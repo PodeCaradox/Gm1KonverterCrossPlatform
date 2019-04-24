@@ -38,7 +38,9 @@ namespace Files.Gm1Converter
 
         public byte[] GetNewFileBytes() {
             List<byte> newFile = new List<byte>();
-            newFile.Add(fileHeader.GetBytes());
+            var headerBytes = fileHeader.GetBytes();
+
+          
 
 
 

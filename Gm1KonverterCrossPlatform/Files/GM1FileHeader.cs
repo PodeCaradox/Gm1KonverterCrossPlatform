@@ -27,9 +27,9 @@ namespace Files.Gm1Converter
         private UInt32 iDataType;
         private UInt32[] iUnknown5 = new UInt32[14];
 
-        internal byte GetBytes()
+        internal byte[] GetBytes()
         {
-            
+            return new byte[3];
         }
 
         private UInt32 iDataSize;
