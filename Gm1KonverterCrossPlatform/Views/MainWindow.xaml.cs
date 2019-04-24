@@ -7,10 +7,10 @@ using Avalonia.Platform;
 using Avalonia.Utilities;
 using Avalonia.Win32;
 using Files.Gm1Converter;
+using Gm1KonverterCrossPlatform.HelperClasses.Views;
 using Gm1KonverterCrossPlatform.ViewModels;
 using HelperClasses.Gm1Converter;
 using SharpDX.WIC;
-using StarDebris.Avalonia.MessageBox;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -42,32 +42,12 @@ namespace Gm1KonverterCrossPlatform.Views
 
         private async void Button_ClickDirectory(object sender, RoutedEventArgs e)
         {
-            var test = "Image files (*.gm1) | *.gm1;";
-
-
-            //    openFileDialog1.Filters = new System.Collections.Generic.List<FileDialogFilter>();
-            //openFileDialog1.InitialDirectory = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Stronghold Crusader Extreme";
-
-            //var task = DoSomethingAsync();
-            //task.Wait();
-            //files = task.Result;
-
-
-            //if (files.Length < 0)
-            //{
-            //    new MessageBox("Error", null, MessageBoxStyle.Error, MessageBoxButtons.Ok).Show();
-            //    return;
-            //}
-            //else
-            //{
-
-            //}
-
             var filesFromTask = await GetFilesAsync();
 
             if (filesFromTask == null || filesFromTask != null && filesFromTask.Length <= 0)
             {
-                new MessageBox("Error", null, MessageBoxStyle.Error, MessageBoxButtons.Ok).Show();
+                MessageBox messageBox = new MessageBox(MessageBox.MessageTyp.Info,"No Files Selected.");
+                await messageBox.ShowDialog(this);
                 return;
             }
 
@@ -76,13 +56,15 @@ namespace Gm1KonverterCrossPlatform.Views
             vm.ConvertButtonEnabled = true;
         }
 
+      
+
         public async Task<string[]> GetFilesAsync()
         {
             OpenFileDialog openFileDialog = new OpenFileDialog
             {
                 Title = "Choose GM1 Files",
                 AllowMultiple = true,
-                InitialDirectory = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Stronghold Crusader Extreme",
+                //InitialDirectory = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Stronghold Crusader Extreme",
             };
 
             openFileDialog.Filters = new System.Collections.Generic.List<FileDialogFilter>();
