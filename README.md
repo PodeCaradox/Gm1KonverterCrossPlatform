@@ -18,6 +18,9 @@ Hallo Leute ich habe angefangen einen GM1 Exporter/Importer für Windows und Lin
 Das erste Bild unten zeigt die exportierte Farb Palette, diese Pixel wurden in der anim_armourer.gm1 verwendet um die einzelnen Bilder zu beschreiben.
 Die anderen Bilder sind die ersten Animierten tiles dieser Datei.
 
+[Download:](https://github.com/Gaaammmler/Gm1KonverterCrossPlatform/blob/master/Gm1KonverterCrossPlatform.zip)
+
+
 ![Palette](https://github.com/Gaaammmler/Gm1KonverterCrossPlatform/blob/master/anim_armourer.gm1/Palette.png)
 
 ![Bild1](https://github.com/Gaaammmler/Gm1KonverterCrossPlatform/blob/master/anim_armourer.gm1/Bild0Farbe0.png)
