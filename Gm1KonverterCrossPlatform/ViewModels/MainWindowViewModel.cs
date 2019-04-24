@@ -3,12 +3,12 @@ using ReactiveUI;
 using Avalonia.Controls;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using Files.Gm1Converter;
 
 namespace Gm1KonverterCrossPlatform.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
-        public string Greeting => "Welcome to Avalonia!";
 
         private bool convertButtonEnabled = false;
         public bool ConvertButtonEnabled {
@@ -17,12 +17,13 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             set => this.RaiseAndSetIfChanged(ref convertButtonEnabled, value);
         }
 
-        private ObservableCollection<Image> images = new ObservableCollection<Image>();
-        public ObservableCollection<Image> TGXImages
+        internal ObservableCollection<Image> images = new ObservableCollection<Image>();
+        internal ObservableCollection<Image> TGXImages
         {
             get => images;
             set => this.RaiseAndSetIfChanged(ref images, value);
         }
+        internal List<DecodedFile> Files { get; set; } = new List<DecodedFile>();
 
 
     }

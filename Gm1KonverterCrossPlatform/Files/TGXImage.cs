@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using Avalonia.Media.Imaging;
 using HelperClasses.Gm1Converter;
@@ -39,6 +40,11 @@ namespace Files.Gm1Converter
         public UInt16 OffsetX { get => offsetX; set => offsetX = value; }
         public UInt16 OffsetY { get => offsetY; set => offsetY = value; }
 
+        internal void ConvertImageToByteArray()
+        {
+            
+        }
+
         /// <summary>
         /// 0 denotes the start of a new collection
         /// </summary>
@@ -48,6 +54,23 @@ namespace Files.Gm1Converter
         /// Number of following parts in the collection
         /// </summary>
         public byte SubParts { get => subParts; set => subParts = value; }
+
+        internal byte[] GetImageHeaderAsByteArray()
+        {
+            List<byte> array =new List<byte>();
+            array.AddRange(BitConverter.GetBytes(width));
+            array.AddRange(BitConverter.GetBytes(height));
+            array.AddRange(BitConverter.GetBytes(offsetX));
+            array.AddRange(BitConverter.GetBytes(offsetY));
+            array.Add(imagePart);
+            array.Add(subParts);
+            array.AddRange(BitConverter.GetBytes(tileOffset));
+            array.Add(direction);
+            array.Add(horizontalOffsetOfImage);
+            array.Add(buildingWidth);
+            array.Add(animatedColor);
+            return array.ToArray();
+        }
 
         /// <summary>
         /// Vertical offset of the tile object on large surface

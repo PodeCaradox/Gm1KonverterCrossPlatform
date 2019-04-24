@@ -37,9 +37,7 @@ namespace Gm1KonverterCrossPlatform.Views
         }
 
         private string[] files;
-
-
-
+        
         private async void Button_ClickDirectory(object sender, RoutedEventArgs e)
         {
             var filesFromTask = await GetFilesAsync();
@@ -55,16 +53,14 @@ namespace Gm1KonverterCrossPlatform.Views
             var vm = DataContext as MainWindowViewModel;
             vm.ConvertButtonEnabled = true;
         }
-
-      
-
+        
         public async Task<string[]> GetFilesAsync()
         {
             OpenFileDialog openFileDialog = new OpenFileDialog
             {
                 Title = "Choose GM1 Files",
                 AllowMultiple = true,
-                //InitialDirectory = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Stronghold Crusader Extreme",
+                InitialDirectory = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Stronghold Crusader Extreme",
             };
 
             openFileDialog.Filters = new System.Collections.Generic.List<FileDialogFilter>();
@@ -85,33 +81,33 @@ namespace Gm1KonverterCrossPlatform.Views
         private void Button_ClickConvert(object sender, RoutedEventArgs e)
         {
             var vm = DataContext as MainWindowViewModel;
-            List<DecodedFile> filesConverted = new List<DecodedFile>();
+           
             
             foreach (var file in files)
             {
-                filesConverted.Add(new DecodedFile(Utility.FileToByteArray(file), System.IO.Path.GetFileName(file)));
+                vm.Files.Add(new DecodedFile(Utility.FileToByteArray(file), System.IO.Path.GetFileName(file)));
             }
 
-            for (int i = 0; i < filesConverted.Count; i++)
+            for (int i = 0; i < vm.Files.Count; i++)
             {
-                if (!Directory.Exists(filesConverted[i].FileHeader.Name))
+                if (!Directory.Exists(vm.Files[i].FileHeader.Name))
                 {
-                    Directory.CreateDirectory(filesConverted[i].FileHeader.Name);
+                    Directory.CreateDirectory(vm.Files[i].FileHeader.Name);
                 }
                 //Palette
-                filesConverted[i].Palette.Bitmap.Save(filesConverted[i].FileHeader.Name +"/Palette.png"); ;
+                vm.Files[i].Palette.Bitmap.Save(vm.Files[i].FileHeader.Name +"/Palette.png"); ;
 
 
-                for (int j = 0; j < filesConverted[i].Images.Count; j++)
+                for (int j = 0; j < vm.Files[i].Images.Count; j++)
                 {
-                    var bitmap = filesConverted[i].Images[j].bmp;
+                    var bitmap = vm.Files[i].Images[j].bmp;
 
                     Image image = new Image();
                     image.MaxHeight = 100;
                     image.MaxWidth = 100;
                     image.Source = bitmap;
                     vm.TGXImages.Add(image);
-                    bitmap.Save(filesConverted[i].FileHeader.Name+"/Bild"+j+ "Farbe" +j/ filesConverted[i].FileHeader.INumberOfPictureinFile+".png");
+                    bitmap.Save(vm.Files[i].FileHeader.Name+"/Bild"+j+ "Farbe" +j/ vm.Files[i].FileHeader.INumberOfPictureinFile+".png");
 
                 }
             }
@@ -121,7 +117,13 @@ namespace Gm1KonverterCrossPlatform.Views
 
         private void Button_ClickConvertBack(object sender, RoutedEventArgs e)
         {
+            var vm = DataContext as MainWindowViewModel;
+            foreach (var file in vm.Files)
+            {
+                var array=file.GetNewGM1Bytes();
 
+                Utility.ByteArraytoFile(file.FileHeader.Name+"/"+ file.FileHeader.Name, array);
+            }
         }
         
     }

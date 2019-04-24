@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Files.Gm1Converter
 {
@@ -29,7 +30,21 @@ namespace Files.Gm1Converter
 
         internal byte[] GetBytes()
         {
-            return new byte[3];
+            var bytearray = new List<byte>();
+            bytearray.AddRange(BitConverter.GetBytes(iUnknown1));
+            bytearray.AddRange(BitConverter.GetBytes(iUnknown2));
+            bytearray.AddRange(BitConverter.GetBytes(iUnknown3));
+            bytearray.AddRange(BitConverter.GetBytes(iNumberOfPictureinFile));
+            bytearray.AddRange(BitConverter.GetBytes(iUnknown4));
+            bytearray.AddRange(BitConverter.GetBytes(iDataType));
+            for (int i = 0; i < iUnknown5.Length; i++)
+            {
+                bytearray.AddRange(BitConverter.GetBytes(this.iUnknown5[i]));
+            }
+            bytearray.AddRange(BitConverter.GetBytes(iDataSize));
+            bytearray.AddRange(BitConverter.GetBytes(iUnknown6));
+
+            return bytearray.ToArray();
         }
 
         private UInt32 iDataSize;

@@ -36,6 +36,15 @@ namespace Files.Gm1Converter
 
         public ushort[] ArrayPalette { get => arrayPalette; set => arrayPalette = value; }
         public byte[] ArrayPaletteByte { get => arrayPaletteByte; set => arrayPaletteByte = value; }
+
+        internal void DebugTestPalette()
+        {
+            for (int i = 0; i < arrayPaletteByte.Length; i++)
+            {
+                arrayPaletteByte[i] = 0b1111_1111;
+            }
+        }
+
         public WriteableBitmap Bitmap { get => bitmap; set => bitmap = value; }
 
 

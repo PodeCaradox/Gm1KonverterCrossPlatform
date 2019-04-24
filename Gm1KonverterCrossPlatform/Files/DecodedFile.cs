@@ -36,13 +36,37 @@ namespace Files.Gm1Converter
       
         }
 
-        public byte[] GetNewFileBytes() {
+        public byte[] GetNewGM1Bytes() {
+
+            //testing
+            palette.DebugTestPalette();
+
+
+
             List<byte> newFile = new List<byte>();
             var headerBytes = fileHeader.GetBytes();
+            newFile.AddRange(headerBytes);
+            newFile.AddRange(palette.ArrayPaletteByte);
+            for (int i = 0; i < fileHeader.INumberOfPictureinFile; i++)
+            {
+                images[i].ConvertImageToByteArray();
+                newFile.AddRange(BitConverter.GetBytes(images[i].OffsetinByteArray));
+            }
 
-          
+            for (int i = 0; i < fileHeader.INumberOfPictureinFile; i++)
+            {
+                newFile.AddRange(BitConverter.GetBytes(images[i].SizeinByteArray));
+            }
 
+            for (int i = 0; i < fileHeader.INumberOfPictureinFile; i++)
+            {
+                newFile.AddRange(images[i].GetImageHeaderAsByteArray());
+            }
 
+            for (int i = 0; i < fileHeader.INumberOfPictureinFile; i++)
+            {
+                newFile.AddRange(images[i].ImgFileAsBytearray);
+            }
 
 
             return newFile.ToArray();
@@ -82,7 +106,9 @@ namespace Files.Gm1Converter
                     image.ImgFileAsBytearray = new byte[(int)image.SizeinByteArray];
                     Buffer.BlockCopy(array, actualPositionInByteArray + (int)image.OffsetinByteArray, image.ImgFileAsBytearray, 0, (int)image.SizeinByteArray);
             }
-           
+
+
+            //Dekodiere alle Farben aus testzwecken
             for (int i = 0; i < 9; i++)
             {
                 for (int j = 0; j < fileHeader.INumberOfPictureinFile; j++)
