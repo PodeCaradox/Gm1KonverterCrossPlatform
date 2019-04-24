@@ -1,0 +1,34 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:Gm1KonverterCrossPlatform.ViewModels;assembly=Gm1KonverterCrossPlatform"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="Gm1KonverterCrossPlatform.Views.MainWindow"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="Gm1KonverterCrossPlatform">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+
+  <StackPanel >
+    <Button Click="Button_ClickDirectory">Load GM1 Files</Button>
+    <Button IsEnabled="{Binding ConvertButtonEnabled}" Click="Button_ClickConvert">Decode GM1 Files</Button>
+    <Button IsEnabled="{Binding ConvertButtonEnabled}" Click="Button_ClickConvertBack">Code Files to GM1</Button>
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+      <ItemsControl Name="Test" MaxHeight="450" DataContext="{Binding TGXImages}">
+        
+        <ItemsControl.ItemsPanel>
+          <ItemsPanelTemplate>
+            <WrapPanel />
+          </ItemsPanelTemplate>
+
+        </ItemsControl.ItemsPanel>
+       
+      </ItemsControl>
+    </ScrollViewer>
+
+  </StackPanel>
+</Window>
