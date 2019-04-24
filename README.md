@@ -38,3 +38,4 @@ Wen du das Programm testen möchtest die dekodierten Dateien werden im Gm1Konver
 New Palette with only Color white Ingame: :)
 ![Bild5](https://github.com/Gaaammmler/Gm1KonverterCrossPlatform/blob/master/anim_armourer.gm1/showcase.jpg)
 
+![SH1 Graphics](https://github.com/Gaaammmler/Stronghold-Crusader-Sh1-Graphics)
