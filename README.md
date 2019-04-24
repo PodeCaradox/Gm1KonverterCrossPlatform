@@ -20,3 +20,11 @@ Die anderen Bilder sind die ersten Animierten tiles dieser Datei.
 
 ![Palette](https://github.com/Gaaammmler/Gm1KonverterCrossPlatform/blob/master/anim_armourer.gm1/Palette.png)
 
+![Bild1](https://github.com/Gaaammmler/Gm1KonverterCrossPlatform/blob/master/anim_armourer.gm1/Bild0Farbe0.png)
+
+![Bild2](https://github.com/Gaaammmler/Gm1KonverterCrossPlatform/blob/master/anim_armourer.gm1/Bild1Farbe0.png)
+
+![Bild3](https://github.com/Gaaammmler/Gm1KonverterCrossPlatform/blob/master/anim_armourer.gm1/Bild2Farbe0.png)
+
+![Bild4](https://github.com/Gaaammmler/Gm1KonverterCrossPlatform/blob/master/anim_armourer.gm1/Bild3Farbe0.png)
+
