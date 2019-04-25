@@ -69,29 +69,8 @@ namespace Files.Gm1Converter
             {
                 for (int i = 0; i < arrayPalette.Length; i++)
                 {
-                    if (i % 65 == 0 && i != 0)
-                    {
-                        y++;
-                        x = 0;
-                        for (int k = 0; k < pixelGroesse - 1; k++)
-                        {
-                            for (int z = 0; z < 65; z++)
-                            {
-                                for (int t = 0; t < pixelGroesse; t++)
-                                {
-                                    
-                                    var ptr = (uint*)buf.Address;
-                                    ptr += (uint)((width * y) + x);
-                                    *ptr = reihe[z];
-                                    x++;
-                                }
-                            }
-                            y++;
-                            x = 0;
 
-                        }
 
-                    }
                     Utility.ReadColor(arrayPalette[i], out r, out g, out b);
                   
                         for (int k = 0; k < pixelGroesse; k++)
@@ -105,14 +84,16 @@ namespace Files.Gm1Converter
                        
                         }
 
-
-                    if (i == 2560 - 1)
+                    
+                    //füge y bits hinzu für pixelGroesse
+                    //schreibt
+                    if (i % 65 == 0 && i != 0)
                     {
                         y++;
                         x = 0;
                         for (int k = 0; k < pixelGroesse - 1; k++)
                         {
-                            for (int z = 0; z < 25; z++)
+                            for (int z = 0; z < 65; z++)
                             {
                                 for (int t = 0; t < pixelGroesse; t++)
                                 {

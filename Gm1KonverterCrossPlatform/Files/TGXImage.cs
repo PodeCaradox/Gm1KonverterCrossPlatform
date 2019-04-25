@@ -40,10 +40,7 @@ namespace Files.Gm1Converter
         public UInt16 OffsetX { get => offsetX; set => offsetX = value; }
         public UInt16 OffsetY { get => offsetY; set => offsetY = value; }
 
-        internal void ConvertImageToByteArray()
-        {
-            
-        }
+
 
         /// <summary>
         /// 0 denotes the start of a new collection
@@ -55,22 +52,7 @@ namespace Files.Gm1Converter
         /// </summary>
         public byte SubParts { get => subParts; set => subParts = value; }
 
-        internal byte[] GetImageHeaderAsByteArray()
-        {
-            List<byte> array =new List<byte>();
-            array.AddRange(BitConverter.GetBytes(width));
-            array.AddRange(BitConverter.GetBytes(height));
-            array.AddRange(BitConverter.GetBytes(offsetX));
-            array.AddRange(BitConverter.GetBytes(offsetY));
-            array.Add(imagePart);
-            array.Add(subParts);
-            array.AddRange(BitConverter.GetBytes(tileOffset));
-            array.Add(direction);
-            array.Add(horizontalOffsetOfImage);
-            array.Add(buildingWidth);
-            array.Add(animatedColor);
-            return array.ToArray();
-        }
+     
 
         /// <summary>
         /// Vertical offset of the tile object on large surface
@@ -106,32 +88,29 @@ namespace Files.Gm1Converter
 
         #region Methods
 
+
         //unsafe
-        public unsafe void CreateImageFromByteArray(Palette palette, GM1FileHeader header, uint teamColor)
+        public unsafe void CreateImageFromByteArray(Palette palette, uint teamColor)
         {
             var teamcolor = (int)teamColor;
-
+            
             bmp = new WriteableBitmap(new Avalonia.PixelSize(width, height), new Avalonia.Vector(100, 100), Avalonia.Platform.PixelFormat.Bgra8888);// Bgra8888 is device-native and much faster.
-        
-
+            
             using (var buf = bmp.Lock())
             {
-
-
-
-
                 int x = 0;
                 int y = 0;
                 byte r, g, b;
-                Color color = Color.Transparent;
                 for (int bytePos = 0; bytePos < imgFileAsBytearray.Length;)
                 {
+            
 
                     byte token = imgFileAsBytearray[bytePos];
                     byte tokentype = (byte)(token >> 5);
                     byte length = (byte)((token & 31) + 1);
 
-
+                    //transparent
+                    UInt32 colorByte = Utility.TransparentColorByte;
 
                     bytePos++;
                     byte index;
@@ -148,34 +127,32 @@ namespace Files.Gm1Converter
                                 pixelColor = palette.ArrayPalette[teamcolor * 256 + index];
                                 Utility.ReadColor(pixelColor, out r, out g, out b);
 
-                                //Bgra8888
-                                UInt32 colorByte = (UInt32)(b | (g << 8) | (r << 16) | (255 << 24));
+                     
+                                colorByte = (UInt32)(b | (g << 8) | (r << 16) | (255 << 24));
                                 var ptr = (uint*)buf.Address;
                                 ptr += (uint)((width * y) + x);
                                 *ptr = colorByte;
-
-
-
                                 x++;
-
+                               
                             }
                             break;
                         case 4://Newline
-
                             for (byte i = 0; i < this.width; i++)
                             {
                                 if (x >= this.width || y >= this.height)
                                     break;
 
                                 //Bgra8888
-                                UInt32 colorByte = (UInt32)(color.B | (color.G << 8) | (color.R << 16) | (255 << 24));
+                               
                                 var ptr = (uint*)buf.Address;
                                 ptr += (uint)((width * y) + x);
                                 *ptr = colorByte;
                                 x++;
+                               
                             }
 
                             y++;
+                            if (y > this.height) break;
                             x = 0;
                             break;
                         case 2://Repeating pixels 
@@ -185,18 +162,14 @@ namespace Files.Gm1Converter
                             pixelColor = palette.ArrayPalette[teamcolor * 256 + index];
 
                             Utility.ReadColor(pixelColor, out r, out g, out b);
-                  
+                            colorByte = (uint)(b | (g << 8) | (r << 16) | (255 << 24));
                             for (byte i = 0; i < length; i++)
                             {
-
-
-                                UInt32 colorByte = (UInt32)(b | (g << 8) | (r << 16) | (255 << 24));
                                 var ptr = (uint*)buf.Address;
                                 ptr += (uint)((width * y) + x);
                                 *ptr = colorByte;
-
-
                                 x++;
+                                
                             }
                             break;
                         case 1://Transparent-Pixel-String 
@@ -204,13 +177,12 @@ namespace Files.Gm1Converter
                             for (byte i = 0; i < length; i++)
                             {
 
-                                UInt32 colorByte = (UInt32)(color.B  | (color.G << 8) | (color.R << 16) | (255 << 24));
+                                
                                 var ptr = (uint*)buf.Address;
                                 ptr += (uint)((width * y) + x);
                                 *ptr = colorByte;
-
-
                                 x++;
+                               
                             }
                             break;
                         default:
@@ -222,13 +194,33 @@ namespace Files.Gm1Converter
 
             }
 
-
+           
 
         }
+       
+        internal void ConvertImageToByteArray(Palette palette)
+        {
+            var colors = Utility.ImgToColors(bmp,width,height);
+            imgFileAsBytearray = Utility.ImgToGM1ByteArray(colors,width,height, imgFileAsBytearray, palette);
+            sizeinByteArray = (uint)imgFileAsBytearray.Length;
+        }
 
-
-
-
+        internal byte[] GetImageHeaderAsByteArray()
+        {
+            List<byte> array = new List<byte>();
+            array.AddRange(BitConverter.GetBytes(width));
+            array.AddRange(BitConverter.GetBytes(height));
+            array.AddRange(BitConverter.GetBytes(offsetX));
+            array.AddRange(BitConverter.GetBytes(offsetY));
+            array.Add(imagePart);
+            array.Add(subParts);
+            array.AddRange(BitConverter.GetBytes(tileOffset));
+            array.Add(direction);
+            array.Add(horizontalOffsetOfImage);
+            array.Add(buildingWidth);
+            array.Add(animatedColor);
+            return array.ToArray();
+        }
 
 
         #endregion

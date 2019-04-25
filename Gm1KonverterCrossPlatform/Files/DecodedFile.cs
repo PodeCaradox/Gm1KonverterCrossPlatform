@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Avalonia.Controls;
+using Gm1KonverterCrossPlatform.HelperClasses.Views;
+using System;
 using System.Collections.Generic;
 
 namespace Files.Gm1Converter
@@ -20,9 +22,13 @@ namespace Files.Gm1Converter
 
         #region Construtor
 
-        public DecodedFile(byte[] array,String name)
+        public DecodedFile()
         {
-
+      
+        }
+        public bool DecodeGm1File(byte[] array, String name)
+        {
+            
             this.fileHeader = new GM1FileHeader(array);
             this.fileHeader.Name = name;
             this.palette = new Palette(array);
@@ -32,16 +38,33 @@ namespace Files.Gm1Converter
             {
                 CreateImagesFromAnimationFile(array);
             }
-
-      
+            else
+            {
+                return false;
+            }
+            return true;
         }
+
+
 
         public byte[] GetNewGM1Bytes() {
 
             //testing
-            palette.DebugTestPalette();
+            //palette.DebugTestPalette();
 
-
+            System.Diagnostics.Debug.WriteLine("Offset in Byte array:");
+            for (int i = 0; i < fileHeader.INumberOfPictureinFile; i++)
+            {
+               
+                System.Diagnostics.Debug.WriteLine(images[i].OffsetinByteArray);
+            }
+            System.Diagnostics.Debug.WriteLine("--------------------------");
+            System.Diagnostics.Debug.WriteLine("Size in Byte array:");
+            for (int i = 0; i < fileHeader.INumberOfPictureinFile; i++)
+            {
+               
+                System.Diagnostics.Debug.WriteLine(images[i].SizeinByteArray);
+            }
 
             List<byte> newFile = new List<byte>();
             var headerBytes = fileHeader.GetBytes();
@@ -49,15 +72,29 @@ namespace Files.Gm1Converter
             newFile.AddRange(palette.ArrayPaletteByte);
             for (int i = 0; i < fileHeader.INumberOfPictureinFile; i++)
             {
-                images[i].ConvertImageToByteArray();
-                newFile.AddRange(BitConverter.GetBytes(images[i].OffsetinByteArray));
+                images[i].ConvertImageToByteArray(palette);
+                
+            }
+            uint offset = 0;
+            for (int i = 1; i < fileHeader.INumberOfPictureinFile; i++)
+            {
+                offset += images[i - 1].SizeinByteArray;
+                images[i].OffsetinByteArray = offset;
             }
 
+           
+            for (int i = 0; i < fileHeader.INumberOfPictureinFile; i++)
+            {
+                newFile.AddRange(BitConverter.GetBytes(images[i].OffsetinByteArray));
+             
+            }
+         
             for (int i = 0; i < fileHeader.INumberOfPictureinFile; i++)
             {
                 newFile.AddRange(BitConverter.GetBytes(images[i].SizeinByteArray));
+      
             }
-
+            
             for (int i = 0; i < fileHeader.INumberOfPictureinFile; i++)
             {
                 newFile.AddRange(images[i].GetImageHeaderAsByteArray());
@@ -132,7 +169,7 @@ namespace Files.Gm1Converter
 
             for (uint i = 0; i < images.Count; i++)
             {
-                images[(int)i].CreateImageFromByteArray(palette, fileHeader, i/fileHeader.INumberOfPictureinFile);
+                images[(int)i].CreateImageFromByteArray(palette, i/fileHeader.INumberOfPictureinFile);
             }
 
 

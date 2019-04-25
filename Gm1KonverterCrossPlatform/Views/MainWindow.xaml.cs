@@ -36,7 +36,7 @@ namespace Gm1KonverterCrossPlatform.Views
             AvaloniaXamlLoader.Load(this);
         }
 
-        private string[] files;
+        private string[] pathToFiles;
         
         private async void Button_ClickDirectory(object sender, RoutedEventArgs e)
         {
@@ -49,7 +49,7 @@ namespace Gm1KonverterCrossPlatform.Views
                 return;
             }
 
-            files = filesFromTask;
+            pathToFiles = filesFromTask;
             var vm = DataContext as MainWindowViewModel;
             vm.ConvertButtonEnabled = true;
         }
@@ -81,11 +81,19 @@ namespace Gm1KonverterCrossPlatform.Views
         private void Button_ClickConvert(object sender, RoutedEventArgs e)
         {
             var vm = DataContext as MainWindowViewModel;
-           
-            
-            foreach (var file in files)
+            vm.Files = new List<DecodedFile>();
+            //Convert Selected files
+            foreach (var file in pathToFiles)
             {
-                vm.Files.Add(new DecodedFile(Utility.FileToByteArray(file), System.IO.Path.GetFileName(file)));
+                var decodedFile = new DecodedFile();
+                if(!decodedFile.DecodeGm1File(Utility.FileToByteArray(file), System.IO.Path.GetFileName(file)))
+                {
+                    MessageBox messageBox = new MessageBox(MessageBox.MessageTyp.Info, "Only Animation Tiles are Supported yet.");
+                    messageBox.ShowDialog(this);
+                    return;
+                }
+               
+                vm.Files.Add(decodedFile);
             }
 
             for (int i = 0; i < vm.Files.Count; i++)
