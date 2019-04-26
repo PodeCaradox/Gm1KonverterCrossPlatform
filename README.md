@@ -21,9 +21,6 @@ Die anderen Bilder sind die ersten Animierten tiles dieser Datei.
 
 Wen du das Programm testen möchtest die dekodierten Dateien werden im Gm1KonverterCrossPlatform Ordner abgelegt.
 
-[Download:](https://github.com/Gaaammmler/Gm1KonverterCrossPlatform/blob/master/Gm1KonverterCrossPlatform.zip)
-
-
 ![Palette](https://github.com/Gaaammmler/Gm1KonverterCrossPlatform/blob/master/anim_armourer.gm1/Palette.png)
 
 ![Bild1](https://github.com/Gaaammmler/Gm1KonverterCrossPlatform/blob/master/anim_armourer.gm1/Bild0Farbe0.png)
