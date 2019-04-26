@@ -58,8 +58,16 @@ namespace HelperClasses.Gm1Converter
         }
 
         
-      
-
+      //todo Fehler falls 2 gleichfarbige und dan das letzte byte, siehe letztes bild
+        /// <summary>
+        /// Encoding back its not same as stronghold it do but it works so it is fine
+        /// </summary>
+        /// <param name="colors"></param>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        /// <param name="oldarray"></param>
+        /// <param name="palette"></param>
+        /// <returns></returns>
         internal static byte[] ImgToGM1ByteArray(List<uint> colors, ushort width, ushort height,byte[] oldarray,Palette palette)
         {
             List<byte> array = new List<byte>();
@@ -82,13 +90,22 @@ namespace HelperClasses.Gm1Converter
                     transparentPixelString = false;
                     repeatingPixels = false;
                     streamofpixels = false;
+                    int repeatedPixel = 0;
                      countSamePixel = 0;
                     var offset = i * width;
                     for (int z = j; z < width-1; z++)
                     {
-                        
-                        if (!repeatingPixels && !streamofpixels && colors[z + offset] == TransparentColorByte)//newline or Transparent-Pixel-String
+                        if (offset + j >= 5200)
                         {
+
+                        }
+                        if (colors[z + offset] == TransparentColorByte)//newline or Transparent-Pixel-String
+                        {
+                            if (repeatingPixels|| streamofpixels)
+                            {
+                                break;
+                            }
+
                             countSamePixel++;
                             transparentPixelString = true;
                         }else if (transparentPixelString)
@@ -96,27 +113,42 @@ namespace HelperClasses.Gm1Converter
                       
                             break;
                         }
-                        else if (!streamofpixels && colors[z + offset] == colors[z + 1 + offset])//Repeating pixels 
+                        else if (colors[z + offset] == colors[z + 1 + offset])//Repeating pixels 
                         {
+                            if (streamofpixels && repeatedPixel >= 2)
+                            {
+                                countSamePixel-=2;
+                                break;
+                            }
+                            repeatedPixel++;
                             countSamePixel++;
                             repeatingPixels = true;
                            
-                        }else if (repeatingPixels)//only if more than 2 colors repeating
+                        }else if (repeatingPixels)//only if more than 2 colors repeating to safe one byte
                         {
-                            if (countSamePixel > 2)
+                            countSamePixel++;
+                            if (repeatedPixel >= 2)
                             {
+                               
                                 break;
                             }
                             else
                             {
                                 streamofpixels = true;
-                                countSamePixel++;
                                 repeatingPixels = false;
                             }
                             
                         }
-                        else if (!repeatingPixels && colors[z + offset] != colors[z + 1 + offset])//Stream-of-pixels 
+                        else if (colors[z + offset] != colors[z + 1 + offset])//Stream-of-pixels 
                         {
+                            if (repeatingPixels || colors[z + 1 + offset] == TransparentColorByte)
+                            {
+                                if (colors[z + 1 + offset] == TransparentColorByte)
+                                {
+                                    countSamePixel++;
+                                }
+                                break;
+                            }
                             countSamePixel++;
                             streamofpixels = true;
                         }
@@ -127,14 +159,16 @@ namespace HelperClasses.Gm1Converter
 
 
                     }
-                   
+           
+
                     if (j + countSamePixel + 1 == width)//newline //+1 because width - 1 in loop
                     {
                         array.Add(0b1000_0000);
+                        countSamePixel++;
                     }
                     else if(transparentPixelString)//Transparent-Pixel-String
                     {
-                        header = 0b0010_0000;
+                         header = 0b0010_0000;
                         var dummy = countSamePixel;
                         while (dummy / 32 > 0)
                         {
@@ -151,7 +185,6 @@ namespace HelperClasses.Gm1Converter
                     else if (streamofpixels)
                     {
                         header = 0b0000_0000;
-                        countSamePixel++;
                         var dummy = countSamePixel;
                         int zaehler = 0;
                         while (dummy / 32 > 0)
@@ -160,7 +193,8 @@ namespace HelperClasses.Gm1Converter
                             array.Add((byte)(header | length));
                             for (int a = 0; a < 32; a++)
                             {
-                                var colorToFind = EncodeColorTo2Byte(colors[j - 1 + zaehler + offset]);
+                                var color = colors[j + zaehler + offset];
+                                var colorToFind = EncodeColorTo2Byte(color);
                                 array.Add(FindColorInPalette(palette, colorToFind));
                                 dummy--;
                                 zaehler++;
@@ -172,7 +206,8 @@ namespace HelperClasses.Gm1Converter
                             array.Add((byte)(header | length));
                             for (int a = 0; a < dummy; a++)
                             {
-                                var colorToFind = EncodeColorTo2Byte(colors[j - 1 + zaehler + offset]);
+                                var color = colors[j + zaehler + offset];
+                                var colorToFind = EncodeColorTo2Byte(color);
                                 array.Add(FindColorInPalette(palette, colorToFind));
                                 zaehler++;
                             }
@@ -183,15 +218,14 @@ namespace HelperClasses.Gm1Converter
                     }
                     else if (repeatingPixels)
                     {
-                        countSamePixel++;
                         header = 0b0100_0000;
-                        length = (byte)(countSamePixel);
+                        length = (byte)(countSamePixel - 1);//-1 because the test is pixel perfect in the loop and 0 == 1 in the encoding
                         array.Add((byte)(header | length));
-                        var colorToFind = EncodeColorTo2Byte(colors[j - 1 + offset]);
+                        var colorToFind = EncodeColorTo2Byte(colors[j + offset]);
                         array.Add(FindColorInPalette(palette, colorToFind));
                     }
 
-                    j += (int)countSamePixel;
+                    j += (int)countSamePixel - 1;//-1 besauce loop +1
 
                 }
 
