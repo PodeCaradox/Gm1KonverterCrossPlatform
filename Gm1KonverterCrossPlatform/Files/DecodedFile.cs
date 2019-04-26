@@ -18,6 +18,8 @@ namespace Files.Gm1Converter
 
         private int actualPositionInByteArray = 0;
 
+        private byte[] fileArray;
+
         #endregion
 
         #region Construtor
@@ -28,10 +30,13 @@ namespace Files.Gm1Converter
         }
         public bool DecodeGm1File(byte[] array, String name)
         {
+            if (this.fileHeader == null)
+            {
+                this.fileHeader = new GM1FileHeader(array);
+                this.fileHeader.Name = name;
+                this.palette = new Palette(array);
+            }
             
-            this.fileHeader = new GM1FileHeader(array);
-            this.fileHeader.Name = name;
-            this.palette = new Palette(array);
             this.images = new List<TGXImage>();
             actualPositionInByteArray = (GM1FileHeader.fileHeaderSize + Palette.paletteSize); ;
             if (fileHeader.IDataType == (UInt32)GM1FileHeader.DataType.Animations)
@@ -44,32 +49,18 @@ namespace Files.Gm1Converter
             }
             return true;
         }
-
-
-
+        
         public byte[] GetNewGM1Bytes() {
 
-            //testing
-            //palette.DebugTestPalette();
-
-            System.Diagnostics.Debug.WriteLine("Offset in Byte array:");
-            for (int i = 0; i < fileHeader.INumberOfPictureinFile; i++)
-            {
-               
-                System.Diagnostics.Debug.WriteLine(images[i].OffsetinByteArray);
-            }
-            System.Diagnostics.Debug.WriteLine("--------------------------");
-            System.Diagnostics.Debug.WriteLine("Size in Byte array:");
-            for (int i = 0; i < fileHeader.INumberOfPictureinFile; i++)
-            {
-               
-                System.Diagnostics.Debug.WriteLine(images[i].SizeinByteArray);
-            }
-
+         
             List<byte> newFile = new List<byte>();
             var headerBytes = fileHeader.GetBytes();
             newFile.AddRange(headerBytes);
+            palette.CalculateNewBytes();
             newFile.AddRange(palette.ArrayPaletteByte);
+
+            /*
+            later for change color on image not palette
             for (int i = 0; i < fileHeader.INumberOfPictureinFile; i++)
             {
                 images[i].ConvertImageToByteArray(palette);
@@ -81,8 +72,8 @@ namespace Files.Gm1Converter
                 offset += images[i - 1].SizeinByteArray;
                 images[i].OffsetinByteArray = offset;
             }
+           */
 
-           
             for (int i = 0; i < fileHeader.INumberOfPictureinFile; i++)
             {
                 newFile.AddRange(BitConverter.GetBytes(images[i].OffsetinByteArray));
@@ -109,14 +100,13 @@ namespace Files.Gm1Converter
             return newFile.ToArray();
         }
 
-        private void CreateImagesFromAnimationFile(byte[] array)
+        public void CreateImagesFromAnimationFile(byte[] array)
         {
-           
-                CreateOffsetAndSizeInByteArrayList(array);
+            fileArray = array;
+             CreateOffsetAndSizeInByteArrayList(array);
             
             
             //Image Header has a length of 16 bytes 
-
             for (int i = 0; i < this.fileHeader.INumberOfPictureinFile; i++)
             {
 
@@ -144,32 +134,29 @@ namespace Files.Gm1Converter
                     Buffer.BlockCopy(array, actualPositionInByteArray + (int)image.OffsetinByteArray, image.ImgFileAsBytearray, 0, (int)image.SizeinByteArray);
             }
 
+            //create all pictures not used now
+            //for (int j = 0; j < fileHeader.INumberOfPictureinFile; j++)
+            //{
+            //    var dummy = new TGXImage();
+            //    dummy.Width = images[j].Width;
+            //    dummy.Height = images[j].Height;
+            //    dummy.OffsetX = images[j].OffsetX;
+            //    dummy.OffsetY = images[j].OffsetY;
+            //    dummy.ImagePart = images[j].ImagePart;
+            //    dummy.SubParts = images[j].SubParts;
+            //    dummy.TileOffset = images[j].TileOffset;
+            //    dummy.Direction = images[j].Direction;
+            //    dummy.HorizontalOffsetOfImage = images[j].HorizontalOffsetOfImage;
+            //    dummy.BuildingWidth = images[j].BuildingWidth;
+            //    dummy.AnimatedColor = images[j].AnimatedColor;
+            //    dummy.ImgFileAsBytearray = images[j].ImgFileAsBytearray;
+            //    images.Add(dummy);
+            //}
+            
 
-            //Dekodiere alle Farben aus testzwecken
-            for (int i = 0; i < 9; i++)
+            for (uint i = 0; i < fileHeader.INumberOfPictureinFile; i++)
             {
-                for (int j = 0; j < fileHeader.INumberOfPictureinFile; j++)
-                {
-                    var dummy = new TGXImage();
-                    dummy.Width = images[j].Width;
-                    dummy.Height = images[j].Height;
-                    dummy.OffsetX = images[j].OffsetX;
-                    dummy.OffsetY = images[j].OffsetY;
-                    dummy.ImagePart = images[j].ImagePart;
-                    dummy.SubParts = images[j].SubParts;
-                    dummy.TileOffset = images[j].TileOffset;
-                    dummy.Direction = images[j].Direction;
-                    dummy.HorizontalOffsetOfImage = images[j].HorizontalOffsetOfImage;
-                    dummy.BuildingWidth = images[j].BuildingWidth;
-                    dummy.AnimatedColor = images[j].AnimatedColor;
-                    dummy.ImgFileAsBytearray = images[j].ImgFileAsBytearray;
-                    images.Add(dummy);
-                }
-            }
-
-            for (uint i = 0; i < images.Count; i++)
-            {
-                images[(int)i].CreateImageFromByteArray(palette, i/fileHeader.INumberOfPictureinFile);
+                images[(int)i].CreateImageFromByteArray(palette);
             }
 
 
@@ -204,6 +191,7 @@ namespace Files.Gm1Converter
         internal GM1FileHeader FileHeader { get => fileHeader; }
         internal Palette Palette { get => palette; }
         internal List<TGXImage> Images { get => images; }
+        public byte[] FileArray { get => fileArray; set => fileArray = value; }
 
         #endregion
 

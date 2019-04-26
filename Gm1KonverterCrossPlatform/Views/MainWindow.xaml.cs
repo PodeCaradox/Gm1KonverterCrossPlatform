@@ -11,6 +11,7 @@ using Gm1KonverterCrossPlatform.HelperClasses.Views;
 using Gm1KonverterCrossPlatform.ViewModels;
 using HelperClasses.Gm1Converter;
 using SharpDX.WIC;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -26,9 +27,9 @@ namespace Gm1KonverterCrossPlatform.Views
         {
 
             InitializeComponent();
-#if DEBUG
+        #if DEBUG
             this.AttachDevTools();
-#endif
+        #endif
         }
 
         private void InitializeComponent()
@@ -52,14 +53,18 @@ namespace Gm1KonverterCrossPlatform.Views
             pathToFiles = filesFromTask;
             var vm = DataContext as MainWindowViewModel;
             vm.ConvertButtonEnabled = true;
+
+            vm.DecodeData(pathToFiles,this);
         }
-        
+
+      
+
         public async Task<string[]> GetFilesAsync()
         {
             OpenFileDialog openFileDialog = new OpenFileDialog
             {
                 Title = "Choose GM1 Files",
-                AllowMultiple = true,
+                //AllowMultiple = true, //will be added later
                 InitialDirectory = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Stronghold Crusader Extreme",
             };
 
@@ -78,52 +83,45 @@ namespace Gm1KonverterCrossPlatform.Views
             return files;
         }
 
-        private void Button_ClickConvert(object sender, RoutedEventArgs e)
+
+        
+
+        private void Button_ClickPalleteminus(object sender, RoutedEventArgs e)
         {
             var vm = DataContext as MainWindowViewModel;
-            vm.Files = new List<DecodedFile>();
-            //Convert Selected files
-            foreach (var file in pathToFiles)
+            vm.ChangePalette(-1);
+
+        }
+
+        private void Button_ClickPalleteplus(object sender, RoutedEventArgs e)
+        {
+            var vm = DataContext as MainWindowViewModel;
+            vm.ChangePalette(1);
+        }
+        private void Button_ClickChangeColorTable(object sender, RoutedEventArgs e)
+        {
+            ChangeColorPalette changeColorPalette = new ChangeColorPalette();
+            changeColorPalette.Closed += OnWindowClosed;
+            changeColorPalette.DataContext = this.DataContext;
+            changeColorPalette.LoadPalette();
+            changeColorPalette.ShowDialog(this);
+      
+
+        }
+
+        private void OnWindowClosed(object sender, EventArgs e)
+        {
+            var vm = DataContext as MainWindowViewModel;
+            if (vm.Files[0].Palette.PaletteChanged)
             {
-                var decodedFile = new DecodedFile();
-                if(!decodedFile.DecodeGm1File(Utility.FileToByteArray(file), System.IO.Path.GetFileName(file)))
-                {
-                    MessageBox messageBox = new MessageBox(MessageBox.MessageTyp.Info, "Only Animation Tiles are Supported yet.");
-                    messageBox.ShowDialog(this);
-                    return;
-                }
-               
-                vm.Files.Add(decodedFile);
+                var bitmap = vm.Files[0].Palette.GetBitmap(vm.Files[0].Palette.ActualPalette, Files.Gm1Converter.Palette.pixelSize);
+                vm.ActuellColorTable = bitmap;
+                vm.Files[0].Palette.Bitmaps[vm.Files[0].Palette.ActualPalette] = bitmap;
+                vm.GeneratePaletteAndImgNew();
+                vm.Files[0].Palette.PaletteChanged = false;
+                vm.DecodeButtonEnabled = true;
             }
-
-            for (int i = 0; i < vm.Files.Count; i++)
-            {
-                if (!Directory.Exists(vm.Files[i].FileHeader.Name))
-                {
-                    Directory.CreateDirectory(vm.Files[i].FileHeader.Name);
-                }
-                //Palette
-                vm.Files[i].Palette.Bitmap.Save(vm.Files[i].FileHeader.Name +"/Palette.png"); ;
-
-
-                for (int j = 0; j < vm.Files[i].Images.Count; j++)
-                {
-                    var bitmap = vm.Files[i].Images[j].bmp;
-
-                    Image image = new Image();
-                    image.MaxHeight = vm.Files[i].Images[j].Height;
-                    image.MaxWidth = vm.Files[i].Images[j].Width;
-                    image.Source = bitmap;
-                    vm.TGXImages.Add(image);
-                    bitmap.Save(vm.Files[i].FileHeader.Name+"/Bild"+j+ "Farbe" +j/ vm.Files[i].FileHeader.INumberOfPictureinFile+".png");
-
-                }
-            }
-
-            #if DEBUG
-            vm.DecodeButtonEnabled = true;
-            #endif
-
+            
         }
 
         private void Button_ClickConvertBack(object sender, RoutedEventArgs e)

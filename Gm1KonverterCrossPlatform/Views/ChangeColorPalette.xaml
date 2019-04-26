@@ -1,0 +1,21 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+         xmlns:controls="clr-namespace:ThemeEditor.Controls.ColorPicker;assembly=ThemeEditor.Controls.ColorPicker"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        Width="700"
+        Height="400"
+        x:Class="Gm1KonverterCrossPlatform.HelperClasses.Views.ChangeColorPalette"
+        Title="ChangeColorPalette">
+  <StackPanel >
+    <TextBlock HorizontalAlignment="Center">Click on the Color u want to Change</TextBlock>
+    <Image HorizontalAlignment="Left" Name="PaletteImage" MaxWidth="640" MaxHeight="160" MinWidth="640" MinHeight="160" Margin="0" Source="{Binding ActuellColorTableChangeColorWindow}"/>
+    <Canvas HorizontalAlignment="Left" x:Name="Cnv"/>
+    <TextBlock>Here u can change the Color:</TextBlock>
+    <TextBox Name="TextBoxColor" Text="{Binding ColorAsText}"/>
+    <Button Click="Button_ClickGeneratePallete">Change Color</Button>
+    <Button Click="Button_ClickSavePalette">save</Button>
+  </StackPanel >
+  
+</Window>

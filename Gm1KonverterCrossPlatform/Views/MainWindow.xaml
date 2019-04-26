@@ -18,8 +18,17 @@
 
   <StackPanel>
     <Button Click="Button_ClickDirectory">Load GM1 Files</Button>
-    <Button IsEnabled="{Binding ConvertButtonEnabled}" Click="Button_ClickConvert">Decode GM1 Files</Button>
-    <Button IsEnabled="{Binding DecodeButtonEnabled}" Click="Button_ClickConvertBack">Code Files to GM1</Button>
+    <Button IsEnabled="{Binding ConvertButtonEnabled}" Click="Button_ClickChangeColorTable">Change Color Table</Button>
+    <Button IsEnabled="{Binding DecodeButtonEnabled}" Click="Button_ClickConvertBack">Create new GM1 with new ColorTable</Button>
+
+    <StackPanel Orientation="Horizontal">
+    
+      <Button IsEnabled="{Binding ConvertButtonEnabled}" Content="««" Width="40" Click="Button_ClickPalleteminus"/>
+      <Button IsEnabled="{Binding ConvertButtonEnabled}" Content="»»" Width="40" Click="Button_ClickPalleteplus"/>
+      <Image Source="{Binding ActuellColorTable}"/>
+      <TextBlock Text="{Binding ActualPalette}"/>
+    </StackPanel>
+  
     <ScrollViewer VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled" MaxHeight="500">
       <ItemsControl Name="Test" Items="{Binding TGXImages}">
         

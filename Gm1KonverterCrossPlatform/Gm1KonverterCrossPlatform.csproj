@@ -3,6 +3,7 @@
   <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <OutputType>Exe</OutputType>
     <TargetFrameworks>netcoreapp2.1;net461</TargetFrameworks>
+    <LangVersion>7.2</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="Models\" />
@@ -13,18 +14,36 @@
       <SubType>Designer</SubType>
     </AvaloniaResource>
     <AvaloniaResource Include="Assets\*" />
-    <AvaloniaResource Remove="HelperClasses\Views\MessageBox.xaml" />
-    <None Remove="HelperClasses\Views\MessageBox.xaml" />
+    <AvaloniaResource Remove="HelperClasses\Views\ChangeColorPalette.xaml" />
+    <AvaloniaResource Remove="HelperClasses\Views\MessageBoxWindow.xaml" />
+    <None Remove="HelperClasses\Views\ChangeColorPalette.xaml" />
+    <None Remove="HelperClasses\Views\MessageBoxWindow.xaml" />
     <Folder Include="Files\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="0.8.0" />
     <PackageReference Include="Avalonia.Desktop" Version="0.8.0" />
     <PackageReference Include="Avalonia.ReactiveUI" Version="0.8.0" />
+    <PackageReference Include="ThemeEditor.Controls.ColorPicker" Version="0.8.0" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="HelperClasses\Views\MessageBox.xaml">
+    <EmbeddedResource Include="HelperClasses\Views\MessageBoxWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Views\ChangeColorPalette.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="HelperClasses\Views\MessageBoxWindow.xaml.cs">
+      <DependentUpon>MessageBoxWindow.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Views\ChangeColorPalette.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
   </ItemGroup>
 </Project>

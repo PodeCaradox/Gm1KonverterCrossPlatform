@@ -90,9 +90,9 @@ namespace Files.Gm1Converter
 
 
         //unsafe
-        public unsafe void CreateImageFromByteArray(Palette palette, uint teamColor)
+        public unsafe void CreateImageFromByteArray(Palette palette)
         {
-            var teamcolor = (int)teamColor;
+          
             
             bmp = new WriteableBitmap(new Avalonia.PixelSize(width, height), new Avalonia.Vector(100, 100), Avalonia.Platform.PixelFormat.Bgra8888);// Bgra8888 is device-native and much faster.
             
@@ -124,7 +124,7 @@ namespace Files.Gm1Converter
                             {
                                 index = imgFileAsBytearray[bytePos];
                                 bytePos++;
-                                pixelColor = palette.ArrayPalette[teamcolor * 256 + index];
+                                pixelColor = palette.ArrayPaletten[palette.ActualPalette, index];
                                 Utility.ReadColor(pixelColor, out r, out g, out b, out a);
 
                      
@@ -159,7 +159,7 @@ namespace Files.Gm1Converter
 
                             index = imgFileAsBytearray[bytePos];
                             bytePos++;
-                            pixelColor = palette.ArrayPalette[teamcolor * 256 + index];
+                            pixelColor = palette.ArrayPaletten[palette.ActualPalette, index];
 
                             Utility.ReadColor(pixelColor, out r, out g, out b, out a);
                             colorByte = (uint)(b | (g << 8) | (r << 16) | (a << 24));

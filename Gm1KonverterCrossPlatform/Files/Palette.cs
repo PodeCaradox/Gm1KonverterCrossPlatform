@@ -1,6 +1,7 @@
 ﻿using Avalonia.Media.Imaging;
 using HelperClasses.Gm1Converter;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 
 namespace Files.Gm1Converter
@@ -8,113 +9,92 @@ namespace Files.Gm1Converter
     class Palette
     {
         public readonly static int paletteSize = 5120;
-
+        public readonly static int pixelSize = 10;
         #region Variables
-
+        
+        private int actualPalette = 0;
+        private ushort[,] arrayPaletten = new ushort[10,256];
         private byte[] arrayPaletteByte = new byte[5120];
-        private ushort[] arrayPalette = new ushort[2560];
-        private WriteableBitmap bitmap;
+        private WriteableBitmap[] bitmaps = new WriteableBitmap[10];
         #endregion
 
         #region Construtor
         public Palette(byte[] array)
         {
-
             Buffer.BlockCopy(array, GM1FileHeader.fileHeaderSize, arrayPaletteByte, 0, paletteSize);
-
-            for (int i = 0; i < arrayPalette.Length; i++)
+            for (int i = 0; i < arrayPaletten.GetLength(0); i++)
             {
-                this.arrayPalette[i] = BitConverter.ToUInt16(arrayPaletteByte, i * 2);
+                for (int j = 0; j < arrayPaletten.GetLength(1); j++)
+                {
+                    this.arrayPaletten[i,j] = BitConverter.ToUInt16(arrayPaletteByte, (i*256+j) * 2);
+                }
+                bitmaps[i] = PalleteToImG(i, pixelSize);
             }
 
-            PalleteToImG();
+            
         }
 
         #endregion
 
         #region GetterSetter
-
-        public ushort[] ArrayPalette { get => arrayPalette; set => arrayPalette = value; }
+        
         public byte[] ArrayPaletteByte { get => arrayPaletteByte; set => arrayPaletteByte = value; }
-
-        internal void DebugTestPalette()
-        {
-            for (int i = 0; i < arrayPaletteByte.Length; i++)
-            {
-                arrayPaletteByte[i] = 0b1111_1111;
-            }
-        }
-
-        public WriteableBitmap Bitmap { get => bitmap; set => bitmap = value; }
-
+        public WriteableBitmap[] Bitmaps { get => bitmaps; set => bitmaps = value; }
+        public ushort[,] ArrayPaletten { get => arrayPaletten; set => arrayPaletten = value; }
+        public int ActualPalette { get => actualPalette; set => actualPalette = value; }
+        public bool PaletteChanged { get; internal set; } = false;
 
 
         #endregion
 
         #region Methods
 
-        private unsafe void PalleteToImG()
+        internal void CalculateNewBytes()
         {
-            int y = 0;
-            int x = 0;
-            byte r, g, b, a;
-            int pixelGroesse = 16;
-            int height = 40 * pixelGroesse;//40*8
-            int width =  65 * pixelGroesse;//65*8
-  
-            bitmap = new WriteableBitmap(new Avalonia.PixelSize(width, height), new Avalonia.Vector(100, 100), Avalonia.Platform.PixelFormat.Bgra8888);// Bgra8888 is device-native and much faster.
-            var reihe = new UInt32[65];
-          
-            using (var buf = bitmap.Lock())
+            List<byte> newArray = new List<byte>();
+            for (int i = 0; i < arrayPaletten.GetLength(0); i++)
             {
-                for (int i = 0; i < arrayPalette.Length; i++)
+                for (int j = 0; j < arrayPaletten.GetLength(1); j++)
                 {
-
-
-                    Utility.ReadColor(arrayPalette[i], out r, out g, out b, out a);
-                  
-                        for (int k = 0; k < pixelGroesse; k++)
-                        {
-                            UInt32 colorByte = (UInt32)(b | (g << 8) | (r << 16) | (a << 24));
-                        reihe[i%65] = colorByte;
-                            var ptr = (uint*)buf.Address;
-                            ptr += (uint)((width * y) + x);
-                            *ptr = colorByte;
-                        x++;
-                       
-                        }
-
-                    
-                    //füge y bits hinzu für pixelGroesse
-                    //schreibt
-                    if (i % 65 == 0 && i != 0)
-                    {
-                        y++;
-                        x = 0;
-                        for (int k = 0; k < pixelGroesse - 1; k++)
-                        {
-                            for (int z = 0; z < 65; z++)
-                            {
-                                for (int t = 0; t < pixelGroesse; t++)
-                                {
-
-                                    var ptr = (uint*)buf.Address;
-                                    ptr += (uint)((width * y) + x);
-                                    *ptr = reihe[z];
-                                    x++;
-                                }
-                            }
-                            y++;
-                            x = 0;
-
-                        }
-
-                    }
-
-
+                    newArray.AddRange(BitConverter.GetBytes(arrayPaletten[i, j]));
                 }
             }
 
+            arrayPaletteByte = newArray.ToArray();
+        }
+
+        public WriteableBitmap GetBitmap(int index,int pixelsize)
+        {
+            return PalleteToImG(index,pixelsize);
+        }
+
+        private unsafe WriteableBitmap PalleteToImG(int palette,int pixelSize)
+        {
+                byte r, g, b, a;
+                int height = 8 * pixelSize;
+                int width = 32 * pixelSize;
+                UInt32 colorByte=0;
+                WriteableBitmap bitmap = new WriteableBitmap(new Avalonia.PixelSize(width, height), new Avalonia.Vector(100, 100), Avalonia.Platform.PixelFormat.Bgra8888);// Bgra8888 is device-native and much faster.
+                using (var buf = bitmap.Lock())
+                {
+                    for (int y = 0; y < height; y++)
+                    {
+                        for (int x = 0; x < width; x++)
+                        {
+                            if (x % pixelSize==0)
+                            {
+                                var pos = y/pixelSize * width/ pixelSize + x/ pixelSize;
+                                Utility.ReadColor(arrayPaletten[palette, pos], out r, out g, out b, out a);
+                                colorByte = (UInt32)(b | (g << 8) | (r << 16) | (a << 24));
+                            }
+                            var ptr = (uint*)buf.Address;
+                            ptr += (uint)((width * y) + x);
+                            *ptr = colorByte;
+                        }
+                   
+                    }
+                }
+            return bitmap;
         }
 
         #endregion

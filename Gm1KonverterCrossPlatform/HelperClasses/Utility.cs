@@ -41,7 +41,6 @@ namespace HelperClasses.Gm1Converter
             List<uint> colors = new List<uint>();
             using (var buf = bmp.Lock())
             {
-                byte r, g, b;
                 for (int y = 0; y < height; y++)
                 {
                     for (int x = 0; x < width; x++)
@@ -57,7 +56,7 @@ namespace HelperClasses.Gm1Converter
             return colors;
         }
 
-        static int iasdasd = 0;
+      
       //todo Fehler falls 2 gleichfarbige und dan das letzte byte, siehe letztes bild
         /// <summary>
         /// Encoding back its not same as stronghold it do but it works so it is fine
@@ -71,17 +70,15 @@ namespace HelperClasses.Gm1Converter
         internal static byte[] ImgToGM1ByteArray(List<uint> colors, ushort width, ushort height,byte[] oldarray,Palette palette)
         {
 
-            iasdasd++;
+           
             List<byte> array = new List<byte>();
             uint countSamePixel = 0;
 
 
-            //3 bytes
-            byte token = 0;
-            // value 1-32
-            byte length = 0;
-
-            byte header = 0;
+            
+      
+            byte length = 0;  // value 1-32  | 0 will be 1
+            byte header = 0;   //3 bytes
             bool transparentPixelString = false;
             bool repeatingPixels  = false;
             bool streamofpixels = false;
@@ -97,10 +94,6 @@ namespace HelperClasses.Gm1Converter
                     var offset = i * width;
                     for (int z = j; z < width-1; z++)
                     {
-                        if (iasdasd >= 16&&offset + j >= 3500)
-                        {
-
-                        }
                         if (colors[z + offset] == TransparentColorByte)//newline or Transparent-Pixel-String
                         {
                             if (repeatingPixels|| streamofpixels)
@@ -197,7 +190,7 @@ namespace HelperClasses.Gm1Converter
                             {
                                 var color = colors[j + zaehler + offset];
                                 var colorToFind = EncodeColorTo2Byte(color);
-                                array.Add(FindColorInPalette(palette, colorToFind));
+                                array.Add(FindColorInPalette(palette, colorToFind,0));
                                 dummy--;
                                 zaehler++;
                             }
@@ -210,7 +203,7 @@ namespace HelperClasses.Gm1Converter
                             {
                                 var color = colors[j + zaehler + offset];
                                 var colorToFind = EncodeColorTo2Byte(color);
-                                array.Add(FindColorInPalette(palette, colorToFind));
+                                array.Add(FindColorInPalette(palette, colorToFind,0));
                                 zaehler++;
                             }
                         }
@@ -224,7 +217,7 @@ namespace HelperClasses.Gm1Converter
                         length = (byte)(countSamePixel - 1);//-1 because the test is pixel perfect in the loop and 0 == 1 in the encoding
                         array.Add((byte)(header | length));
                         var colorToFind = EncodeColorTo2Byte(colors[j + offset]);
-                        array.Add(FindColorInPalette(palette, colorToFind));
+                        array.Add(FindColorInPalette(palette, colorToFind,0));
                     }
 
                     j += (int)countSamePixel - 1;//-1 besauce loop +1
@@ -236,21 +229,21 @@ namespace HelperClasses.Gm1Converter
             return array.ToArray();
         }
 
-        private static byte FindColorInPalette(Palette palette,UInt16 colorToFind)
+        private static byte FindColorInPalette(Palette palette,int teamcolor, UInt16 colorToFind)
         {
             byte offsetPalette = 0;
-            for (byte colorPalette = 0; colorPalette < 255; colorPalette++)
+            for (int colorPalette = 0; colorPalette < palette.ArrayPaletten.GetLength(0); colorPalette++)
             {
-                if (palette.ArrayPalette[colorPalette] == colorToFind)
+                if (palette.ArrayPaletten[teamcolor, colorPalette] == colorToFind)
                 {
-                    offsetPalette = colorPalette;
+                    offsetPalette = (byte)colorPalette;
                 }
             }
             return offsetPalette;
         }
 
 
-        private static UInt16 EncodeColorTo2Byte(uint colorAsInt32)
+        public static UInt16 EncodeColorTo2Byte(uint colorAsInt32)
         {
             byte[] arrray = { (byte)(204), (byte)196 };
             var testtt=BitConverter.ToUInt16(arrray, 0);
