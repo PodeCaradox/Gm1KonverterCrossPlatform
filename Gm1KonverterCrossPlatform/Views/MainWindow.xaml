@@ -4,6 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        Width="1000"
+        Height="500"
         x:Class="Gm1KonverterCrossPlatform.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
         
@@ -14,20 +16,18 @@
     </Design.DataContext>
 
 
-  <StackPanel >
+  <StackPanel>
     <Button Click="Button_ClickDirectory">Load GM1 Files</Button>
     <Button IsEnabled="{Binding ConvertButtonEnabled}" Click="Button_ClickConvert">Decode GM1 Files</Button>
-    <Button IsEnabled="{Binding ConvertButtonEnabled}" Click="Button_ClickConvertBack">Code Files to GM1</Button>
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
-      <ItemsControl Name="Test" MaxHeight="450" DataContext="{Binding TGXImages}">
+    <Button IsEnabled="{Binding DecodeButtonEnabled}" Click="Button_ClickConvertBack">Code Files to GM1</Button>
+    <ScrollViewer VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled" MaxHeight="500">
+      <ItemsControl Name="Test" Items="{Binding TGXImages}">
         
         <ItemsControl.ItemsPanel>
           <ItemsPanelTemplate>
             <WrapPanel />
           </ItemsPanelTemplate>
-
         </ItemsControl.ItemsPanel>
-       
       </ItemsControl>
     </ScrollViewer>
 

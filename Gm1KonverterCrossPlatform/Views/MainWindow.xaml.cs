@@ -111,8 +111,8 @@ namespace Gm1KonverterCrossPlatform.Views
                     var bitmap = vm.Files[i].Images[j].bmp;
 
                     Image image = new Image();
-                    image.MaxHeight = 100;
-                    image.MaxWidth = 100;
+                    image.MaxHeight = vm.Files[i].Images[j].Height;
+                    image.MaxWidth = vm.Files[i].Images[j].Width;
                     image.Source = bitmap;
                     vm.TGXImages.Add(image);
                     bitmap.Save(vm.Files[i].FileHeader.Name+"/Bild"+j+ "Farbe" +j/ vm.Files[i].FileHeader.INumberOfPictureinFile+".png");
@@ -120,7 +120,10 @@ namespace Gm1KonverterCrossPlatform.Views
                 }
             }
 
-           
+            #if DEBUG
+            vm.DecodeButtonEnabled = true;
+            #endif
+
         }
 
         private void Button_ClickConvertBack(object sender, RoutedEventArgs e)

@@ -57,7 +57,7 @@ namespace HelperClasses.Gm1Converter
             return colors;
         }
 
-        
+        static int iasdasd = 0;
       //todo Fehler falls 2 gleichfarbige und dan das letzte byte, siehe letztes bild
         /// <summary>
         /// Encoding back its not same as stronghold it do but it works so it is fine
@@ -70,6 +70,8 @@ namespace HelperClasses.Gm1Converter
         /// <returns></returns>
         internal static byte[] ImgToGM1ByteArray(List<uint> colors, ushort width, ushort height,byte[] oldarray,Palette palette)
         {
+
+            iasdasd++;
             List<byte> array = new List<byte>();
             uint countSamePixel = 0;
 
@@ -95,7 +97,7 @@ namespace HelperClasses.Gm1Converter
                     var offset = i * width;
                     for (int z = j; z < width-1; z++)
                     {
-                        if (offset + j >= 5200)
+                        if (iasdasd >= 16&&offset + j >= 3500)
                         {
 
                         }
@@ -230,9 +232,7 @@ namespace HelperClasses.Gm1Converter
                 }
 
             }
-
-            test();
-
+            
             return array.ToArray();
         }
 
@@ -249,23 +249,6 @@ namespace HelperClasses.Gm1Converter
             return offsetPalette;
         }
 
-        private static void test()
-        {
-            //blue
-            //0b0000_0000_0001_1111
-            //green
-            //0b0000_0011_1110_0000
-            //red
-            //0b0111_1100_0000_0000
-
-            byte r, g, b;
-            ReadColor(38087, out  r, out  g, out  b);
-            var colorByte = (UInt32)(b | (g << 8) | (r << 16) | (255 << 24));
-
-            var colorBytevergleich = EncodeColorTo2Byte(colorByte);
-
-
-        }
 
         private static UInt16 EncodeColorTo2Byte(uint colorAsInt32)
         {
@@ -281,7 +264,7 @@ namespace HelperClasses.Gm1Converter
             return color;
         }
 
-        public static void ReadColor(UInt16 pixel, out byte r, out byte g, out byte b)
+        public static void ReadColor(UInt16 pixel, out byte r, out byte g, out byte b, out byte a)
         {
             //blue
             //0b0000_0000_0001_1111
@@ -292,11 +275,10 @@ namespace HelperClasses.Gm1Converter
             //alpha
             //0b1000_0000_0000_0000
 
-            byte a = (byte)((pixel >> 15) & 0b1);
+            a = (byte)((((pixel >> 15) & 0b0000_0001)==1)?255:0);
             r = (byte)(((pixel >> 10) & 0b11111) << 3);
             g = (byte)(((pixel >> 5) & 0b11111) << 3);
             b = (byte)((pixel & 0b11111) << 3);
-            var colorByte = (UInt32)(b | (g << 8) | (r << 16) | (255 << 24));
             //r = (byte)(r | (r >> 5));
             //g = (byte)(g | (g >> 5));
             //b = (byte)(b | (b >> 5));

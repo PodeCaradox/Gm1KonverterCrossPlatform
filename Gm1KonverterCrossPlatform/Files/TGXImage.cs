@@ -100,7 +100,7 @@ namespace Files.Gm1Converter
             {
                 int x = 0;
                 int y = 0;
-                byte r, g, b;
+                byte r, g, b, a;
                 for (int bytePos = 0; bytePos < imgFileAsBytearray.Length;)
                 {
             
@@ -125,10 +125,10 @@ namespace Files.Gm1Converter
                                 index = imgFileAsBytearray[bytePos];
                                 bytePos++;
                                 pixelColor = palette.ArrayPalette[teamcolor * 256 + index];
-                                Utility.ReadColor(pixelColor, out r, out g, out b);
+                                Utility.ReadColor(pixelColor, out r, out g, out b, out a);
 
                      
-                                colorByte = (UInt32)(b | (g << 8) | (r << 16) | (255 << 24));
+                                colorByte = (UInt32)(b | (g << 8) | (r << 16) | (a << 24));
                                 var ptr = (uint*)buf.Address;
                                 ptr += (uint)((width * y) + x);
                                 *ptr = colorByte;
@@ -161,8 +161,8 @@ namespace Files.Gm1Converter
                             bytePos++;
                             pixelColor = palette.ArrayPalette[teamcolor * 256 + index];
 
-                            Utility.ReadColor(pixelColor, out r, out g, out b);
-                            colorByte = (uint)(b | (g << 8) | (r << 16) | (255 << 24));
+                            Utility.ReadColor(pixelColor, out r, out g, out b, out a);
+                            colorByte = (uint)(b | (g << 8) | (r << 16) | (a << 24));
                             for (byte i = 0; i < length; i++)
                             {
                                 var ptr = (uint*)buf.Address;

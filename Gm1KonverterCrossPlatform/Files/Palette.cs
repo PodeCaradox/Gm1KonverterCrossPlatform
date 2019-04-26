@@ -57,7 +57,7 @@ namespace Files.Gm1Converter
         {
             int y = 0;
             int x = 0;
-            byte r, g, b;
+            byte r, g, b, a;
             int pixelGroesse = 16;
             int height = 40 * pixelGroesse;//40*8
             int width =  65 * pixelGroesse;//65*8
@@ -71,11 +71,11 @@ namespace Files.Gm1Converter
                 {
 
 
-                    Utility.ReadColor(arrayPalette[i], out r, out g, out b);
+                    Utility.ReadColor(arrayPalette[i], out r, out g, out b, out a);
                   
                         for (int k = 0; k < pixelGroesse; k++)
                         {
-                            UInt32 colorByte = (UInt32)(b | (g << 8) | (r << 16) | (255 << 24));
+                            UInt32 colorByte = (UInt32)(b | (g << 8) | (r << 16) | (a << 24));
                         reihe[i%65] = colorByte;
                             var ptr = (uint*)buf.Address;
                             ptr += (uint)((width * y) + x);

@@ -17,6 +17,15 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             set => this.RaiseAndSetIfChanged(ref convertButtonEnabled, value);
         }
 
+        private bool decodeButtonEnabled = false;
+        public bool DecodeButtonEnabled
+        {
+
+            get => decodeButtonEnabled;
+            set => this.RaiseAndSetIfChanged(ref decodeButtonEnabled, value);
+        }
+
+        
         internal ObservableCollection<Image> images = new ObservableCollection<Image>();
         internal ObservableCollection<Image> TGXImages
         {
