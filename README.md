@@ -10,6 +10,7 @@ First picture below show the exported Color Palette, this pixel are used to desc
 The other Pictures are the first exported Animated tiles from this file.
 
 If u want to try the programm the files will be at the Gm1KonverterCrossPlatform folder.
+![Download](https://github.com/Gaaammmler/Gm1KonverterCrossPlatform/releases)
 
 Deutsch
 ---------
@@ -20,6 +21,7 @@ Das erste Bild unten zeigt die exportierte Farb Palette, diese Pixel wurden in d
 Die anderen Bilder sind die ersten Animierten tiles dieser Datei.
 
 Wen du das Programm testen möchtest die dekodierten Dateien werden im Gm1KonverterCrossPlatform Ordner abgelegt.
+![Download](https://github.com/Gaaammmler/Gm1KonverterCrossPlatform/releases)
 
 ![Palette](https://github.com/Gaaammmler/Gm1KonverterCrossPlatform/blob/master/anim_armourer.gm1/Palette.png)
 
