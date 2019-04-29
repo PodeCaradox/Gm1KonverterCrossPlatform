@@ -9,13 +9,14 @@ using HelperClasses.Gm1Converter;
 using Gm1KonverterCrossPlatform.HelperClasses.Views;
 using System.IO;
 using System;
+using Gm1KonverterCrossPlatform.HelperClasses;
 
 namespace Gm1KonverterCrossPlatform.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
 
-        
+        private UserConfig userConfig;
 
         private String colorAsText = "";
         public String ColorAsText
@@ -29,7 +30,7 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             }
         }
 
-        private String actualPalette = "Actual Palette 1";
+        private String actualPalette = "Palette 1";
         public String ActualPalette
         {
 
@@ -37,11 +38,56 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             set => this.RaiseAndSetIfChanged(ref actualPalette, value);
         }
 
-        private bool convertButtonEnabled = false;
-        public bool ConvertButtonEnabled {
 
-            get => convertButtonEnabled;
-            set => this.RaiseAndSetIfChanged(ref convertButtonEnabled, value);
+
+     
+
+        internal void LoadStrongholdFiles()
+        {
+            if (!String.IsNullOrEmpty( userConfig.CrusaderPath))
+            {
+                StrongholdFiles = Utility.GetFileNames(userConfig.CrusaderPath,"*.gm1");
+          
+            }
+                
+        }
+
+
+
+        internal String[] strongholdFiles;
+        internal String[] StrongholdFiles
+        {
+            get => strongholdFiles;
+            set => this.RaiseAndSetIfChanged(ref strongholdFiles, value);
+        }
+
+        private bool buttonsEnabled = false;
+        public bool ButtonsEnabled
+        {
+
+            get => buttonsEnabled;
+            set => this.RaiseAndSetIfChanged(ref buttonsEnabled, value);
+        }
+        
+
+
+        private bool openFolderAfterExport = false;
+        public bool OpenFolderAfterExport
+        {
+
+            get => openFolderAfterExport;
+            set {
+                this.RaiseAndSetIfChanged(ref openFolderAfterExport, value);
+                userConfig.OpenFolderAfterExport = value;
+                    }
+        }
+
+        private bool replaceWithSaveFile = false;
+        public bool ReplaceWithSaveFile
+        {
+
+            get => replaceWithSaveFile;
+            set => this.RaiseAndSetIfChanged(ref replaceWithSaveFile, value);
         }
 
         private bool decodeButtonEnabled = false;
@@ -72,32 +118,31 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             get => images;
             set => this.RaiseAndSetIfChanged(ref images, value);
         }
-        internal List<DecodedFile> Files { get; set; } = new List<DecodedFile>();
+        internal DecodedFile File { get; set; }
+        public UserConfig UserConfig { get => userConfig; set => userConfig = value; }
 
         #region Methods
 
-        internal void DecodeData(string[] pathToFiles, Window window)
+        internal void DecodeData(string fileName, Window window)
         {
-            Files = new List<DecodedFile>();
+          
             //Convert Selected file
-            foreach (var file in pathToFiles)
-            {
-                var decodedFile = new DecodedFile();
-                if (!decodedFile.DecodeGm1File(Utility.FileToByteArray(file), System.IO.Path.GetFileName(file)))
+            
+                 File = new DecodedFile();
+                if (!File.DecodeGm1File(Utility.FileToByteArray(userConfig.CrusaderPath+"\\"+ fileName), fileName))
                 {
-                    MessageBox messageBox = new MessageBox(MessageBox.MessageTyp.Info, "Only Animation Tiles are Supported yet. \nError from " + System.IO.Path.GetFileName(file));
+                    MessageBoxWindow messageBox = new MessageBoxWindow(MessageBoxWindow.MessageTyp.Info, "Only Animation Tiles are Supported yet. \nError from " + fileName);
                     messageBox.ShowDialog(window);
                     return;
                 }
 
-                Files.Add(decodedFile);
-            }
+              
+            
 
-            for (int i = 0; i < Files.Count; i++)
-            {
-                if (!Directory.Exists(Files[i].FileHeader.Name))
+            
+                if (!Directory.Exists(userConfig.CrusaderPath + File.FileHeader.Name))
                 {
-                    Directory.CreateDirectory(Files[i].FileHeader.Name);
+                    Directory.CreateDirectory(userConfig.CrusaderPath + File.FileHeader.Name);
                 }
 
                 //Palette
@@ -108,7 +153,7 @@ namespace Gm1KonverterCrossPlatform.ViewModels
 
                 ShowImgToWindow();
               
-            }
+            
 
 
           
@@ -117,54 +162,54 @@ namespace Gm1KonverterCrossPlatform.ViewModels
         private void ShowImgToWindow()
         {
             TGXImages = new ObservableCollection<Image>();
-            for (int j = 0; j < Files[0].FileHeader.INumberOfPictureinFile; j++)
+            for (int j = 0; j < File.FileHeader.INumberOfPictureinFile; j++)
             {
-                var bitmap = Files[0].Images[j].bmp;
+                var bitmap = File.Images[j].Bitmap;
 
                 Image image = new Image();
-                image.MaxHeight = Files[0].Images[j].Height;
-                image.MaxWidth = Files[0].Images[j].Width;
+                image.MaxHeight = File.Images[j].Height;
+                image.MaxWidth = File.Images[j].Width;
                 image.Source = bitmap;
                 TGXImages.Add(image);
                 //safe later is in progress
                 //bitmap.Save(Files[i].FileHeader.Name + "/"+ Files[i].Palette.ActualPalette+ "Bild" + j + ".png");
 
             }
-            ActuellColorTable = Files[0].Palette.Bitmaps[Files[0].Palette.ActualPalette];
+            ActuellColorTable = File.Palette.Bitmaps[File.Palette.ActualPalette];
         }
 
         internal void ChangePalette(int number)
         {
             if (number>0)
             {
-                    if (Files[0].Palette.ActualPalette+ number>9)
+                    if (File.Palette.ActualPalette+ number>9)
                     {
-                    Files[0].Palette.ActualPalette = 0;
+                    File.Palette.ActualPalette = 0;
                     }
                     else
                     {
-                    Files[0].Palette.ActualPalette += number;
+                    File.Palette.ActualPalette += number;
                     }
             }
             else
             {
-                    if (Files[0].Palette.ActualPalette + number < 0)
+                    if (File.Palette.ActualPalette + number < 0)
                     {
-                    Files[0].Palette.ActualPalette = 9;
+                    File.Palette.ActualPalette = 9;
                     }
                     else
                     {
-                    Files[0].Palette.ActualPalette += number;
+                    File.Palette.ActualPalette += number;
                     }
             }
-            ActualPalette = "Actual Palette " + (Files[0].Palette.ActualPalette+1);
-            Files[0].DecodeGm1File(Files[0].FileArray, Files[0].FileHeader.Name);
+            ActualPalette = "Palette " + (File.Palette.ActualPalette+1);
+            File.DecodeGm1File(File.FileArray, File.FileHeader.Name);
             ShowImgToWindow();
         }
 
         internal void GeneratePaletteAndImgNew()
         {
-            Files[0].DecodeGm1File(Files[0].FileArray, Files[0].FileHeader.Name);
+            File.DecodeGm1File(File.FileArray, File.FileHeader.Name);
             ShowImgToWindow();
         }
 

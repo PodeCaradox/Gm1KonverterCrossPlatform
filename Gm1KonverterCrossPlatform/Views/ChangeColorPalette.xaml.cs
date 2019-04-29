@@ -22,7 +22,7 @@ namespace Gm1KonverterCrossPlatform.HelperClasses.Views
             this.InitializeComponent();
             #if DEBUG
             this.AttachDevTools();
-#endif
+            #endif
             this.Closing += WindowClosed;
             image = this.Get<Image>("PaletteImage");
             canvas = this.Get<Canvas>("Cnv");
@@ -71,7 +71,7 @@ namespace Gm1KonverterCrossPlatform.HelperClasses.Views
 
             var vm = DataContext as MainWindowViewModel;
             positionInPalette = (int)newPos.X / pixelsize + (int)(newPos.Y) / pixelsize * 32;
-            var color = vm.Files[0].Palette.ArrayPaletten[vm.Files[0].Palette.ActualPalette, positionInPalette];
+            var color = vm.File.Palette.ArrayPaletten[vm.File.Palette.ActualPalette, positionInPalette];
             byte r, g, b, a;
             Utility.ReadColor(color, out r, out g, out b, out a);
             vm.ColorAsText = "#" + a.ToString("X2") + r.ToString("X2") + g.ToString("X2") + b.ToString("X2");
@@ -87,8 +87,8 @@ namespace Gm1KonverterCrossPlatform.HelperClasses.Views
             var color = Color.Parse(vm.ColorAsText).ToUint32();
             var newColor=Utility.EncodeColorTo2Byte(color);
 
-            vm.Files[0].Palette.ArrayPaletten[vm.Files[0].Palette.ActualPalette, positionInPalette] = newColor;
-            vm.ActuellColorTableChangeColorWindow = vm.Files[0].Palette.GetBitmap(vm.Files[0].Palette.ActualPalette, pixelsize);
+            vm.File.Palette.ArrayPaletten[vm.File.Palette.ActualPalette, positionInPalette] = newColor;
+            vm.ActuellColorTableChangeColorWindow = vm.File.Palette.GetBitmap(vm.File.Palette.ActualPalette, pixelsize);
 
 
         }
@@ -96,7 +96,7 @@ namespace Gm1KonverterCrossPlatform.HelperClasses.Views
         private void Button_ClickSavePalette(object sender, RoutedEventArgs e)
         {
             var vm = DataContext as MainWindowViewModel;
-            vm.Files[0].Palette.PaletteChanged = true;
+            vm.File.Palette.PaletteChanged = true;
 
             this.Close();
         }
@@ -104,9 +104,9 @@ namespace Gm1KonverterCrossPlatform.HelperClasses.Views
         private void WindowClosed(object sender, CancelEventArgs e)
         {
             var vm = DataContext as MainWindowViewModel;
-            if (!vm.Files[0].Palette.PaletteChanged)
+            if (!vm.File.Palette.PaletteChanged)
             {
-                vm.Files[0].Palette.ArrayPaletten = safeList;
+                vm.File.Palette.ArrayPaletten = safeList;
             }
          
         }
@@ -114,8 +114,8 @@ namespace Gm1KonverterCrossPlatform.HelperClasses.Views
         public void LoadPalette()
         {
             var vm = DataContext as MainWindowViewModel;
-            safeList =(ushort[,]) vm.Files[0].Palette.ArrayPaletten.Clone();
-            vm.ActuellColorTableChangeColorWindow = vm.Files[0].Palette.GetBitmap(vm.Files[0].Palette.ActualPalette, pixelsize);
+            safeList =(ushort[,]) vm.File.Palette.ArrayPaletten.Clone();
+            vm.ActuellColorTableChangeColorWindow = vm.File.Palette.GetBitmap(vm.File.Palette.ActualPalette, pixelsize);
             
         }
 

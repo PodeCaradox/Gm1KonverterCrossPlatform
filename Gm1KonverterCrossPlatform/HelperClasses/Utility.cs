@@ -6,6 +6,9 @@ using System.Drawing;
 using Color = System.Drawing.Color;
 using Avalonia.Media.Imaging;
 using Files.Gm1Converter;
+using Image = SixLabors.ImageSharp.Image;
+using Gm1KonverterCrossPlatform.HelperClasses.Views;
+using SixLabors.ImageSharp.Formats;
 
 namespace HelperClasses.Gm1Converter
 {
@@ -36,14 +39,14 @@ namespace HelperClasses.Gm1Converter
             File.WriteAllBytes(fileName, array);
         }
 
-        public unsafe static List<uint> ImgToColors(WriteableBitmap bmp,ushort width, ushort height)
+        public unsafe static List<uint> ImgToColors(WriteableBitmap bmp,ushort width, ushort height, int pixelsize=1)
         {
             List<uint> colors = new List<uint>();
             using (var buf = bmp.Lock())
             {
-                for (int y = 0; y < height; y++)
+                for (int y = 0; y < height; y += pixelsize)
                 {
-                    for (int x = 0; x < width; x++)
+                    for (int x = 0; x < width; x += pixelsize)
                     {
                         var ptr = (uint*)buf.Address;
                         ptr += (uint)((width * y) + x);
@@ -56,8 +59,34 @@ namespace HelperClasses.Gm1Converter
             return colors;
         }
 
-      
-      //todo Fehler falls 2 gleichfarbige und dan das letzte byte, siehe letztes bild
+
+        public static List<UInt16> LoadImage(String filename,int width,int height,int pixelsize = 1)
+        {
+            List<UInt16> colors = new List<UInt16>();
+            try
+            {
+                var image = Image.Load(filename);
+                for (int i = 0; i < height; i += pixelsize)
+                {
+                    for (int j = 0; j < width; j += pixelsize) //Bgra8888
+                    {
+                        var pixel = image[j, i];
+                        colors.Add(EncodeColorTo2Byte((uint)(pixel.B | pixel.G << 8 | pixel.R << 16 | byte.MaxValue << 24)));
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBoxWindow messageBox = new MessageBoxWindow(MessageBoxWindow.MessageTyp.Info, e.Message);
+                messageBox.Show();
+            }
+            
+           
+            return colors;
+        }
+
+
+        //todo Fehler falls 2 gleichfarbige und dan das letzte byte, siehe letztes bild
         /// <summary>
         /// Encoding back its not same as stronghold it do but it works so it is fine
         /// </summary>
@@ -279,6 +308,12 @@ namespace HelperClasses.Gm1Converter
 
         #endregion
 
-
+        public static string[] GetFileNames(string path, string filter)
+        {
+            string[] files = Directory.GetFiles(path, filter);
+            for (int i = 0; i < files.Length; i++)
+                files[i] = Path.GetFileName(files[i]);
+            return files;
+        }
     }
 }

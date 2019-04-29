@@ -11,34 +11,73 @@
         
         Title="Gm1KonverterCrossPlatform">
 
-    <Design.DataContext>
-        <vm:MainWindowViewModel/>
-    </Design.DataContext>
+  <Design.DataContext>
+    <vm:MainWindowViewModel/>
+  </Design.DataContext>
 
 
-  <StackPanel>
-    <Button Click="Button_ClickDirectory">Load GM1 Files</Button>
-    <Button IsEnabled="{Binding ConvertButtonEnabled}" Click="Button_ClickChangeColorTable">Change Color Table</Button>
-    <Button IsEnabled="{Binding DecodeButtonEnabled}" Click="Button_ClickConvertBack">Create new GM1 with new ColorTable</Button>
-
-    <StackPanel Orientation="Horizontal">
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition />
+    </Grid.RowDefinitions>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="200"/>
+      <ColumnDefinition Width="*"/>
+    </Grid.ColumnDefinitions>
+    <Menu DockPanel.Dock="Top" Grid.Row="0" Grid.ColumnSpan="2" >
+      <MenuItem Header="_File">
+        <MenuItem Header="_Create new GM1" Name="CreatenewGM1MenueItem" IsEnabled="{Binding ButtonsEnabled}"/>
+        <Separator/>
+        <MenuItem Header="_Replace with Saved GM1 File" Name="ReplacewithSavedGM1FileMenueItem" IsEnabled="{Binding ReplaceWithSaveFile}"/>
     
-      <Button IsEnabled="{Binding ConvertButtonEnabled}" Content="««" Width="40" Click="Button_ClickPalleteminus"/>
-      <Button IsEnabled="{Binding ConvertButtonEnabled}" Content="»»" Width="40" Click="Button_ClickPalleteplus"/>
-      <Image Source="{Binding ActuellColorTable}"/>
-      <TextBlock Text="{Binding ActualPalette}"/>
-    </StackPanel>
-  
-    <ScrollViewer VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled" MaxHeight="500">
-      <ItemsControl Name="Test" Items="{Binding TGXImages}">
-        
-        <ItemsControl.ItemsPanel>
-          <ItemsPanelTemplate>
-            <WrapPanel />
-          </ItemsPanelTemplate>
-        </ItemsControl.ItemsPanel>
-      </ItemsControl>
-    </ScrollViewer>
+      </MenuItem>
+      <MenuItem Header="_Edit">
+        <MenuItem Header="Export Colortable" Name="ExportColortableMenueItem" IsEnabled="{Binding ButtonsEnabled}"/>
+        <MenuItem Header="Import Colortable" Name="ImportColortableMenueItem" IsEnabled="{Binding ButtonsEnabled}"/>
+        <Separator/>
+        <MenuItem Header="Export Images" Name="ExportImagesMenueItem" IsEnabled="{Binding ButtonsEnabled}"/>
+      </MenuItem>
+      <MenuItem Header="_Options">
+        <MenuItem Header="_Workfolder" Name="WorkfolderMenueItem"/>
+        <Separator/>
+        <MenuItem Header="_Crusader GM1 Folder" Name="CrusaderfolderMenueItem"/>
+        <Separator/>
+        <CheckBox Content="Open Folder after Export" Name="UserConfigOpenFolderafterExport" IsChecked="{Binding OpenFolderAfterExport}"/>
+      </MenuItem>
+    </Menu>
+   
+      <ListBox Items="{Binding StrongholdFiles}" Grid.Row="1" Grid.Column="0" SelectionMode="Single" Name="Gm1FilesSelector"/>
 
-  </StackPanel>
+    <StackPanel Grid.Column="2" Grid.Row="2">
+      <Button IsEnabled="{Binding ButtonsEnabled}" Click="Button_ClickChangeColorTable">Change Color Table</Button>
+
+      <StackPanel Orientation="Horizontal">
+
+        <Button IsEnabled="{Binding ButtonsEnabled}" Content="««" Width="40" Click="Button_ClickPalleteminus"/>
+        <Button IsEnabled="{Binding ButtonsEnabled}" Content="»»" Width="40" Click="Button_ClickPalleteplus"/>
+        <Image Source="{Binding ActuellColorTable}"/>
+        <TextBlock Text="{Binding ActualPalette}"/>
+      </StackPanel>
+
+      <ScrollViewer VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled" MaxHeight="350" Height="350"  >
+        <ItemsControl Items="{Binding TGXImages}">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <WrapPanel Margin="5"/>
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+        </ItemsControl>
+      </ScrollViewer>
+    </StackPanel>
+  </Grid>
+
+
+
+
+
+
+
+
+
 </Window>

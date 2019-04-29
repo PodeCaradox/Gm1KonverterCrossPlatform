@@ -10,8 +10,10 @@ namespace Files.Gm1Converter
     {
         public readonly static int paletteSize = 5120;
         public readonly static int pixelSize = 10;
+        public readonly static ushort width = 32;
+        public readonly static ushort height = 8;
         #region Variables
-        
+
         private int actualPalette = 0;
         private ushort[,] arrayPaletten = new ushort[10,256];
         private byte[] arrayPaletteByte = new byte[5120];
@@ -30,8 +32,6 @@ namespace Files.Gm1Converter
                 }
                 bitmaps[i] = PalleteToImG(i, pixelSize);
             }
-
-            
         }
 
         #endregion
@@ -44,7 +44,13 @@ namespace Files.Gm1Converter
         public int ActualPalette { get => actualPalette; set => actualPalette = value; }
         public bool PaletteChanged { get; internal set; } = false;
 
-
+        public void SetPaleteUInt(int index,ushort[] array)
+        {
+            for (int i = 0; i < arrayPaletten.GetLength(1); i++)
+            {
+                arrayPaletten[index, i] = array[i];
+            }
+        }
         #endregion
 
         #region Methods
@@ -96,6 +102,12 @@ namespace Files.Gm1Converter
                 }
             return bitmap;
         }
+
+        private void BitmapToColorTable(int index,List<uint> colors)
+        {
+
+        }
+
 
         #endregion
 

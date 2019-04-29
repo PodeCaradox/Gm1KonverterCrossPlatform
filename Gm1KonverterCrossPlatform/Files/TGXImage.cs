@@ -82,8 +82,10 @@ namespace Files.Gm1Converter
         public UInt32 SizeinByteArray { get => sizeinByteArray; set => sizeinByteArray = value; }
         public byte[] ImgFileAsBytearray { get => imgFileAsBytearray; set => imgFileAsBytearray = value; }
 
+        private WriteableBitmap bmp;
+        public WriteableBitmap Bitmap { get => bmp; set => bmp = value; }
 
-        public WriteableBitmap bmp;
+     
         #endregion
 
         #region Methods
@@ -92,8 +94,8 @@ namespace Files.Gm1Converter
         //unsafe
         public unsafe void CreateImageFromByteArray(Palette palette)
         {
-          
-            
+
+
             bmp = new WriteableBitmap(new Avalonia.PixelSize(width, height), new Avalonia.Vector(100, 100), Avalonia.Platform.PixelFormat.Bgra8888);// Bgra8888 is device-native and much faster.
             
             using (var buf = bmp.Lock())
@@ -137,6 +139,7 @@ namespace Files.Gm1Converter
                             }
                             break;
                         case 4://Newline
+                            colorByte = Utility.TransparentColorByte;
                             for (byte i = 0; i < this.width; i++)
                             {
                                 if (x >= this.width || y >= this.height)
@@ -173,7 +176,7 @@ namespace Files.Gm1Converter
                             }
                             break;
                         case 1://Transparent-Pixel-String 
-
+                            colorByte = Utility.TransparentColorByte;
                             for (byte i = 0; i < length; i++)
                             {
 
@@ -200,7 +203,7 @@ namespace Files.Gm1Converter
        
         internal void ConvertImageToByteArray(Palette palette)
         {
-            var colors = Utility.ImgToColors(bmp,width,height);
+            var colors = Utility.ImgToColors(bmp, width,height);
             imgFileAsBytearray = Utility.ImgToGM1ByteArray(colors,width,height, imgFileAsBytearray, palette);
             sizeinByteArray = (uint)imgFileAsBytearray.Length;
         }

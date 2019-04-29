@@ -24,7 +24,9 @@
     <PackageReference Include="Avalonia" Version="0.8.0" />
     <PackageReference Include="Avalonia.Desktop" Version="0.8.0" />
     <PackageReference Include="Avalonia.ReactiveUI" Version="0.8.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
     <PackageReference Include="ThemeEditor.Controls.ColorPicker" Version="0.8.0" />
+    <PackageReference Include="Veldrid.ImageSharp" Version="4.6.1" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="HelperClasses\Views\MessageBoxWindow.xaml">
@@ -40,6 +42,17 @@
     <Compile Update="HelperClasses\Views\MessageBoxWindow.xaml.cs">
       <DependentUpon>MessageBoxWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Update="Views\ChangeColorPalette.xaml">

@@ -5,18 +5,18 @@ using Avalonia.Markup.Xaml;
 
 namespace Gm1KonverterCrossPlatform.HelperClasses.Views
 {
-    public class MessageBox : Window
+    public class MessageBoxWindow : Window
     {
         public enum MessageTyp { Fehler,Info }
-        public MessageBox(MessageTyp typ,string message)
+        public MessageBoxWindow(MessageTyp typ,string message)
         {
-            this.Title = typ.ToString();
+          
             
             this.InitializeComponent();
             #if DEBUG
             this.AttachDevTools();
-#endif
-
+            #endif
+            this.Title = typ.ToString();
             var textBox = this.Get<TextBlock>("textBox");
             textBox.Text = message;
         }
