@@ -22,7 +22,7 @@ namespace Files.Gm1Converter
         private byte direction;
         private byte horizontalOffsetOfImage;
         private byte buildingWidth;
-        private byte animatedColor;
+        private byte animatedColor;//if alpha 1 
         private UInt32 offsetinByteArray;
         private UInt32 sizeinByteArray;
         #endregion
@@ -100,10 +100,10 @@ namespace Files.Gm1Converter
             
             using (var buf = bmp.Lock())
             {
-                int x = 0;
-                int y = 0;
+                uint x = 0;
+                uint y = 0;
                 byte r, g, b, a;
-                for (int bytePos = 0; bytePos < imgFileAsBytearray.Length;)
+                for (uint bytePos = 0; bytePos < imgFileAsBytearray.Length;)
                 {
             
 
@@ -124,11 +124,24 @@ namespace Files.Gm1Converter
 
                             for (byte i = 0; i < length; i++)
                             {
-                                index = imgFileAsBytearray[bytePos];
-                                bytePos++;
-                                pixelColor = palette.ArrayPaletten[palette.ActualPalette, index];
+                               
+                                if (palette != null)
+                                {
+                                    index = imgFileAsBytearray[bytePos];
+                                    pixelColor = palette.ArrayPaletten[palette.ActualPalette, index];
+                                    bytePos++;
+                                }
+                                else
+                                {
+                                    pixelColor = BitConverter.ToUInt16(imgFileAsBytearray,(int) bytePos);
+                                    bytePos+=2;
+                                }
+                           
                                 Utility.ReadColor(pixelColor, out r, out g, out b, out a);
-
+                                if (palette == null)
+                                {
+                                    a = 255;
+                                }
                      
                                 colorByte = (UInt32)(b | (g << 8) | (r << 16) | (a << 24));
                                 var ptr = (uint*)buf.Address;
@@ -140,18 +153,21 @@ namespace Files.Gm1Converter
                             break;
                         case 4://Newline
                             colorByte = Utility.TransparentColorByte;
-                            for (byte i = 0; i < this.width; i++)
+                            if (palette != null)
                             {
-                                if (x >= this.width || y >= this.height)
-                                    break;
+                                for (byte i = 0; i < this.width; i++)
+                                {
+                                    if (x >= this.width || y >= this.height)
+                                        break;
 
-                                //Bgra8888
-                               
-                                var ptr = (uint*)buf.Address;
-                                ptr += (uint)((width * y) + x);
-                                *ptr = colorByte;
-                                x++;
-                               
+                                    //Bgra8888
+
+                                    var ptr = (uint*)buf.Address;
+                                    ptr += (uint)((width * y) + x);
+                                    *ptr = colorByte;
+                                    x++;
+
+                                }
                             }
 
                             y++;
@@ -160,11 +176,23 @@ namespace Files.Gm1Converter
                             break;
                         case 2://Repeating pixels 
 
-                            index = imgFileAsBytearray[bytePos];
-                            bytePos++;
-                            pixelColor = palette.ArrayPaletten[palette.ActualPalette, index];
+                            if (palette != null)
+                            {
+                                index = imgFileAsBytearray[bytePos];
+                                pixelColor = palette.ArrayPaletten[palette.ActualPalette, index];
+                                bytePos++;
+                            }
+                            else
+                            {
+                                pixelColor = BitConverter.ToUInt16(imgFileAsBytearray, (int)bytePos);
+                                bytePos += 2;
+                            }
 
                             Utility.ReadColor(pixelColor, out r, out g, out b, out a);
+                            if (palette == null)
+                            {
+                                a = 255;
+                            }
                             colorByte = (uint)(b | (g << 8) | (r << 16) | (a << 24));
                             for (byte i = 0; i < length; i++)
                             {
@@ -200,7 +228,14 @@ namespace Files.Gm1Converter
            
 
         }
-       
+
+        internal void ConvertImageWithoutPaletteToByteArray(List<ushort> colors, int width, int height,int img)
+        {
+            var array = Utility.ImgWithoutPaletteToGM1ByteArray(colors, width, height, imgFileAsBytearray,animatedColor,img);
+          
+                imgFileAsBytearray = array.ToArray();
+        }
+
         internal void ConvertImageToByteArray(Palette palette)
         {
             var colors = Utility.ImgToColors(bmp, width,height);

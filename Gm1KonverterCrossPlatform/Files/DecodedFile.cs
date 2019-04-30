@@ -34,20 +34,27 @@ namespace Files.Gm1Converter
             {
                 this.fileHeader = new GM1FileHeader(array);
                 this.fileHeader.Name = name;
-                this.palette = new Palette(array);
+                if (fileHeader.IDataType == (UInt32)GM1FileHeader.DataType.Animations)
+                {
+                    this.palette = new Palette(array);
+                }
             }
-            
-            this.images = new List<TGXImage>();
             actualPositionInByteArray = (GM1FileHeader.fileHeaderSize + Palette.paletteSize); ;
+
+            this.images = new List<TGXImage>();
+          
             if (fileHeader.IDataType == (UInt32)GM1FileHeader.DataType.Animations)
             {
                 CreateImagesFromAnimationFile(array);
+                return true;
             }
-            else
+            else if(fileHeader.IDataType == (UInt32)GM1FileHeader.DataType.Interface)
             {
-                return false;
+                CreateImagesFromAnimationFile(array);
+                return true;
             }
-            return true;
+       
+            return false;
         }
         
         public byte[] GetNewGM1Bytes() {
@@ -56,8 +63,16 @@ namespace Files.Gm1Converter
             List<byte> newFile = new List<byte>();
             var headerBytes = fileHeader.GetBytes();
             newFile.AddRange(headerBytes);
-            palette.CalculateNewBytes();
-            newFile.AddRange(palette.ArrayPaletteByte);
+            if (palette == null)
+            {
+                newFile.AddRange(new byte[Palette.paletteSize]);
+            }
+            else
+            {
+                palette.CalculateNewBytes();
+                newFile.AddRange(palette.ArrayPaletteByte);
+            }
+          
 
             /*
             later for change color on image not palette
@@ -133,26 +148,9 @@ namespace Files.Gm1Converter
                     image.ImgFileAsBytearray = new byte[(int)image.SizeinByteArray];
                     Buffer.BlockCopy(array, actualPositionInByteArray + (int)image.OffsetinByteArray, image.ImgFileAsBytearray, 0, (int)image.SizeinByteArray);
             }
+      
 
-            //create all pictures not used now
-            //for (int j = 0; j < fileHeader.INumberOfPictureinFile; j++)
-            //{
-            //    var dummy = new TGXImage();
-            //    dummy.Width = images[j].Width;
-            //    dummy.Height = images[j].Height;
-            //    dummy.OffsetX = images[j].OffsetX;
-            //    dummy.OffsetY = images[j].OffsetY;
-            //    dummy.ImagePart = images[j].ImagePart;
-            //    dummy.SubParts = images[j].SubParts;
-            //    dummy.TileOffset = images[j].TileOffset;
-            //    dummy.Direction = images[j].Direction;
-            //    dummy.HorizontalOffsetOfImage = images[j].HorizontalOffsetOfImage;
-            //    dummy.BuildingWidth = images[j].BuildingWidth;
-            //    dummy.AnimatedColor = images[j].AnimatedColor;
-            //    dummy.ImgFileAsBytearray = images[j].ImgFileAsBytearray;
-            //    images.Add(dummy);
-            //}
-            
+
 
             for (uint i = 0; i < fileHeader.INumberOfPictureinFile; i++)
             {

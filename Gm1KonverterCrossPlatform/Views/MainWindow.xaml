@@ -33,10 +33,11 @@
     
       </MenuItem>
       <MenuItem Header="_Edit">
-        <MenuItem Header="Export Colortable" Name="ExportColortableMenueItem" IsEnabled="{Binding ButtonsEnabled}"/>
-        <MenuItem Header="Import Colortable" Name="ImportColortableMenueItem" IsEnabled="{Binding ButtonsEnabled}"/>
+        <MenuItem Header="Export Colortable" Name="ExportColortableMenueItem" IsEnabled="{Binding ColorButtonsEnabled}"/>
+        <MenuItem Header="Import Colortable" Name="ImportColortableMenueItem" IsEnabled="{Binding ColorButtonsEnabled}"/>
         <Separator/>
         <MenuItem Header="Export Images" Name="ExportImagesMenueItem" IsEnabled="{Binding ButtonsEnabled}"/>
+        <MenuItem Header="Import Images" Name="ImportImagesMenueItem" IsEnabled="{Binding ImportButtonEnabled}"/>
       </MenuItem>
       <MenuItem Header="_Options">
         <MenuItem Header="_Workfolder" Name="WorkfolderMenueItem"/>
@@ -50,25 +51,29 @@
       <ListBox Items="{Binding StrongholdFiles}" Grid.Row="1" Grid.Column="0" SelectionMode="Single" Name="Gm1FilesSelector"/>
 
     <StackPanel Grid.Column="2" Grid.Row="2">
-      <Button IsEnabled="{Binding ButtonsEnabled}" Click="Button_ClickChangeColorTable">Change Color Table</Button>
+      <Button IsEnabled="{Binding ColorButtonsEnabled}" Click="Button_ClickChangeColorTable" IsVisible="{Binding ColorButtonsEnabled}">Change Color Table</Button>
 
       <StackPanel Orientation="Horizontal">
 
-        <Button IsEnabled="{Binding ButtonsEnabled}" Content="««" Width="40" Click="Button_ClickPalleteminus"/>
-        <Button IsEnabled="{Binding ButtonsEnabled}" Content="»»" Width="40" Click="Button_ClickPalleteplus"/>
-        <Image Source="{Binding ActuellColorTable}"/>
-        <TextBlock Text="{Binding ActualPalette}"/>
+        <Button IsEnabled="{Binding ColorButtonsEnabled}" Content="««" Width="40" Click="Button_ClickPalleteminus" IsVisible="{Binding ColorButtonsEnabled}"/>
+        <Button IsEnabled="{Binding ColorButtonsEnabled}" Content="»»" Width="40" Click="Button_ClickPalleteplus" IsVisible="{Binding ColorButtonsEnabled}"/>
+        <Image Source="{Binding ActuellColorTable}" IsVisible="{Binding ColorButtonsEnabled}"/>
+        <TextBlock Text="{Binding ActualPalette}" IsVisible="{Binding ColorButtonsEnabled}"/>
+        <TextBlock Text="XOffset:" IsVisible="{Binding ImportButtonEnabled}"/>
+        <TextBox  Text="{Binding XOffset}" IsVisible="{Binding ImportButtonEnabled}"/>
+        <TextBlock Text="YOffset:" IsVisible="{Binding ImportButtonEnabled}"/>
+        <TextBox  Text="{Binding YOffset}" IsVisible="{Binding ImportButtonEnabled}"/>
+        <Button  Content="Save" Click="Button_ClickSaveOffset" IsVisible="{Binding ImportButtonEnabled}"/>
       </StackPanel>
 
-      <ScrollViewer VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled" MaxHeight="350" Height="350"  >
-        <ItemsControl Items="{Binding TGXImages}">
-          <ItemsControl.ItemsPanel>
-            <ItemsPanelTemplate>
-              <WrapPanel Margin="5"/>
-            </ItemsPanelTemplate>
-          </ItemsControl.ItemsPanel>
-        </ItemsControl>
-      </ScrollViewer>
+
+      <ListBox Items="{Binding TGXImages}" MaxHeight="400" Name="TGXImageListBox">
+        <ListBox.ItemsPanel>
+          <ItemsPanelTemplate>
+            <WrapPanel Orientation="Vertical" />
+          </ItemsPanelTemplate>
+        </ListBox.ItemsPanel>
+      </ListBox>
     </StackPanel>
   </Grid>
 

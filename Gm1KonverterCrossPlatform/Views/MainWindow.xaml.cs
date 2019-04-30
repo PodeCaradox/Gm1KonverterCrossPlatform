@@ -38,11 +38,17 @@ namespace Gm1KonverterCrossPlatform.Views
 
             ListBox listbox = this.Get<ListBox>("Gm1FilesSelector");
             listbox.SelectionChanged += SelectedGm1File;
+            ListBox TGXImageListBox = this.Get<ListBox>("TGXImageListBox");
+            TGXImageListBox.SelectionChanged += TGXImageSelectionChanged;
+
+
+            
+
             MenuItem workfolderMenueItem = this.Get<MenuItem>("WorkfolderMenueItem");
             workfolderMenueItem.Click += ChangeWorkfolder;
             MenuItem crusaderfolderMenueItem = this.Get<MenuItem>("CrusaderfolderMenueItem");
             crusaderfolderMenueItem.Click += ChangeCrusaderfolder;
-
+    
             MenuItem createnewGM1MenueItem = this.Get<MenuItem>("CreatenewGM1MenueItem");
             createnewGM1MenueItem.Click += CreatenewGM1;
             MenuItem replacewithSavedGM1FileMenueItem = this.Get<MenuItem>("ReplacewithSavedGM1FileMenueItem");
@@ -56,8 +62,60 @@ namespace Gm1KonverterCrossPlatform.Views
 
             MenuItem exportImagesMenueItem = this.Get<MenuItem>("ExportImagesMenueItem");
             exportImagesMenueItem.Click += ExportImages;
-            
 
+            MenuItem importImagesMenueItem = this.Get<MenuItem>("ImportImagesMenueItem");
+            importImagesMenueItem.Click += ImportImages;
+
+            
+        }
+
+        private void TGXImageSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var listbox = sender as ListBox;
+            if (listbox.SelectedIndex == -1) return;
+            if (vm.File==null) return;
+            if (listbox.SelectedIndex > vm.File.Images.Count) return;
+            vm.XOffset = vm.File.Images[listbox.SelectedIndex].OffsetX.ToString();
+            vm.YOffset = vm.File.Images[listbox.SelectedIndex].OffsetY.ToString();
+        }
+
+        private void ImportImages(object sender, RoutedEventArgs e)
+        {
+            var filewithoutgm1ending = vm.File.FileHeader.Name.Replace(".gm1", "");
+            var files = Directory.GetFiles(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\Images", "*.png");
+            foreach (var file in files)
+            {
+                var filename = Path.GetFileName(file);
+                if (filename.StartsWith("Image"))
+                {
+                    var fileindex = int.Parse(filename.Replace("Image", "").Replace(".png", "")) - 1;
+                    int width, height;
+                    var list = Utility.LoadImage(file,out width,out height, vm.File.Images[fileindex].AnimatedColor);
+                    if (list.Count == 0) return;
+             
+                    vm.File.Images[fileindex].ConvertImageWithoutPaletteToByteArray(list,width,height, fileindex);
+                    vm.File.Images[fileindex].Width = (ushort)width;
+                    vm.File.Images[fileindex].Height = (ushort)height;
+                }
+
+            }
+            vm.File.Images[0].SizeinByteArray = (uint)vm.File.Images[0].ImgFileAsBytearray.Length;
+            uint zaehler = 0;
+            for (int i = 1; i < vm.File.Images.Count; i++)
+            {
+                zaehler += vm.File.Images[i-1].SizeinByteArray;
+                //if (vm.File.Images[i].OffsetinByteArray != zaehler)
+                //{
+
+                //}
+
+                vm.File.Images[i].OffsetinByteArray = zaehler;
+                vm.File.Images[i].SizeinByteArray = (uint)vm.File.Images[i].ImgFileAsBytearray.Length;
+            }
+
+            
+            int testtt = (int)vm.File.Images[vm.File.Images.Count - 1].OffsetinByteArray + (int)vm.File.Images[vm.File.Images.Count - 1].SizeinByteArray; ;
+            vm.File.FileHeader.IDataSize = zaehler;
         }
 
         private void ExportImages(object sender, RoutedEventArgs e)
@@ -87,15 +145,14 @@ namespace Gm1KonverterCrossPlatform.Views
                 var filename = Path.GetFileName(file);
                 if (filename.StartsWith("ColorTable"))
                 {
+                    int width, height;
                     var fileindex = int.Parse(filename.Replace("ColorTable", "").Replace(".png","")) - 1;
-                    var list = Utility.LoadImage(file, Palette.width * Palette.pixelSize, Palette.height * Palette.pixelSize, Palette.pixelSize);
+                    var list = Utility.LoadImage(file, out width, out height,1, Palette.pixelSize);
                     if (list.Count == 0) return;
                     vm.File.Palette.SetPaleteUInt(fileindex, list.ToArray());
                     var bitmap = vm.File.Palette.GetBitmap(fileindex, Files.Gm1Converter.Palette.pixelSize);
                     vm.File.Palette.Bitmaps[fileindex] = bitmap;
                     vm.GeneratePaletteAndImgNew();
-
-
                     vm.File.Palette.Bitmaps[fileindex] = bitmap;
                 }
                
@@ -134,17 +191,32 @@ namespace Gm1KonverterCrossPlatform.Views
             if (listboxItemBefore == listbox.SelectedItem.ToString()) return;
             listboxItemBefore = listbox.SelectedItem.ToString();
             
-            vm.DecodeData(listboxItemBefore, this);
-            vm.ButtonsEnabled = true;
-            var filewithoutgm1ending = listboxItemBefore.Replace(".gm1", "");
-            if (!File.Exists(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\" + filewithoutgm1ending + "Save.gm1"))
-            {
-                vm.ReplaceWithSaveFile = false;
+            if(vm.DecodeData(listboxItemBefore, this)){
+
+                if (vm.File.Palette == null)
+                {
+                    vm.ImportButtonEnabled = true;
+                    vm.ColorButtonsEnabled = false;
+                    vm.ActuellColorTable = null;
+                }
+                else
+                {
+                    vm.ColorButtonsEnabled = true;
+                    vm.ImportButtonEnabled = false;
+                }
+
+                vm.ButtonsEnabled = true;
+                var filewithoutgm1ending = listboxItemBefore.Replace(".gm1", "");
+                if (!File.Exists(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\" + filewithoutgm1ending + "Save.gm1"))
+                {
+                    vm.ReplaceWithSaveFile = false;
+                }
+                else
+                {
+                    vm.ReplaceWithSaveFile = true;
+                }
             }
-            else
-            {
-                vm.ReplaceWithSaveFile = true;
-            }
+          
         }
 
         private MainWindowViewModel vm;
@@ -245,6 +317,13 @@ namespace Gm1KonverterCrossPlatform.Views
 
         
 
+        private void Button_ClickSaveOffset(object sender, RoutedEventArgs e)
+        {
+            var listbox = this.Get<ListBox>("TGXImageListBox");
+            vm.File.Images[listbox.SelectedIndex].OffsetX = ushort.Parse(vm.XOffset);
+            vm.File.Images[listbox.SelectedIndex].OffsetY = ushort.Parse(vm.YOffset);
+
+        }
         private void Button_ClickPalleteminus(object sender, RoutedEventArgs e)
         {
             

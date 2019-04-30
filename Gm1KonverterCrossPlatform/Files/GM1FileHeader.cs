@@ -93,7 +93,7 @@ namespace Files.Gm1Converter
         public UInt32 IUnknown4 { get => iUnknown4; }
         public UInt32 IDataType { get => iDataType; }
         public UInt32[] IUnknown5 { get => iUnknown5; }
-        public UInt32 IDataSize { get => iDataSize; }
+        public UInt32 IDataSize { get => iDataSize; set => iDataSize = value; }
         public UInt32 IUnknown6 { get => iUnknown6; }
         public UInt32[] Size { get => size; }
         public string Name { get => name; set => name = value; }

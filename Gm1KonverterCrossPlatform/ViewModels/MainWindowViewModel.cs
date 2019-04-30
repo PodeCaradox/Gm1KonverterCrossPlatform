@@ -30,6 +30,23 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             }
         }
 
+        private String yOffset = "";
+        public String YOffset
+        {
+
+            get => yOffset;
+            set => this.RaiseAndSetIfChanged(ref yOffset, value);
+        }
+
+        private String xOffset = "";
+        public String XOffset
+        {
+
+            get => xOffset;
+            set => this.RaiseAndSetIfChanged(ref xOffset, value);
+        }
+
+
         private String actualPalette = "Palette 1";
         public String ActualPalette
         {
@@ -90,6 +107,22 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             set => this.RaiseAndSetIfChanged(ref replaceWithSaveFile, value);
         }
 
+        
+              private bool colorButtonsEnabled = false;
+        public bool ColorButtonsEnabled
+        {
+
+            get => colorButtonsEnabled;
+            set => this.RaiseAndSetIfChanged(ref colorButtonsEnabled, value);
+        }
+        private bool importButtonEnabled = false;
+        public bool ImportButtonEnabled
+        {
+
+            get => importButtonEnabled;
+            set => this.RaiseAndSetIfChanged(ref importButtonEnabled, value);
+        }
+
         private bool decodeButtonEnabled = false;
         public bool DecodeButtonEnabled
         {
@@ -113,6 +146,8 @@ namespace Gm1KonverterCrossPlatform.ViewModels
         }
 
         internal ObservableCollection<Image> images = new ObservableCollection<Image>();
+       
+
         internal ObservableCollection<Image> TGXImages
         {
             get => images;
@@ -123,7 +158,7 @@ namespace Gm1KonverterCrossPlatform.ViewModels
 
         #region Methods
 
-        internal void DecodeData(string fileName, Window window)
+        internal bool DecodeData(string fileName, Window window)
         {
           
             //Convert Selected file
@@ -133,17 +168,9 @@ namespace Gm1KonverterCrossPlatform.ViewModels
                 {
                     MessageBoxWindow messageBox = new MessageBoxWindow(MessageBoxWindow.MessageTyp.Info, "Only Animation Tiles are Supported yet. \nError from " + fileName);
                     messageBox.ShowDialog(window);
-                    return;
+                    return false;
                 }
-
-              
-            
-
-            
-                if (!Directory.Exists(userConfig.CrusaderPath + File.FileHeader.Name))
-                {
-                    Directory.CreateDirectory(userConfig.CrusaderPath + File.FileHeader.Name);
-                }
+                
 
                 //Palette
                 //for (int j = 0; j < Files[i].Palette.Bitmaps.Length; j++)
@@ -152,8 +179,8 @@ namespace Gm1KonverterCrossPlatform.ViewModels
                 //}
 
                 ShowImgToWindow();
-              
-            
+
+            return true;
 
 
           
@@ -175,7 +202,11 @@ namespace Gm1KonverterCrossPlatform.ViewModels
                 //bitmap.Save(Files[i].FileHeader.Name + "/"+ Files[i].Palette.ActualPalette+ "Bild" + j + ".png");
 
             }
-            ActuellColorTable = File.Palette.Bitmaps[File.Palette.ActualPalette];
+            if (File.Palette!=null)
+            {
+                ActuellColorTable = File.Palette.Bitmaps[File.Palette.ActualPalette];
+            }
+           
         }
 
         internal void ChangePalette(int number)

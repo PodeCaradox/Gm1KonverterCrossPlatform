@@ -60,18 +60,31 @@ namespace HelperClasses.Gm1Converter
         }
 
 
-        public static List<UInt16> LoadImage(String filename,int width,int height,int pixelsize = 1)
+        public static List<UInt16> LoadImage(String filename, out int width, out int height,int animatedColor = 1, int pixelsize = 1)
         {
+            width = 0;
+            height = 0;
             List<UInt16> colors = new List<UInt16>();
             try
             {
                 var image = Image.Load(filename);
-                for (int i = 0; i < height; i += pixelsize)
+                width = image.Width;
+                height = image.Height;
+                for (int i = 0; i < image.Height; i += pixelsize)
                 {
-                    for (int j = 0; j < width; j += pixelsize) //Bgra8888
+                    for (int j = 0; j < image.Width; j += pixelsize) //Bgra8888
                     {
                         var pixel = image[j, i];
-                        colors.Add(EncodeColorTo2Byte((uint)(pixel.B | pixel.G << 8 | pixel.R << 16 | byte.MaxValue << 24)));
+                        byte a = (animatedColor >= 1) ?  byte.MaxValue : byte.MinValue;
+                        if (pixel.A == 0 && pixel.B==0 && pixel.G==0 && pixel.R==0)
+                        {
+                            colors.Add((animatedColor >= 1) ? (ushort)65535 : (ushort)32767);
+                        }
+                        else
+                        {
+                            colors.Add(EncodeColorTo2Byte((uint)(pixel.B | pixel.G << 8 | pixel.R << 16 | a << 24)));
+                        }
+                        
                     }
                 }
             }
@@ -80,11 +93,114 @@ namespace HelperClasses.Gm1Converter
                 MessageBoxWindow messageBox = new MessageBoxWindow(MessageBoxWindow.MessageTyp.Info, e.Message);
                 messageBox.Show();
             }
-            
-           
             return colors;
         }
 
+
+        internal static List<byte> ImgWithoutPaletteToGM1ByteArray(List<ushort> colors, int width, int height, byte[] imgFileAsBytearray,int animatedColor,int img)
+        {
+   
+
+            int transparent = (animatedColor>=1) ? 65535 : 32767;
+            List<byte> array = new List<byte>();
+            byte length = 0;  // value 1-32  | 0 will be 1
+            byte header = 0;   //3 bytes
+            int countSamePixel = 0;
+            bool newline = false;
+            byte[] arraytest = { 84, 107 };
+            var tessttt=BitConverter.ToUInt16(arraytest,0);
+            for (int i = 0; i < height; i++)
+            {
+                for (int j = 0; j < width;)
+                {
+                    countSamePixel = 0;
+                    //check for newline
+                    for (int z = j; z < width; z++)
+                    {
+                        if(colors[i * width + z] == transparent)
+                        {
+                            newline = true;
+                            countSamePixel++;
+                        }
+                        else
+                        {
+                            newline = false;
+                            break;
+                        }
+                    }
+                    if (newline == true && countSamePixel == width)
+                    {
+                        for (int z = 0; z < width; z++)//ist wahrscheinlich ein Fehler von Stronghold?
+                        {
+                            array.Add(0b0010_0000);
+                        }
+                        array.Add(0b1000_0000);
+                        j = width;
+                    }
+                    else
+                    {
+                        header = 0b0010_0000;
+                        var dummy = countSamePixel;
+                        while (dummy / 32 > 0)
+                        {
+                            length = 0b0001_1111;
+                            array.Add((byte)(header | length));
+                            dummy -= 32;
+                        }
+                        if (dummy != 0)
+                        {
+                            length = (byte)(dummy - 1);//-1 because the test is pixel perfect in the loop and 0 == 1 in the encoding
+                            array.Add((byte)(header | length));
+                        }
+                        j += countSamePixel;
+                        countSamePixel = 0;
+                        //Stream-of-pixels 
+                        for (int z = j; z < width; z++)
+                        {
+                            if (colors[i * width + z] != transparent)  countSamePixel++;
+                            else break;
+                            
+                        }
+
+                        header = 0b0000_0000;
+                        dummy = countSamePixel;
+                        int zaehler = 0;
+                        while (dummy / 32 > 0)
+                        {
+                            length = 0b0001_1111;
+                            array.Add((byte)(header | length));
+                            for (int a = 0; a < 32; a++)
+                            {
+                                var color = colors[j + zaehler + i * width];
+                                array.AddRange(BitConverter.GetBytes(color));
+                                dummy--;
+                                zaehler++;
+                            }
+                        }
+                        if (dummy != 0)
+                        {
+                            length = (byte)(dummy - 1);//-1 because the test is pixel perfect in the loop and 0 == 1 in the encoding
+                            array.Add((byte)(header | length));
+                            for (int a = 0; a < dummy; a++)
+                            {
+                                var color = colors[j + zaehler + i * width];
+                                array.AddRange(BitConverter.GetBytes(color));
+                                zaehler++;
+                            }
+                        }
+
+                        j += countSamePixel;
+                        if (j == width)
+                        {
+                            array.Add(0b1000_0000);
+                        }
+                    }
+
+
+                }
+            }
+            return array;
+        }
 
         //todo Fehler falls 2 gleichfarbige und dan das letzte byte, siehe letztes bild
         /// <summary>
@@ -102,10 +218,6 @@ namespace HelperClasses.Gm1Converter
            
             List<byte> array = new List<byte>();
             uint countSamePixel = 0;
-
-
-            
-      
             byte length = 0;  // value 1-32  | 0 will be 1
             byte header = 0;   //3 bytes
             bool transparentPixelString = false;
@@ -258,6 +370,8 @@ namespace HelperClasses.Gm1Converter
             return array.ToArray();
         }
 
+
+
         private static byte FindColorInPalette(Palette palette,int teamcolor, UInt16 colorToFind)
         {
             byte offsetPalette = 0;
@@ -296,7 +410,7 @@ namespace HelperClasses.Gm1Converter
             //0b0111_1100_0000_0000
             //alpha
             //0b1000_0000_0000_0000
-
+           
             a = (byte)((((pixel >> 15) & 0b0000_0001)==1)?255:0);
             r = (byte)(((pixel >> 10) & 0b11111) << 3);
             g = (byte)(((pixel >> 5) & 0b11111) << 3);
