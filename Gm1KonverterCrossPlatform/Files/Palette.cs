@@ -8,19 +8,29 @@ namespace Files.Gm1Converter
 {
     class Palette
     {
+        #region Public
+
         public readonly static int paletteSize = 5120;
         public readonly static int pixelSize = 10;
         public readonly static ushort width = 32;
         public readonly static ushort height = 8;
+
+        #endregion
+        
         #region Variables
 
         private int actualPalette = 0;
         private ushort[,] arrayPaletten = new ushort[10,256];
         private byte[] arrayPaletteByte = new byte[5120];
         private WriteableBitmap[] bitmaps = new WriteableBitmap[10];
+
         #endregion
 
         #region Construtor
+        /// <summary>
+        /// Palette is 5120 bytes in Size and is used in Animation files.
+        /// </summary>
+        /// <param name="array">The GM1 File as byte Array</param>
         public Palette(byte[] array)
         {
             Buffer.BlockCopy(array, GM1FileHeader.fileHeaderSize, arrayPaletteByte, 0, paletteSize);
@@ -43,7 +53,6 @@ namespace Files.Gm1Converter
         public ushort[,] ArrayPaletten { get => arrayPaletten; set => arrayPaletten = value; }
         public int ActualPalette { get => actualPalette; set => actualPalette = value; }
         public bool PaletteChanged { get; internal set; } = false;
-
         public void SetPaleteUInt(int index,ushort[] array)
         {
             for (int i = 0; i < arrayPaletten.GetLength(1); i++)
@@ -51,10 +60,18 @@ namespace Files.Gm1Converter
                 arrayPaletten[index, i] = array[i];
             }
         }
+        public WriteableBitmap GetBitmap(int index, int pixelsize)
+        {
+            return PalleteToImG(index, pixelsize);
+        }
+
         #endregion
 
         #region Methods
 
+        /// <summary>
+        /// Calculate the new Bytearray to save new imported ColorTables
+        /// </summary>
         internal void CalculateNewBytes()
         {
             List<byte> newArray = new List<byte>();
@@ -68,12 +85,13 @@ namespace Files.Gm1Converter
 
             arrayPaletteByte = newArray.ToArray();
         }
-
-        public WriteableBitmap GetBitmap(int index,int pixelsize)
-        {
-            return PalleteToImG(index,pixelsize);
-        }
-
+        
+        /// <summary>
+        /// Calculate new Palette IMG with the new Pixelsize
+        /// </summary>
+        /// <param name="palette">Selected Palette 0-9</param>
+        /// <param name="pixelSize">Make the Pallete pixelssize bigger for bigger IMGS</param>
+        /// <returns></returns>
         private unsafe WriteableBitmap PalleteToImG(int palette,int pixelSize)
         {
                 byte r, g, b, a;
@@ -103,6 +121,7 @@ namespace Files.Gm1Converter
             return bitmap;
         }
 
+        //todo
         private void BitmapToColorTable(int index,List<uint> colors)
         {
 

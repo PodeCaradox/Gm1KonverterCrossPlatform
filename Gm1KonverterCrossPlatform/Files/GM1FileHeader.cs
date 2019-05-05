@@ -5,18 +5,23 @@ namespace Files.Gm1Converter
 {
     class GM1FileHeader
     {
+
+        #region Public
+
         public readonly static int fileHeaderSize = 88;
 
-         /// <summary>
-         ///  Data type is and ID that represents what kind of images are stored, they are as follows:
-         ///1 – Interface items and some building animations.Images are stored similar to TGX images. 
-         ///2 – Animations.
-         ///3 – Buildings.Images are stored similar to TGX images but with a Tile object. 
-         ///4 – Font.TGX format. 
-         ///5 and 7 – Walls, grass, stones and other.No compression, stored with 2-bytes per pixel.
-         /// </summary>
-       public enum DataType : UInt32 { Interface = 1, Animations = 2, TilesObject = 3, Font = 4, NOCompression = 5, TGXConstSize = 6, NOCompression1 = 7};
+        /// <summary>
+        ///  Data type is and ID that represents what kind of images are stored, they are as follows:
+        ///1 – Interface items and some building animations.Images are stored similar to TGX images. 
+        ///2 – Animations.
+        ///3 – Buildings.Images are stored similar to TGX images but with a Tile object. 
+        ///4 – Font.TGX format. 
+        ///5 and 7 – Walls, grass, stones and other.No compression, stored with 2-bytes per pixel.
+        /// </summary>
+        public enum DataType : UInt32 { Interface = 1, Animations = 2, TilesObject = 3, Font = 4, NOCompression = 5, TGXConstSize = 6, NOCompression1 = 7 };
 
+        #endregion
+        
         #region Variables
 
         private String name;
@@ -97,10 +102,6 @@ namespace Files.Gm1Converter
         public UInt32 IUnknown6 { get => iUnknown6; }
         public UInt32[] Size { get => size; }
         public string Name { get => name; set => name = value; }
-
-        #endregion
-
-        #region Methods
 
         #endregion
 

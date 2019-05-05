@@ -15,14 +15,23 @@ namespace HelperClasses.Gm1Converter
     /// <summary>
     /// Reusable functions for many uses.
     /// </summary>
-    public static class Utility
+    internal static class Utility
     {
-        private static Color color = Color.Transparent;
-        public static UInt32 TransparentColorByte = (UInt32)(color.B | (color.G << 8) | (color.R << 16) | (color.A << 24));
+        #region Public
 
+        private static readonly Color color = Color.Transparent;
+        internal static readonly UInt32 TransparentColorByte = (UInt32)(color.B | (color.G << 8) | (color.R << 16) | (color.A << 24));
+
+        #endregion
+        
         #region Methods
 
-        public static byte[] FileToByteArray(string fileName)
+        /// <summary>
+        /// Load the File as Bytearray
+        /// </summary>
+        /// <param name="fileName">The Filepath/Filenamee to load</param>
+        /// <returns></returns>
+        internal static byte[] FileToByteArray(string fileName)
         {
             byte[] buff = null;
             FileStream fs = new FileStream(fileName,
@@ -34,32 +43,27 @@ namespace HelperClasses.Gm1Converter
             return buff;
         }
 
-        public static void ByteArraytoFile(string fileName,byte[] array)
+        /// <summary>
+        /// Save the bytearray as File
+        /// </summary>
+        /// <param name="fileName">The Filepath/Filenamee to save</param>
+        /// <param name="array">The byte array to save</param>
+        internal static void ByteArraytoFile(string fileName,byte[] array)
         {
             File.WriteAllBytes(fileName, array);
         }
 
-        public unsafe static List<uint> ImgToColors(WriteableBitmap bmp,ushort width, ushort height, int pixelsize=1)
-        {
-            List<uint> colors = new List<uint>();
-            using (var buf = bmp.Lock())
-            {
-                for (int y = 0; y < height; y += pixelsize)
-                {
-                    for (int x = 0; x < width; x += pixelsize)
-                    {
-                        var ptr = (uint*)buf.Address;
-                        ptr += (uint)((width * y) + x);
-                        colors.Add(*ptr);
-                    }
-                }
-            }
 
-      
-            return colors;
-        }
-
-        public static List<UInt16> LoadImage(String filename, out int width, out int height,int animatedColor = 1, int pixelsize = 1)
+        /// <summary>
+        /// Load the IMG as Color 2byte list
+        /// </summary>
+        /// <param name="filename">The Filepath/Filenamee to load</param>
+        /// <param name="width">The width from the IMG</param>
+        /// <param name="height">The Height from the IMG</param>
+        /// <param name="animatedColor">Needed if alpha is 0 or 1</param>
+        /// <param name="pixelsize">Pixelsize of a pixel needed for Colortable</param>
+        /// <returns></returns>
+        internal static List<UInt16> LoadImage(String filename, out int width, out int height,int animatedColor = 1, int pixelsize = 1)
         {
             width = 0;
             height = 0;
@@ -95,7 +99,15 @@ namespace HelperClasses.Gm1Converter
         }
 
 
-        internal static List<byte> ImgWithoutPaletteToGM1ByteArray(List<ushort> colors, int width, int height, byte[] imgFileAsBytearray,int animatedColor,int img)
+        /// <summary>
+        /// Convert an IMG as Colorlist to ByteArray
+        /// </summary>
+        /// <param name="colors">The IMG as Color List</param>
+        /// <param name="width">The width from the IMG</param>
+        /// <param name="height">The Height from the IMG</param>
+        /// <param name="animatedColor">Needed for Alpha is 1 or 0</param>
+        /// <returns></returns>
+        internal static List<byte> ImgWithoutPaletteToGM1ByteArray(List<ushort> colors, int width, int height, int animatedColor)
         {
    
 
@@ -199,8 +211,13 @@ namespace HelperClasses.Gm1Converter
 
             return array;
         }
-        
-        public static UInt16 EncodeColorTo2Byte(uint colorAsInt32)
+
+        /// <summary>
+        /// Convert Color 4 byte to 2 byte Color
+        /// </summary>
+        /// <param name="colorAsInt32">The Color to Convert</param>
+        /// <returns></returns>
+        internal static UInt16 EncodeColorTo2Byte(uint colorAsInt32)
         {
             byte[] arrray = { (byte)(204), (byte)196 };
             var testtt=BitConverter.ToUInt16(arrray, 0);
@@ -214,18 +231,34 @@ namespace HelperClasses.Gm1Converter
             return color;
         }
 
-        public static void ReadColor(UInt16 pixel, out byte r, out byte g, out byte b, out byte a)
+        /// <summary>
+        /// Convert 2byte Color to RGBA
+        /// </summary>
+        /// <param name="pixel">2 Byte Color to Convert</param>
+        /// <param name="r">Red value</param>
+        /// <param name="g">Green value</param>
+        /// <param name="b">Blue value</param>
+        /// <param name="a">Alpha value</param>
+        internal static void ReadColor(UInt16 pixel, out byte r, out byte g, out byte b, out byte a)
         {
             a = (byte)((((pixel >> 15) & 0b0000_0001)==1)?255:0);
             r = (byte)(((pixel >> 10) & 0b11111) << 3);
             g = (byte)(((pixel >> 5) & 0b11111) << 3);
             b = (byte)((pixel & 0b11111) << 3);
+
+            //Round Color to full RGB white than 255 not below
             //r = (byte)(r | (r >> 5));
             //g = (byte)(g | (g >> 5));
             //b = (byte)(b | (b >> 5));
         }
 
-        public static string[] GetFileNames(string path, string filter)
+        /// <summary>
+        /// Get File names in an Path
+        /// </summary>
+        /// <param name="path">The Path to lookup</param>
+        /// <param name="filter">The Filer, which files only</param>
+        /// <returns></returns>
+        internal static string[] GetFileNames(string path, string filter)
         {
             string[] files = Directory.GetFiles(path, filter);
             for (int i = 0; i < files.Length; i++)
@@ -233,12 +266,12 @@ namespace HelperClasses.Gm1Converter
             return files;
         }
 
-        public static unsafe void CreateImageFromByteArray(WriteableBitmap bmp)
-        {
-
-        }
-
-        public static int GetDiamondWidth(int anzParts)
+        /// <summary>
+        /// Calculate the width of a Image from the parts of Diamonds in it
+        /// </summary>
+        /// <param name="anzParts">The Number of Diamonds in the bigger IMG</param>
+        /// <returns></returns>
+        internal static int GetDiamondWidth(int anzParts)
         {
             int width = 0;
             int actualParts = 0;
@@ -266,7 +299,6 @@ namespace HelperClasses.Gm1Converter
 
 
         #endregion
-
 
     }
 }

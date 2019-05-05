@@ -16,6 +16,8 @@ namespace Gm1KonverterCrossPlatform.ViewModels
     public class MainWindowViewModel : ViewModelBase
     {
 
+        #region Variables
+
         private UserConfig userConfig;
 
         private String colorAsText = "";
@@ -23,7 +25,8 @@ namespace Gm1KonverterCrossPlatform.ViewModels
         {
 
             get => colorAsText;
-            set {
+            set
+            {
                 this.RaiseAndSetIfChanged(ref colorAsText, value);
 
 
@@ -45,8 +48,7 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             get => xOffset;
             set => this.RaiseAndSetIfChanged(ref xOffset, value);
         }
-
-
+        
         private String actualPalette = "Palette 1";
         public String ActualPalette
         {
@@ -54,22 +56,6 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             get => actualPalette;
             set => this.RaiseAndSetIfChanged(ref actualPalette, value);
         }
-
-
-
-     
-
-        internal void LoadStrongholdFiles()
-        {
-            if (!String.IsNullOrEmpty( userConfig.CrusaderPath))
-            {
-                StrongholdFiles = Utility.GetFileNames(userConfig.CrusaderPath,"*.gm1");
-          
-            }
-                
-        }
-
-
 
         internal String[] strongholdFiles;
         internal String[] StrongholdFiles
@@ -85,18 +71,17 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             get => buttonsEnabled;
             set => this.RaiseAndSetIfChanged(ref buttonsEnabled, value);
         }
-        
-
 
         private bool openFolderAfterExport = false;
         public bool OpenFolderAfterExport
         {
 
             get => openFolderAfterExport;
-            set {
+            set
+            {
                 this.RaiseAndSetIfChanged(ref openFolderAfterExport, value);
                 userConfig.OpenFolderAfterExport = value;
-                    }
+            }
         }
 
         private bool replaceWithSaveFile = false;
@@ -107,8 +92,7 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             set => this.RaiseAndSetIfChanged(ref replaceWithSaveFile, value);
         }
 
-        
-              private bool colorButtonsEnabled = false;
+        private bool colorButtonsEnabled = false;
         public bool ColorButtonsEnabled
         {
 
@@ -146,7 +130,6 @@ namespace Gm1KonverterCrossPlatform.ViewModels
         }
 
         internal ObservableCollection<Image> images = new ObservableCollection<Image>();
-       
 
         internal ObservableCollection<Image> TGXImages
         {
@@ -156,8 +139,31 @@ namespace Gm1KonverterCrossPlatform.ViewModels
         internal DecodedFile File { get; set; }
         public UserConfig UserConfig { get => userConfig; set => userConfig = value; }
 
+
+        #endregion
+
         #region Methods
 
+        /// <summary>
+        /// Load the GM1 Files from the CrusaderPath
+        /// </summary>
+        internal void LoadStrongholdFiles()
+        {
+            if (!String.IsNullOrEmpty(userConfig.CrusaderPath))
+            {
+                StrongholdFiles = Utility.GetFileNames(userConfig.CrusaderPath, "*.gm1");
+
+            }
+
+        }
+
+
+        /// <summary>
+        /// Decode the GM1 File to IMGS and Headers
+        /// </summary>
+        /// <param name="fileName">The Filepath/Filename to decode</param>
+        /// <param name="window">actual avalonia window for error Text</param>
+        /// <returns></returns>
         internal bool DecodeData(string fileName, Window window)
         {
           
@@ -173,7 +179,6 @@ namespace Gm1KonverterCrossPlatform.ViewModels
                 
                 if((GM1FileHeader.DataType)File.FileHeader.IDataType == GM1FileHeader.DataType.TilesObject)
                 {
-                    File.CreateTileImage();
                     ShowTileImgToWindow();
                 }
                 else
@@ -188,6 +193,9 @@ namespace Gm1KonverterCrossPlatform.ViewModels
           
         }
 
+        /// <summary>
+        /// Show the Imgs to the main Window
+        /// </summary>
         private void ShowTileImgToWindow()
         {
             TGXImages = new ObservableCollection<Image>();
@@ -204,6 +212,9 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             }
         }
 
+        /// <summary>
+        /// Show the Tile Imgs to the main Window
+        /// </summary>
         private void ShowTGXImgToWindow()
         {
             TGXImages = new ObservableCollection<Image>();
@@ -225,6 +236,10 @@ namespace Gm1KonverterCrossPlatform.ViewModels
            
         }
 
+        /// <summary>
+        /// Changes the actual Paletteimg
+        /// </summary>
+        /// <param name="number"></param>
         internal void ChangePalette(int number)
         {
             if (number>0)
@@ -254,6 +269,9 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             ShowTGXImgToWindow();
         }
 
+        /// <summary>
+        /// Generate the Palette with the IMGS new, maybe after Import from new Colortables
+        /// </summary>
         internal void GeneratePaletteAndImgNew()
         {
             File.DecodeGm1File(File.FileArray, File.FileHeader.Name);

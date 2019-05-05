@@ -91,7 +91,7 @@ namespace Gm1KonverterCrossPlatform.Views
                     var list = Utility.LoadImage(file,out width,out height, vm.File.ImagesTGX[fileindex].AnimatedColor);
                     if (list.Count == 0) return;
              
-                    vm.File.ImagesTGX[fileindex].ConvertImageWithoutPaletteToByteArray(list,width,height, fileindex);
+                    vm.File.ImagesTGX[fileindex].ConvertImageWithoutPaletteToByteArray(list,width,height);
                     vm.File.ImagesTGX[fileindex].Width = (ushort)width;
                     vm.File.ImagesTGX[fileindex].Height = (ushort)height;
                 }
@@ -321,15 +321,13 @@ namespace Gm1KonverterCrossPlatform.Views
             return files;
         }
 
-
-        
-
         private void Button_ClickSaveOffset(object sender, RoutedEventArgs e)
         {
             var listbox = this.Get<ListBox>("TGXImageListBox");
             vm.File.ImagesTGX[listbox.SelectedIndex].OffsetX = ushort.Parse(vm.XOffset);
 
         }
+
         private void Button_ClickPalleteminus(object sender, RoutedEventArgs e)
         {
             Cursor = new Avalonia.Input.Cursor(Avalonia.Input.StandardCursorType.Wait);

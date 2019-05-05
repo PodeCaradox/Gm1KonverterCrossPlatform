@@ -8,7 +8,14 @@ namespace Gm1KonverterCrossPlatform.Files
 {
     class TilesImage
     {
+
+        #region Public
+
         public static int Puffer = 500;
+
+        #endregion
+
+        #region Variables
 
         private static int[] array = {
                 2, 6, 10, 14, 18, 22, 26, 30,
@@ -17,6 +24,12 @@ namespace Gm1KonverterCrossPlatform.Files
         private int width, height;
         private WriteableBitmap bmp;
         private int minusHeight = 9999999;
+        private UInt32[] colors;
+
+        #endregion
+        
+        #region Construtor
+
         public TilesImage(int width, int height)
         {
             this.width = width;
@@ -25,13 +38,25 @@ namespace Gm1KonverterCrossPlatform.Files
 
         }
 
+        #endregion
+
+        #region GetterSetter
+
         public WriteableBitmap TileImage { get => bmp; set => bmp = value; }
         public int Width { get => width; set => width = value; }
         public int Height { get => height; set => height = value; }
         public int MinusHeight { get => minusHeight; set => minusHeight = value; }
 
-        private UInt32[] colors;
+        #endregion
 
+        #region Methods
+
+        /// <summary>
+        /// Add the Diamond Tile Img to the bigger Img
+        /// </summary>
+        /// <param name="imgFileAsBytearray">The Diamond byte array</param>
+        /// <param name="xOffset">The xOffset in the bigger IMG</param>
+        /// <param name="yOffset">The yOffset in the bigger IMG</param>
         internal void AddDiamondToImg(byte[] imgFileAsBytearray, int xOffset, int yOffset)
         {
             int x = 0;
@@ -59,6 +84,12 @@ namespace Gm1KonverterCrossPlatform.Files
 
         }
 
+        /// <summary>
+        /// Add normal IMG to the bigger IMG
+        /// </summary>
+        /// <param name="imgFileAsBytearray"></param>
+        /// <param name="offsetX"></param>
+        /// <param name="offsetY"></param>
         internal void AddImgTileOnTopToImg(byte[] imgFileAsBytearray, int offsetX, int offsetY)
         {
 
@@ -140,10 +171,14 @@ namespace Gm1KonverterCrossPlatform.Files
             }
         }
 
+        /// <summary>
+        /// Creates the new big IMG as Bitmap
+        /// </summary>
         internal unsafe void CreateImagefromList()
         {
-            if (minusHeight== 9999999)
+            if (minusHeight == 9999999)
             {
+                //is used for the correct height of the bitmap
                 minusHeight = Puffer;
             }
             bmp = new WriteableBitmap(new Avalonia.PixelSize(width, height - minusHeight), new Avalonia.Vector(100, 100), Avalonia.Platform.PixelFormat.Bgra8888);// Bgra8888 is device-native and much faster.
@@ -160,5 +195,8 @@ namespace Gm1KonverterCrossPlatform.Files
                 }
             }
         }
+
+        #endregion
+
     }
 }

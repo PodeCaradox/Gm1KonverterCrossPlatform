@@ -30,10 +30,23 @@ namespace Files.Gm1Converter
 
         public DecodedFile()
         {
-      
+
         }
+
+        #endregion
+
+
+        #region Methods
+
+        /// <summary>
+        /// Decode the actual GM1 File to Imgs and the typical headers
+        /// </summary>
+        /// <param name="array">The GM1 File as Array</param>
+        /// <param name="name">Name of the File</param>
+        /// <returns></returns>
         public bool DecodeGm1File(byte[] array, String name)
         {
+            fileArray = array;
             if (this.fileHeader == null)
             {
                 this.fileHeader = new GM1FileHeader(array);
@@ -43,29 +56,38 @@ namespace Files.Gm1Converter
                     this.palette = new Palette(array);
                 }
             }
-            actualPositionInByteArray = (GM1FileHeader.fileHeaderSize + Palette.paletteSize); ;
 
+
+            actualPositionInByteArray = (GM1FileHeader.fileHeaderSize + Palette.paletteSize);
             this._TGXImage = new List<TGXImage>();
             this.tilesImage = new List<TilesImage>();
+            //Supported Types
             switch ((GM1FileHeader.DataType)fileHeader.IDataType)
             {
                 case GM1FileHeader.DataType.Animations:
                 case GM1FileHeader.DataType.Interface:
                 case GM1FileHeader.DataType.TGXConstSize:
-                case GM1FileHeader.DataType.TilesObject:
                 case GM1FileHeader.DataType.Font:
-                    CreateImagesFromAnimationFile(array);
+                    CreateImages(array);
+                    return true;
+                case GM1FileHeader.DataType.TilesObject:
+                    CreateTileImage(array);
                     return true;
                 default:
                     break;
             }
-           
+
             return false;
         }
 
-        public byte[] GetNewGM1Bytes() {
+        /// <summary>
+        /// Create the new GM1 Files from IMGS and Headers(1. FileHeader,2. Palette,3. OffsetList,4. SizeList,5. ImgHeaderList,6. ImgsasByteList)
+        /// </summary>
+        /// <returns></returns>
+        public byte[] GetNewGM1Bytes()
+        {
 
-         
+
             List<byte> newFile = new List<byte>();
             var headerBytes = fileHeader.GetBytes();
             newFile.AddRange(headerBytes);
@@ -82,15 +104,15 @@ namespace Files.Gm1Converter
             for (int i = 0; i < fileHeader.INumberOfPictureinFile; i++)
             {
                 newFile.AddRange(BitConverter.GetBytes(_TGXImage[i].OffsetinByteArray));
-             
+
             }
-         
+
             for (int i = 0; i < fileHeader.INumberOfPictureinFile; i++)
             {
                 newFile.AddRange(BitConverter.GetBytes(_TGXImage[i].SizeinByteArray));
-      
+
             }
-            
+
             for (int i = 0; i < fileHeader.INumberOfPictureinFile; i++)
             {
                 newFile.AddRange(_TGXImage[i].GetImageHeaderAsByteArray());
@@ -105,15 +127,32 @@ namespace Files.Gm1Converter
             return newFile.ToArray();
         }
 
-        public void CreateImagesFromAnimationFile(byte[] array)
+        /// <summary>
+        /// Creates the IMG from the byte array, handles Animation,Interfaces,TGXConstSize, Font
+        /// </summary>
+        /// <param name="array">The GM1 File as byte Array</param>
+        private void CreateImages(byte[] array)
         {
-            fileArray = array;
-             CreateOffsetAndSizeInByteArrayList(array);
 
+            CreateOffsetAndSizeInByteArrayList(array);
+            CreateImgHeader(array);
+
+            for (uint i = 0; i < fileHeader.INumberOfPictureinFile; i++)
+            {
+                _TGXImage[(int)i].CreateImageFromByteArray(palette);
+            }
+        }
+
+        /// <summary>
+        /// Creates the IMG Header
+        /// </summary>
+        /// <param name="array">The GM1 File as byte Array</param>
+        private void CreateImgHeader(byte[] array)
+        {
             //Image Header has a length of 16 bytes 
             for (int i = 0; i < this.fileHeader.INumberOfPictureinFile; i++)
             {
-         
+
                 _TGXImage[i].Width = BitConverter.ToUInt16(array, actualPositionInByteArray + i * TGXImage.iImageHeaderSize + 0);
                 _TGXImage[i].Height = BitConverter.ToUInt16(array, actualPositionInByteArray + i * TGXImage.iImageHeaderSize + 2);
                 _TGXImage[i].OffsetX = BitConverter.ToUInt16(array, actualPositionInByteArray + i * TGXImage.iImageHeaderSize + 4);
@@ -126,42 +165,24 @@ namespace Files.Gm1Converter
                 _TGXImage[i].BuildingWidth = array[actualPositionInByteArray + i * TGXImage.iImageHeaderSize + 14];
                 _TGXImage[i].AnimatedColor = array[actualPositionInByteArray + i * TGXImage.iImageHeaderSize + 15];
             }
-
             actualPositionInByteArray += (int)this.fileHeader.INumberOfPictureinFile * TGXImage.iImageHeaderSize;
-
-
 
             foreach (var image in _TGXImage)
             {
-               
-
-                    image.ImgFileAsBytearray = new byte[(int)image.SizeinByteArray];
-                    Buffer.BlockCopy(array, actualPositionInByteArray + (int)image.OffsetinByteArray, image.ImgFileAsBytearray, 0, (int)image.SizeinByteArray);
-                
-                
+                image.ImgFileAsBytearray = new byte[(int)image.SizeinByteArray];
+                Buffer.BlockCopy(array, actualPositionInByteArray + (int)image.OffsetinByteArray, image.ImgFileAsBytearray, 0, (int)image.SizeinByteArray);
             }
-
-
-            
-            if ((GM1FileHeader.DataType)fileHeader.IDataType == GM1FileHeader.DataType.TilesObject)
-            {
-              
-            }
-            else
-            {
-                for (uint i = 0; i < fileHeader.INumberOfPictureinFile; i++)
-                {
-                    _TGXImage[(int)i].CreateImageFromByteArray(palette);
-                }
-            }
-
-           
-
-
         }
 
-        internal void CreateTileImage()
+        /// <summary>
+        /// Creates IMGS from TGX and Tile(the IMG consist out of many smaller IMGS)
+        /// </summary>
+        /// <param name="array">The GM1 File as byte Array</param>
+        private void CreateTileImage(byte[] array)
         {
+            CreateOffsetAndSizeInByteArrayList(array);
+            CreateImgHeader(array);
+
             int offsetX = 0, offsetY = 0;
             int midx = 0;
             int width = 0;
@@ -173,18 +194,18 @@ namespace Files.Gm1Converter
             int partsBefore = 0;
             for (int i = 0; i < _TGXImage.Count; i++)
             {
-                if (_TGXImage[i].ImagePart==0)
+                if (_TGXImage[i].ImagePart == 0)
                 {
                     width = Utility.GetDiamondWidth(_TGXImage[i].SubParts);
-                    
+
 
                     partsBefore += _TGXImage[i].SubParts;
-             
+
                     tilesImage.Add(new TilesImage(width * 30, width * 16 + _TGXImage[partsBefore - 1].TileOffset + TilesImage.Puffer));
                     counter++;
                     itemsPerRow = 1;
                     actualItemsPerRow = 0;
-                    midx = (width / 2)*30 - ((width % 2 == 0)? 15:0);
+                    midx = (width / 2) * 30 - ((width % 2 == 0) ? 15 : 0);
                     offsetY = tilesImage[counter].Height - 16;
                     offsetX = midx;
                     safeoffset = offsetX;
@@ -199,19 +220,19 @@ namespace Files.Gm1Converter
                     {
                         right = 14;
                     }
-                     tilesImage[counter].AddImgTileOnTopToImg(_TGXImage[i].ImgFileAsBytearray, offsetX + right, offsetY - _TGXImage[i].TileOffset);
+                    tilesImage[counter].AddImgTileOnTopToImg(_TGXImage[i].ImgFileAsBytearray, offsetX + right, offsetY - _TGXImage[i].TileOffset);
                     if (tilesImage[counter].MinusHeight > offsetY - _TGXImage[i].TileOffset)
                     {
                         tilesImage[counter].MinusHeight = offsetY - _TGXImage[i].TileOffset;
                     }
-                    
+
                 }
-                if (counter==42)
+                if (counter == 42)
                 {
 
                 }
-                tilesImage[counter].AddDiamondToImg(_TGXImage[i].ImgFileAsBytearray,offsetX,offsetY);
-              
+                tilesImage[counter].AddDiamondToImg(_TGXImage[i].ImgFileAsBytearray, offsetX, offsetY);
+
 
 
 
@@ -220,7 +241,7 @@ namespace Files.Gm1Converter
                 if (actualItemsPerRow == itemsPerRow)
                 {
                     offsetX = safeoffset;
-                    
+
                     offsetY -= 8;
                     if (itemsPerRow < width)
                     {
@@ -241,12 +262,12 @@ namespace Files.Gm1Converter
                         offsetX += 15;
                         halfReached = true;
                     }
-                   
+
                     safeoffset = offsetX;
                     actualItemsPerRow = 0;
                 }
-           
-                
+
+
 
 
 
@@ -258,6 +279,10 @@ namespace Files.Gm1Converter
             }
         }
 
+        /// <summary>
+        ///  Create the offset and size Lists
+        /// </summary>
+        /// <param name="array">The GM1 File as byte Array</param>
         private void CreateOffsetAndSizeInByteArrayList(byte[] array)
         {
             for (int i = 0; i < this.fileHeader.INumberOfPictureinFile; i++)
@@ -281,6 +306,9 @@ namespace Files.Gm1Converter
         }
 
         #endregion
+
+
+
 
         #region GetterSetter
 

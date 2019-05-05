@@ -8,8 +8,13 @@ namespace Files.Gm1Converter
 {
     class TGXImage
     {
+
+        #region Public
+
         public static readonly int iImageHeaderSize = 16;
 
+        #endregion
+        
         #region Variables
         private byte[] imgFileAsBytearray;
         private ushort width;
@@ -25,6 +30,7 @@ namespace Files.Gm1Converter
         private byte animatedColor;//if alpha 1 
         private UInt32 offsetinByteArray;
         private UInt32 sizeinByteArray;
+        private WriteableBitmap bmp;
         #endregion
 
         #region Construtor
@@ -32,6 +38,7 @@ namespace Files.Gm1Converter
         {
 
         }
+
         #endregion
 
         #region GetterSetter
@@ -39,8 +46,6 @@ namespace Files.Gm1Converter
         public UInt16 Height { get => height; set => height = value; }
         public UInt16 OffsetX { get => offsetX; set => offsetX = value; }
         public UInt16 OffsetY { get => offsetY; set => offsetY = value; }
-
-
 
         /// <summary>
         /// 0 denotes the start of a new collection
@@ -51,9 +56,7 @@ namespace Files.Gm1Converter
         /// Number of following parts in the collection
         /// </summary>
         public byte SubParts { get => subParts; set => subParts = value; }
-
-     
-
+        
         /// <summary>
         /// Vertical offset of the tile object on large surface
         /// </summary>
@@ -81,17 +84,18 @@ namespace Files.Gm1Converter
         public UInt32 OffsetinByteArray { get => offsetinByteArray; set => offsetinByteArray = value; }
         public UInt32 SizeinByteArray { get => sizeinByteArray; set => sizeinByteArray = value; }
         public byte[] ImgFileAsBytearray { get => imgFileAsBytearray; set => imgFileAsBytearray = value; }
-
-        private WriteableBitmap bmp;
+        
         public WriteableBitmap Bitmap { get => bmp; set => bmp = value; }
-
-
+        
         #endregion
 
         #region Methods
 
 
-        //unsafe
+        /// <summary>
+        /// Convert img byte array to IMG, use Pallete if not null
+        /// </summary>
+        /// <param name="palette">actual Pallete, Pallete is null if normal IMG</param>
         public unsafe void CreateImageFromByteArray(Palette palette)
         {
           
@@ -230,15 +234,25 @@ namespace Files.Gm1Converter
 
         }
 
-        internal void ConvertImageWithoutPaletteToByteArray(List<ushort> colors, int width, int height,int img)
+        /// <summary>
+        /// Convert imported Imgs without a Pallete to Byte array to safe new GM1 File
+        /// </summary>
+        /// <param name="colors">Color List of the new IMG</param>
+        /// <param name="width">Width of the new IMG</param>
+        /// <param name="height">Height of the new IMG</param>
+        internal void ConvertImageWithoutPaletteToByteArray(List<ushort> colors, int width, int height)
         {
-            var array = Utility.ImgWithoutPaletteToGM1ByteArray(colors, width, height, imgFileAsBytearray,animatedColor,img);
+            var array = Utility.ImgWithoutPaletteToGM1ByteArray(colors, width, height,animatedColor);
       
-                imgFileAsBytearray = array.ToArray();
+            imgFileAsBytearray = array.ToArray();
             
                 
         }
 
+        /// <summary>
+        /// Convert the Imageheader back to byte Array
+        /// </summary>
+        /// <returns></returns>
         internal byte[] GetImageHeaderAsByteArray()
         {
             List<byte> array = new List<byte>();
