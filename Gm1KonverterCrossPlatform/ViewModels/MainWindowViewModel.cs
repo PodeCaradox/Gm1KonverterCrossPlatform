@@ -171,14 +171,16 @@ namespace Gm1KonverterCrossPlatform.ViewModels
                     return false;
                 }
                 
-
-                //Palette
-                //for (int j = 0; j < Files[i].Palette.Bitmaps.Length; j++)
-                //{
-                //    Files[i].Palette.Bitmaps[j].Save(Files[i].FileHeader.Name + "/Palette" + j + ".png"); ;
-                //}
-
-                ShowImgToWindow();
+                if((GM1FileHeader.DataType)File.FileHeader.IDataType == GM1FileHeader.DataType.TilesObject)
+                {
+                    File.CreateTileImage();
+                    ShowTileImgToWindow();
+                }
+                else
+                {
+                    ShowTGXImgToWindow();
+                }
+                
 
             return true;
 
@@ -186,20 +188,34 @@ namespace Gm1KonverterCrossPlatform.ViewModels
           
         }
 
-        private void ShowImgToWindow()
+        private void ShowTileImgToWindow()
+        {
+            TGXImages = new ObservableCollection<Image>();
+            for (int j = 0; j < File.TilesImages.Count; j++)
+            {
+                var bitmap = File.TilesImages[j].TileImage;
+
+                Image image = new Image();
+                image.MaxHeight = File.TilesImages[j].Height;
+                image.MaxWidth = File.TilesImages[j].Width;
+                image.Source = bitmap;
+                TGXImages.Add(image);
+
+            }
+        }
+
+        private void ShowTGXImgToWindow()
         {
             TGXImages = new ObservableCollection<Image>();
             for (int j = 0; j < File.FileHeader.INumberOfPictureinFile; j++)
             {
-                var bitmap = File.Images[j].Bitmap;
+                var bitmap = File.ImagesTGX[j].Bitmap;
 
                 Image image = new Image();
-                image.MaxHeight = File.Images[j].Height;
-                image.MaxWidth = File.Images[j].Width;
+                image.MaxHeight = File.ImagesTGX[j].Height;
+                image.MaxWidth = File.ImagesTGX[j].Width;
                 image.Source = bitmap;
                 TGXImages.Add(image);
-                //safe later is in progress
-                //bitmap.Save(Files[i].FileHeader.Name + "/"+ Files[i].Palette.ActualPalette+ "Bild" + j + ".png");
 
             }
             if (File.Palette!=null)
@@ -235,13 +251,13 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             }
             ActualPalette = "Palette " + (File.Palette.ActualPalette+1);
             File.DecodeGm1File(File.FileArray, File.FileHeader.Name);
-            ShowImgToWindow();
+            ShowTGXImgToWindow();
         }
 
         internal void GeneratePaletteAndImgNew()
         {
             File.DecodeGm1File(File.FileArray, File.FileHeader.Name);
-            ShowImgToWindow();
+            ShowTGXImgToWindow();
         }
 
         #endregion

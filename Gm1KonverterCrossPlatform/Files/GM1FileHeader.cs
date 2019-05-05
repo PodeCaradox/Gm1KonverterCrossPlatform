@@ -15,7 +15,7 @@ namespace Files.Gm1Converter
          ///4 – Font.TGX format. 
          ///5 and 7 – Walls, grass, stones and other.No compression, stored with 2-bytes per pixel.
          /// </summary>
-       public enum DataType : UInt32 { Interface = 1, Animations = 2, Buildings = 3, Font = 4, Others = 5};
+       public enum DataType : UInt32 { Interface = 1, Animations = 2, TilesObject = 3, Font = 4, NOCompression = 5, TGXConstSize = 6, NOCompression1 = 7};
 
         #region Variables
 

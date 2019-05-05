@@ -18,7 +18,6 @@
     <AvaloniaResource Remove="HelperClasses\Views\MessageBoxWindow.xaml" />
     <None Remove="HelperClasses\Views\ChangeColorPalette.xaml" />
     <None Remove="HelperClasses\Views\MessageBoxWindow.xaml" />
-    <Folder Include="Files\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="0.8.0" />

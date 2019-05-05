@@ -59,10 +59,8 @@
         <Button IsEnabled="{Binding ColorButtonsEnabled}" Content="»»" Width="40" Click="Button_ClickPalleteplus" IsVisible="{Binding ColorButtonsEnabled}"/>
         <Image Source="{Binding ActuellColorTable}" IsVisible="{Binding ColorButtonsEnabled}"/>
         <TextBlock Text="{Binding ActualPalette}" IsVisible="{Binding ColorButtonsEnabled}"/>
-        <TextBlock Text="XOffset:" IsVisible="{Binding ImportButtonEnabled}"/>
+        <TextBlock Text="Offset:" IsVisible="{Binding ImportButtonEnabled}"/>
         <TextBox  Text="{Binding XOffset}" IsVisible="{Binding ImportButtonEnabled}"/>
-        <TextBlock Text="YOffset:" IsVisible="{Binding ImportButtonEnabled}"/>
-        <TextBox  Text="{Binding YOffset}" IsVisible="{Binding ImportButtonEnabled}"/>
         <Button  Content="Save" Click="Button_ClickSaveOffset" IsVisible="{Binding ImportButtonEnabled}"/>
       </StackPanel>
 

@@ -85,7 +85,7 @@ namespace Files.Gm1Converter
         private WriteableBitmap bmp;
         public WriteableBitmap Bitmap { get => bmp; set => bmp = value; }
 
-     
+
         #endregion
 
         #region Methods
@@ -94,15 +94,16 @@ namespace Files.Gm1Converter
         //unsafe
         public unsafe void CreateImageFromByteArray(Palette palette)
         {
-
-
-            bmp = new WriteableBitmap(new Avalonia.PixelSize(width, height), new Avalonia.Vector(100, 100), Avalonia.Platform.PixelFormat.Bgra8888);// Bgra8888 is device-native and much faster.
+          
+                      bmp = new WriteableBitmap(new Avalonia.PixelSize(width, height), new Avalonia.Vector(100, 100), Avalonia.Platform.PixelFormat.Bgra8888);// Bgra8888 is device-native and much faster.
             
             using (var buf = bmp.Lock())
             {
                 uint x = 0;
                 uint y = 0;
                 byte r, g, b, a;
+      
+
                 for (uint bytePos = 0; bytePos < imgFileAsBytearray.Length;)
                 {
             
@@ -232,15 +233,10 @@ namespace Files.Gm1Converter
         internal void ConvertImageWithoutPaletteToByteArray(List<ushort> colors, int width, int height,int img)
         {
             var array = Utility.ImgWithoutPaletteToGM1ByteArray(colors, width, height, imgFileAsBytearray,animatedColor,img);
-          
+      
                 imgFileAsBytearray = array.ToArray();
-        }
-
-        internal void ConvertImageToByteArray(Palette palette)
-        {
-            var colors = Utility.ImgToColors(bmp, width,height);
-            imgFileAsBytearray = Utility.ImgToGM1ByteArray(colors,width,height, imgFileAsBytearray, palette);
-            sizeinByteArray = (uint)imgFileAsBytearray.Length;
+            
+                
         }
 
         internal byte[] GetImageHeaderAsByteArray()
