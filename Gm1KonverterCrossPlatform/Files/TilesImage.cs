@@ -64,6 +64,8 @@ namespace Gm1KonverterCrossPlatform.Files
             int bytePos = 0;
             byte r, g, b, a;
 
+
+
             for (int i = 0; i < 16; i++)
             {
                 for (int j = 0; j < array[i]; j++)
@@ -72,7 +74,13 @@ namespace Gm1KonverterCrossPlatform.Files
                     bytePos += 2;
                     Utility.ReadColor(pixelColor, out r, out g, out b, out a);
                     a = byte.MaxValue;
-                    colors[(uint)((width * (y + yOffset)) + x + xOffset + 15 - array[i] / 2)] = (UInt32)(b | (g << 8) | (r << 16) | (a << 24));
+                    int number = ((width * (y + yOffset)) + x + xOffset + 15 - array[i] / 2);
+                    if (number == 345734)
+                    {
+
+                    }
+                    colors[number] = (UInt32)(b | (g << 8) | (r << 16) | (a << 24));
+                
                     x++;
                 }
                 x = 0;
@@ -126,8 +134,8 @@ namespace Gm1KonverterCrossPlatform.Files
 
                             Utility.ReadColor(pixelColor, out r, out g, out b, out a);
                             a = byte.MaxValue;
-
-                            colors[(uint)((width * (y + offsetY)) + x + offsetX)] = (UInt32)(b | (g << 8) | (r << 16) | (a << 24));
+                            uint number = (uint)((width * (y + offsetY)) + x + offsetX);
+                            colors[number] = (UInt32)(b | (g << 8) | (r << 16) | (a << 24));
 
                             x++;
 
@@ -181,13 +189,18 @@ namespace Gm1KonverterCrossPlatform.Files
                 //is used for the correct height of the bitmap
                 minusHeight = Puffer;
             }
-            bmp = new WriteableBitmap(new Avalonia.PixelSize(width, height - minusHeight), new Avalonia.Vector(100, 100), Avalonia.Platform.PixelFormat.Bgra8888);// Bgra8888 is device-native and much faster.
+            height = height - minusHeight;
+            bmp = new WriteableBitmap(new Avalonia.PixelSize(width, height), new Avalonia.Vector(100, 100), Avalonia.Platform.PixelFormat.Bgra8888);// Bgra8888 is device-native and much faster.
 
             using (var buf = bmp.Lock())
             {
                 uint zaehler = 0;
                 for (int i = width * minusHeight; i < colors.Length; i++)
                 {
+                    if (i == 345734)
+                    {
+                        var color = colors[i];
+                    }
                     var ptr = (uint*)buf.Address;
                     ptr += (uint)(zaehler);
                     *ptr = colors[i];

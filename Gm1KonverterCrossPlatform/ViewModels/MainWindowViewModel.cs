@@ -33,28 +33,91 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             }
         }
 
-        private String yOffset = "";
-        public String YOffset
-        {
-
-            get => yOffset;
-            set => this.RaiseAndSetIfChanged(ref yOffset, value);
-        }
-
-        private String xOffset = "";
-        public String XOffset
-        {
-
-            get => xOffset;
-            set => this.RaiseAndSetIfChanged(ref xOffset, value);
-        }
         
+        private String filetype = "Datatype: ";
+        public String Filetype
+        {
+
+            get => filetype;
+            set => this.RaiseAndSetIfChanged(ref filetype, value);
+        }
+
+        private int red = 0;
+        public int Red
+        {
+
+            get => red;
+            set {
+                if (value > 255)
+                {
+                    value = 255;
+                }
+                else if (value < 0)
+                {
+                    value = 0;
+                }
+                this.RaiseAndSetIfChanged(ref red, value);
+                ColorAsText = "#" + 255.ToString("X2") + red.ToString("X2") + green.ToString("X2") + blue.ToString("X2");
+            }
+        }
+
+        private int blue = 0;
+        public int Blue
+        {
+
+            get => blue;
+            set
+            {
+                if (value>255)
+                {
+                    value = 255;
+                }
+                else if (value < 0)
+                {
+                    value = 0;
+                }
+
+                this.RaiseAndSetIfChanged(ref blue, value);
+                ColorAsText = "#" + 255.ToString("X2") + red.ToString("X2") + green.ToString("X2") + blue.ToString("X2");
+            }
+        }
+
+        private int green = 0;
+        public int Green
+        {
+
+            get => green;
+            set
+            {
+                if (value > 255)
+                {
+                    value = 255;
+                }
+                else if (value < 0)
+                {
+                    value = 0;
+                }
+                this.RaiseAndSetIfChanged(ref green, value);
+                ColorAsText = "#" + 255.ToString("X2") + red.ToString("X2") + green.ToString("X2") + blue.ToString("X2");
+            }
+        }
+
+
         private String actualPalette = "Palette 1";
         public String ActualPalette
         {
 
             get => actualPalette;
             set => this.RaiseAndSetIfChanged(ref actualPalette, value);
+        }
+
+        
+
+        internal String[] workfolderFiles;
+        internal String[] WorkfolderFiles
+        {
+            get => workfolderFiles;
+            set => this.RaiseAndSetIfChanged(ref workfolderFiles, value);
         }
 
         internal String[] strongholdFiles;
@@ -81,6 +144,18 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             {
                 this.RaiseAndSetIfChanged(ref openFolderAfterExport, value);
                 userConfig.OpenFolderAfterExport = value;
+            }
+        }
+
+        private bool loggerActiv = false;
+        public bool LoggerActiv
+        {
+
+            get => loggerActiv;
+            set {
+                this.RaiseAndSetIfChanged(ref loggerActiv, value);
+                userConfig.ActivateLogger = value;
+
             }
         }
 
@@ -157,6 +232,16 @@ namespace Gm1KonverterCrossPlatform.ViewModels
 
         }
 
+        internal void LoadWorkfolderFiles()
+        {
+            if (!String.IsNullOrEmpty(userConfig.WorkFolderPath))
+            {
+                WorkfolderFiles = Utility.GetDirectoryNames(userConfig.WorkFolderPath);
+
+            }
+
+        }
+
 
         /// <summary>
         /// Decode the GM1 File to IMGS and Headers
@@ -172,7 +257,7 @@ namespace Gm1KonverterCrossPlatform.ViewModels
                  File = new DecodedFile();
                 if (!File.DecodeGm1File(Utility.FileToByteArray(userConfig.CrusaderPath+"\\"+ fileName), fileName))
                 {
-                    MessageBoxWindow messageBox = new MessageBoxWindow(MessageBoxWindow.MessageTyp.Info, "Only Animation Tiles are Supported yet. \nError from " + fileName);
+                    MessageBoxWindow messageBox = new MessageBoxWindow(MessageBoxWindow.MessageTyp.Info, (GM1FileHeader.DataType)File.FileHeader.IDataType + " Tiles are not Supported yet.");
                     messageBox.ShowDialog(window);
                     return false;
                 }

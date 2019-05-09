@@ -143,6 +143,16 @@ namespace Files.Gm1Converter
             }
         }
 
+        private List<TGXImage> newTileList = new List<TGXImage>();
+        /// <summary>
+        /// Convert Img To Tiled Diamond Images
+        /// </summary>
+        /// <param name="list"></param>
+        internal void ConvertImgToTiles(List<ushort> list, ushort width, ushort height)
+        {
+            newTileList.AddRange(Utility.ConvertImgToTiles(list, width, height,ImagesTGX));
+        }
+
         /// <summary>
         /// Creates the IMG Header
         /// </summary>
@@ -201,11 +211,11 @@ namespace Files.Gm1Converter
 
                     partsBefore += _TGXImage[i].SubParts;
 
-                    tilesImage.Add(new TilesImage(width * 30, width * 16 + _TGXImage[partsBefore - 1].TileOffset + TilesImage.Puffer));
+                    tilesImage.Add(new TilesImage(width * 30 + ((width - 1) * 2), width * 16 + _TGXImage[partsBefore - 1].TileOffset + TilesImage.Puffer));//gap 2 pixels
                     counter++;
                     itemsPerRow = 1;
                     actualItemsPerRow = 0;
-                    midx = (width / 2) * 30 - ((width % 2 == 0) ? 15 : 0);
+                    midx = (width / 2) * 30 + (width - 1) - ((width%2==0)? 15 : 0);
                     offsetY = tilesImage[counter].Height - 16;
                     offsetX = midx;
                     safeoffset = offsetX;
@@ -215,6 +225,7 @@ namespace Files.Gm1Converter
 
                 if (_TGXImage[i].ImgFileAsBytearray.Length > 512 && (_TGXImage[i].Width > 30 || _TGXImage[i].Height > 16))
                 {
+
                     int right = 0;
                     if (_TGXImage[i].Direction == 3)
                     {
@@ -227,16 +238,12 @@ namespace Files.Gm1Converter
                     }
 
                 }
-                if (counter == 42)
-                {
-
-                }
                 tilesImage[counter].AddDiamondToImg(_TGXImage[i].ImgFileAsBytearray, offsetX, offsetY);
 
 
 
 
-                offsetX += 30;
+                offsetX += 32;
                 actualItemsPerRow++;
                 if (actualItemsPerRow == itemsPerRow)
                 {
@@ -248,18 +255,18 @@ namespace Files.Gm1Converter
                         if (halfReached)
                         {
                             itemsPerRow--;
-                            offsetX += 15;
+                            offsetX += 16;
                         }
                         else
                         {
                             itemsPerRow++;
-                            offsetX -= 15;
+                            offsetX -= 16;
                         }
                     }
                     else
                     {
                         itemsPerRow--;
-                        offsetX += 15;
+                        offsetX += 16;
                         halfReached = true;
                     }
 
@@ -305,6 +312,11 @@ namespace Files.Gm1Converter
 
         }
 
+        public void SetNewTileList()
+        {
+            _TGXImage = newTileList;
+            fileHeader.INumberOfPictureinFile = (uint)_TGXImage.Count;
+        }
         #endregion
 
 

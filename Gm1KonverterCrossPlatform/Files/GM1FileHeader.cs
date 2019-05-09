@@ -94,7 +94,7 @@ namespace Files.Gm1Converter
         public UInt32 IUnknown1 { get => iUnknown1; }
         public UInt32 IUnknown2 { get => iUnknown2; }
         public UInt32 IUnknown3 { get => iUnknown3; }
-        public UInt32 INumberOfPictureinFile { get => iNumberOfPictureinFile; }
+        public UInt32 INumberOfPictureinFile { get => iNumberOfPictureinFile; set => iNumberOfPictureinFile = value; }
         public UInt32 IUnknown4 { get => iUnknown4; }
         public UInt32 IDataType { get => iDataType; }
         public UInt32[] IUnknown5 { get => iUnknown5; }

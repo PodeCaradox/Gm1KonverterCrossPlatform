@@ -4,7 +4,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
          xmlns:controls="clr-namespace:ThemeEditor.Controls.ColorPicker;assembly=ThemeEditor.Controls.ColorPicker"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-        Width="700"
+        Width="800"
         Height="400"
         x:Class="Gm1KonverterCrossPlatform.HelperClasses.Views.ChangeColorPalette"
         Title="ChangeColorPalette">
@@ -12,10 +12,31 @@
     <TextBlock HorizontalAlignment="Center">Click on the Color u want to Change</TextBlock>
     <Image HorizontalAlignment="Left" Name="PaletteImage" MaxWidth="640" MaxHeight="160" MinWidth="640" MinHeight="160" Margin="0" Source="{Binding ActuellColorTableChangeColorWindow}"/>
     <Canvas HorizontalAlignment="Left" x:Name="Cnv"/>
-    <TextBlock>Here u can change the Color:</TextBlock>
-    <TextBox Name="TextBoxColor" Text="{Binding ColorAsText}"/>
-    <Button Click="Button_ClickGeneratePallete">Change Color</Button>
-    <Button Click="Button_ClickSavePalette">save</Button>
+    <StackPanel Orientation="Horizontal">
+      <TextBlock Margin="50,0,0,0" VerticalAlignment="Center">HEX Color:</TextBlock>
+      <TextBox Name="TextBoxColor" Text="{Binding ColorAsText}" Width="100" Height="30" VerticalAlignment="Center"/>
+      <StackPanel>
+        <StackPanel Orientation="Horizontal">
+          <TextBlock>R</TextBlock>
+          <Slider  Maximum="255" Minimum="0" TickFrequency="1" Width="255" Value="{Binding Red}"></Slider>
+          <TextBox Width="40" Text="{Binding Red}"></TextBox>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+          <TextBlock>B</TextBlock>
+          <Slider Maximum="255" Minimum="0" TickFrequency="1" Width="255" Value="{Binding Blue}"></Slider>
+          <TextBox Width="40" Text="{Binding Blue}"></TextBox>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+          <TextBlock>G</TextBlock>
+          <Slider Maximum="255" Minimum="0" TickFrequency="1" Width="255" Value="{Binding Green}"></Slider>
+          <TextBox Width="40" Text="{Binding Green}"></TextBox>
+        </StackPanel>
+
+      </StackPanel>
+      <Button Click="Button_ClickGeneratePallete" Height="30" Margin="10,0,0,0" Width="100" VerticalAlignment="Center">Change Color</Button>
+      <Button Click="Button_ClickSavePalette" Height="30" Margin="10,0,0,0" VerticalAlignment="Center" Width="100">save</Button>
+    </StackPanel>
+
   </StackPanel >
   
 </Window>

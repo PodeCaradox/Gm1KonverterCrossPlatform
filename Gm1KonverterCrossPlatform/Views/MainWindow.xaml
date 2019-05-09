@@ -3,9 +3,9 @@
         xmlns:vm="clr-namespace:Gm1KonverterCrossPlatform.ViewModels;assembly=Gm1KonverterCrossPlatform"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-        Width="1000"
-        Height="500"
+        mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="600"
+        Width="1200"
+        Height="600"
         x:Class="Gm1KonverterCrossPlatform.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
         
@@ -18,14 +18,15 @@
 
   <Grid>
     <Grid.RowDefinitions>
-      <RowDefinition Height="Auto"/>
-      <RowDefinition />
+      <RowDefinition Height="20"/>
+      <RowDefinition Height="550"/>
     </Grid.RowDefinitions>
     <Grid.ColumnDefinitions>
-      <ColumnDefinition Width="200"/>
-      <ColumnDefinition Width="*"/>
+      <ColumnDefinition Width="250"/>
+      <ColumnDefinition Width="700"/>
+      <ColumnDefinition Width="250"/>
     </Grid.ColumnDefinitions>
-    <Menu DockPanel.Dock="Top" Grid.Row="0" Grid.ColumnSpan="2" >
+    <Menu DockPanel.Dock="Top" Grid.Row="0" Grid.ColumnSpan="3" >
       <MenuItem Header="_File">
         <MenuItem Header="_Create new GM1" Name="CreatenewGM1MenueItem" IsEnabled="{Binding ButtonsEnabled}"/>
         <Separator/>
@@ -45,30 +46,40 @@
         <MenuItem Header="_Crusader GM1 Folder" Name="CrusaderfolderMenueItem"/>
         <Separator/>
         <CheckBox Content="Open Folder after Export" Name="UserConfigOpenFolderafterExport" IsChecked="{Binding OpenFolderAfterExport}"/>
+        <CheckBox Content="Activate Logger" IsChecked="{Binding LoggerActiv}"/>
       </MenuItem>
     </Menu>
-   
-      <ListBox Items="{Binding StrongholdFiles}" Grid.Row="1" Grid.Column="0" SelectionMode="Single" Name="Gm1FilesSelector"/>
+    <StackPanel Grid.Row="1" Grid.Column="0" MaxWidth="250">
+      <TextBlock Text="Work Folder:" HorizontalAlignment="Left" Height="20"/>
+      <ListBox Items="{Binding WorkfolderFiles}" SelectionMode="Single" Name="WorkfolderSelector" MaxWidth="250" MaxHeight="560"/>
+    </StackPanel>
+    
+    <StackPanel Grid.Row="1" Grid.Column="2" MaxWidth="250">
+      <TextBlock Text="Stronghold Folder:" HorizontalAlignment="Left" Height="20"/>
+      <ListBox Items="{Binding StrongholdFiles}" SelectionMode="Single" Name="Gm1FilesSelector" MaxWidth="250" MaxHeight="560"/>
+    </StackPanel>
 
-    <StackPanel Grid.Column="2" Grid.Row="2">
-      <Button IsEnabled="{Binding ColorButtonsEnabled}" Click="Button_ClickChangeColorTable" IsVisible="{Binding ColorButtonsEnabled}">Change Color Table</Button>
 
-      <StackPanel Orientation="Horizontal">
+    <StackPanel Grid.Column="1" Grid.Row="2">
+      <TextBlock Text="{Binding Filetype}" HorizontalAlignment="Center" Height="20"/>
+    
+      <StackPanel Orientation="Vertical">
+        <TextBlock Text="{Binding ActualPalette}" IsVisible="{Binding ColorButtonsEnabled}" HorizontalAlignment="Center"/>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+          <Button IsEnabled="{Binding ColorButtonsEnabled}" Content="««" Width="40" Click="Button_ClickPalleteminus" IsVisible="{Binding ColorButtonsEnabled}" HorizontalAlignment="Center"/>
+          <Image Source="{Binding ActuellColorTable}" IsVisible="{Binding ColorButtonsEnabled}" HorizontalAlignment="Center"/>
+          <Button IsEnabled="{Binding ColorButtonsEnabled}" Content="»»" Width="40" Click="Button_ClickPalleteplus" IsVisible="{Binding ColorButtonsEnabled}" HorizontalAlignment="Center"/>
 
-        <Button IsEnabled="{Binding ColorButtonsEnabled}" Content="««" Width="40" Click="Button_ClickPalleteminus" IsVisible="{Binding ColorButtonsEnabled}"/>
-        <Button IsEnabled="{Binding ColorButtonsEnabled}" Content="»»" Width="40" Click="Button_ClickPalleteplus" IsVisible="{Binding ColorButtonsEnabled}"/>
-        <Image Source="{Binding ActuellColorTable}" IsVisible="{Binding ColorButtonsEnabled}"/>
-        <TextBlock Text="{Binding ActualPalette}" IsVisible="{Binding ColorButtonsEnabled}"/>
-        <TextBlock Text="Offset:" IsVisible="{Binding ImportButtonEnabled}"/>
-        <TextBox  Text="{Binding XOffset}" IsVisible="{Binding ImportButtonEnabled}"/>
-        <Button  Content="Save" Click="Button_ClickSaveOffset" IsVisible="{Binding ImportButtonEnabled}"/>
+          <Button IsEnabled="{Binding ColorButtonsEnabled}" Click="Button_ClickChangeColorTable" IsVisible="{Binding ColorButtonsEnabled}" HorizontalAlignment="Right">Change Color Table</Button>
+        </StackPanel>
       </StackPanel>
 
 
-      <ListBox Items="{Binding TGXImages}" MaxHeight="400" Name="TGXImageListBox">
+
+      <ListBox Items="{Binding TGXImages}" MaxHeight="400" Name="TGXImageListBox" MaxWidth="700">
         <ListBox.ItemsPanel>
           <ItemsPanelTemplate>
-            <WrapPanel Orientation="Vertical" />
+            <WrapPanel Orientation="Horizontal" MaxWidth="650"/>
           </ItemsPanelTemplate>
         </ListBox.ItemsPanel>
       </ListBox>

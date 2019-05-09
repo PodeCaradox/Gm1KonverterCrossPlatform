@@ -14,7 +14,7 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
         private String crusaderPath;
         private String workFolderPath;
         private bool openFolderAfterExport;
-
+        private bool activateLogger;
         #endregion
 
         #region Construtor
@@ -58,6 +58,17 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
             }
         }
 
+        public bool ActivateLogger
+        {
+            get => activateLogger;
+            set
+            {
+                Logger.Loggeractiv = value;
+                activateLogger = value;
+                SaveData();
+            }
+        }
+
         #endregion
 
         #region Methods
@@ -70,9 +81,10 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
             {
                 var json = File.ReadAllText(path + "\\UserConfig.txt");
                 var obj = JsonConvert.DeserializeObject<UserConfig>(json);
-                CrusaderPath = obj.CrusaderPath;
-                WorkFolderPath = obj.WorkFolderPath;
-                OpenFolderAfterExport = obj.OpenFolderAfterExport;
+                crusaderPath = obj.CrusaderPath;
+                workFolderPath = obj.WorkFolderPath;
+                openFolderAfterExport = obj.OpenFolderAfterExport;
+                activateLogger = obj.ActivateLogger;
             }
             else
             {

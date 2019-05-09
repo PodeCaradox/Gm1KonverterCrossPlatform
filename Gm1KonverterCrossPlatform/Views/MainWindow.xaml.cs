@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Palette = Files.Gm1Converter.Palette;
 
@@ -26,7 +27,7 @@ namespace Gm1KonverterCrossPlatform.Views
     public class MainWindow : Window
     {
 
-        
+        private MainWindowViewModel vm;
         public MainWindow()
         {
 
@@ -41,8 +42,8 @@ namespace Gm1KonverterCrossPlatform.Views
             ListBox TGXImageListBox = this.Get<ListBox>("TGXImageListBox");
             TGXImageListBox.SelectionChanged += TGXImageSelectionChanged;
 
-
-            
+            ListBox workfolderSelector = this.Get<ListBox>("WorkfolderSelector");
+            workfolderSelector.DoubleTapped += OpenWorkfolderDirectory;
 
             MenuItem workfolderMenueItem = this.Get<MenuItem>("WorkfolderMenueItem");
             workfolderMenueItem.Click += ChangeWorkfolder;
@@ -68,19 +69,31 @@ namespace Gm1KonverterCrossPlatform.Views
 
         }
 
+        private void OpenWorkfolderDirectory(object sender, RoutedEventArgs e)
+        {
+            ListBox listbox = sender as ListBox;
+            if (listbox.SelectedIndex == -1) return;
+            Process.Start(vm.UserConfig.WorkFolderPath + "\\" + listbox.SelectedItem);
+        }
+
         private void TGXImageSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var listbox = sender as ListBox;
             if (listbox.SelectedIndex == -1) return;
             if (vm.File==null) return;
             if (listbox.SelectedIndex > vm.File.ImagesTGX.Count) return;
-            vm.XOffset = vm.File.ImagesTGX[listbox.SelectedIndex].OffsetX.ToString();
         }
 
         private void ImportImages(object sender, RoutedEventArgs e)
         {
+            Cursor = new Avalonia.Input.Cursor(Avalonia.Input.StandardCursorType.Wait);
             var filewithoutgm1ending = vm.File.FileHeader.Name.Replace(".gm1", "");
-            var files = Directory.GetFiles(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\Images", "*.png");
+            var files = Directory.GetFiles(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\Images", "*.png",SearchOption.TopDirectoryOnly);
+            //sort because 11 is before 2
+            files = files.OrderBy(x => x.Length).ThenBy(x => x).ToArray<String>();
+
+
+           
             foreach (var file in files)
             {
                 var filename = Path.GetFileName(file);
@@ -88,15 +101,24 @@ namespace Gm1KonverterCrossPlatform.Views
                 {
                     var fileindex = int.Parse(filename.Replace("Image", "").Replace(".png", "")) - 1;
                     int width, height;
-                    var list = Utility.LoadImage(file,out width,out height, vm.File.ImagesTGX[fileindex].AnimatedColor);
+                    var list = Utility.LoadImage(file,out width,out height, vm.File.ImagesTGX[fileindex].AnimatedColor,1,vm.File.FileHeader.IDataType);
                     if (list.Count == 0) return;
-             
-                    vm.File.ImagesTGX[fileindex].ConvertImageWithoutPaletteToByteArray(list,width,height);
-                    vm.File.ImagesTGX[fileindex].Width = (ushort)width;
-                    vm.File.ImagesTGX[fileindex].Height = (ushort)height;
+                    if ((GM1FileHeader.DataType)vm.File.FileHeader.IDataType != GM1FileHeader.DataType.TilesObject)
+                    {
+                        vm.File.ImagesTGX[fileindex].ConvertImageWithoutPaletteToByteArray(list, width, height);
+                        vm.File.ImagesTGX[fileindex].Width = (ushort)width;
+                        vm.File.ImagesTGX[fileindex].Height = (ushort)height;
+                    }
+                    else
+                    {
+                        vm.File.ConvertImgToTiles(list, (ushort)width, (ushort)height);
+                    }
+
                 }
 
             }
+            if ((GM1FileHeader.DataType)vm.File.FileHeader.IDataType == GM1FileHeader.DataType.TilesObject) vm.File.SetNewTileList();
+            
             vm.File.ImagesTGX[0].SizeinByteArray = (uint)vm.File.ImagesTGX[0].ImgFileAsBytearray.Length;
             uint zaehler = 0;
             for (int i = 1; i < vm.File.ImagesTGX.Count; i++)
@@ -110,10 +132,12 @@ namespace Gm1KonverterCrossPlatform.Views
             uint newDataSize = vm.File.ImagesTGX[vm.File.ImagesTGX.Count - 1].OffsetinByteArray + vm.File.ImagesTGX[vm.File.ImagesTGX.Count - 1].SizeinByteArray; ;
           
             vm.File.FileHeader.IDataSize = newDataSize;
+            Cursor = new Avalonia.Input.Cursor(Avalonia.Input.StandardCursorType.Arrow);
         }
 
         private void ExportImages(object sender, RoutedEventArgs e)
         {
+            Cursor = new Avalonia.Input.Cursor(Avalonia.Input.StandardCursorType.Wait);
             int img = 1;
             var filewithoutgm1ending = vm.File.FileHeader.Name.Replace(".gm1", "");
             if (!Directory.Exists(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\Images"))
@@ -139,10 +163,16 @@ namespace Gm1KonverterCrossPlatform.Views
             
             if (vm.UserConfig.OpenFolderAfterExport)
                 Process.Start(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\Images");
+
+
+            vm.LoadWorkfolderFiles();
+
+            Cursor = new Avalonia.Input.Cursor(Avalonia.Input.StandardCursorType.Arrow);
         }
 
         private void ImportColortable(object sender, RoutedEventArgs e)
         {
+            Cursor = new Avalonia.Input.Cursor(Avalonia.Input.StandardCursorType.Wait);
             var filewithoutgm1ending = vm.File.FileHeader.Name.Replace(".gm1", "");
             var files=Directory.GetFiles(vm.UserConfig.WorkFolderPath+"\\"+ filewithoutgm1ending+ "\\Colortables", "*.png");
   
@@ -153,7 +183,7 @@ namespace Gm1KonverterCrossPlatform.Views
                 {
                     int width, height;
                     var fileindex = int.Parse(filename.Replace("ColorTable", "").Replace(".png","")) - 1;
-                    var list = Utility.LoadImage(file, out width, out height,1, Palette.pixelSize);
+                    var list = Utility.LoadImage(file, out width, out height,1, Palette.pixelSize, vm.File.FileHeader.IDataType);
                     if (list.Count == 0) return;
                     vm.File.Palette.SetPaleteUInt(fileindex, list.ToArray());
                     var bitmap = vm.File.Palette.GetBitmap(fileindex, Palette.pixelSize);
@@ -163,12 +193,13 @@ namespace Gm1KonverterCrossPlatform.Views
                 }
                
             }
-
+            Cursor = new Avalonia.Input.Cursor(Avalonia.Input.StandardCursorType.Arrow);
             vm.ActuellColorTable = vm.File.Palette.Bitmaps[vm.File.Palette.ActualPalette];
         }
 
         private void ExportColortable(object sender, RoutedEventArgs e)
         {
+            Cursor = new Avalonia.Input.Cursor(Avalonia.Input.StandardCursorType.Wait);
             int colorTable = 1;
             var filewithoutgm1ending = vm.File.FileHeader.Name.Replace(".gm1", "");
             if (!Directory.Exists(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending+ "\\Colortables"))
@@ -182,12 +213,17 @@ namespace Gm1KonverterCrossPlatform.Views
             }
             if(vm.UserConfig.OpenFolderAfterExport)
             Process.Start(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\Colortables");
+
+            vm.LoadWorkfolderFiles();
+            Cursor = new Avalonia.Input.Cursor(Avalonia.Input.StandardCursorType.Arrow);
         }
 
         private void ReplacewithSavedGM1FileM(object sender, RoutedEventArgs e)
         {
+            Cursor = new Avalonia.Input.Cursor(Avalonia.Input.StandardCursorType.Wait);
             var filewithoutgm1ending = vm.File.FileHeader.Name.Replace(".gm1", "");
             File.Copy(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\" + filewithoutgm1ending + "Save.gm1",   vm.UserConfig.CrusaderPath + "\\" + vm.File.FileHeader.Name, true);
+            Cursor = new Avalonia.Input.Cursor(Avalonia.Input.StandardCursorType.Arrow);
         }
 
         String listboxItemBefore = null;
@@ -200,7 +236,7 @@ namespace Gm1KonverterCrossPlatform.Views
             listboxItemBefore = listbox.SelectedItem.ToString();
             Cursor = new Avalonia.Input.Cursor(Avalonia.Input.StandardCursorType.Wait);
             if (vm.DecodeData(listboxItemBefore, this)){
-
+                vm.Filetype = "Datatype: " + ((GM1FileHeader.DataType) vm.File.FileHeader.IDataType);
                 if (vm.File.Palette == null)
                 {
                     vm.ImportButtonEnabled = true;
@@ -228,19 +264,23 @@ namespace Gm1KonverterCrossPlatform.Views
 
         }
 
-        private MainWindowViewModel vm;
+       
         private void ViewModelSet(object sender, EventArgs e)
         {
             vm = DataContext as MainWindowViewModel;
             vm.UserConfig = new UserConfig();
             vm.UserConfig.LoadData();
             vm.OpenFolderAfterExport = vm.UserConfig.OpenFolderAfterExport;
+            vm.LoggerActiv = vm.UserConfig.ActivateLogger;
             vm.LoadStrongholdFiles();
+            vm.LoadWorkfolderFiles();
+            Logger.Path = vm.UserConfig.WorkFolderPath;
+           if(File.Exists(vm.UserConfig.WorkFolderPath + "\\Logger\\Log.txt")) File.Delete(vm.UserConfig.WorkFolderPath+"\\Logger\\Log.txt");
         }
 
         private void CreatenewGM1(object sender, EventArgs e)
         {
-       
+            Cursor = new Avalonia.Input.Cursor(Avalonia.Input.StandardCursorType.Wait);
             var filewithoutgm1ending = vm.File.FileHeader.Name.Replace(".gm1", "");
             if (!Directory.Exists(vm.UserConfig.WorkFolderPath+"\\"+ filewithoutgm1ending))
             {
@@ -255,6 +295,7 @@ namespace Gm1KonverterCrossPlatform.Views
             var array = vm.File.GetNewGM1Bytes();
             Utility.ByteArraytoFile(vm.UserConfig.CrusaderPath + "\\" + vm.File.FileHeader.Name, array);
             File.Copy(vm.UserConfig.CrusaderPath + "\\" + vm.File.FileHeader.Name, vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\" + filewithoutgm1ending + "Modded.gm1", true);
+            Cursor = new Avalonia.Input.Cursor(Avalonia.Input.StandardCursorType.Arrow);
         }
 
         private async void ChangeCrusaderfolder(object sender, RoutedEventArgs e)
@@ -269,6 +310,7 @@ namespace Gm1KonverterCrossPlatform.Views
         
             var folderFromTask = await GetFolderAsync("Workfolder", vm.UserConfig.WorkFolderPath);
             vm.UserConfig.WorkFolderPath = folderFromTask;
+            vm.LoadWorkfolderFiles();
         }
 
         private async Task<string> GetFolderAsync(String name,String initialDirectory)
@@ -321,12 +363,7 @@ namespace Gm1KonverterCrossPlatform.Views
             return files;
         }
 
-        private void Button_ClickSaveOffset(object sender, RoutedEventArgs e)
-        {
-            var listbox = this.Get<ListBox>("TGXImageListBox");
-            vm.File.ImagesTGX[listbox.SelectedIndex].OffsetX = ushort.Parse(vm.XOffset);
 
-        }
 
         private void Button_ClickPalleteminus(object sender, RoutedEventArgs e)
         {

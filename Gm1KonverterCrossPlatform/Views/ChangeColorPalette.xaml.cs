@@ -75,11 +75,9 @@ namespace Gm1KonverterCrossPlatform.HelperClasses.Views
             byte r, g, b, a;
             Utility.ReadColor(color, out r, out g, out b, out a);
             vm.ColorAsText = "#" + a.ToString("X2") + r.ToString("X2") + g.ToString("X2") + b.ToString("X2");
-
-           
-
-
-         
+            vm.Red = r;
+            vm.Green = g;
+            vm.Blue = b;
         }
         private void Button_ClickGeneratePallete(object sender, RoutedEventArgs e)
         {
