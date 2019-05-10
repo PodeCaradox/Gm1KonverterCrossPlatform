@@ -18,3 +18,5 @@ Wen du das Programm testen möchtest die dekodierten Dateien werden im Gm1Konver
 ![Download](https://github.com/Gaaammmler/Gm1KonverterCrossPlatform/releases)
 
 ![SH1 Graphics](https://github.com/Gaaammmler/Stronghold-Crusader-Sh1-Graphics)
+
+![Lolasik011](https://github.com/Lolasik011) for the russian translation
