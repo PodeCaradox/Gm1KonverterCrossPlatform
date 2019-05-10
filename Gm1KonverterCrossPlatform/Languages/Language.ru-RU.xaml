@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<controls:ResourceDictionary
+    xmlns:controls="clr-namespace:Avalonia.Controls;assembly=Avalonia.Styling"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <x:String x:Key="Русский">Русский язык загружен</x:String>
+    <x:String x:Key="CreatenewGM1">Создать новый GM1 файл</x:String>
+    <x:String x:Key="ReplacewithSavedGM1File">Заменить сохраненным файлом GM1</x:String>
+    <x:String x:Key="ExportColortable">Экспорт таблицы цветов</x:String>
+    <x:String x:Key="ImportColortable">Импорт таблицы цветов</x:String>
+    <x:String x:Key="ExportImages">Экспорт изображений</x:String>
+    <x:String x:Key="ImportImages">Импорт изображений</x:String>
+    <x:String x:Key="Workfolder">Рабочая папка</x:String>
+    <x:String x:Key="OpenFolderafterExport">Открыть папку после експорта</x:String>
+    <x:String x:Key="ActivateLogger">Активировать лог файл</x:String>
+    <x:String x:Key="StrongholdFolder">Папка Stronghold</x:String>
+    <x:String x:Key="File">Файл</x:String>
+    <x:String x:Key="Edit">Редактировать</x:String>
+    <x:String x:Key="Options">Опции</x:String>
+    <x:String x:Key="Datatype">Тип данных:</x:String>
+    <x:String x:Key="Palette">Таблица цветов:</x:String>
+    <x:String x:Key="TilesarenotSupportedyet">Плитка еще не поддерживается.</x:String>
+    <x:String x:Key="ClickontheColoryouwanttoChange">Нажмите на цвет, который вы хотите изменить.</x:String>
+    <x:String x:Key="HEXColor">HEX Цвет:</x:String>
+    <x:String x:Key="ChangeColor">Изменить цвет</x:String>
+    <x:String x:Key="Save">Сохранить</x:String>
+    <x:String x:Key="ChangeColorTable">Изменить таблицу цветов</x:String>
+    <x:String x:Key="GM1Converter">GM1 конвертер</x:String>
+    <x:String x:Key="ChangeColorPalette">Таблица смены цветов</x:String>
+
+    <x:String x:Key="AnimationTitel1">Тип данных анимаций</x:String>
+    <x:String x:Key="AnimationText1">Файлы анимации GM1 состоят из определенного количества закодированных изображений и 10 таблиц цветов.
+        Таблицы цветов используются для экономии места и отображения разных цветов игроков.
+        Сгенерированные изображения ссылаются на текущую выбранную таблицу цветов:
+    </x:String>
+    <x:String x:Key="AnimationText2">Важно отметить, что один цвет на изображении взят из одного и того же места в Таблице цветов, что означает, то что на Рисунке для одного Пикселя одна Позиция для всех Таблиц Цветов.
+    Позиции цвета на изображении остаются одинаковыми для каждой таблицы цветов, но таблица цветов изменяется, чтобы дать другой цвет игрока.
+    </x:String>
+
+    <x:String x:Key="AnimationText3">1 = серый/нейтральный??</x:String>
+    <x:String x:Key="AnimationText4">2 = синий</x:String>
+    <x:String x:Key="AnimationText5">3 = красный</x:String>
+    <x:String x:Key="AnimationText6">4 = оранжевый</x:String>
+    <x:String x:Key="AnimationText7">5 = желтый</x:String>
+    <x:String x:Key="AnimationText8">6 = пурпурный</x:String>
+    <x:String x:Key="AnimationText9">7 = черный</x:String>
+    <x:String x:Key="AnimationText10">8 = бирюзовый</x:String>
+    <x:String x:Key="AnimationText11">9 = зеленый</x:String>
+    <x:String x:Key="AnimationText12">10 = серый/нейтральный??</x:String>
+    <x:String x:Key="AnimationText13">Присвоение номера таблицы цветов цветам игрока / нейтральные цвета:</x:String>
+
+    <x:String x:Key="InterfaceTitel1">Тип данных интерфейс</x:String>
+    <x:String x:Key="InterfaceText1">Файлы интерфейса GM1 состоят из определенного количества закодированных изображений.
+        Эти изображения могут быть полностью отредактированы после экспорта в размере и презентации.
+        К сожалению, пока неизвестно, как изображение расположено в Stronghold, потому что положение остается фиксированным, их можно только удлинить вниз и вправо.
+    </x:String>
+
+<x:String x:Key="TiledObjectTitel1">Тип данных Плиточный объект</x:String>
+    <x:String x:Key="TiledObjectText1">Файлы GM1 типа Плиточный объект состоят из определенного количества кодированных картинок.
+        Эти изображения состоят из файла GM1 из множества маленьких бриллиантов размером 30 х 16 пикселей. На рисунке ниже показан такой бриллиант, увеличенный в 4 раза.
+    </x:String>
+    <x:String x:Key="TiledObjectText2">Из отдельных алмазных плиток получается наземный алмаз картины.
+    </x:String>
+
+    <x:String x:Key="TiledObjectText3">Наконец, изображения с переменной высотой размещаются на отдельных бриллиантах, и вся картинка складывается вместе.</x:String>
+
+
+    <x:String x:Key="TiledObjectText4">Это означает, что файлы GM1 типа Плиточный объект могут быть изменены только по высоте и визуально преобразованы.
+        Все, что находится под изображением Земляной Диамант, игнорируется, потому что оно должно быть изометрическим.</x:String>
+
+    <x:String x:Key="NoInfoYet">Пока нет информации об этом типе файла.</x:String>
+
+</controls:ResourceDictionary>

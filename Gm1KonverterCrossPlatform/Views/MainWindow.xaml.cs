@@ -31,6 +31,7 @@ namespace Gm1KonverterCrossPlatform.Views
         public MainWindow()
         {
 
+
             InitializeComponent();
         #if DEBUG
             this.AttachDevTools();
@@ -67,6 +68,19 @@ namespace Gm1KonverterCrossPlatform.Views
             MenuItem importImagesMenueItem = this.Get<MenuItem>("ImportImagesMenueItem");
             importImagesMenueItem.Click += ImportImages;
 
+            Image image = this.Get<Image>("HelpIcon");
+
+            Avalonia.Media.Imaging.Bitmap bitmap = new Avalonia.Media.Imaging.Bitmap("Images/info.png");
+            image.Source = bitmap;
+            image.Tapped += OpenInfoWindow;
+        }
+
+        private void OpenInfoWindow(object sender, RoutedEventArgs e)
+        {
+            if (vm.File == null) return;
+
+            InfoWindow infoWindow = new InfoWindow((GM1FileHeader.DataType)vm.File.FileHeader.IDataType);
+            infoWindow.Show();
         }
 
         private void OpenWorkfolderDirectory(object sender, RoutedEventArgs e)
@@ -236,7 +250,9 @@ namespace Gm1KonverterCrossPlatform.Views
             listboxItemBefore = listbox.SelectedItem.ToString();
             Cursor = new Avalonia.Input.Cursor(Avalonia.Input.StandardCursorType.Wait);
             if (vm.DecodeData(listboxItemBefore, this)){
-                vm.Filetype = "Datatype: " + ((GM1FileHeader.DataType) vm.File.FileHeader.IDataType);
+             
+                
+                vm.Filetype = Utility.GetText("Datatype") + ((GM1FileHeader.DataType) vm.File.FileHeader.IDataType);
                 if (vm.File.Palette == null)
                 {
                     vm.ImportButtonEnabled = true;
@@ -268,8 +284,10 @@ namespace Gm1KonverterCrossPlatform.Views
         private void ViewModelSet(object sender, EventArgs e)
         {
             vm = DataContext as MainWindowViewModel;
+            
             vm.UserConfig = new UserConfig();
             vm.UserConfig.LoadData();
+            vm.ActualLanguage = vm.UserConfig.Language;
             vm.OpenFolderAfterExport = vm.UserConfig.OpenFolderAfterExport;
             vm.LoggerActiv = vm.UserConfig.ActivateLogger;
             vm.LoadStrongholdFiles();
@@ -300,7 +318,7 @@ namespace Gm1KonverterCrossPlatform.Views
 
         private async void ChangeCrusaderfolder(object sender, RoutedEventArgs e)
         {
-            var folderFromTask = await GetFolderAsync("Crusaderfolder", vm.UserConfig.CrusaderPath);
+            var folderFromTask = await GetFolderAsync(Utility.GetText("StrongholdFolder"), vm.UserConfig.CrusaderPath);
             vm.UserConfig.CrusaderPath = folderFromTask;
             vm.LoadStrongholdFiles();
         }
@@ -308,19 +326,19 @@ namespace Gm1KonverterCrossPlatform.Views
         private async void ChangeWorkfolder(object sender, RoutedEventArgs e)
         {
         
-            var folderFromTask = await GetFolderAsync("Workfolder", vm.UserConfig.WorkFolderPath);
+            var folderFromTask = await GetFolderAsync(Utility.GetText("Workfolder"), vm.UserConfig.WorkFolderPath);
             vm.UserConfig.WorkFolderPath = folderFromTask;
             vm.LoadWorkfolderFiles();
         }
 
         private async Task<string> GetFolderAsync(String name,String initialDirectory)
         {
-            OpenFolderDialog openFolderDialog = new OpenFolderDialog
-            {
-                Title = name,
-                
+            OpenFolderDialog openFolderDialog = new OpenFolderDialog();
 
-            };
+            openFolderDialog.Title = name;
+
+
+
             if (!String.IsNullOrEmpty(initialDirectory))
             {
                 openFolderDialog.InitialDirectory = initialDirectory;
@@ -332,38 +350,12 @@ namespace Gm1KonverterCrossPlatform.Views
             }
             return file;
         }
-
+     
         private void InitializeComponent()
         {
             AvaloniaXamlLoader.Load(this);
         }
-
-        public async Task<string[]> GetFilesAsync()
-        {
-          
-            OpenFileDialog openFileDialog = new OpenFileDialog
-            {
-                Title = "Choose GM1 Files",
-                //AllowMultiple = true, //will be added later
-                InitialDirectory = vm.UserConfig.CrusaderPath,
-            };
-
-            openFileDialog.Filters = new System.Collections.Generic.List<FileDialogFilter>();
-            openFileDialog.Filters.Add(
-                    new FileDialogFilter
-                    {
-                        Name = "GM1 files (*.gm1)",
-                        Extensions = { "gm1" },
-                    }
-                );
-
-
-            var files = await openFileDialog.ShowAsync(this);
-
-            return files;
-        }
-
-
+        
 
         private void Button_ClickPalleteminus(object sender, RoutedEventArgs e)
         {

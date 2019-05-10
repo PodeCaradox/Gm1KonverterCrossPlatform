@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<controls:ResourceDictionary
+    xmlns:controls="clr-namespace:Avalonia.Controls;assembly=Avalonia.Styling"
+     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  >
+
+    <x:String x:Key="English">English loaded</x:String>
+    <x:String x:Key="CreatenewGM1">Create new GM1</x:String>
+    <x:String x:Key="ReplacewithSavedGM1File">Replace with Saved GM1 File</x:String>
+    <x:String x:Key="ExportColortable">Export Colortable</x:String>
+    <x:String x:Key="ImportColortable">Import Colortable</x:String>
+    <x:String x:Key="ExportImages">Export Images</x:String>
+    <x:String x:Key="ImportImages">Import Images</x:String>
+    <x:String x:Key="Workfolder">Workfolder</x:String>
+    <x:String x:Key="OpenFolderafterExport">Open Folder after Export</x:String>
+    <x:String x:Key="ActivateLogger">Activate Logger</x:String>
+    <x:String x:Key="StrongholdFolder">Stronghold Folder</x:String>
+    <x:String x:Key="File">File</x:String>
+    <x:String x:Key="Edit">Edit</x:String>
+    <x:String x:Key="Options">Options</x:String>
+    <x:String x:Key="Datatype">Datatype: </x:String>
+    <x:String x:Key="Palette">Colortable: </x:String>
+    <x:String x:Key="TilesarenotSupportedyet">Tiles are not Supported yet.</x:String>
+    <x:String x:Key="ClickontheColoryouwanttoChange">Click on the Color you want to Change.</x:String>
+    <x:String x:Key="HEXColor">HEX Color:</x:String>
+    <x:String x:Key="ChangeColor">Change Color</x:String>
+    <x:String x:Key="Save">Save</x:String>
+    <x:String x:Key="ChangeColorTable">Change Colortable</x:String>
+    <x:String x:Key="GM1Converter">GM1 Converter</x:String>
+    <x:String x:Key="ChangeColorPalette">Colortable changer</x:String>
+
+    <x:String x:Key="AnimationTitel1">Datatyp Animation</x:String>
+    <x:String x:Key="AnimationText1">GM1 animation files consist of a certain number of encoded images and 10 color tables.
+        The color tables are used to save space and display different player colors.
+        The generated images refer to the currently selected color table:
+    </x:String>
+    <x:String x:Key="AnimationText2">It is important to note that one color in the picture is taken from the same place in the Colortable, that means in the Picture is for one Pixel one Position for all Colortables.
+    The positions of the color in the image remain the same for each Colortable, but the Colortable is changed to give the different player color.
+    </x:String>
+
+    <x:String x:Key="AnimationText3">1 = gray/neutral??</x:String>
+    <x:String x:Key="AnimationText4">2 = blue</x:String>
+    <x:String x:Key="AnimationText5">3 = red</x:String>
+    <x:String x:Key="AnimationText6">4 = orange</x:String>
+    <x:String x:Key="AnimationText7">5 = yellow</x:String>
+    <x:String x:Key="AnimationText8">6 = purple</x:String>
+    <x:String x:Key="AnimationText9">7 = black</x:String>
+    <x:String x:Key="AnimationText10">8 = turquoise</x:String>
+    <x:String x:Key="AnimationText11">9 = green</x:String>
+    <x:String x:Key="AnimationText12">10 = gray/neutral??</x:String>
+    <x:String x:Key="AnimationText13">Assignment of the color table number to the player colors / neutral colors:</x:String>
+
+    <x:String x:Key="InterfaceTitel1">Datatyp Interface</x:String>
+    <x:String x:Key="InterfaceText1">GM1 Interface files consist of a certain number of encoded images.
+        These images can be completely edited after export in size and presentation.
+        Unfortunately, it is not yet known how a picture is positioned in Stronghold, because the position remains fixed, they can only be extended downwards and to the right.
+    </x:String>
+
+
+    <x:String x:Key="TiledObjectTitel1">Datatyp TiledObject</x:String>
+    <x:String x:Key="TiledObjectText1">GM1 files of type TiledObject consist of a certain number of coded pictures.
+        These images consist in the GM1 file of many small Diamonds 30 x 16 pixels. The picture below shows such a Diamond enlarged by a factor of 4.
+    </x:String>
+    <x:String x:Key="TiledObjectText2">From the individual Diamond Tiles then the Grounddiamond of the picture is produced.
+    </x:String>
+
+    <x:String x:Key="TiledObjectText3">Finally, pictures with variable height are placed on the individual diamonds and the whole picture is put together.</x:String>
+
+
+    <x:String x:Key="TiledObjectText4">That means GM1 files of the type TiledObject can only be changed in the height and visually transformed.
+        Anything below the Grounddiamond image is ignored, because it need to be isometric.</x:String>
+
+    <x:String x:Key="NoInfoYet">There is no info about this file type yet.</x:String>
+
+</controls:ResourceDictionary>

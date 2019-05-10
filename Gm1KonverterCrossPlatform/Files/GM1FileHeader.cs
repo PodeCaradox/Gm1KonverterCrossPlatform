@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Files.Gm1Converter
 {
-    class GM1FileHeader
+    public class GM1FileHeader
     {
 
         #region Public

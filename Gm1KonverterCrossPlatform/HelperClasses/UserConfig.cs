@@ -8,8 +8,10 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
 {
     public class UserConfig
     {
-        #region Variables
+        public enum Languages { English, Deutsch, Русский };
 
+        #region Variables
+        private Languages language = Languages.English;
         private String path;
         private String crusaderPath;
         private String workFolderPath;
@@ -34,6 +36,16 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
             set
             {
                 crusaderPath = value;
+                SaveData();
+            }
+        }
+
+        public Languages Language
+        {
+            get => language;
+            set
+            {
+                language = value;
                 SaveData();
             }
         }
@@ -85,6 +97,7 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
                 workFolderPath = obj.WorkFolderPath;
                 openFolderAfterExport = obj.OpenFolderAfterExport;
                 activateLogger = obj.ActivateLogger;
+                language = obj.Language;
             }
             else
             {

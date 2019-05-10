@@ -9,7 +9,7 @@
         x:Class="Gm1KonverterCrossPlatform.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
         
-        Title="Gm1KonverterCrossPlatform">
+        Title="{DynamicResource GM1Converter}">
 
   <Design.DataContext>
     <vm:MainWindowViewModel/>
@@ -27,42 +27,50 @@
       <ColumnDefinition Width="250"/>
     </Grid.ColumnDefinitions>
     <Menu DockPanel.Dock="Top" Grid.Row="0" Grid.ColumnSpan="3" >
-      <MenuItem Header="_File">
-        <MenuItem Header="_Create new GM1" Name="CreatenewGM1MenueItem" IsEnabled="{Binding ButtonsEnabled}"/>
+      <MenuItem Header="{DynamicResource File}">
+        <MenuItem Header="{DynamicResource CreatenewGM1}" Name="CreatenewGM1MenueItem" IsEnabled="{Binding ButtonsEnabled}"/>
         <Separator/>
-        <MenuItem Header="_Replace with Saved GM1 File" Name="ReplacewithSavedGM1FileMenueItem" IsEnabled="{Binding ReplaceWithSaveFile}"/>
+        <MenuItem Header="{DynamicResource ReplacewithSavedGM1File}" Name="ReplacewithSavedGM1FileMenueItem" IsEnabled="{Binding ReplaceWithSaveFile}"/>
     
       </MenuItem>
-      <MenuItem Header="_Edit">
-        <MenuItem Header="Export Colortable" Name="ExportColortableMenueItem" IsEnabled="{Binding ColorButtonsEnabled}"/>
-        <MenuItem Header="Import Colortable" Name="ImportColortableMenueItem" IsEnabled="{Binding ColorButtonsEnabled}"/>
+      <MenuItem Header="{DynamicResource Edit}">
+        <MenuItem Header="{DynamicResource ExportColortable}" Name="ExportColortableMenueItem" IsEnabled="{Binding ColorButtonsEnabled}"/>
+        <MenuItem Header="{DynamicResource ImportColortable}" Name="ImportColortableMenueItem" IsEnabled="{Binding ColorButtonsEnabled}"/>
         <Separator/>
-        <MenuItem Header="Export Images" Name="ExportImagesMenueItem" IsEnabled="{Binding ButtonsEnabled}"/>
-        <MenuItem Header="Import Images" Name="ImportImagesMenueItem" IsEnabled="{Binding ImportButtonEnabled}"/>
+        <MenuItem Header="{DynamicResource ExportImages}" Name="ExportImagesMenueItem" IsEnabled="{Binding ButtonsEnabled}"/>
+        <MenuItem Header="{DynamicResource ImportImages}" Name="ImportImagesMenueItem" IsEnabled="{Binding ImportButtonEnabled}"/>
       </MenuItem>
-      <MenuItem Header="_Options">
-        <MenuItem Header="_Workfolder" Name="WorkfolderMenueItem"/>
+      <MenuItem Header="{DynamicResource Options}">
+        <MenuItem Header="{DynamicResource Workfolder}" Name="WorkfolderMenueItem"/>
         <Separator/>
-        <MenuItem Header="_Crusader GM1 Folder" Name="CrusaderfolderMenueItem"/>
+        <MenuItem Header="{DynamicResource StrongholdFolder}" Name="CrusaderfolderMenueItem"/>
         <Separator/>
-        <CheckBox Content="Open Folder after Export" Name="UserConfigOpenFolderafterExport" IsChecked="{Binding OpenFolderAfterExport}"/>
-        <CheckBox Content="Activate Logger" IsChecked="{Binding LoggerActiv}"/>
+        <CheckBox Content="{DynamicResource OpenFolderafterExport}" Name="UserConfigOpenFolderafterExport" IsChecked="{Binding OpenFolderAfterExport}"/>
+        <Separator/>
+        <CheckBox Content="{DynamicResource ActivateLogger}" IsChecked="{Binding LoggerActiv}"/>
+        <Separator/>
+        <ComboBox Items="{Binding Languages}" SelectedItem="{Binding ActualLanguage}"></ComboBox>
       </MenuItem>
     </Menu>
     <StackPanel Grid.Row="1" Grid.Column="0" MaxWidth="250">
-      <TextBlock Text="Work Folder:" HorizontalAlignment="Left" Height="20"/>
+      <TextBlock Text="{DynamicResource Workfolder}" HorizontalAlignment="Left" Height="20"/>
       <ListBox Items="{Binding WorkfolderFiles}" SelectionMode="Single" Name="WorkfolderSelector" MaxWidth="250" MaxHeight="560"/>
     </StackPanel>
     
     <StackPanel Grid.Row="1" Grid.Column="2" MaxWidth="250">
-      <TextBlock Text="Stronghold Folder:" HorizontalAlignment="Left" Height="20"/>
+      <TextBlock Text="{DynamicResource StrongholdFolder}" HorizontalAlignment="Left" Height="20"/>
       <ListBox Items="{Binding StrongholdFiles}" SelectionMode="Single" Name="Gm1FilesSelector" MaxWidth="250" MaxHeight="560"/>
     </StackPanel>
 
 
     <StackPanel Grid.Column="1" Grid.Row="2">
-      <TextBlock Text="{Binding Filetype}" HorizontalAlignment="Center" Height="20"/>
-    
+      <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+        
+        <TextBlock Text="{Binding Filetype}" HorizontalAlignment="Center" Height="20"/>
+        <Image Name="HelpIcon" Margin="10,0,0,0"/>
+      </StackPanel>
+
+
       <StackPanel Orientation="Vertical">
         <TextBlock Text="{Binding ActualPalette}" IsVisible="{Binding ColorButtonsEnabled}" HorizontalAlignment="Center"/>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
@@ -70,7 +78,7 @@
           <Image Source="{Binding ActuellColorTable}" IsVisible="{Binding ColorButtonsEnabled}" HorizontalAlignment="Center"/>
           <Button IsEnabled="{Binding ColorButtonsEnabled}" Content="»»" Width="40" Click="Button_ClickPalleteplus" IsVisible="{Binding ColorButtonsEnabled}" HorizontalAlignment="Center"/>
 
-          <Button IsEnabled="{Binding ColorButtonsEnabled}" Click="Button_ClickChangeColorTable" IsVisible="{Binding ColorButtonsEnabled}" HorizontalAlignment="Right">Change Color Table</Button>
+          <Button IsEnabled="{Binding ColorButtonsEnabled}" Click="Button_ClickChangeColorTable" IsVisible="{Binding ColorButtonsEnabled}" HorizontalAlignment="Right" Content="{DynamicResource ChangeColorTable}"/>
         </StackPanel>
       </StackPanel>
 

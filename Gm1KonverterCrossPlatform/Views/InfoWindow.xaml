@@ -1,0 +1,67 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        Width="820"
+        MaxWidth="820"
+        Height="550"
+        MaxHeight="800"
+        x:Class="Gm1KonverterCrossPlatform.Views.InfoWindow"
+        Title="Info">
+  <ScrollViewer >
+    <StackPanel>
+      <StackPanel  MaxWidth="800"  Name="Animation">
+        <TextBlock Text="{DynamicResource AnimationTitel1}"  HorizontalAlignment="Center" MaxWidth="800" />
+        <TextBlock TextWrapping="Wrap" Text="{DynamicResource AnimationText1}" MaxWidth="800" Margin="0,20,0,0" />
+        <Image Name="Palette1" />
+        <Image Name="Palette2" />
+        <TextBlock TextWrapping="Wrap" Text="{DynamicResource AnimationText2}" MaxWidth="800" Margin="0,20,0,0"/>
+        <Image Name="Palette3" />
+
+        <TextBlock TextWrapping="Wrap" Text="{DynamicResource AnimationText13}" HorizontalAlignment="Left" Margin="0,20,0,0"/>
+        <TextBlock TextWrapping="Wrap" Text="{DynamicResource AnimationText3}" HorizontalAlignment="Left"/>
+        <TextBlock TextWrapping="Wrap" Text="{DynamicResource AnimationText4}" HorizontalAlignment="Left"/>
+        <TextBlock TextWrapping="Wrap" Text="{DynamicResource AnimationText5}" HorizontalAlignment="Left"/>
+        <TextBlock TextWrapping="Wrap" Text="{DynamicResource AnimationText6}" HorizontalAlignment="Left"/>
+        <TextBlock TextWrapping="Wrap" Text="{DynamicResource AnimationText7}" HorizontalAlignment="Left"/>
+        <TextBlock TextWrapping="Wrap" Text="{DynamicResource AnimationText8}" HorizontalAlignment="Left"/>
+        <TextBlock TextWrapping="Wrap" Text="{DynamicResource AnimationText9}" HorizontalAlignment="Left"/>
+        <TextBlock TextWrapping="Wrap" Text="{DynamicResource AnimationText10}" HorizontalAlignment="Left"/>
+        <TextBlock TextWrapping="Wrap" Text="{DynamicResource AnimationText11}" HorizontalAlignment="Left"/>
+        <TextBlock TextWrapping="Wrap" Text="{DynamicResource AnimationText12}" HorizontalAlignment="Left"/>
+
+
+      </StackPanel>
+
+
+
+
+      <StackPanel Name="Interface" MaxWidth="800">
+        <TextBlock Text="{DynamicResource InterfaceTitel1}"  HorizontalAlignment="Center" MaxWidth="800" />
+        <TextBlock TextWrapping="Wrap" Text="{DynamicResource InterfaceText1}" MaxWidth="800" Margin="0,20,0,0" />
+        <Image Name="Interface1" />
+        <Image Name="Interface2" />
+      </StackPanel>
+
+      <StackPanel Name="TiledObject" MaxWidth="800">
+        <TextBlock Text="{DynamicResource TiledObjectTitel1}"  HorizontalAlignment="Center" MaxWidth="800" />
+        <TextBlock TextWrapping="Wrap" Text="{DynamicResource TiledObjectText1}" MaxWidth="800" Margin="0,20,0,0" />
+        <Image Name="TiledObject1" />
+        <TextBlock TextWrapping="Wrap" Text="{DynamicResource TiledObjectText2}" MaxWidth="800" Margin="0,20,0,0" />
+        <Image Name="TiledObject2" />
+        <TextBlock TextWrapping="Wrap" Text="{DynamicResource TiledObjectText3}" MaxWidth="800" Margin="0,20,0,0" />
+        <Image Name="TiledObject3" />
+        <Image Name="TiledObject4" />
+        <TextBlock TextWrapping="Wrap" Text="{DynamicResource TiledObjectText4}" MaxWidth="800" Margin="0,20,0,0" />
+        <Image Name="TiledObject5" />
+      </StackPanel>
+
+      <StackPanel Name="NoInfo" MaxWidth="800">
+        <TextBlock Text="{DynamicResource NoInfoYet}"  HorizontalAlignment="Center" MaxWidth="800" />
+      
+      </StackPanel>
+
+    </StackPanel>
+  </ScrollViewer>
+</Window>

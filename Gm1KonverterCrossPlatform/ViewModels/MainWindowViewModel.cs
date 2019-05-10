@@ -10,6 +10,8 @@ using Gm1KonverterCrossPlatform.HelperClasses.Views;
 using System.IO;
 using System;
 using Gm1KonverterCrossPlatform.HelperClasses;
+using Avalonia;
+using System.Linq;
 
 namespace Gm1KonverterCrossPlatform.ViewModels
 {
@@ -34,6 +36,37 @@ namespace Gm1KonverterCrossPlatform.ViewModels
         }
 
         
+        private UserConfig.Languages actualLanguage = UserConfig.Languages.English;
+        public UserConfig.Languages ActualLanguage
+        {
+
+            get => actualLanguage;
+            set {
+                this.RaiseAndSetIfChanged(ref actualLanguage, value);
+                Utility.SelectCulture(value);
+                ChangeLanguages();
+                userConfig.Language = value;
+            }
+        }
+
+        private void ChangeLanguages()
+        {
+            if (File == null) return; 
+            Filetype = Utility.GetText("Datatype") + ((GM1FileHeader.DataType)File.FileHeader.IDataType);
+           if(File.Palette!=null) ActualPalette = Utility.GetText("Palette") + (File.Palette.ActualPalette + 1);
+
+
+        }
+
+        private UserConfig.Languages[] languages = new UserConfig.Languages[]{ UserConfig.Languages.Deutsch, UserConfig.Languages.English, UserConfig.Languages.Русский };
+        public UserConfig.Languages[] Languages
+        {
+
+            get => languages;
+            set => this.RaiseAndSetIfChanged(ref languages, value);
+        }
+
+     
         private String filetype = "Datatype: ";
         public String Filetype
         {
@@ -102,8 +135,8 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             }
         }
 
-
-        private String actualPalette = "Palette 1";
+      
+        private String actualPalette = Utility.GetText("Palette")+"1";
         public String ActualPalette
         {
 
@@ -257,7 +290,7 @@ namespace Gm1KonverterCrossPlatform.ViewModels
                  File = new DecodedFile();
                 if (!File.DecodeGm1File(Utility.FileToByteArray(userConfig.CrusaderPath+"\\"+ fileName), fileName))
                 {
-                    MessageBoxWindow messageBox = new MessageBoxWindow(MessageBoxWindow.MessageTyp.Info, (GM1FileHeader.DataType)File.FileHeader.IDataType + " Tiles are not Supported yet.");
+                    MessageBoxWindow messageBox = new MessageBoxWindow(MessageBoxWindow.MessageTyp.Info, (GM1FileHeader.DataType)File.FileHeader.IDataType + Utility.GetText("TilesarenotSupportedyet"));
                     messageBox.ShowDialog(window);
                     return false;
                 }
@@ -349,7 +382,7 @@ namespace Gm1KonverterCrossPlatform.ViewModels
                     File.Palette.ActualPalette += number;
                     }
             }
-            ActualPalette = "Palette " + (File.Palette.ActualPalette+1);
+            ActualPalette = Utility.GetText("Palette")  + (File.Palette.ActualPalette+1);
             File.DecodeGm1File(File.FileArray, File.FileHeader.Name);
             ShowTGXImgToWindow();
         }

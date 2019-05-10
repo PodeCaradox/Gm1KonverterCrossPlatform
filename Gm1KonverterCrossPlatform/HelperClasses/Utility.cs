@@ -9,6 +9,10 @@ using Files.Gm1Converter;
 using Image = SixLabors.ImageSharp.Image;
 using Gm1KonverterCrossPlatform.HelperClasses.Views;
 using SixLabors.ImageSharp.Formats;
+using Avalonia;
+using System.Linq;
+using Avalonia.Controls;
+using Gm1KonverterCrossPlatform.HelperClasses;
 
 namespace HelperClasses.Gm1Converter
 {
@@ -487,6 +491,29 @@ namespace HelperClasses.Gm1Converter
 
 
         #endregion
+
+        public static void SelectCulture(UserConfig.Languages language)
+        {
+            var dictionaryList = Application.Current.Resources.MergedDictionaries;
+
+            object dummy;
+            var resourceDictionary = dictionaryList.FirstOrDefault(d => d.TryGetResource(language.ToString(),out dummy) == true);
+            
+            if (resourceDictionary != null)
+            {
+                Application.Current.Resources.MergedDictionaries.Remove(resourceDictionary);
+                Application.Current.Resources.MergedDictionaries.Add(resourceDictionary);
+            }
+        }
+
+        public static String GetText(String key)
+        {
+            var dictionaryList = Application.Current.Resources.MergedDictionaries;
+            object dummy=null;
+            var resourceDictionary = dictionaryList.Last(d => d.TryGetResource(key, out dummy) == true);
+
+            return dummy.ToString();
+        }
 
     }
 }

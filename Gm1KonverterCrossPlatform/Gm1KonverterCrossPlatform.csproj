@@ -14,10 +14,21 @@
       <SubType>Designer</SubType>
     </AvaloniaResource>
     <AvaloniaResource Include="Assets\*" />
+    <AvaloniaResource Remove="Assets\info.png" />
+    <AvaloniaResource Remove="HelperClasses\Language.de-DE.xaml" />
+    <AvaloniaResource Remove="HelperClasses\Language.xaml" />
     <AvaloniaResource Remove="HelperClasses\Views\ChangeColorPalette.xaml" />
     <AvaloniaResource Remove="HelperClasses\Views\MessageBoxWindow.xaml" />
+    <AvaloniaResource Remove="Views\InfoWindow.xaml" />
+    <None Remove="Assets\info.png" />
     <None Remove="HelperClasses\Views\ChangeColorPalette.xaml" />
     <None Remove="HelperClasses\Views\MessageBoxWindow.xaml" />
+    <None Remove="Views\InfoWindow.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Images\info.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="0.8.0" />
@@ -38,6 +49,16 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Views\InfoWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.Drawing">
+      <HintPath>System.Drawing</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
     <Compile Update="HelperClasses\Views\MessageBoxWindow.xaml.cs">
       <DependentUpon>MessageBoxWindow.xaml</DependentUpon>
     </Compile>
@@ -54,6 +75,45 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Update="Images\Interface1.JPG">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Images\Interface2.JPG">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Images\Palette1.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Images\Palette2.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Images\Palette3.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Images\TiledObject1.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Images\TiledObject2.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Images\TiledObject3.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Images\TiledObject4.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Language.ru-RU.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+    <None Update="Languages\Language.de-DE.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+    <None Update="Languages\Language.ru-RU.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+    <None Update="Languages\Language.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
     <None Update="Views\ChangeColorPalette.xaml">
       <Generator>MSBuild:Compile</Generator>
     </None>

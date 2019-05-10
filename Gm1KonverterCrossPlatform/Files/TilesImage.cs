@@ -118,8 +118,6 @@ namespace Gm1KonverterCrossPlatform.Files
                 UInt32 colorByte = Utility.TransparentColorByte;
 
                 bytePos++;
-                byte index;
-
                 ushort pixelColor;
                 switch (tokentype)
                 {

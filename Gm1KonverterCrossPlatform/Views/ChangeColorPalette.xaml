@@ -7,13 +7,13 @@
         Width="800"
         Height="400"
         x:Class="Gm1KonverterCrossPlatform.HelperClasses.Views.ChangeColorPalette"
-        Title="ChangeColorPalette">
+        Title="{DynamicResource ChangeColorPalette}">
   <StackPanel >
-    <TextBlock HorizontalAlignment="Center">Click on the Color u want to Change</TextBlock>
+    <TextBlock HorizontalAlignment="Center" Text="{DynamicResource ClickontheColoryouwanttoChange}" />
     <Image HorizontalAlignment="Left" Name="PaletteImage" MaxWidth="640" MaxHeight="160" MinWidth="640" MinHeight="160" Margin="0" Source="{Binding ActuellColorTableChangeColorWindow}"/>
     <Canvas HorizontalAlignment="Left" x:Name="Cnv"/>
     <StackPanel Orientation="Horizontal">
-      <TextBlock Margin="50,0,0,0" VerticalAlignment="Center">HEX Color:</TextBlock>
+      <TextBlock Margin="50,0,0,0" VerticalAlignment="Center" Text="{DynamicResource HEXColor}"/>
       <TextBox Name="TextBoxColor" Text="{Binding ColorAsText}" Width="100" Height="30" VerticalAlignment="Center"/>
       <StackPanel>
         <StackPanel Orientation="Horizontal">
@@ -33,8 +33,8 @@
         </StackPanel>
 
       </StackPanel>
-      <Button Click="Button_ClickGeneratePallete" Height="30" Margin="10,0,0,0" Width="100" VerticalAlignment="Center">Change Color</Button>
-      <Button Click="Button_ClickSavePalette" Height="30" Margin="10,0,0,0" VerticalAlignment="Center" Width="100">save</Button>
+      <Button Click="Button_ClickGeneratePallete" Height="30" Margin="10,0,0,0" Width="100" VerticalAlignment="Center" Content="{DynamicResource ChangeColor}" />
+      <Button Click="Button_ClickSavePalette" Height="30" Margin="10,0,0,0" VerticalAlignment="Center" Width="100" Content="{DynamicResource Save}"/>
     </StackPanel>
 
   </StackPanel >

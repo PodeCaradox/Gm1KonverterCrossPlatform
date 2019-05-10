@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<controls:ResourceDictionary
+    xmlns:controls="clr-namespace:Avalonia.Controls;assembly=Avalonia.Styling"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <x:String x:Key="Deutsch">Deutsch geladen</x:String>
+    <x:String x:Key="CreatenewGM1">_Erstelle neue GM1 Datei</x:String>
+    <x:String x:Key="ReplacewithSavedGM1File">Ersetzen mit der gesicherten GM1 Datei</x:String>
+    <x:String x:Key="ExportColortable">Exportiere Farbtabelle</x:String>
+    <x:String x:Key="ImportColortable">Importiere Farbtabelle</x:String>
+    <x:String x:Key="ExportImages">Exportiere Bilder</x:String>
+    <x:String x:Key="ImportImages">Importiere Bilder</x:String>
+    <x:String x:Key="Workfolder">Arbeitsordner</x:String>
+    <x:String x:Key="OpenFolderafterExport">Öffne Ordner nachdem Exportieren</x:String>
+    <x:String x:Key="ActivateLogger">Aktiviere Logger</x:String>
+    <x:String x:Key="StrongholdFolder">Stronghold GM1 Ordner</x:String>
+    <x:String x:Key="File">Datei</x:String>
+    <x:String x:Key="Edit">Bearbeiten</x:String>
+    <x:String x:Key="Options">Optionen</x:String>
+    <x:String x:Key="Datatype">Dateityp: </x:String>
+    <x:String x:Key="Palette">Farbtabelle: </x:String>
+    <x:String x:Key="TilesarenotSupportedyet">Dateien werden noch nicht Unterstützt.</x:String>
+    <x:String x:Key="ClickontheColoryouwanttoChange">Klicke auf die Farbe die du ändern möchtest.</x:String>
+    <x:String x:Key="HEXColor">HEX Farbe:</x:String>
+    <x:String x:Key="ChangeColor">Ändere Farbe</x:String>
+    <x:String x:Key="Save">Speichern</x:String>
+    <x:String x:Key="ChangeColorTable">Ändere Farbtabelle</x:String>
+    <x:String x:Key="GM1Converter">GM1 Konverter</x:String>
+    <x:String x:Key="ChangeColorPalette">Farbtabelle bearbeiten</x:String>
+    <x:String x:Key="AnimationTitel1">Datentyp Animation</x:String>
+    <x:String x:Key="AnimationText1">GM1 Dateien vom Typ Animation bestehen aus einer bestimmten Anzahl kodierten Bildern und 10 Farbtabellen. 
+        Die Farbtabellen werden dafür genutzt um Speicherplatz zu sparen und verschiedene Spielerfarben darzustellen. 
+        Die generierten Bilder beziehen ihre Farbe aus der aktuell ausgewählten Farbtabelle:
+    </x:String>
+    <x:String x:Key="AnimationText2">Wichtig zu beachten ist das eine Farbe im Bild an der jeweils gleichen Stelle in der Farbtabelle bezogen wird, das heißt im Bild ist für ein Pixel eine einzige Position für alle Farbtabellen angegeben. 
+         Die Positionen der Farbe im Bild bleibt zu der Farbtabelle immer gleich, aber die Tabelle mit Farben wird getauscht, so entstehen dann die verschiedenen Spielerfarbe.
+    </x:String>
+    <x:String x:Key="AnimationText3">1 = grau/neutral??</x:String>
+    <x:String x:Key="AnimationText4">2 = blau</x:String>
+    <x:String x:Key="AnimationText5">3 = Rot</x:String>
+    <x:String x:Key="AnimationText6">4 = Orange</x:String>
+    <x:String x:Key="AnimationText7">5 = gelb</x:String>
+    <x:String x:Key="AnimationText8">6 = lila</x:String>
+    <x:String x:Key="AnimationText9">7 = schwarz</x:String>
+    <x:String x:Key="AnimationText10">8 = Türkis</x:String>
+    <x:String x:Key="AnimationText11">9 = grün</x:String>
+    <x:String x:Key="AnimationText12">10 = grau/neutral??</x:String>
+    <x:String x:Key="AnimationText13">Zuweisung der Farbtabellennummer zu den Spielerfarben/Neutralenfarben:</x:String>
+
+    <x:String x:Key="InterfaceTitel1">Datentyp Interface</x:String>
+    <x:String x:Key="InterfaceText1">GM1 Dateien vom Typ Interface bestehen aus einer bestimmten Anzahl kodierten Bildern. 
+        Diese Bilder können nach dem Export komplett bearbeitet werden in größe und Darstellung.
+        Leider ist noch nicht bekannt wie ein Bild in Stronghold Positioniert wird, da die Position fest bleibt können diese nur nach unten und rechts erweitert werden.
+    </x:String>
+
+
+    <x:String x:Key="TiledObjectTitel1">Datentyp TiledObject</x:String>
+    <x:String x:Key="TiledObjectText1">GM1 Dateien vom Typ TiledObject bestehen aus einer bestimmten Anzahl kodierten Bildern. 
+        Diese Bilder bestehen in der GM1 Datei aus vielen kleinen Rauten 30 x 16 Pixeln. Das Bild unten zeigt ein solche Raute um den Faktor 4 vergrößert.
+    </x:String>
+    <x:String x:Key="TiledObjectText2">Aus den einzelnen Rauten Tiles wird dann die Grundraute des Bildes erzeugt.
+    </x:String>
+
+    <x:String x:Key="TiledObjectText3">Zum ende werden dann noch Bilder mit variabler höhe auf die einzelnen Rauten gesetzt und das ganze Bild zusammengefügt.</x:String>
+
+
+    <x:String x:Key="TiledObjectText4">Das heißt GM1 Dateien vom Typ TiledObject können nur in der höhe verändert und visuell umgestaltet werden. 
+        Alles unterhalb der Grundraute des impotierten Bildes wird ignoriert, da diese Isometrik sein müssen.</x:String>
+
+    <x:String x:Key="NoInfoYet">Zu diesem Dateityp gibt es jetzt noch keine Info.</x:String>
+    
+</controls:ResourceDictionary>
