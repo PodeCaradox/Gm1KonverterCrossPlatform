@@ -111,7 +111,7 @@ namespace HelperClasses.Gm1Converter
         /// <param name="height">The Height from the IMG</param>
         /// <param name="animatedColor">Needed for Alpha is 1 or 0</param>
         /// <returns></returns>
-        internal static List<byte> ImgWithoutPaletteToGM1ByteArray(List<ushort> colors, int width, int height, int animatedColor)
+        internal static List<byte> ImgWithoutPaletteToGM1ByteArray(List<ushort> colors, int width, int height, int animatedColor,byte[] arraytest=null)
         {
 
 
@@ -142,9 +142,19 @@ namespace HelperClasses.Gm1Converter
                     }
                     if (newline == true && countSamePixel == width)
                     {
-                        for (int z = 0; z < width; z++)//ist wahrscheinlich ein Fehler von Stronghold?
+                        //newline consist out of transparent pixelstrings
+                        header = 0b0010_0000;
+                        var dummy = countSamePixel;
+                        while (dummy / 32 > 0)
                         {
-                            array.Add(0b0010_0000);
+                            length = 0b0001_1111;
+                            array.Add((byte)(header | length));
+                            dummy -= 32;
+                        }
+                        if (dummy != 0)
+                        {
+                            length = (byte)(dummy - 1);//-1 because the test is pixel perfect in the loop and 0 == 1 in the encoding
+                            array.Add((byte)(header | length));
                         }
                         array.Add(0b1000_0000);
                         j = width;
@@ -220,14 +230,18 @@ namespace HelperClasses.Gm1Converter
                 2, 6, 10, 14, 18, 22, 26, 30,
                 30, 26, 22, 18, 14, 10, 6, 2
             };
-        static int before = 0;
+
+        public static int YOffsetBefore { get; internal set; }
+        public static int XOffsetBefore { get; internal set; }
+
+        private static int biggestHeight = 0;
+        private static int countertest = 0;
         internal static List<TGXImage> ConvertImgToTiles(List<ushort> list, ushort width, ushort height, List<TGXImage> oldList)
         {
             List<TGXImage> newImageList = new List<TGXImage>();
-            if (width==158&&height==359)
-            {
+            countertest++;
 
-            }
+
             //calculate Parts one part 16 x 30
             int partwidth = width / 30;//todo not exactly 30 width because 2 pixels between
             int totalTiles = partwidth;
@@ -258,8 +272,6 @@ namespace HelperClasses.Gm1Converter
                     {
                         int number = ((width * (y + yOffset)) + x + xOffset - array[i] / 2);
                         var color = list[number];
-                        //set to alpha
-                        list[number] = 65535;
                         arrayByte.AddRange(BitConverter.GetBytes(color));
                         x++;
                     }
@@ -272,8 +284,11 @@ namespace HelperClasses.Gm1Converter
                 newImage.Direction = 0;
                 newImage.Height = 16;
                 newImage.Width = 30;
+                newImage.OffsetX = (ushort)(xOffset + XOffsetBefore);
+                newImage.OffsetY = (ushort)(yOffset + YOffsetBefore);
                 newImage.SubParts = (byte)totalTiles;
                 newImage.ImagePart = (byte)part;
+                if(totalTiles==1) halfreached = true;
                 if (halfreached)
                 {
 
@@ -288,11 +303,14 @@ namespace HelperClasses.Gm1Converter
                             int imageOnTopheight = yOffset + 7;
                             int imageOnTopOffsetX = xOffset - 15;
                             List<ushort> colorListImgOnTop = GetColorList(list, imageOnTopwidth, imageOnTopheight, imageOnTopOffsetX, width);
-                            var byteArrayImgonTop = ImgWithoutPaletteToGM1ByteArray(colorListImgOnTop, imageOnTopwidth, colorListImgOnTop.Count / imageOnTopwidth, 1);
+                            if (colorListImgOnTop.Count != 0) {
+                 
+                                var byteArrayImgonTop = ImgWithoutPaletteToGM1ByteArray(colorListImgOnTop, imageOnTopwidth, colorListImgOnTop.Count / imageOnTopwidth, 1);
+                                arrayByte.AddRange(byteArrayImgonTop);
+                                newImage.TileOffset = (ushort)(colorListImgOnTop.Count / imageOnTopwidth + 10 - 16 - 1);
+                                newImage.Height = (ushort)imageOnTopheight;
+                            }
                            
-                            arrayByte.AddRange(byteArrayImgonTop);
-                            newImage.TileOffset = (ushort)(colorListImgOnTop.Count / imageOnTopwidth + 10 - 16 - 1);
-                            newImage.Height = (ushort)imageOnTopheight;
                         }
                         else
                         {
@@ -302,11 +320,17 @@ namespace HelperClasses.Gm1Converter
                             int imageOnTopheight = yOffset + 7;
                             int imageOnTopOffsetX = xOffset - 15;
                             List<ushort> colorListImgOnTop = GetColorList(list, imageOnTopwidth, imageOnTopheight, imageOnTopOffsetX, width);
-                            var byteArrayImgonTop = ImgWithoutPaletteToGM1ByteArray(colorListImgOnTop, imageOnTopwidth, colorListImgOnTop.Count / imageOnTopwidth, 1);
-                           
-                            arrayByte.AddRange(byteArrayImgonTop);
-                            newImage.TileOffset = (ushort)(colorListImgOnTop.Count / imageOnTopwidth + 10 - 16 - 1);
-                            newImage.Height = (ushort)(colorListImgOnTop.Count / imageOnTopwidth + 10);
+
+                            if (colorListImgOnTop.Count != 0)
+                            {
+                 
+
+                                var byteArrayImgonTop = ImgWithoutPaletteToGM1ByteArray(colorListImgOnTop, imageOnTopwidth, colorListImgOnTop.Count / imageOnTopwidth, 1);
+
+                                arrayByte.AddRange(byteArrayImgonTop);
+                                newImage.TileOffset = (ushort)(colorListImgOnTop.Count / imageOnTopwidth + 10 - 16 - 1);
+                                newImage.Height = (ushort)(colorListImgOnTop.Count / imageOnTopwidth + 10);
+                            }
                         }
                     }
                     else if (counter == partsPerLine)//right
@@ -318,12 +342,15 @@ namespace HelperClasses.Gm1Converter
                         int imageOnTopheight = yOffset + 7;
                         int imageOnTopOffsetX = xOffset;
                         List<ushort> colorListImgOnTop = GetColorList(list, imageOnTopwidth, imageOnTopheight, imageOnTopOffsetX - 1, width);
-                        var byteArrayImgonTop = ImgWithoutPaletteToGM1ByteArray(colorListImgOnTop, imageOnTopwidth, colorListImgOnTop.Count / imageOnTopwidth, 1);
-                       
-                        arrayByte.AddRange(byteArrayImgonTop);
-                        
-                        newImage.Height = (ushort)(colorListImgOnTop.Count / imageOnTopwidth + 10);
-                        newImage.TileOffset = (ushort)(colorListImgOnTop.Count / imageOnTopwidth + 10 - 16 - 1);
+                        if (colorListImgOnTop.Count != 0)
+                        {
+                  
+
+                            var byteArrayImgonTop = ImgWithoutPaletteToGM1ByteArray(colorListImgOnTop, imageOnTopwidth, colorListImgOnTop.Count / imageOnTopwidth, 1);
+                            arrayByte.AddRange(byteArrayImgonTop);
+                            newImage.Height = (ushort)(colorListImgOnTop.Count / imageOnTopwidth + 10);
+                            newImage.TileOffset = (ushort)(colorListImgOnTop.Count / imageOnTopwidth + 10 - 16 - 1);
+                        }
                         newImage.HorizontalOffsetOfImage = 14;
 
 
@@ -363,8 +390,14 @@ namespace HelperClasses.Gm1Converter
 
 
             }
-            before += totalTiles;
 
+            XOffsetBefore += width;
+            if(height> biggestHeight) biggestHeight = height;
+            if (XOffsetBefore>4000)
+            {
+                XOffsetBefore = 0;
+                YOffsetBefore += biggestHeight;
+            }
 
             return newImageList;
         }

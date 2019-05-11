@@ -107,7 +107,8 @@ namespace Gm1KonverterCrossPlatform.Views
             files = files.OrderBy(x => x.Length).ThenBy(x => x).ToArray<String>();
 
 
-           
+            Utility.XOffsetBefore = 0;
+            Utility.YOffsetBefore = 0;
             foreach (var file in files)
             {
                 var filename = Path.GetFileName(file);

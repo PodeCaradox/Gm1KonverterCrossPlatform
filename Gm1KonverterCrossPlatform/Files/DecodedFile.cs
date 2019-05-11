@@ -184,6 +184,7 @@ namespace Files.Gm1Converter
             }
         }
 
+
         /// <summary>
         /// Creates IMGS from TGX and Tile(the IMG consist out of many smaller IMGS)
         /// </summary>
@@ -192,7 +193,7 @@ namespace Files.Gm1Converter
         {
             CreateOffsetAndSizeInByteArrayList(array);
             CreateImgHeader(array);
-
+         
             int offsetX = 0, offsetY = 0;
             int midx = 0;
             int width = 0;
@@ -204,10 +205,13 @@ namespace Files.Gm1Converter
             int partsBefore = 0;
             for (int i = 0; i < _TGXImage.Count; i++)
             {
+               
+      
                 if (_TGXImage[i].ImagePart == 0)
                 {
+                  
                     width = Utility.GetDiamondWidth(_TGXImage[i].SubParts);
-
+          
 
                     partsBefore += _TGXImage[i].SubParts;
 
@@ -223,7 +227,7 @@ namespace Files.Gm1Converter
                 }
 
 
-                if (_TGXImage[i].ImgFileAsBytearray.Length > 512 && (_TGXImage[i].Width > 30 || _TGXImage[i].Height > 16))
+                if (_TGXImage[i].ImgFileAsBytearray.Length > 512)
                 {
 
                     int right = 0;

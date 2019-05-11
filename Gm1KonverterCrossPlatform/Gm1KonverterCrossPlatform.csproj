@@ -102,6 +102,9 @@
     <None Update="Images\TiledObject4.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Images\TiledObject5.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Language.ru-RU.xaml">
       <Generator>MSBuild:Compile</Generator>
     </None>
