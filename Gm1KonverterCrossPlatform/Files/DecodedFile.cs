@@ -320,6 +320,7 @@ namespace Files.Gm1Converter
         {
             _TGXImage = newTileList;
             fileHeader.INumberOfPictureinFile = (uint)_TGXImage.Count;
+            newTileList = new List<TGXImage>();
         }
         #endregion
 

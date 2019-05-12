@@ -84,13 +84,13 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
         /// </summary>
         /// <param name="Image">The image to add</param>
         /// <param name="Delay">Delay in Milliseconds between this and last frame... 0 = <see cref="DefaultFrameDelay"/></param>
-        public void WriteFrame(WriteableBitmap Image, int Delay = 0)
+        public void WriteFrame(Image Image, int Delay = 0)
         {
         
             lock (_syncLock)
                 using (var gifStream = new MemoryStream())
                 {
-                    Image.Save(gifStream);
+                    Image.Save(gifStream,ImageFormat.Gif);
 
                     // Steal the global color table info
                     if (_firstFrame)

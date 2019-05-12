@@ -109,11 +109,13 @@ namespace Gm1KonverterCrossPlatform.Views
 
             Utility.XOffsetBefore = 0;
             Utility.YOffsetBefore = 0;
+            int counter = 1;
             foreach (var file in files)
             {
                 var filename = Path.GetFileName(file);
-                if (filename.StartsWith("Image"))
+                if (filename.Equals("Image"+ counter+".png"))
                 {
+                    counter++;
                     var fileindex = int.Parse(filename.Replace("Image", "").Replace(".png", "")) - 1;
                     int width, height;
                     var list = Utility.LoadImage(file,out width,out height, vm.File.ImagesTGX[fileindex].AnimatedColor,1,vm.File.FileHeader.IDataType);
@@ -154,11 +156,14 @@ namespace Gm1KonverterCrossPlatform.Views
         {
             Cursor = new Avalonia.Input.Cursor(Avalonia.Input.StandardCursorType.Wait);
             int img = 1;
+          
             var filewithoutgm1ending = vm.File.FileHeader.Name.Replace(".gm1", "");
+           
             if (!Directory.Exists(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\Images"))
             {
                 Directory.CreateDirectory(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\Images");
             }
+            //Stream stream = new FileStream(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\Images\\ImageAsGif.gif", FileMode.Create);
             if ((GM1FileHeader.DataType)vm.File.FileHeader.IDataType==GM1FileHeader.DataType.TilesObject)
             {
                 foreach (var image in vm.File.TilesImages)
@@ -169,13 +174,23 @@ namespace Gm1KonverterCrossPlatform.Views
             }
             else
             {
+                
+                //GifWriter gif = new GifWriter(stream,100,0);
+
                 foreach (var image in vm.File.ImagesTGX)
                 {
                     image.Bitmap.Save(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\Images\\Image" + img + ".png");
+
+                    //System.Drawing.Image imageGif = System.Drawing.Image.FromFile(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\Images\\Image" + img + ".png");
+                    //gif.WriteFrame(imageGif);
                     img++;
                 }
             }
-            
+            //stream.Flush();
+            //stream.Dispose();
+
+
+
             if (vm.UserConfig.OpenFolderAfterExport)
                 Process.Start(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\Images");
 

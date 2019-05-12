@@ -83,7 +83,7 @@ namespace HelperClasses.Gm1Converter
                     {
                         var pixel = image[j, i];
                         byte a = (animatedColor >= 1 || ((GM1FileHeader.DataType)type) == GM1FileHeader.DataType.TilesObject) ? byte.MaxValue : byte.MinValue;
-                        if (pixel.A == 0 && pixel.B == 0 && pixel.G == 0 && pixel.R == 0)
+                        if (pixel.A == 0)
                         {
                             colors.Add((animatedColor >= 1 || ((GM1FileHeader.DataType)type) == GM1FileHeader.DataType.TilesObject) ? (ushort)65535 : (ushort)32767);
                         }
@@ -420,7 +420,7 @@ namespace HelperClasses.Gm1Converter
                     }
                     else
                     {
-                        dummy.Add(list[0]);
+                        dummy.Add(65535);
                     }
                 }
                 if (!allTransparent) colorList.AddRange(dummy);
