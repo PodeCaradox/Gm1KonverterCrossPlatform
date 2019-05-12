@@ -68,5 +68,9 @@
         Alles unterhalb der Grundraute des impotierten Bildes wird ignoriert, da diese Isometrik sein müssen.</x:String>
 
     <x:String x:Key="NoInfoYet">Zu diesem Dateityp gibt es jetzt noch keine Info.</x:String>
-    
+
+    <x:String x:Key="GifExporter">Gif Exportieren</x:String>
+    <x:String x:Key="ExportGif">Exportiere Gif</x:String>
+    <x:String x:Key="SelectGif">Selektiere Bilder mit STRG danach klicke auf den Export Button</x:String>
+    <x:String x:Key="Delay">Verzögerung:</x:String>
 </controls:ResourceDictionary>

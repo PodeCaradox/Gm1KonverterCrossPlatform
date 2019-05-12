@@ -67,8 +67,10 @@
       <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
         
         <TextBlock Text="{Binding Filetype}" HorizontalAlignment="Center" Height="20"/>
+
         <Image Name="HelpIcon" Margin="10,0,0,0"/>
       </StackPanel>
+
 
 
       <StackPanel Orientation="Vertical">
@@ -81,10 +83,24 @@
           <Button IsEnabled="{Binding ColorButtonsEnabled}" Click="Button_ClickChangeColorTable" IsVisible="{Binding ColorButtonsEnabled}" HorizontalAlignment="Right" Content="{DynamicResource ChangeColorTable}"/>
         </StackPanel>
       </StackPanel>
+      
+      <Expander ExpandDirection="Down" Header="{DynamicResource GifExporter}">
+        <StackPanel Orientation="Horizontal">
+          <StackPanel>
+            <TextBlock Text="{DynamicResource SelectGif}"/>
+            <StackPanel Orientation="Horizontal">
+              <TextBlock Text="{DynamicResource Delay}"/>
+              <TextBox Width="100" Text="{Binding Delay}"/>
+          </StackPanel>
+          </StackPanel>
 
+          <Button Name="GifExporter"  Content="{DynamicResource ExportGif}" Click="Button_ClickGifExporter"/>
 
+        </StackPanel>
 
-      <ListBox Items="{Binding TGXImages}" MaxHeight="400" Name="TGXImageListBox" MaxWidth="700">
+      </Expander>
+
+      <ListBox Items="{Binding TGXImages}" MaxHeight="400" Name="TGXImageListBox" MaxWidth="700" SelectionMode="Multiple">
         <ListBox.ItemsPanel>
           <ItemsPanelTemplate>
             <WrapPanel Orientation="Horizontal" MaxWidth="650"/>

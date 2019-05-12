@@ -69,5 +69,9 @@
         Все, что находится под изображением Земляной Диамант, игнорируется, потому что оно должно быть изометрическим.</x:String>
 
     <x:String x:Key="NoInfoYet">Пока нет информации об этом типе файла.</x:String>
-
+    
+    <x:String x:Key="GifExporter">Gif Exporter</x:String>
+    <x:String x:Key="ExportGif">Export Gif</x:String>
+    <x:String x:Key="SelectGif">Select Images with CTRL than click on the Export Button</x:String>
+    <x:String x:Key="Delay">Delay:</x:String>
 </controls:ResourceDictionary>

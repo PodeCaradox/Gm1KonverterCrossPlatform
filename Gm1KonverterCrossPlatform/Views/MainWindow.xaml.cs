@@ -40,8 +40,6 @@ namespace Gm1KonverterCrossPlatform.Views
 
             ListBox listbox = this.Get<ListBox>("Gm1FilesSelector");
             listbox.SelectionChanged += SelectedGm1File;
-            ListBox TGXImageListBox = this.Get<ListBox>("TGXImageListBox");
-            TGXImageListBox.SelectionChanged += TGXImageSelectionChanged;
 
             ListBox workfolderSelector = this.Get<ListBox>("WorkfolderSelector");
             workfolderSelector.DoubleTapped += OpenWorkfolderDirectory;
@@ -90,14 +88,6 @@ namespace Gm1KonverterCrossPlatform.Views
             Process.Start(vm.UserConfig.WorkFolderPath + "\\" + listbox.SelectedItem);
         }
 
-        private void TGXImageSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            var listbox = sender as ListBox;
-            if (listbox.SelectedIndex == -1) return;
-            if (vm.File==null) return;
-            if (listbox.SelectedIndex > vm.File.ImagesTGX.Count) return;
-        }
-
         private void ImportImages(object sender, RoutedEventArgs e)
         {
             Cursor = new Avalonia.Input.Cursor(Avalonia.Input.StandardCursorType.Wait);
@@ -115,11 +105,14 @@ namespace Gm1KonverterCrossPlatform.Views
                 var filename = Path.GetFileName(file);
                 if (filename.Equals("Image"+ counter+".png"))
                 {
+                    Avalonia.Media.Imaging.Bitmap image = new Avalonia.Media.Imaging.Bitmap(file);
+                    vm.TGXImages[counter - 1].Source = image;
                     counter++;
                     var fileindex = int.Parse(filename.Replace("Image", "").Replace(".png", "")) - 1;
                     int width, height;
                     var list = Utility.LoadImage(file,out width,out height, vm.File.ImagesTGX[fileindex].AnimatedColor,1,vm.File.FileHeader.IDataType);
                     if (list.Count == 0) return;
+               
                     if ((GM1FileHeader.DataType)vm.File.FileHeader.IDataType != GM1FileHeader.DataType.TilesObject)
                     {
                         vm.File.ImagesTGX[fileindex].ConvertImageWithoutPaletteToByteArray(list, width, height);
@@ -163,7 +156,7 @@ namespace Gm1KonverterCrossPlatform.Views
             {
                 Directory.CreateDirectory(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\Images");
             }
-            //Stream stream = new FileStream(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\Images\\ImageAsGif.gif", FileMode.Create);
+           
             if ((GM1FileHeader.DataType)vm.File.FileHeader.IDataType==GM1FileHeader.DataType.TilesObject)
             {
                 foreach (var image in vm.File.TilesImages)
@@ -175,19 +168,17 @@ namespace Gm1KonverterCrossPlatform.Views
             else
             {
                 
-                //GifWriter gif = new GifWriter(stream,100,0);
+               
 
                 foreach (var image in vm.File.ImagesTGX)
                 {
                     image.Bitmap.Save(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\Images\\Image" + img + ".png");
 
-                    //System.Drawing.Image imageGif = System.Drawing.Image.FromFile(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\Images\\Image" + img + ".png");
-                    //gif.WriteFrame(imageGif);
+                   
                     img++;
                 }
             }
-            //stream.Flush();
-            //stream.Dispose();
+         
 
 
 
@@ -250,10 +241,9 @@ namespace Gm1KonverterCrossPlatform.Views
 
         private void ReplacewithSavedGM1FileM(object sender, RoutedEventArgs e)
         {
-            Cursor = new Avalonia.Input.Cursor(Avalonia.Input.StandardCursorType.Wait);
             var filewithoutgm1ending = vm.File.FileHeader.Name.Replace(".gm1", "");
             File.Copy(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\" + filewithoutgm1ending + "Save.gm1",   vm.UserConfig.CrusaderPath + "\\" + vm.File.FileHeader.Name, true);
-            Cursor = new Avalonia.Input.Cursor(Avalonia.Input.StandardCursorType.Arrow);
+            LoadGm1File(vm.File.FileHeader.Name);
         }
 
         String listboxItemBefore = null;
@@ -264,11 +254,19 @@ namespace Gm1KonverterCrossPlatform.Views
             var listbox = sender as ListBox;
             if (listboxItemBefore == listbox.SelectedItem.ToString())return;
             listboxItemBefore = listbox.SelectedItem.ToString();
+            LoadGm1File(listboxItemBefore);
+           
+
+        }
+
+        private void LoadGm1File(string listboxItemBefore)
+        {
             Cursor = new Avalonia.Input.Cursor(Avalonia.Input.StandardCursorType.Wait);
-            if (vm.DecodeData(listboxItemBefore, this)){
-             
-                
-                vm.Filetype = Utility.GetText("Datatype") + ((GM1FileHeader.DataType) vm.File.FileHeader.IDataType);
+            if (vm.DecodeData(listboxItemBefore, this))
+            {
+
+
+                vm.Filetype = Utility.GetText("Datatype") + ((GM1FileHeader.DataType)vm.File.FileHeader.IDataType);
                 if (vm.File.Palette == null)
                 {
                     vm.ImportButtonEnabled = true;
@@ -293,10 +291,8 @@ namespace Gm1KonverterCrossPlatform.Views
                 }
             }
             Cursor = new Avalonia.Input.Cursor(Avalonia.Input.StandardCursorType.Arrow);
-
         }
 
-       
         private void ViewModelSet(object sender, EventArgs e)
         {
             vm = DataContext as MainWindowViewModel;
@@ -395,6 +391,33 @@ namespace Gm1KonverterCrossPlatform.Views
             changeColorPalette.ShowDialog(this);
       
 
+        }
+        
+
+        private void Button_ClickGifExporter(object sender, RoutedEventArgs e)
+        {
+            ListBox listBox = this.Get<ListBox>("TGXImageListBox");
+            if (listBox.SelectedItems == null || listBox.SelectedItems.Count == 0) return;
+            var filewithoutgm1ending = vm.File.FileHeader.Name.Replace(".gm1", "");
+
+            if (!Directory.Exists(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\Gif"))
+            {
+                Directory.CreateDirectory(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\Gif");
+            }
+
+           
+            Stream stream = new FileStream(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\Gif\\ImageAsGif.gif", FileMode.Create);
+            GifWriter gif = new GifWriter(stream,vm.Delay,0);
+          
+            foreach (var img in listBox.SelectedItems)
+            {
+                Stream imgStream = new MemoryStream();
+                ((Image)img).Source.Save(imgStream);
+                System.Drawing.Image imageGif = System.Drawing.Image.FromStream(imgStream);
+                gif.WriteFrame(imageGif);
+            }
+            stream.Flush();
+            stream.Dispose();
         }
 
         private void OnWindowClosed(object sender, EventArgs e)

@@ -75,6 +75,23 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             set => this.RaiseAndSetIfChanged(ref filetype, value);
         }
 
+    
+
+        private Image gifImage;
+        public Image GIFImage
+        {
+
+            get => gifImage;
+            set => this.RaiseAndSetIfChanged(ref gifImage, value);
+        }
+
+        private int delay = 100;
+        public int Delay
+        {
+
+            get => delay;
+            set => this.RaiseAndSetIfChanged(ref delay, value);
+        }
         private int red = 0;
         public int Red
         {
