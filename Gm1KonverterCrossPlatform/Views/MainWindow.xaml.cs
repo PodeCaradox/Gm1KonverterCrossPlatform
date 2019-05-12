@@ -408,8 +408,14 @@ namespace Gm1KonverterCrossPlatform.Views
            
             Stream stream = new FileStream(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\Gif\\ImageAsGif.gif", FileMode.Create);
             GifWriter gif = new GifWriter(stream,vm.Delay,0);
-          
+
             foreach (var img in listBox.SelectedItems)
+            {
+               if(gif.DefaultWidth < ((Image)img).Source.PixelSize.Width) gif.DefaultWidth = ((Image)img).Source.PixelSize.Width;
+               if (gif.DefaultHeight < ((Image)img).Source.PixelSize.Height) gif.DefaultHeight = ((Image)img).Source.PixelSize.Height;
+            }
+
+                foreach (var img in listBox.SelectedItems)
             {
                 Stream imgStream = new MemoryStream();
                 ((Image)img).Source.Save(imgStream);
@@ -418,6 +424,10 @@ namespace Gm1KonverterCrossPlatform.Views
             }
             stream.Flush();
             stream.Dispose();
+
+            if (vm.UserConfig.OpenFolderAfterExport)
+                Process.Start(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\Gif");
+
         }
 
         private void OnWindowClosed(object sender, EventArgs e)

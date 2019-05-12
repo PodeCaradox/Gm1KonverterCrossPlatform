@@ -97,7 +97,7 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
                         InitHeader(gifStream, _writer,(int) Image.Size.Width, (int)Image.Size.Height);
 
                     WriteGraphicControlBlock(gifStream, _writer, Delay == 0 ? DefaultFrameDelay : Delay);
-                    WriteImageBlock(gifStream, _writer, !_firstFrame, 0, 0, (int)Image.Size.Width, (int)Image.Size.Height);
+                    WriteImageBlock(gifStream, _writer, !_firstFrame, DefaultWidth- Image.Size.Width, DefaultHeight - Image.Size.Height, (int)Image.Size.Width, (int)Image.Size.Height);
                 }
 
             if (_firstFrame)
