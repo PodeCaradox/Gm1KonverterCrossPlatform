@@ -234,6 +234,40 @@ namespace Files.Gm1Converter
 
         }
 
+
+
+        internal unsafe void CreateNoComppressionImageFromByteArray(Palette palette,int offset)
+        {
+            //-7 because the images only height -7 long idk why
+            bmp = new WriteableBitmap(new Avalonia.PixelSize(width, height - offset), new Avalonia.Vector(100, 100), Avalonia.Platform.PixelFormat.Bgra8888);// Bgra8888 is device-native and much faster.
+
+            using (var buf = bmp.Lock())
+            {
+                
+                byte r, g, b, a;
+                uint x = 0;
+                uint y = 0;
+                for (int bytePos = 0; bytePos < imgFileAsBytearray.Length; bytePos+=2)
+                {
+                    Utility.ReadColor(BitConverter.ToUInt16(imgFileAsBytearray, bytePos), out r, out g, out b, out a);
+                    var colorByte = (UInt32)(b | (g << 8) | (r << 16) | (a << 24));
+                    var ptr = (uint*)buf.Address;
+                    ptr += (uint)((width * y) + x);
+                    *ptr = colorByte;
+                    x++;
+                    if (x==width)
+                    {
+                        y++;
+                        x = 0;
+                    }
+                }
+
+
+                      
+              
+            }
+        }
+
         /// <summary>
         /// Convert imported Imgs without a Pallete to Byte array to safe new GM1 File
         /// </summary>
@@ -242,11 +276,25 @@ namespace Files.Gm1Converter
         /// <param name="height">Height of the new IMG</param>
         internal void ConvertImageWithoutPaletteToByteArray(List<ushort> colors, int width, int height)
         {
-            var array = Utility.ImgWithoutPaletteToGM1ByteArray(colors, width, height,animatedColor,imgFileAsBytearray);
-      
+            var array = Utility.ImgWithoutPaletteToGM1ByteArray(colors, width, height,animatedColor);
+
+
             imgFileAsBytearray = array.ToArray();
-            
-                
+
+
+        }
+
+        internal void ConvertNoCommpressionImageToByteArray(List<ushort> list, int width, int height)
+        {
+            List<byte> newArray = new List<byte>();
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    newArray.AddRange(BitConverter.GetBytes(list[y*width+x]));
+                }
+            }
+            imgFileAsBytearray = newArray.ToArray();
         }
 
         /// <summary>

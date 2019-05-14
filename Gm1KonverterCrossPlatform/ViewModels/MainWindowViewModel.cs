@@ -286,6 +286,11 @@ namespace Gm1KonverterCrossPlatform.ViewModels
         {
             if (!String.IsNullOrEmpty(userConfig.WorkFolderPath))
             {
+                if (!Directory.Exists(userConfig.WorkFolderPath))
+                {
+                    Directory.CreateDirectory(userConfig.WorkFolderPath);
+                }
+
                 WorkfolderFiles = Utility.GetDirectoryNames(userConfig.WorkFolderPath);
 
             }

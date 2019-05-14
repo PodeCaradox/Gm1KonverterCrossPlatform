@@ -70,6 +70,10 @@ namespace Files.Gm1Converter
                 case GM1FileHeader.DataType.Font:
                     CreateImages(array);
                     return true;
+                case GM1FileHeader.DataType.NOCompression:
+                case GM1FileHeader.DataType.NOCompression1:
+                    CreateNoCompressionImages(array,((GM1FileHeader.DataType)fileHeader.IDataType==GM1FileHeader.DataType.NOCompression1)?0:7);
+                    return true;
                 case GM1FileHeader.DataType.TilesObject:
                     CreateTileImage(array);
                     return true;
@@ -79,6 +83,8 @@ namespace Files.Gm1Converter
 
             return false;
         }
+
+      
 
         /// <summary>
         /// Create the new GM1 Files from IMGS and Headers(1. FileHeader,2. Palette,3. OffsetList,4. SizeList,5. ImgHeaderList,6. ImgsasByteList)
@@ -136,11 +142,22 @@ namespace Files.Gm1Converter
 
             CreateOffsetAndSizeInByteArrayList(array);
             CreateImgHeader(array);
-
             for (uint i = 0; i < fileHeader.INumberOfPictureinFile; i++)
             {
                 _TGXImage[(int)i].CreateImageFromByteArray(palette);
             }
+        }
+
+
+        private void CreateNoCompressionImages(byte[] array,int offset)
+        {
+            CreateOffsetAndSizeInByteArrayList(array);
+            CreateImgHeader(array);
+            for (uint i = 0; i < fileHeader.INumberOfPictureinFile; i++)
+            {
+                _TGXImage[(int)i].CreateNoComppressionImageFromByteArray(palette, offset);
+            }
+
         }
 
         private List<TGXImage> newTileList = new List<TGXImage>();
@@ -183,6 +200,8 @@ namespace Files.Gm1Converter
                 Buffer.BlockCopy(array, actualPositionInByteArray + (int)image.OffsetinByteArray, image.ImgFileAsBytearray, 0, (int)image.SizeinByteArray);
             }
         }
+
+
 
 
         /// <summary>

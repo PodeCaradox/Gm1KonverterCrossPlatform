@@ -107,17 +107,27 @@ namespace Gm1KonverterCrossPlatform.Views
                 {
                     Avalonia.Media.Imaging.Bitmap image = new Avalonia.Media.Imaging.Bitmap(file);
                     vm.TGXImages[counter - 1].Source = image;
+                    vm.TGXImages[counter - 1].MaxWidth = image.PixelSize.Width;
+                    vm.TGXImages[counter - 1].MaxHeight = image.PixelSize.Height;
                     counter++;
                     var fileindex = int.Parse(filename.Replace("Image", "").Replace(".png", "")) - 1;
                     int width, height;
                     var list = Utility.LoadImage(file,out width,out height, vm.File.ImagesTGX[fileindex].AnimatedColor,1,vm.File.FileHeader.IDataType);
                     if (list.Count == 0) return;
                
-                    if ((GM1FileHeader.DataType)vm.File.FileHeader.IDataType != GM1FileHeader.DataType.TilesObject)
+                    if ((GM1FileHeader.DataType)vm.File.FileHeader.IDataType != GM1FileHeader.DataType.TilesObject 
+                        && (GM1FileHeader.DataType)vm.File.FileHeader.IDataType != GM1FileHeader.DataType.NOCompression
+                        && (GM1FileHeader.DataType)vm.File.FileHeader.IDataType != GM1FileHeader.DataType.NOCompression1)
                     {
                         vm.File.ImagesTGX[fileindex].ConvertImageWithoutPaletteToByteArray(list, width, height);
                         vm.File.ImagesTGX[fileindex].Width = (ushort)width;
                         vm.File.ImagesTGX[fileindex].Height = (ushort)height;
+                    }else if ((GM1FileHeader.DataType)vm.File.FileHeader.IDataType == GM1FileHeader.DataType.NOCompression
+                            ||(GM1FileHeader.DataType)vm.File.FileHeader.IDataType == GM1FileHeader.DataType.NOCompression1)
+                    {
+                        vm.File.ImagesTGX[fileindex].ConvertNoCommpressionImageToByteArray(list, width, height);
+                        vm.File.ImagesTGX[fileindex].Width = (ushort)width;
+                        vm.File.ImagesTGX[fileindex].Height = (ushort)(height + ((GM1FileHeader.DataType)vm.File.FileHeader.IDataType == GM1FileHeader.DataType.NOCompression1 ? 0 : 7));//7 because stronghold want it so
                     }
                     else
                     {
@@ -264,7 +274,7 @@ namespace Gm1KonverterCrossPlatform.Views
             Cursor = new Avalonia.Input.Cursor(Avalonia.Input.StandardCursorType.Wait);
             if (vm.DecodeData(listboxItemBefore, this))
             {
-
+                Utility.datatype = (GM1FileHeader.DataType)vm.File.FileHeader.IDataType;
 
                 vm.Filetype = Utility.GetText("Datatype") + ((GM1FileHeader.DataType)vm.File.FileHeader.IDataType);
                 if (vm.File.Palette == null)
