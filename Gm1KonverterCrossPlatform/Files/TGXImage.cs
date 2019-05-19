@@ -276,8 +276,16 @@ namespace Files.Gm1Converter
         /// <param name="height">Height of the new IMG</param>
         internal void ConvertImageWithoutPaletteToByteArray(List<ushort> colors, int width, int height)
         {
-            var array = Utility.ImgWithoutPaletteToGM1ByteArray(colors, width, height,animatedColor);
+            var array = Utility.ImgToGM1ByteArray(colors, width, height,animatedColor);
+            //for (int i = 0; i < imgFileAsBytearray.Length; i++)
+            //{
+            //    if (imgFileAsBytearray[i]!= array[i])
+            //    {
 
+            //    }
+            //}
+
+          
 
             imgFileAsBytearray = array.ToArray();
 

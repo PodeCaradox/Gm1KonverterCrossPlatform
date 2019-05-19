@@ -13,7 +13,7 @@
     <x:String x:Key="Workfolder">Рабочая папка</x:String>
     <x:String x:Key="OpenFolderafterExport">Открыть папку после експорта</x:String>
     <x:String x:Key="ActivateLogger">Активировать лог файл</x:String>
-    <x:String x:Key="StrongholdFolder">Папка Stronghold</x:String>
+    <x:String x:Key="StrongholdFolder">Папка Stronghold GM</x:String>
     <x:String x:Key="File">Файл</x:String>
     <x:String x:Key="Edit">Редактировать</x:String>
     <x:String x:Key="Options">Опции</x:String>

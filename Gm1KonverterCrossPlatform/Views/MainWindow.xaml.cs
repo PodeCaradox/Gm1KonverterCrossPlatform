@@ -33,9 +33,9 @@ namespace Gm1KonverterCrossPlatform.Views
 
 
             InitializeComponent();
-        #if DEBUG
+            #if DEBUG
             this.AttachDevTools();
-#endif
+            #endif
             this.DataContextChanged += ViewModelSet;
 
             ListBox listbox = this.Get<ListBox>("Gm1FilesSelector");
@@ -85,7 +85,7 @@ namespace Gm1KonverterCrossPlatform.Views
         {
             ListBox listbox = sender as ListBox;
             if (listbox.SelectedIndex == -1) return;
-            Process.Start(vm.UserConfig.WorkFolderPath + "\\" + listbox.SelectedItem);
+            Process.Start("explorer.exe", vm.UserConfig.WorkFolderPath + "\\" + listbox.SelectedItem);
         }
 
         private void ImportImages(object sender, RoutedEventArgs e)
@@ -139,7 +139,7 @@ namespace Gm1KonverterCrossPlatform.Views
             }
             if ((GM1FileHeader.DataType)vm.File.FileHeader.IDataType == GM1FileHeader.DataType.TilesObject) vm.File.SetNewTileList();
             
-            vm.File.ImagesTGX[0].SizeinByteArray = (uint)vm.File.ImagesTGX[0].ImgFileAsBytearray.Length;
+            if(vm.File.ImagesTGX.Count>0) vm.File.ImagesTGX[0].SizeinByteArray = (uint)vm.File.ImagesTGX[0].ImgFileAsBytearray.Length;
             uint zaehler = 0;
             for (int i = 1; i < vm.File.ImagesTGX.Count; i++)
             {
@@ -193,7 +193,7 @@ namespace Gm1KonverterCrossPlatform.Views
 
 
             if (vm.UserConfig.OpenFolderAfterExport)
-                Process.Start(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\Images");
+                Process.Start("explorer.exe", vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\Images");
 
 
             vm.LoadWorkfolderFiles();
@@ -243,7 +243,7 @@ namespace Gm1KonverterCrossPlatform.Views
                 colorTable++;
             }
             if(vm.UserConfig.OpenFolderAfterExport)
-            Process.Start(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\Colortables");
+            Process.Start("explorer.exe", vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\Colortables");
 
             vm.LoadWorkfolderFiles();
             Cursor = new Avalonia.Input.Cursor(Avalonia.Input.StandardCursorType.Arrow);
@@ -436,7 +436,7 @@ namespace Gm1KonverterCrossPlatform.Views
             stream.Dispose();
 
             if (vm.UserConfig.OpenFolderAfterExport)
-                Process.Start(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\Gif");
+                Process.Start("explorer.exe", vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\Gif");
 
         }
 

@@ -13,7 +13,7 @@
     <x:String x:Key="Workfolder">Arbeitsordner</x:String>
     <x:String x:Key="OpenFolderafterExport">Öffne Ordner nachdem Exportieren</x:String>
     <x:String x:Key="ActivateLogger">Aktiviere Logger</x:String>
-    <x:String x:Key="StrongholdFolder">Stronghold GM1 Ordner</x:String>
+    <x:String x:Key="StrongholdFolder">Stronghold GM Ordner</x:String>
     <x:String x:Key="File">Datei</x:String>
     <x:String x:Key="Edit">Bearbeiten</x:String>
     <x:String x:Key="Options">Optionen</x:String>

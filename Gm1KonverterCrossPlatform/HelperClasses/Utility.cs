@@ -106,7 +106,9 @@ namespace HelperClasses.Gm1Converter
             }
             return colors;
         }
-        
+
+    
+
         /// <summary>
         /// Convert an IMG as Colorlist to ByteArray
         /// </summary>
@@ -115,17 +117,16 @@ namespace HelperClasses.Gm1Converter
         /// <param name="height">The Height from the IMG</param>
         /// <param name="animatedColor">Needed for Alpha is 1 or 0</param>
         /// <returns></returns>
-        internal static List<byte> ImgWithoutPaletteToGM1ByteArray(List<ushort> colors, int width, int height, int animatedColor,int part=0)
+        internal static List<byte> ImgToGM1ByteArray(List<ushort> colors, int width, int height, int animatedColor, Palette palette = null)
         {
-            bool allTransparentOnTopReached = false;
-            //if (height == 7) allTransparentOnTopReached = true;
-            int transparent =  32767;
+         
+                int transparent =  32767;
+            ushort alpha=(animatedColor==0)?(ushort)0b1000_0000_0000_0000: (ushort)0b0;
             List<byte> array = new List<byte>();
             byte length = 0;  // value 1-32  | 0 will be 1
             byte header = 0;   //3 bytes
             int countSamePixel = 0;
             bool newline = false;
-       
             for (int i = 0; i < height; i++)
             {
                 for (int j = 0; j < width;)
@@ -145,6 +146,7 @@ namespace HelperClasses.Gm1Converter
                             break;
                         }
                     }
+                  
                     //hole line transparent?
                     if (newline == true && countSamePixel == width)
                     {
@@ -165,7 +167,7 @@ namespace HelperClasses.Gm1Converter
                                 }
                                 if (dummy != 0)
                                 {
-                                    length = (byte)(dummy - 1);//-1 because the test is pixel perfect in the loop and 0 == 1 in the encoding
+                                    length = (byte)(dummy - 1);//-1 because in the decoding +1
                                     array.Add((byte)(header | length));
 
                                 }
@@ -173,14 +175,15 @@ namespace HelperClasses.Gm1Converter
                         }
                       
                         array.Add(0b1000_0000);
+                       
                         j = width;
+                        continue;
                     }
                     //pixels in the line
                     else
                     {
-                        allTransparentOnTopReached = true;
+                        //transparent pixelstring?
                         var dummy = countSamePixel;
-                            //transparent pixelstring
                             header = 0b0010_0000;
                             while (dummy / 32 > 0)
                             {
@@ -190,19 +193,20 @@ namespace HelperClasses.Gm1Converter
                             }
                             if (dummy != 0)
                             {
-                                length = (byte)(dummy - 1);//-1 because the test is pixel perfect in the loop and 0 == 1 in the encoding
-                                array.Add((byte)(header | length));
+                                length = (byte)(dummy - 1);//-1 because in the decoding +1
+                            array.Add((byte)(header | length));
                             }
                         j += countSamePixel;
                         if (j == width)
                         {
                             array.Add(0b1000_0000);
+                          
                             continue;
                         }
-                    
+                        
                         countSamePixel = 1;
                         int repeatingPixel = 1;
-                        //Stream-of-pixels or repeating pixels
+                        //Stream-of-pixels or repeating pixels?
                         for (int z = j + 1; z < width; z++)
                         {
                             if (colors[i * width + z] != transparent && colors[i * width + z - 1] != colors[i * width + z])
@@ -224,8 +228,13 @@ namespace HelperClasses.Gm1Converter
                                 repeatingPixel++;
                                 if (countSamePixel > 1 && repeatingPixel > 2)
                                 {
+                                    countSamePixel--;
                                     repeatingPixel = 1;
                                     break;
+                                }
+                                if (z == width-1)
+                                {
+                                    countSamePixel++;
                                 }
                             }
                             else
@@ -250,17 +259,17 @@ namespace HelperClasses.Gm1Converter
                                 length = 0b0001_1111;
                                 array.Add((byte)(header | length));
                               
-                                    var color = colors[j + i * width + 1];
+                                    var color = (ushort)(colors[j + i * width + 1] | alpha);
                                     array.AddRange(BitConverter.GetBytes(color));
                              
                                 dummy -= 32;
                             }
                             if (dummy != 0)
                             {
-                                length = (byte)(dummy - 1);//-1 because the test is pixel perfect in the loop and 0 == 1 in the encoding
+                                length = (byte)(dummy - 1);//-1 because in the decoding +1
                                 array.Add((byte)(header | length));
                                
-                                    var color = colors[j  + i * width + 1];
+                                    var color = (ushort)(colors[j  + i * width + 1] | alpha);
                                     array.AddRange(BitConverter.GetBytes(color));
                               
                             }
@@ -276,7 +285,7 @@ namespace HelperClasses.Gm1Converter
                                 array.Add((byte)(header | length));
                                 for (int a = 0; a < 32; a++)
                                 {
-                                    var color = colors[j + zaehler + i * width];
+                                    var color = (ushort)(colors[j + zaehler + i * width] | alpha);
                                     array.AddRange(BitConverter.GetBytes(color));
                                   
                                     dummy--;
@@ -285,11 +294,11 @@ namespace HelperClasses.Gm1Converter
                             }
                             if (dummy != 0)
                             {
-                                length = (byte)(dummy - 1);//-1 because the test is pixel perfect in the loop and 0 == 1 in the encoding
+                                length = (byte)(dummy - 1);//-1 because in the decoding +1
                                 array.Add((byte)(header | length));
                                 for (int a = 0; a < dummy; a++)
                                 {
-                                    var color = colors[j + zaehler + i * width];
+                                    var color = (ushort)(colors[j + zaehler + i * width] | alpha);
                                     array.AddRange(BitConverter.GetBytes(color));
                                     
                                     zaehler++;
@@ -303,13 +312,14 @@ namespace HelperClasses.Gm1Converter
                         if (j == width)
                         {
                             array.Add(0b1000_0000);
+                          
                         }
                     }
 
 
                 }
             }
-
+  
 
             return array;
         }
@@ -335,15 +345,13 @@ namespace HelperClasses.Gm1Converter
         public static int XOffsetBefore { get; internal set; }
 
         private static int biggestHeight = 0;
-        private static int countertest = 0;
         internal static List<TGXImage> ConvertImgToTiles(List<ushort> list, ushort width, ushort height, List<TGXImage> oldList)
         {
             List<TGXImage> newImageList = new List<TGXImage>();
-            countertest++;
 
 
             //calculate Parts one part 16 x 30
-            int partwidth = width / 30;//todo not exactly 30 width because 2 pixels between
+            int partwidth = width / 30;//todo not exactly 30 width because 2 pixels between(can ignored because Church bigest tiledImage and work)
             int totalTiles = partwidth;
             int dummy = 0;
             for (int i = 0; 0 != totalTiles; i++)
@@ -362,7 +370,7 @@ namespace HelperClasses.Gm1Converter
             datatype = GM1FileHeader.DataType.TilesObject;
             for (int part = 0; part < totalTiles; part++)
             {
-
+               
                 counter++;
                 int x = 0;
                 int y = 0;
@@ -380,14 +388,17 @@ namespace HelperClasses.Gm1Converter
                     y++;
                     x = 0;
                 }
+                if (part ==3 || part==5)
+                {
 
+                }
 
                 var newImage = new TGXImage();
                 newImage.Direction = 0;
                 newImage.Height = 16;
                 newImage.Width = 30;
-                newImage.OffsetX = (ushort)(xOffset + XOffsetBefore);
-                newImage.OffsetY = (ushort)(yOffset + YOffsetBefore);
+                //newImage.OffsetX = (ushort)(xOffset + XOffsetBefore);
+                //newImage.OffsetY = (ushort)(yOffset + YOffsetBefore);
                 newImage.SubParts = (byte)totalTiles;
                 newImage.ImagePart = (byte)part;
                 if(totalTiles==1) halfreached = true;
@@ -407,7 +418,7 @@ namespace HelperClasses.Gm1Converter
                             List<ushort> colorListImgOnTop = GetColorList(list, imageOnTopwidth, imageOnTopheight, imageOnTopOffsetX, width);
                             if (colorListImgOnTop.Count != 0) {
                            
-                                var byteArrayImgonTop = ImgWithoutPaletteToGM1ByteArray(colorListImgOnTop, imageOnTopwidth, colorListImgOnTop.Count / imageOnTopwidth, 1, part);
+                                var byteArrayImgonTop = ImgToGM1ByteArray(colorListImgOnTop, imageOnTopwidth, colorListImgOnTop.Count / imageOnTopwidth, 1);
                                 arrayByte.AddRange(byteArrayImgonTop);
                                 newImage.TileOffset = (ushort)(colorListImgOnTop.Count / imageOnTopwidth + 10 - 16 - 1);
                                 if (newImage.TileOffset == ushort.MaxValue) newImage.TileOffset = 0;
@@ -426,7 +437,7 @@ namespace HelperClasses.Gm1Converter
 
                             if (colorListImgOnTop.Count != 0)
                             {
-                                var byteArrayImgonTop = ImgWithoutPaletteToGM1ByteArray(colorListImgOnTop, imageOnTopwidth, colorListImgOnTop.Count / imageOnTopwidth, 1, part);
+                                var byteArrayImgonTop = ImgToGM1ByteArray(colorListImgOnTop, imageOnTopwidth, colorListImgOnTop.Count / imageOnTopwidth, 1);
 
                                 arrayByte.AddRange(byteArrayImgonTop);
                                 newImage.TileOffset = (ushort)(colorListImgOnTop.Count / imageOnTopwidth + 10 - 16 - 1);
@@ -446,7 +457,7 @@ namespace HelperClasses.Gm1Converter
                         List<ushort> colorListImgOnTop = GetColorList(list, imageOnTopwidth, imageOnTopheight, imageOnTopOffsetX - 1, width);
                         if (colorListImgOnTop.Count != 0)
                         {
-                            var byteArrayImgonTop = ImgWithoutPaletteToGM1ByteArray(colorListImgOnTop, imageOnTopwidth, colorListImgOnTop.Count / imageOnTopwidth, 1, part);
+                            var byteArrayImgonTop = ImgToGM1ByteArray(colorListImgOnTop, imageOnTopwidth, colorListImgOnTop.Count / imageOnTopwidth, 1);
                             arrayByte.AddRange(byteArrayImgonTop);
                             newImage.Height = (ushort)(colorListImgOnTop.Count / imageOnTopwidth + 9);
                             newImage.TileOffset = (ushort)(colorListImgOnTop.Count / imageOnTopwidth + 10 - 16 - 1);

@@ -72,7 +72,7 @@ namespace Files.Gm1Converter
                     return true;
                 case GM1FileHeader.DataType.NOCompression:
                 case GM1FileHeader.DataType.NOCompression1:
-                    CreateNoCompressionImages(array,((GM1FileHeader.DataType)fileHeader.IDataType==GM1FileHeader.DataType.NOCompression1)?0:7);
+                    CreateNoCompressionImages(array, ((GM1FileHeader.DataType)fileHeader.IDataType == GM1FileHeader.DataType.NOCompression1) ? 0 : 7);
                     return true;
                 case GM1FileHeader.DataType.TilesObject:
                     CreateTileImage(array);
@@ -84,7 +84,7 @@ namespace Files.Gm1Converter
             return false;
         }
 
-      
+
 
         /// <summary>
         /// Create the new GM1 Files from IMGS and Headers(1. FileHeader,2. Palette,3. OffsetList,4. SizeList,5. ImgHeaderList,6. ImgsasByteList)
@@ -149,7 +149,7 @@ namespace Files.Gm1Converter
         }
 
 
-        private void CreateNoCompressionImages(byte[] array,int offset)
+        private void CreateNoCompressionImages(byte[] array, int offset)
         {
             CreateOffsetAndSizeInByteArrayList(array);
             CreateImgHeader(array);
@@ -167,7 +167,7 @@ namespace Files.Gm1Converter
         /// <param name="list"></param>
         internal void ConvertImgToTiles(List<ushort> list, ushort width, ushort height)
         {
-            newTileList.AddRange(Utility.ConvertImgToTiles(list, width, height,ImagesTGX));
+            newTileList.AddRange(Utility.ConvertImgToTiles(list, width, height, ImagesTGX));
         }
 
         /// <summary>
@@ -212,7 +212,7 @@ namespace Files.Gm1Converter
         {
             CreateOffsetAndSizeInByteArrayList(array);
             CreateImgHeader(array);
-         
+
             int offsetX = 0, offsetY = 0;
             int midx = 0;
             int width = 0;
@@ -224,13 +224,13 @@ namespace Files.Gm1Converter
             int partsBefore = 0;
             for (int i = 0; i < _TGXImage.Count; i++)
             {
-               
-      
+
+
                 if (_TGXImage[i].ImagePart == 0)
                 {
-                  
+
                     width = Utility.GetDiamondWidth(_TGXImage[i].SubParts);
-          
+
 
                     partsBefore += _TGXImage[i].SubParts;
 
@@ -238,7 +238,7 @@ namespace Files.Gm1Converter
                     counter++;
                     itemsPerRow = 1;
                     actualItemsPerRow = 0;
-                    midx = (width / 2) * 30 + (width - 1) - ((width%2==0)? 15 : 0);
+                    midx = (width / 2) * 30 + (width - 1) - ((width % 2 == 0) ? 15 : 0);
                     offsetY = tilesImage[counter].Height - 16;
                     offsetX = midx;
                     safeoffset = offsetX;
@@ -337,6 +337,14 @@ namespace Files.Gm1Converter
 
         public void SetNewTileList()
         {
+
+            //Check for animatedColor(not known how to set it in Stronghold 1 is not used in Stronghold Crusader)
+            if(_TGXImage.Count <= newTileList.Count)
+            for (int i = 0; i < _TGXImage.Count; i++)
+            {
+                newTileList[i].AnimatedColor = _TGXImage[i].AnimatedColor;
+            }
+
             _TGXImage = newTileList;
             fileHeader.INumberOfPictureinFile = (uint)_TGXImage.Count;
             newTileList = new List<TGXImage>();
