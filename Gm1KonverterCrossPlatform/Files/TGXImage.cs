@@ -234,7 +234,12 @@ namespace Files.Gm1Converter
 
         }
 
+        internal void ConvertImageWithPaletteToByteArray(List<ushort> colors, int width, int height, Palette palette, List<ushort>[] colorsImages = null)
+        {
+            var array = Utility.ImgToGM1ByteArray(colors, width, height, animatedColor, palette, colorsImages);
 
+            imgFileAsBytearray = array.ToArray();
+        }
 
         internal unsafe void CreateNoComppressionImageFromByteArray(Palette palette,int offset)
         {

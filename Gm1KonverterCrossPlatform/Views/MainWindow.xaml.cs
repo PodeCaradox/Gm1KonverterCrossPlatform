@@ -66,11 +66,97 @@ namespace Gm1KonverterCrossPlatform.Views
             MenuItem importImagesMenueItem = this.Get<MenuItem>("ImportImagesMenueItem");
             importImagesMenueItem.Click += ImportImages;
 
+            MenuItem exportOrginalStrongholdAnimation = this.Get<MenuItem>("ExportOrginalStrongholdAnimation");
+            exportOrginalStrongholdAnimation.Click += ExportOrginalStrongholdAnimation;
+
+            MenuItem importOrginalStrongholdAnimation = this.Get<MenuItem>("ImportOrginalStrongholdAnimation");
+            importOrginalStrongholdAnimation.Click += ImportOrginalStrongholdAnimation;
+
+
             Image image = this.Get<Image>("HelpIcon");
 
             Avalonia.Media.Imaging.Bitmap bitmap = new Avalonia.Media.Imaging.Bitmap("Images/info.png");
             image.Source = bitmap;
             image.Tapped += OpenInfoWindow;
+        }
+
+        private void ExportOrginalStrongholdAnimation(object sender, RoutedEventArgs e)
+        {
+            Cursor = new Avalonia.Input.Cursor(Avalonia.Input.StandardCursorType.Wait);
+            var filewithoutgm1ending = vm.File.FileHeader.Name.Replace(".gm1", "");
+            vm.File.Palette.ActualPalette = 0;
+            vm.File.DecodeGm1File(vm.File.FileArray, vm.File.FileHeader.Name);
+            for (int i = 0; i < 10; i++)
+            {
+
+                if (!Directory.Exists(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\OrginalAnimationPalette"+(i+1)))
+                {
+                    Directory.CreateDirectory(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\OrginalAnimationPalette" + (i + 1));
+                }
+                int img = 1;
+                foreach (var image in vm.File.ImagesTGX)
+                {
+                    image.Bitmap.Save(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\OrginalAnimationPalette" + (i + 1)+"\\OrginalAnimationImg" + img + ".png");
+                    img++;
+                }
+                vm.ChangePalette(1);
+            }
+
+            if (vm.UserConfig.OpenFolderAfterExport)
+                Process.Start("explorer.exe", vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending );
+
+            vm.LoadWorkfolderFiles();
+            Cursor = new Avalonia.Input.Cursor(Avalonia.Input.StandardCursorType.Arrow);
+        }
+
+        private void ImportOrginalStrongholdAnimation(object sender, RoutedEventArgs e)
+        {
+            Cursor = new Avalonia.Input.Cursor(Avalonia.Input.StandardCursorType.Wait);
+            var filewithoutgm1ending = vm.File.FileHeader.Name.Replace(".gm1", "");
+            var files = Directory.GetFiles(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\OrginalAnimationPalette1", "*.png", SearchOption.TopDirectoryOnly);
+            //sort because 11 is before 2
+            files = files.OrderBy(x => x.Length).ThenBy(x => x).ToArray<String>();
+            int counter = 1;
+            foreach (var file in files)
+            {
+                var filename = Path.GetFileName(file);
+                if (filename.Equals("OrginalAnimationImg" + counter + ".png"))
+                {
+                    int width, height;
+                    var list = Utility.LoadImage(file, out width, out height, vm.File.ImagesTGX[counter-1].AnimatedColor, 1, vm.File.FileHeader.IDataType);
+                    if (list.Count == 0) return;
+                    List<ushort>[] colorsImages = new List<ushort>[9];
+
+                    colorsImages[0] = Utility.LoadImage(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\OrginalAnimationPalette" + 2 + "\\OrginalAnimationImg"+counter+".png", out width, out height, vm.File.ImagesTGX[counter - 1].AnimatedColor, 1, vm.File.FileHeader.IDataType);
+                    colorsImages[1] = Utility.LoadImage(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\OrginalAnimationPalette" + 3 + "\\OrginalAnimationImg" + counter + ".png", out width, out height, vm.File.ImagesTGX[counter - 1].AnimatedColor, 1, vm.File.FileHeader.IDataType);
+                    colorsImages[2] = Utility.LoadImage(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\OrginalAnimationPalette" + 4 + "\\OrginalAnimationImg" + counter + ".png", out width, out height, vm.File.ImagesTGX[counter - 1].AnimatedColor, 1, vm.File.FileHeader.IDataType);
+                    colorsImages[3] = Utility.LoadImage(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\OrginalAnimationPalette" + 5 + "\\OrginalAnimationImg" + counter + ".png", out width, out height, vm.File.ImagesTGX[counter - 1].AnimatedColor, 1, vm.File.FileHeader.IDataType);
+                    colorsImages[4] = Utility.LoadImage(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\OrginalAnimationPalette" + 6 + "\\OrginalAnimationImg" + counter + ".png", out width, out height, vm.File.ImagesTGX[counter - 1].AnimatedColor, 1, vm.File.FileHeader.IDataType);
+                    colorsImages[5] = Utility.LoadImage(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\OrginalAnimationPalette" + 7 + "\\OrginalAnimationImg" + counter + ".png", out width, out height, vm.File.ImagesTGX[counter - 1].AnimatedColor, 1, vm.File.FileHeader.IDataType);
+                    colorsImages[6] = Utility.LoadImage(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\OrginalAnimationPalette" + 8 + "\\OrginalAnimationImg" + counter + ".png", out width, out height, vm.File.ImagesTGX[counter - 1].AnimatedColor, 1, vm.File.FileHeader.IDataType);
+                    colorsImages[7] = Utility.LoadImage(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\OrginalAnimationPalette" + 9 + "\\OrginalAnimationImg" + counter + ".png", out width, out height, vm.File.ImagesTGX[counter - 1].AnimatedColor, 1, vm.File.FileHeader.IDataType);
+                    colorsImages[8] = Utility.LoadImage(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\OrginalAnimationPalette" + 10 + "\\OrginalAnimationImg" + counter + ".png", out width, out height, vm.File.ImagesTGX[counter - 1].AnimatedColor, 1, vm.File.FileHeader.IDataType);
+                    vm.File.ImagesTGX[counter - 1].ConvertImageWithPaletteToByteArray(list, width, height, vm.File.Palette, colorsImages);
+                    vm.File.ImagesTGX[counter - 1].Width = (ushort)width;
+                    vm.File.ImagesTGX[counter - 1].Height = (ushort)height;
+
+                    counter++;
+                }
+            }
+
+            if (vm.File.ImagesTGX.Count > 0) vm.File.ImagesTGX[0].SizeinByteArray = (uint)vm.File.ImagesTGX[0].ImgFileAsBytearray.Length;
+            uint zaehler = 0;
+            for (int i = 1; i < vm.File.ImagesTGX.Count; i++)
+            {
+                zaehler += vm.File.ImagesTGX[i - 1].SizeinByteArray;
+                vm.File.ImagesTGX[i].OffsetinByteArray = zaehler;
+                vm.File.ImagesTGX[i].SizeinByteArray = (uint)vm.File.ImagesTGX[i].ImgFileAsBytearray.Length;
+            }
+
+            //datasize neu setzten
+            uint newDataSize = vm.File.ImagesTGX[vm.File.ImagesTGX.Count - 1].OffsetinByteArray + vm.File.ImagesTGX[vm.File.ImagesTGX.Count - 1].SizeinByteArray; ;
+            Cursor = new Avalonia.Input.Cursor(Avalonia.Input.StandardCursorType.Arrow);
+
         }
 
         private void OpenInfoWindow(object sender, RoutedEventArgs e)
@@ -103,7 +189,7 @@ namespace Gm1KonverterCrossPlatform.Views
             foreach (var file in files)
             {
                 var filename = Path.GetFileName(file);
-                if (filename.Equals("Image"+ counter+".png"))
+                if (filename.Equals("Image"+ counter +".png"))
                 {
                     Avalonia.Media.Imaging.Bitmap image = new Avalonia.Media.Imaging.Bitmap(file);
                     vm.TGXImages[counter - 1].Source = image;
@@ -115,23 +201,27 @@ namespace Gm1KonverterCrossPlatform.Views
                     var list = Utility.LoadImage(file,out width,out height, vm.File.ImagesTGX[fileindex].AnimatedColor,1,vm.File.FileHeader.IDataType);
                     if (list.Count == 0) return;
                
-                    if ((GM1FileHeader.DataType)vm.File.FileHeader.IDataType != GM1FileHeader.DataType.TilesObject 
-                        && (GM1FileHeader.DataType)vm.File.FileHeader.IDataType != GM1FileHeader.DataType.NOCompression
-                        && (GM1FileHeader.DataType)vm.File.FileHeader.IDataType != GM1FileHeader.DataType.NOCompression1)
+                    if ((GM1FileHeader.DataType)vm.File.FileHeader.IDataType == GM1FileHeader.DataType.Animations)
                     {
-                        vm.File.ImagesTGX[fileindex].ConvertImageWithoutPaletteToByteArray(list, width, height);
+                        vm.File.ImagesTGX[fileindex].ConvertImageWithPaletteToByteArray(list, width, height,vm.File.Palette);
                         vm.File.ImagesTGX[fileindex].Width = (ushort)width;
                         vm.File.ImagesTGX[fileindex].Height = (ushort)height;
-                    }else if ((GM1FileHeader.DataType)vm.File.FileHeader.IDataType == GM1FileHeader.DataType.NOCompression
+                    }
+                    else if ((GM1FileHeader.DataType)vm.File.FileHeader.IDataType == GM1FileHeader.DataType.NOCompression
                             ||(GM1FileHeader.DataType)vm.File.FileHeader.IDataType == GM1FileHeader.DataType.NOCompression1)
                     {
                         vm.File.ImagesTGX[fileindex].ConvertNoCommpressionImageToByteArray(list, width, height);
                         vm.File.ImagesTGX[fileindex].Width = (ushort)width;
                         vm.File.ImagesTGX[fileindex].Height = (ushort)(height + ((GM1FileHeader.DataType)vm.File.FileHeader.IDataType == GM1FileHeader.DataType.NOCompression1 ? 0 : 7));//7 because stronghold want it so
                     }
-                    else
+                    else if((GM1FileHeader.DataType)vm.File.FileHeader.IDataType == GM1FileHeader.DataType.TilesObject)
                     {
                         vm.File.ConvertImgToTiles(list, (ushort)width, (ushort)height);
+                    }
+                    else {
+                        vm.File.ImagesTGX[fileindex].ConvertImageWithoutPaletteToByteArray(list, width, height);
+                        vm.File.ImagesTGX[fileindex].Width = (ushort)width;
+                        vm.File.ImagesTGX[fileindex].Height = (ushort)height;
                     }
 
                 }
@@ -281,12 +371,14 @@ namespace Gm1KonverterCrossPlatform.Views
                 {
                     vm.ImportButtonEnabled = true;
                     vm.ColorButtonsEnabled = false;
+                    vm.OrginalStrongholdAnimationButtonEnabled = false;
                     vm.ActuellColorTable = null;
                 }
                 else
                 {
+                    vm.OrginalStrongholdAnimationButtonEnabled = true;
                     vm.ColorButtonsEnabled = true;
-                    vm.ImportButtonEnabled = false;
+                    vm.ImportButtonEnabled = true;
                 }
 
                 vm.ButtonsEnabled = true;

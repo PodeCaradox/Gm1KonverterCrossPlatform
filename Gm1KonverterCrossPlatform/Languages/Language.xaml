@@ -75,5 +75,7 @@
     <x:String x:Key="ExportGif">Export Gif</x:String>
     <x:String x:Key="SelectGif">Select Images with CTRL than click on the Export Button</x:String>
     <x:String x:Key="Delay">Delay:</x:String>
-    
+
+    <x:String x:Key="ImportOrginalStrongholdAnimation">Import Orginal Stronghold Animation</x:String>
+    <x:String x:Key="ExportOrginalStrongholdAnimation">Export Orginal Stronghold Animation</x:String>
 </controls:ResourceDictionary>

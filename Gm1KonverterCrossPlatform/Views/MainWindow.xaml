@@ -39,6 +39,10 @@
         <Separator/>
         <MenuItem Header="{DynamicResource ExportImages}" Name="ExportImagesMenueItem" IsEnabled="{Binding ButtonsEnabled}"/>
         <MenuItem Header="{DynamicResource ImportImages}" Name="ImportImagesMenueItem" IsEnabled="{Binding ImportButtonEnabled}"/>
+        <Separator/>
+        <Separator/>
+        <MenuItem Header="{DynamicResource ExportOrginalStrongholdAnimation}" Name="ExportOrginalStrongholdAnimation" IsEnabled="{Binding OrginalStrongholdAnimationButtonEnabled}"/>
+        <MenuItem Header="{DynamicResource ImportOrginalStrongholdAnimation}" Name="ImportOrginalStrongholdAnimation" IsEnabled="{Binding OrginalStrongholdAnimationButtonEnabled}"/>
       </MenuItem>
       <MenuItem Header="{DynamicResource Options}">
         <MenuItem Header="{DynamicResource Workfolder}" Name="WorkfolderMenueItem"/>

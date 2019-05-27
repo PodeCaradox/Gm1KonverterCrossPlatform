@@ -85,6 +85,7 @@ namespace HelperClasses.Gm1Converter
                         var pixel = image[j, i];
                         byte a = (animatedColor >= 1 
                             || ((GM1FileHeader.DataType)type) == GM1FileHeader.DataType.TilesObject
+                            || ((GM1FileHeader.DataType)type) == GM1FileHeader.DataType.Animations
                             || ((GM1FileHeader.DataType)type) == GM1FileHeader.DataType.TGXConstSize
                             || ((GM1FileHeader.DataType)type) == GM1FileHeader.DataType.NOCompression
                             || ((GM1FileHeader.DataType)type) == GM1FileHeader.DataType.NOCompression1) ? byte.MaxValue : byte.MinValue;
@@ -117,9 +118,8 @@ namespace HelperClasses.Gm1Converter
         /// <param name="height">The Height from the IMG</param>
         /// <param name="animatedColor">Needed for Alpha is 1 or 0</param>
         /// <returns></returns>
-        internal static List<byte> ImgToGM1ByteArray(List<ushort> colors, int width, int height, int animatedColor, Palette palette = null)
+        internal static List<byte> ImgToGM1ByteArray(List<ushort> colors, int width, int height, int animatedColor, Palette palette = null, List<ushort>[] paletteImages = null)
         {
-         
                 int transparent =  32767;
             ushort alpha=(animatedColor==0)?(ushort)0b1000_0000_0000_0000: (ushort)0b0;
             List<byte> array = new List<byte>();
@@ -260,8 +260,16 @@ namespace HelperClasses.Gm1Converter
                                 array.Add((byte)(header | length));
                               
                                     var color = (ushort)(colors[j + i * width + 1] | alpha);
+                                if (palette == null)
+                                {
                                     array.AddRange(BitConverter.GetBytes(color));
-                             
+                                }
+                                else
+                                {
+                                    byte positioninColortable = FindColorPositionInPalette(color, j + i * width + 1, palette, paletteImages);
+                                    array.Add(positioninColortable);
+                                }
+
                                 dummy -= 32;
                             }
                             if (dummy != 0)
@@ -270,8 +278,18 @@ namespace HelperClasses.Gm1Converter
                                 array.Add((byte)(header | length));
                                
                                     var color = (ushort)(colors[j  + i * width + 1] | alpha);
+                                if (palette==null)
+                                {
                                     array.AddRange(BitConverter.GetBytes(color));
-                              
+                                }
+                                else
+                                {
+                                    byte positioninColortable = FindColorPositionInPalette(color, j + i * width + 1, palette, paletteImages);
+                                    array.Add(positioninColortable);
+                                }
+                                  
+
+                               
                             }
                         }
                         else
@@ -286,8 +304,16 @@ namespace HelperClasses.Gm1Converter
                                 for (int a = 0; a < 32; a++)
                                 {
                                     var color = (ushort)(colors[j + zaehler + i * width] | alpha);
-                                    array.AddRange(BitConverter.GetBytes(color));
-                                  
+                                    if (palette == null)
+                                    {
+                                        array.AddRange(BitConverter.GetBytes(color));
+                                    }
+                                    else
+                                    {
+                                        byte positioninColortable = FindColorPositionInPalette(color, j + zaehler + i * width, palette, paletteImages);
+                                        array.Add(positioninColortable);
+                                    }
+
                                     dummy--;
                                     zaehler++;
                                 }
@@ -299,8 +325,16 @@ namespace HelperClasses.Gm1Converter
                                 for (int a = 0; a < dummy; a++)
                                 {
                                     var color = (ushort)(colors[j + zaehler + i * width] | alpha);
-                                    array.AddRange(BitConverter.GetBytes(color));
-                                    
+                                    if (palette == null)
+                                    {
+                                        array.AddRange(BitConverter.GetBytes(color));
+                                    }
+                                    else
+                                    {
+                                        byte positioninColortable = FindColorPositionInPalette(color, j + zaehler + i * width, palette, paletteImages);
+                                        array.Add(positioninColortable);
+                                    }
+
                                     zaehler++;
                                 }
                             }
@@ -322,6 +356,69 @@ namespace HelperClasses.Gm1Converter
   
 
             return array;
+        }
+
+        private static byte FindColorPositionInPalette(ushort color,int position, Palette palette, List<ushort>[] paletteImages)
+        {
+    
+            byte newPosition = 0;
+            if (paletteImages==null)//not orginal Stronghold Files do not need to check all
+            {
+                for (byte i = 0; i < byte.MaxValue; i++)
+                {
+                    if (color == palette.ArrayPaletten[0,i])
+                    {
+                        newPosition = i;
+                        break;
+                    }
+                    
+                }
+            }
+            else // Orginal ones
+            {
+                List<byte> positions = new List<byte>();
+                for (byte i = 0; i < byte.MaxValue; i++)
+                {
+                    if (color == palette.ArrayPaletten[0, i])
+                    {
+                        positions.Add(i);
+                    }
+                }
+                if (positions.Count>1|| positions.Count==0)
+                {
+                  
+                    for (int j = 0; j < 9; j++)//other 9 pictures check for only one position
+                    {
+                        List<byte> otherPositions = new List<byte>();
+                        for (byte i = 0; i < byte.MaxValue; i++)
+                        {
+                            if (paletteImages[j][position] == palette.ArrayPaletten[j+1, i])
+                            {
+                                otherPositions.Add(i);
+                            }
+                        }
+                        if (otherPositions.Count==1)
+                        {
+                            newPosition = otherPositions[0];
+                            break;
+                        }else if (otherPositions.Count > 1)
+                        {
+                            newPosition = otherPositions[0];
+                        }
+                    }
+
+                }
+                else
+                {
+                 
+                    newPosition = positions[0];
+                }
+            }
+            if (newPosition==0)
+            {
+
+            }
+            return newPosition;
         }
 
         private static bool CheckIfAllLinesUnderTransparent(List<ushort> colors, int transparent, int offset)

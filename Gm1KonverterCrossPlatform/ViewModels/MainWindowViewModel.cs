@@ -224,6 +224,17 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             get => colorButtonsEnabled;
             set => this.RaiseAndSetIfChanged(ref colorButtonsEnabled, value);
         }
+
+
+        
+        private bool orginalStrongholdAnimationButtonEnabled = false;
+        public bool OrginalStrongholdAnimationButtonEnabled
+        {
+
+            get => orginalStrongholdAnimationButtonEnabled;
+            set => this.RaiseAndSetIfChanged(ref orginalStrongholdAnimationButtonEnabled, value);
+        }
+
         private bool importButtonEnabled = false;
         public bool ImportButtonEnabled
         {

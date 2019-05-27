@@ -75,4 +75,7 @@
     <x:String x:Key="ExportGif">Экспортировать Гиф</x:String>
     <x:String x:Key="SelectGif">Выберите изображения с помощью CTRL, затем нажмите кнопку «Экспорт».</x:String>
     <x:String x:Key="Delay">Задержка:</x:String>
+
+    <x:String x:Key="ImportOrginalStrongholdAnimation">Import Orginal Stronghold Animation</x:String>
+    <x:String x:Key="ExportOrginalStrongholdAnimation">Export Orginal Stronghold Animation</x:String>
 </controls:ResourceDictionary>
