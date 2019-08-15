@@ -1,4 +1,7 @@
-# Gm1KonverterCrossPlatform
+
+Gm1KonverterCrossPlatform
+=======================
+A tool to convert strongholds gm1 files to png and png to GM1 Files.
 
 English:
 ---------
