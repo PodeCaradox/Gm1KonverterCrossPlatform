@@ -75,10 +75,7 @@ namespace Gm1KonverterCrossPlatform.Files
                     Utility.ReadColor(pixelColor, out r, out g, out b, out a);
                     a = byte.MaxValue;
                     int number = ((width * (y + yOffset)) + x + xOffset + 15 - array[i] / 2);
-                    if (number == 345734)
-                    {
-
-                    }
+               
                     colors[number] = (UInt32)(b | (g << 8) | (r << 16) | (a << 24));
                 
                     x++;

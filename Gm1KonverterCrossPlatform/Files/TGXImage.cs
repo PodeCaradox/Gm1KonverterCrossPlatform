@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using Avalonia.Media.Imaging;
 using HelperClasses.Gm1Converter;
 
@@ -99,8 +100,8 @@ namespace Files.Gm1Converter
         public unsafe void CreateImageFromByteArray(Palette palette)
         {
           
-                      bmp = new WriteableBitmap(new Avalonia.PixelSize(width, height), new Avalonia.Vector(100, 100), Avalonia.Platform.PixelFormat.Bgra8888);// Bgra8888 is device-native and much faster.
-            
+            bmp = new WriteableBitmap(new Avalonia.PixelSize(width, height), new Avalonia.Vector(100, 100), Avalonia.Platform.PixelFormat.Bgra8888);// Bgra8888 is device-native and much faster.
+         
             using (var buf = bmp.Lock())
             {
                 uint x = 0;
@@ -152,6 +153,7 @@ namespace Files.Gm1Converter
                                 var ptr = (uint*)buf.Address;
                                 ptr += (uint)((width * y) + x);
                                 *ptr = colorByte;
+                               
                                 x++;
                                
                             }
@@ -170,6 +172,7 @@ namespace Files.Gm1Converter
                                     var ptr = (uint*)buf.Address;
                                     ptr += (uint)((width * y) + x);
                                     *ptr = colorByte;
+                                 
                                     x++;
 
                                 }
@@ -204,6 +207,7 @@ namespace Files.Gm1Converter
                                 var ptr = (uint*)buf.Address;
                                 ptr += (uint)((width * y) + x);
                                 *ptr = colorByte;
+                                
                                 x++;
                                 
                             }
@@ -217,6 +221,7 @@ namespace Files.Gm1Converter
                                 var ptr = (uint*)buf.Address;
                                 ptr += (uint)((width * y) + x);
                                 *ptr = colorByte;
+                              
                                 x++;
                                
                             }
@@ -229,11 +234,9 @@ namespace Files.Gm1Converter
                 }
 
             }
-
-           
-
+            
+          
         }
-
         internal void ConvertImageWithPaletteToByteArray(List<ushort> colors, int width, int height, Palette palette, List<ushort>[] colorsImages = null)
         {
             var array = Utility.ImgToGM1ByteArray(colors, width, height, animatedColor, palette, colorsImages);

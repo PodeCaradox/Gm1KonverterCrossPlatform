@@ -8,6 +8,10 @@
     <x:String x:Key="ReplacewithSavedGM1File">Ersetzen mit der gesicherten GM1 Datei</x:String>
     <x:String x:Key="ExportColortable">Exportiere Farbtabelle</x:String>
     <x:String x:Key="ImportColortable">Importiere Farbtabelle</x:String>
+
+
+
+
     <x:String x:Key="ExportImages">Exportiere Bilder</x:String>
     <x:String x:Key="ImportImages">Importiere Bilder</x:String>
     <x:String x:Key="Workfolder">Arbeitsordner</x:String>
@@ -76,4 +80,9 @@
 
     <x:String x:Key="ImportOrginalStrongholdAnimation">Importiere Orginal Stronghold Animation</x:String>
     <x:String x:Key="ExportOrginalStrongholdAnimation">Exportiere Orginal Stronghold Animation</x:String>
+
+
+    <x:String x:Key="ExportBigImage">Exportiere als ein Großes Bild</x:String>
+    <x:String x:Key="ImportBigImage">Importiere Großes Bild</x:String>
+    <x:String x:Key="OpenLogFile">Öffne Log Ordner</x:String>
 </controls:ResourceDictionary>

@@ -7,6 +7,12 @@ namespace Gm1KonverterCrossPlatform.HelperClasses.Views
 {
     public class MessageBoxWindow : Window
     {
+
+        public MessageBoxWindow()
+        {
+        }
+
+
         public enum MessageTyp { Fehler,Info }
         public MessageBoxWindow(MessageTyp typ,string message)
         {
@@ -20,6 +26,8 @@ namespace Gm1KonverterCrossPlatform.HelperClasses.Views
             var textBox = this.Get<TextBlock>("textBox");
             textBox.Text = message;
         }
+
+
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {

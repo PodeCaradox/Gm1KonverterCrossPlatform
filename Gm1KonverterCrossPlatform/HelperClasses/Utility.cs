@@ -13,6 +13,7 @@ using Avalonia;
 using System.Linq;
 using Avalonia.Controls;
 using Gm1KonverterCrossPlatform.HelperClasses;
+using Gm1KonverterCrossPlatform.Files;
 
 namespace HelperClasses.Gm1Converter
 {
@@ -68,21 +69,24 @@ namespace HelperClasses.Gm1Converter
         /// <param name="animatedColor">Needed if alpha is 0 or 1</param>
         /// <param name="pixelsize">Pixelsize of a pixel needed for Colortable</param>
         /// <returns></returns>
-        internal static List<UInt16> LoadImage(String filename, out int width, out int height, int animatedColor = 1, int pixelsize = 1, uint type = 0)
+        internal static List<UInt16> LoadImage(String filename, ref int width, ref int height, int animatedColor = 1, int pixelsize = 1, uint type = 0,int offsetx=0,int offsety=0)
         {
-            width = 0;
-            height = 0;
+            if (Logger.Loggeractiv) Logger.Log("LoadImage");
             List<UInt16> colors = new List<UInt16>();
             try
             {
                 var image = Image.Load(filename);
-                width = image.Width;
-                height = image.Height;
-                for (int i = 0; i < image.Height; i += pixelsize)
+                Console.WriteLine("Width:" + width);
+                Console.WriteLine("Height:"+height);
+                Console.WriteLine("OrginalWidth:" + image.Width);
+                Console.WriteLine("Width+Offset:" + (width + offsetx));
+                if (width==0) width = image.Width;
+                if(height==0) height = image.Height;
+                for (int y = offsety; y < height + offsety; y += pixelsize)
                 {
-                    for (int j = 0; j < image.Width; j += pixelsize) //Bgra8888
+                    for (int x = offsetx; x < width + offsetx; x += pixelsize) //Bgra8888
                     {
-                        var pixel = image[j, i];
+                        var pixel = image[x, y];
                         byte a = (animatedColor >= 1 
                             || ((GM1FileHeader.DataType)type) == GM1FileHeader.DataType.TilesObject
                             || ((GM1FileHeader.DataType)type) == GM1FileHeader.DataType.Animations
@@ -102,7 +106,8 @@ namespace HelperClasses.Gm1Converter
             }
             catch (Exception e)
             {
-                MessageBoxWindow messageBox = new MessageBoxWindow(MessageBoxWindow.MessageTyp.Info, e.Message);
+                if (Logger.Loggeractiv) Logger.Log("Exception:\n" + e.Message);
+                MessageBoxWindow messageBox = new MessageBoxWindow(MessageBoxWindow.MessageTyp.Info, "Something went wrong: pls add a issue on the Github Page\n\nError:\n" + e.Message);
                 messageBox.Show();
             }
             return colors;
@@ -120,7 +125,8 @@ namespace HelperClasses.Gm1Converter
         /// <returns></returns>
         internal static List<byte> ImgToGM1ByteArray(List<ushort> colors, int width, int height, int animatedColor, Palette palette = null, List<ushort>[] paletteImages = null)
         {
-                int transparent =  32767;
+            if (Logger.Loggeractiv) Logger.Log("ImgToGM1ByteArray");
+            int transparent =  32767;
             ushort alpha=(animatedColor==0)?(ushort)0b1000_0000_0000_0000: (ushort)0b0;
             List<byte> array = new List<byte>();
             byte length = 0;  // value 1-32  | 0 will be 1
@@ -358,6 +364,105 @@ namespace HelperClasses.Gm1Converter
             return array;
         }
 
+        internal static WriteableBitmap CreateBigImage(List<TilesImage> tilesImages)
+        {
+            if (Logger.Loggeractiv) Logger.Log("CreateBigImage");
+            List<WriteableBitmap> bitmaps = new List<WriteableBitmap>();
+            foreach (var item in tilesImages)
+            {
+                bitmaps.Add(item.TileImage);
+            }
+            return CreateBigImage(bitmaps);
+        }
+
+        private static unsafe WriteableBitmap CreateBigImage(List<WriteableBitmap> bitmaps)
+        {
+            int maxwidth = 650;
+            int maxheight = 0;
+            int actualwidth = 0;
+            int row = 0;
+
+            List<int> heighrows = new List<int>();
+            heighrows.Add(bitmaps[0].PixelSize.Height);
+            foreach (var bitmap in bitmaps)
+            {
+                actualwidth += bitmap.PixelSize.Width;
+                if (maxwidth <= actualwidth)
+                {
+                    heighrows.Add(bitmap.PixelSize.Height);
+                    row++;
+                    actualwidth = bitmap.PixelSize.Width;
+                }
+
+                if (heighrows[row] < bitmap.PixelSize.Height)
+                {
+                    heighrows[row] = bitmap.PixelSize.Height;
+                }
+
+            }
+
+            foreach (var height in heighrows)
+            {
+                maxheight += height;
+            }
+
+
+            WriteableBitmap bigImage = new WriteableBitmap(new Avalonia.PixelSize(maxwidth, maxheight), new Avalonia.Vector(100, 100), Avalonia.Platform.PixelFormat.Bgra8888);// Bgra8888 is device-native and much faster.
+            using (var buf = bigImage.Lock())
+            {
+                int xoffset = 0;
+                int yoffset = 0;
+                row = 0;
+                actualwidth = 0;
+                foreach (var bitmap in bitmaps)
+                {
+                    actualwidth += bitmap.PixelSize.Width;
+                    if (maxwidth <= actualwidth)
+                    {
+                        actualwidth = bitmap.PixelSize.Width;
+                        xoffset = 0;
+                        yoffset += heighrows[row];
+                        row++;
+                    }
+
+
+                    using (var bit = bitmap.Lock())
+                    {
+                        for (int y = 0; y < bitmap.PixelSize.Height; y++)
+                        {
+                            for (int x = 0; x < bitmap.PixelSize.Width; x++)
+                            {
+                                UInt32 colorByte;
+                                var ptr = (uint*)bit.Address;
+                                ptr += (uint)((bitmap.PixelSize.Width * y) + x);
+                                colorByte = *ptr;
+
+                                ptr = (uint*)buf.Address;
+                                ptr += (uint)((maxwidth * (y+yoffset)) + x + xoffset);
+                                *ptr = colorByte;
+                            }
+                        }
+                    }
+
+                    xoffset += bitmap.PixelSize.Width;
+              
+
+                }
+
+            }
+            return bigImage;
+        }
+
+        internal static WriteableBitmap CreateBigImage(List<TGXImage> imagesTGX)
+        {
+            List<WriteableBitmap> bitmaps = new List<WriteableBitmap>();
+            foreach (var item in imagesTGX)
+            {
+                bitmaps.Add(item.Bitmap);
+            }
+            return CreateBigImage(bitmaps);
+        }
+
         private static byte FindColorPositionInPalette(ushort color,int position, Palette palette, List<ushort>[] paletteImages)
         {
     
@@ -421,6 +526,8 @@ namespace HelperClasses.Gm1Converter
             return newPosition;
         }
 
+  
+
         private static bool CheckIfAllLinesUnderTransparent(List<ushort> colors, int transparent, int offset)
         {
             for (int i = offset; i < colors.Count; i++)
@@ -444,6 +551,7 @@ namespace HelperClasses.Gm1Converter
         private static int biggestHeight = 0;
         internal static List<TGXImage> ConvertImgToTiles(List<ushort> list, ushort width, ushort height, List<TGXImage> oldList)
         {
+            if (Logger.Loggeractiv) Logger.Log("ConvertImgToTiles");
             List<TGXImage> newImageList = new List<TGXImage>();
 
 

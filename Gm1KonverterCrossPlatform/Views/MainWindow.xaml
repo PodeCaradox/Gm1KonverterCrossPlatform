@@ -40,6 +40,9 @@
         <MenuItem Header="{DynamicResource ExportImages}" Name="ExportImagesMenueItem" IsEnabled="{Binding ButtonsEnabled}"/>
         <MenuItem Header="{DynamicResource ImportImages}" Name="ImportImagesMenueItem" IsEnabled="{Binding ImportButtonEnabled}"/>
         <Separator/>
+        <MenuItem Header="{DynamicResource ExportBigImage}" Name="ExportBigImageMenueItem" IsEnabled="{Binding ButtonsEnabled}"/>
+        <MenuItem Header="{DynamicResource ImportBigImage}" Name="ImportBigImageMenueItem" IsEnabled="{Binding ImportButtonEnabled}"/>
+        
         <Separator/>
         <MenuItem Header="{DynamicResource ExportOrginalStrongholdAnimation}" Name="ExportOrginalStrongholdAnimation" IsEnabled="{Binding OrginalStrongholdAnimationButtonEnabled}"/>
         <MenuItem Header="{DynamicResource ImportOrginalStrongholdAnimation}" Name="ImportOrginalStrongholdAnimation" IsEnabled="{Binding OrginalStrongholdAnimationButtonEnabled}"/>
@@ -52,6 +55,7 @@
         <CheckBox Content="{DynamicResource OpenFolderafterExport}" Name="UserConfigOpenFolderafterExport" IsChecked="{Binding OpenFolderAfterExport}"/>
         <Separator/>
         <CheckBox Content="{DynamicResource ActivateLogger}" IsChecked="{Binding LoggerActiv}"/>
+        <MenuItem Header="{DynamicResource OpenLogFile}" Name="OpenLogFile"/>
         <Separator/>
         <ComboBox Items="{Binding Languages}" SelectedItem="{Binding ActualLanguage}"></ComboBox>
       </MenuItem>

@@ -78,4 +78,8 @@
 
     <x:String x:Key="ImportOrginalStrongholdAnimation">Import Orginal Stronghold Animation</x:String>
     <x:String x:Key="ExportOrginalStrongholdAnimation">Export Orginal Stronghold Animation</x:String>
+
+    <x:String x:Key="ExportBigImage">Export Bigimage</x:String>
+    <x:String x:Key="ImportBigImage">Import Bigimage</x:String>
+    <x:String x:Key="OpenLogFile">Open Log Folder</x:String>
 </controls:ResourceDictionary>

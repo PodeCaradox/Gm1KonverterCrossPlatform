@@ -317,18 +317,19 @@ namespace Gm1KonverterCrossPlatform.ViewModels
         /// <returns></returns>
         internal bool DecodeData(string fileName, Window window)
         {
-          
+            if (Logger.Loggeractiv) Logger.Log("DecodeData:\nFile: "+ fileName);
             //Convert Selected file
-            
-                 File = new DecodedFile();
-                if (!File.DecodeGm1File(Utility.FileToByteArray(userConfig.CrusaderPath+"\\"+ fileName), fileName))
+            try
+            {
+                File = new DecodedFile();
+                if (!File.DecodeGm1File(Utility.FileToByteArray(userConfig.CrusaderPath + "\\" + fileName), fileName))
                 {
                     MessageBoxWindow messageBox = new MessageBoxWindow(MessageBoxWindow.MessageTyp.Info, (GM1FileHeader.DataType)File.FileHeader.IDataType + Utility.GetText("TilesarenotSupportedyet"));
                     messageBox.ShowDialog(window);
                     return false;
                 }
-                
-                if((GM1FileHeader.DataType)File.FileHeader.IDataType == GM1FileHeader.DataType.TilesObject)
+
+                if ((GM1FileHeader.DataType)File.FileHeader.IDataType == GM1FileHeader.DataType.TilesObject)
                 {
                     ShowTileImgToWindow();
                 }
@@ -336,7 +337,16 @@ namespace Gm1KonverterCrossPlatform.ViewModels
                 {
                     ShowTGXImgToWindow();
                 }
-                
+
+            }
+            catch (Exception e)
+            {
+                if (Logger.Loggeractiv) Logger.Log("Exception:\n" + e.Message);
+                MessageBoxWindow messageBox = new MessageBoxWindow(MessageBoxWindow.MessageTyp.Info, "Something went wrong: pls add a issue on the Github Page\n\nError:\n" + e.Message);
+                messageBox.Show();
+                return false;
+            }
+        
 
             return true;
 
@@ -353,7 +363,7 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             for (int j = 0; j < File.TilesImages.Count; j++)
             {
                 var bitmap = File.TilesImages[j].TileImage;
-
+         
                 Image image = new Image();
                 image.MaxHeight = File.TilesImages[j].Height;
                 image.MaxWidth = File.TilesImages[j].Width;
@@ -372,7 +382,6 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             for (int j = 0; j < File.FileHeader.INumberOfPictureinFile; j++)
             {
                 var bitmap = File.ImagesTGX[j].Bitmap;
-
                 Image image = new Image();
                 image.MaxHeight = File.ImagesTGX[j].Height;
                 image.MaxWidth = File.ImagesTGX[j].Width;

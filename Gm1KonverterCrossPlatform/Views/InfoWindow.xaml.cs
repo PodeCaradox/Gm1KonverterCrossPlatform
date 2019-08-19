@@ -8,7 +8,13 @@ namespace Gm1KonverterCrossPlatform.Views
 {
     public class InfoWindow : Window
     {
-        public InfoWindow(GM1FileHeader.DataType dataType)
+
+        public InfoWindow()
+        {
+
+
+        }
+            public InfoWindow(GM1FileHeader.DataType dataType)
         {
             this.InitializeComponent();
             #if DEBUG

@@ -1,5 +1,6 @@
 ﻿using Avalonia.Controls;
 using Gm1KonverterCrossPlatform.Files;
+using Gm1KonverterCrossPlatform.HelperClasses;
 using Gm1KonverterCrossPlatform.HelperClasses.Views;
 using HelperClasses.Gm1Converter;
 using System;
@@ -46,6 +47,7 @@ namespace Files.Gm1Converter
         /// <returns></returns>
         public bool DecodeGm1File(byte[] array, String name)
         {
+            if (Logger.Loggeractiv) Logger.Log("DecodeGm1File:\nFile:"+name);
             fileArray = array;
             if (this.fileHeader == null)
             {
@@ -55,6 +57,7 @@ namespace Files.Gm1Converter
                 {
                     this.palette = new Palette(array);
                 }
+                if (Logger.Loggeractiv) Logger.Log("Datatype" + ((GM1FileHeader.DataType)fileHeader.IDataType));
             }
 
 
@@ -62,24 +65,35 @@ namespace Files.Gm1Converter
             this._TGXImage = new List<TGXImage>();
             this.tilesImage = new List<TilesImage>();
             //Supported Types
-            switch ((GM1FileHeader.DataType)fileHeader.IDataType)
+            try
             {
-                case GM1FileHeader.DataType.Animations:
-                case GM1FileHeader.DataType.Interface:
-                case GM1FileHeader.DataType.TGXConstSize:
-                case GM1FileHeader.DataType.Font:
-                    CreateImages(array);
-                    return true;
-                case GM1FileHeader.DataType.NOCompression:
-                case GM1FileHeader.DataType.NOCompression1:
-                    CreateNoCompressionImages(array, ((GM1FileHeader.DataType)fileHeader.IDataType == GM1FileHeader.DataType.NOCompression1) ? 0 : 7);
-                    return true;
-                case GM1FileHeader.DataType.TilesObject:
-                    CreateTileImage(array);
-                    return true;
-                default:
-                    break;
+                switch ((GM1FileHeader.DataType)fileHeader.IDataType)
+                {
+                    case GM1FileHeader.DataType.Animations:
+                    case GM1FileHeader.DataType.Interface:
+                    case GM1FileHeader.DataType.TGXConstSize:
+                    case GM1FileHeader.DataType.Font:
+                        CreateImages(array);
+                        return true;
+                    case GM1FileHeader.DataType.NOCompression:
+                    case GM1FileHeader.DataType.NOCompression1:
+                        CreateNoCompressionImages(array, ((GM1FileHeader.DataType)fileHeader.IDataType == GM1FileHeader.DataType.NOCompression1) ? 0 : 7);
+                        return true;
+                    case GM1FileHeader.DataType.TilesObject:
+                        CreateTileImage(array);
+                        return true;
+                    default:
+                        break;
+                }
             }
+            catch (Exception e)
+            {
+                if (Logger.Loggeractiv) Logger.Log("Exception:\n" + e.Message);
+                MessageBoxWindow messageBox = new MessageBoxWindow(MessageBoxWindow.MessageTyp.Info, "Something went wrong: pls add a issue on the Github Page\n\nError:\n" + e.Message);
+                messageBox.Show();
+                return false;
+            }
+           
 
             return false;
         }
@@ -93,7 +107,7 @@ namespace Files.Gm1Converter
         public byte[] GetNewGM1Bytes()
         {
 
-
+            if (Logger.Loggeractiv) Logger.Log("GetNewGM1Bytes");
             List<byte> newFile = new List<byte>();
             var headerBytes = fileHeader.GetBytes();
             newFile.AddRange(headerBytes);
@@ -139,11 +153,14 @@ namespace Files.Gm1Converter
         /// <param name="array">The GM1 File as byte Array</param>
         private void CreateImages(byte[] array)
         {
-
+    
+            if (Logger.Loggeractiv) Logger.Log("Create Images");
             CreateOffsetAndSizeInByteArrayList(array);
             CreateImgHeader(array);
+            if (Logger.Loggeractiv) Logger.Log("CreateImageFromByteArray");
             for (uint i = 0; i < fileHeader.INumberOfPictureinFile; i++)
             {
+
                 _TGXImage[(int)i].CreateImageFromByteArray(palette);
             }
         }
@@ -151,8 +168,10 @@ namespace Files.Gm1Converter
 
         private void CreateNoCompressionImages(byte[] array, int offset)
         {
+            if (Logger.Loggeractiv) Logger.Log("CreateNoCompressionImages");
             CreateOffsetAndSizeInByteArrayList(array);
             CreateImgHeader(array);
+            if (Logger.Loggeractiv) Logger.Log("CreateNoComppressionImageFromByteArray");
             for (uint i = 0; i < fileHeader.INumberOfPictureinFile; i++)
             {
                 _TGXImage[(int)i].CreateNoComppressionImageFromByteArray(palette, offset);
@@ -167,6 +186,7 @@ namespace Files.Gm1Converter
         /// <param name="list"></param>
         internal void ConvertImgToTiles(List<ushort> list, ushort width, ushort height)
         {
+            if (Logger.Loggeractiv) Logger.Log("ConvertImgToTiles");
             newTileList.AddRange(Utility.ConvertImgToTiles(list, width, height, ImagesTGX));
         }
 
@@ -176,6 +196,7 @@ namespace Files.Gm1Converter
         /// <param name="array">The GM1 File as byte Array</param>
         private void CreateImgHeader(byte[] array)
         {
+            if (Logger.Loggeractiv) Logger.Log("CreateImgHeader");
             //Image Header has a length of 16 bytes 
             for (int i = 0; i < this.fileHeader.INumberOfPictureinFile; i++)
             {
@@ -210,6 +231,7 @@ namespace Files.Gm1Converter
         /// <param name="array">The GM1 File as byte Array</param>
         private void CreateTileImage(byte[] array)
         {
+            if (Logger.Loggeractiv) Logger.Log("CreateTileImage");
             CreateOffsetAndSizeInByteArrayList(array);
             CreateImgHeader(array);
 
@@ -222,6 +244,8 @@ namespace Files.Gm1Converter
             int safeoffset = 0;
             bool halfReached = false;
             int partsBefore = 0;
+
+            if (Logger.Loggeractiv) Logger.Log("CreateTileImage for Loop");
             for (int i = 0; i < _TGXImage.Count; i++)
             {
 
@@ -315,6 +339,7 @@ namespace Files.Gm1Converter
         /// <param name="array">The GM1 File as byte Array</param>
         private void CreateOffsetAndSizeInByteArrayList(byte[] array)
         {
+            if (Logger.Loggeractiv) Logger.Log("CreateOffsetAndSizeInByteArrayList");
             for (int i = 0; i < this.fileHeader.INumberOfPictureinFile; i++)
             {
                 var image = new TGXImage();
@@ -337,9 +362,9 @@ namespace Files.Gm1Converter
 
         public void SetNewTileList()
         {
-
+            if (Logger.Loggeractiv) Logger.Log("SetNewTileList");
             //Check for animatedColor(not known how to set it in Stronghold 1 is not used in Stronghold Crusader)
-            if(_TGXImage.Count <= newTileList.Count)
+            if (_TGXImage.Count <= newTileList.Count)
             for (int i = 0; i < _TGXImage.Count; i++)
             {
                 newTileList[i].AnimatedColor = _TGXImage[i].AnimatedColor;

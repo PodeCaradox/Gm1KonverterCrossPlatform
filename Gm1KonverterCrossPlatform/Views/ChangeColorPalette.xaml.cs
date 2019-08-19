@@ -10,7 +10,6 @@ using Avalonia.Media;
 using Files.Gm1Converter;
 using Gm1KonverterCrossPlatform.ViewModels;
 using HelperClasses.Gm1Converter;
-using ThemeEditor.Controls.ColorPicker;
 
 namespace Gm1KonverterCrossPlatform.HelperClasses.Views
 {

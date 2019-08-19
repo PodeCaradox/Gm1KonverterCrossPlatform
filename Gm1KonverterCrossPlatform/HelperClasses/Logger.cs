@@ -12,11 +12,13 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
         public static void Log(String text)
         {
             if (!Loggeractiv) return;
-            if (!Directory.Exists(Path+ "\\Logger"))
+            if (!Directory.Exists(Path))
             {
-                Directory.CreateDirectory(Path + "\\Logger");
+                Directory.CreateDirectory(Path );
             }
-            var writer = File.AppendText(Path + "\\Logger\\Log.txt");
+            DateTime localDate = DateTime.Now;
+           
+             var writer = File.AppendText(Path + "\\LogFile from "+ localDate.ToShortDateString() + ".txt");
             writer.WriteLine(text);
             writer.Dispose();
             writer.Close();

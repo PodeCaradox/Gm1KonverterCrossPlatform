@@ -1,5 +1,6 @@
 ﻿using System;
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Logging.Serilog;
 using Gm1KonverterCrossPlatform.ViewModels;
 using Gm1KonverterCrossPlatform.Views;
