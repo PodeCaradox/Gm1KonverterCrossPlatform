@@ -6,18 +6,19 @@
     <x:String x:Key="Deutsch">Deutsch geladen</x:String>
     <x:String x:Key="CreatenewGM1">_Erstelle neue GM1 Datei</x:String>
     <x:String x:Key="ReplacewithSavedGM1File">Ersetzen mit der gesicherten GM1 Datei</x:String>
+    <x:String x:Key="CreatenewTgx">_Erstelle neue Tgx Datei</x:String>
+    <x:String x:Key="ReplacewithSavedTgxFile">Ersetzen mit der gesicherten Tgx Datei</x:String>
+
+    
+
     <x:String x:Key="ExportColortable">Exportiere Farbtabelle</x:String>
     <x:String x:Key="ImportColortable">Importiere Farbtabelle</x:String>
-
-
-
-
     <x:String x:Key="ExportImages">Exportiere Bilder</x:String>
     <x:String x:Key="ImportImages">Importiere Bilder</x:String>
     <x:String x:Key="Workfolder">Arbeitsordner</x:String>
     <x:String x:Key="OpenFolderafterExport">Öffne Ordner nachdem Exportieren</x:String>
     <x:String x:Key="ActivateLogger">Aktiviere Logger</x:String>
-    <x:String x:Key="StrongholdFolder">Stronghold GM Ordner</x:String>
+    <x:String x:Key="StrongholdFolder">Stronghold Ordner</x:String>
     <x:String x:Key="File">Datei</x:String>
     <x:String x:Key="Edit">Bearbeiten</x:String>
     <x:String x:Key="Options">Optionen</x:String>
@@ -81,7 +82,10 @@
     <x:String x:Key="ImportOrginalStrongholdAnimation">Importiere Orginal Stronghold Animation</x:String>
     <x:String x:Key="ExportOrginalStrongholdAnimation">Exportiere Orginal Stronghold Animation</x:String>
 
-
+    <x:String x:Key="ImportTgxImage">Importiere Bild als Tgx</x:String>
+    <x:String x:Key="ExportTgxImage">Exportiere Tgx Bild</x:String>
+    
+    
     <x:String x:Key="ExportBigImage">Exportiere als ein Großes Bild</x:String>
     <x:String x:Key="ImportBigImage">Importiere Großes Bild</x:String>
     <x:String x:Key="OpenLogFile">Öffne Log Ordner</x:String>

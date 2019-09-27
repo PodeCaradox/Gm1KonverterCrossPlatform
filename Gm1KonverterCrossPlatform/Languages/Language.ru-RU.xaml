@@ -6,14 +6,21 @@
     <x:String x:Key="Русский">Русский язык загружен</x:String>
     <x:String x:Key="CreatenewGM1">Создать новый GM1 файл</x:String>
     <x:String x:Key="ReplacewithSavedGM1File">Заменить сохраненным файлом GM1</x:String>
+    <x:String x:Key="CreatenewTgx">Создать новый Tgx файл</x:String>
+    <x:String x:Key="ReplacewithSavedTgxFile">Заменить сохраненным файлом Tgx</x:String>
     <x:String x:Key="ExportColortable">Экспорт таблицы цветов</x:String>
     <x:String x:Key="ImportColortable">Импорт таблицы цветов</x:String>
     <x:String x:Key="ExportImages">Экспорт изображений</x:String>
     <x:String x:Key="ImportImages">Импорт изображений</x:String>
+
+    <x:String x:Key="ImportTgxImage">Импорт изображения как Tgx</x:String>
+    <x:String x:Key="ExportTgxImage">Экспорт Tgx образ</x:String>
+
+
     <x:String x:Key="Workfolder">Рабочая папка</x:String>
     <x:String x:Key="OpenFolderafterExport">Открыть папку после експорта</x:String>
     <x:String x:Key="ActivateLogger">Активировать лог файл</x:String>
-    <x:String x:Key="StrongholdFolder">Папка Stronghold GM</x:String>
+    <x:String x:Key="StrongholdFolder">Папка Stronghold</x:String>
     <x:String x:Key="File">Файл</x:String>
     <x:String x:Key="Edit">Редактировать</x:String>
     <x:String x:Key="Options">Опции</x:String>

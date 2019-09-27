@@ -12,6 +12,7 @@ using System;
 using Gm1KonverterCrossPlatform.HelperClasses;
 using Avalonia;
 using System.Linq;
+using Gm1KonverterCrossPlatform.Views;
 
 namespace Gm1KonverterCrossPlatform.ViewModels
 {
@@ -177,6 +178,13 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             set => this.RaiseAndSetIfChanged(ref strongholdFiles, value);
         }
 
+        internal String[] gfxFiles;
+        internal String[] GfxFiles
+        {
+            get => gfxFiles;
+            set => this.RaiseAndSetIfChanged(ref gfxFiles, value);
+        }
+
         private bool buttonsEnabled = false;
         public bool ButtonsEnabled
         {
@@ -184,6 +192,43 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             get => buttonsEnabled;
             set => this.RaiseAndSetIfChanged(ref buttonsEnabled, value);
         }
+
+
+        private bool gm1PreviewTrue = true;
+        public bool Gm1PreviewTrue
+        {
+
+            get => gm1PreviewTrue;
+            set {
+                this.RaiseAndSetIfChanged(ref gm1PreviewTrue, value);
+                GfxPreviewTrue = !gm1PreviewTrue;
+                if (value)
+                {
+                    ToggleButtonName = "GM1";
+                }
+                else
+                {
+                    ToggleButtonName = "GFX";
+                }
+            }
+        }
+        
+        private bool gfxPreviewTrue = false;
+        public bool GfxPreviewTrue
+        {
+
+            get => gfxPreviewTrue;
+            set => this.RaiseAndSetIfChanged(ref gfxPreviewTrue, value);
+        }
+
+        private String toggleButtonName = "GM1";
+        public String ToggleButtonName
+        {
+
+            get => toggleButtonName;
+            set => this.RaiseAndSetIfChanged(ref toggleButtonName, value);
+        }
+
 
         private bool openFolderAfterExport = false;
         public bool OpenFolderAfterExport
@@ -217,6 +262,17 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             set => this.RaiseAndSetIfChanged(ref replaceWithSaveFile, value);
         }
 
+        private bool replaceWithSaveFileTgx = false;
+        public bool ReplaceWithSaveFileTgx
+        {
+
+            get => replaceWithSaveFileTgx;
+            set => this.RaiseAndSetIfChanged(ref replaceWithSaveFileTgx, value);
+        }
+
+
+        
+
         private bool colorButtonsEnabled = false;
         public bool ColorButtonsEnabled
         {
@@ -225,8 +281,22 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             set => this.RaiseAndSetIfChanged(ref colorButtonsEnabled, value);
         }
 
-
         
+        private bool tgxButtonExportEnabled = false;
+        public bool TgxButtonExportEnabled
+        {
+
+            get => tgxButtonExportEnabled;
+            set => this.RaiseAndSetIfChanged(ref tgxButtonExportEnabled, value);
+        }
+
+        private bool tgxButtonImportEnabled = false;
+        public bool TgxButtonImportEnabled
+        {
+
+            get => tgxButtonImportEnabled;
+            set => this.RaiseAndSetIfChanged(ref tgxButtonImportEnabled, value);
+        }
         private bool orginalStrongholdAnimationButtonEnabled = false;
         public bool OrginalStrongholdAnimationButtonEnabled
         {
@@ -288,7 +358,7 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             if (!String.IsNullOrEmpty(userConfig.CrusaderPath))
             {
                 StrongholdFiles = Utility.GetFileNames(userConfig.CrusaderPath, "*.gm1");
-
+                GfxFiles = Utility.GetFileNames(userConfig.CrusaderPath.Replace("\\gm",String.Empty)+ "\\gfx", "*.tgx");
             }
 
         }
@@ -353,6 +423,28 @@ namespace Gm1KonverterCrossPlatform.ViewModels
 
           
         }
+        public TGXImage TgxImage;
+        internal void DecodeTgxData(string fileName, MainWindow mainWindow)
+        {
+            if (Logger.Loggeractiv) Logger.Log("DecodeTgxData:\nFile: " + fileName);
+
+            var array = Utility.FileToByteArray(userConfig.CrusaderPath.Replace("\\gm",String.Empty)+"\\gfx" + "\\" + fileName);
+            TgxImage = new TGXImage();
+
+            TgxImage.TgxWidth = BitConverter.ToUInt32(array,  0);
+            TgxImage.TgxHeight = BitConverter.ToUInt32(array,  4);
+            TgxImage.ImgFileAsBytearray = new byte[array.Length - 8];
+            Array.Copy(array, 8, TgxImage.ImgFileAsBytearray,0, TgxImage.ImgFileAsBytearray.Length);
+            TgxImage.CreateImageFromByteArray(null,true);
+            TGXImages = new ObservableCollection<Image>();
+            var bitmap = TgxImage.Bitmap;
+            Image image = new Image();
+            image.MaxWidth = TgxImage.TgxWidth;
+            image.MaxHeight = TgxImage.TgxHeight;
+            image.Source = bitmap;
+            TGXImages.Add(image);
+
+         }
 
         /// <summary>
         /// Show the Imgs to the main Window
@@ -437,6 +529,8 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             File.DecodeGm1File(File.FileArray, File.FileHeader.Name);
             ShowTGXImgToWindow();
         }
+
+       
 
         #endregion
 

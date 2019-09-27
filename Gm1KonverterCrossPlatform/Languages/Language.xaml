@@ -7,6 +7,9 @@
     <x:String x:Key="English">English loaded</x:String>
     <x:String x:Key="CreatenewGM1">Create new GM1</x:String>
     <x:String x:Key="ReplacewithSavedGM1File">Replace with Saved GM1 File</x:String>
+    <x:String x:Key="CreatenewTgx">Create new Tgx</x:String>
+    <x:String x:Key="ReplacewithSavedTgxFile">Replace with Saved Tgx File</x:String>
+
     <x:String x:Key="ExportColortable">Export Colortable</x:String>
     <x:String x:Key="ImportColortable">Import Colortable</x:String>
     <x:String x:Key="ExportImages">Export Images</x:String>
@@ -14,7 +17,7 @@
     <x:String x:Key="Workfolder">Workfolder</x:String>
     <x:String x:Key="OpenFolderafterExport">Open Folder after Export</x:String>
     <x:String x:Key="ActivateLogger">Activate Logger</x:String>
-    <x:String x:Key="StrongholdFolder">Stronghold GM Folder</x:String>
+    <x:String x:Key="StrongholdFolder">Stronghold Folder</x:String>
     <x:String x:Key="File">File</x:String>
     <x:String x:Key="Edit">Edit</x:String>
     <x:String x:Key="Options">Options</x:String>
@@ -28,6 +31,9 @@
     <x:String x:Key="ChangeColorTable">Change Colortable</x:String>
     <x:String x:Key="GM1Converter">GM1 Converter</x:String>
     <x:String x:Key="ChangeColorPalette">Colortable changer</x:String>
+
+    <x:String x:Key="ImportTgxImage">Import Image as Tgx</x:String>
+    <x:String x:Key="ExportTgxImage">Export Tgx Image</x:String>
 
     <x:String x:Key="AnimationTitel1">Datatyp Animation</x:String>
     <x:String x:Key="AnimationText1">GM1 animation files consist of a certain number of encoded images and 10 color tables.

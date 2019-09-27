@@ -6,7 +6,7 @@ using System.Drawing;
 
 namespace Files.Gm1Converter
 {
-    class Palette
+    public class Palette
     {
         #region Public
 

@@ -6,7 +6,6 @@
     <LangVersion>7.2</LangVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Folder Include="Models\" />
     <Compile Update="**\*.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
@@ -14,6 +13,10 @@
       <SubType>Designer</SubType>
     </AvaloniaResource>
     <AvaloniaResource Include="Assets\*" />
+    <AvaloniaResource Remove="Models\**" />
+    <Compile Remove="Models\**" />
+    <EmbeddedResource Remove="Models\**" />
+    <None Remove="Models\**" />
     <AvaloniaResource Remove="Assets\info.png" />
     <AvaloniaResource Remove="HelperClasses\Language.de-DE.xaml" />
     <AvaloniaResource Remove="HelperClasses\Language.xaml" />

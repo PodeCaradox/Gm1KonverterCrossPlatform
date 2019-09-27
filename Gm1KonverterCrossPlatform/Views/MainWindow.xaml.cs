@@ -41,6 +41,10 @@ namespace Gm1KonverterCrossPlatform.Views
             ListBox listbox = this.Get<ListBox>("Gm1FilesSelector");
             listbox.SelectionChanged += SelectedGm1File;
 
+            
+            ListBox gfxFilesSelector = this.Get<ListBox>("GfxFilesSelector");
+            gfxFilesSelector.SelectionChanged += SelectedGfxFile;
+
             ListBox workfolderSelector = this.Get<ListBox>("WorkfolderSelector");
             workfolderSelector.DoubleTapped += OpenWorkfolderDirectory;
 
@@ -58,6 +62,14 @@ namespace Gm1KonverterCrossPlatform.Views
             createnewGM1MenueItem.Click += CreatenewGM1;
             MenuItem replacewithSavedGM1FileMenueItem = this.Get<MenuItem>("ReplacewithSavedGM1FileMenueItem");
             replacewithSavedGM1FileMenueItem.Click += ReplacewithSavedGM1FileM;
+
+
+            MenuItem createnewTgxMenueItem = this.Get<MenuItem>("CreatenewTgxMenueItem");
+            createnewTgxMenueItem.Click += CreatenewTgx;
+            MenuItem replacewithSavedTgxFileMenueItem = this.Get<MenuItem>("ReplacewithSavedTgxFileMenueItem");
+            replacewithSavedTgxFileMenueItem.Click += ReplacewithSavedTgxFile;
+            
+
 
             MenuItem exportColortableMenueItem = this.Get<MenuItem>("ExportColortableMenueItem");
             exportColortableMenueItem.Click += ExportColortable;
@@ -83,12 +95,90 @@ namespace Gm1KonverterCrossPlatform.Views
             MenuItem importOrginalStrongholdAnimation = this.Get<MenuItem>("ImportOrginalStrongholdAnimation");
             importOrginalStrongholdAnimation.Click += ImportOrginalStrongholdAnimation;
 
+            MenuItem importTgxImageMenueItem = this.Get<MenuItem>("ImportTgxImageMenueItem");
+            importTgxImageMenueItem.Click += ImportTgxImage;
+
+            MenuItem exportTgxImageMenueItem = this.Get<MenuItem>("ExportTgxImageMenueItem");
+            exportTgxImageMenueItem.Click += ExportTgxImage;
+
+   
+
 
             Image image = this.Get<Image>("HelpIcon");
 
             Avalonia.Media.Imaging.Bitmap bitmap = new Avalonia.Media.Imaging.Bitmap("Images/info.png");
             image.Source = bitmap;
             image.Tapped += OpenInfoWindow;
+        }
+
+        private void ReplacewithSavedTgxFile(object sender, RoutedEventArgs e)
+        {
+            if (Logger.Loggeractiv) Logger.Log("\n>>ReplacewithSavedTgxFile start");
+            var filewithoutgm1ending = actualName.Replace(".tgx", "");
+            File.Copy(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\" + filewithoutgm1ending + "Save.tgx", vm.UserConfig.CrusaderPath.Replace("\\gm",String.Empty) + "\\" + actualName, true);
+            if (Logger.Loggeractiv) Logger.Log("\n>>ReplacewithSavedTgxFile end");
+        }
+
+        private void CreatenewTgx(object sender, RoutedEventArgs e)
+        {
+            var filewithoutgm1ending = actualName.Replace(".tgx", "");
+            if(!File.Exists(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\" + filewithoutgm1ending + "Save.tgx"))
+                File.Copy(vm.UserConfig.CrusaderPath.Replace("\\gm", String.Empty)+"\\gfx\\"+ actualName, vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\" + filewithoutgm1ending + "Save.tgx",true);
+
+            var array = new List<byte>();
+            
+            array.AddRange(BitConverter.GetBytes(vm.TgxImage.TgxWidth));
+            array.AddRange(BitConverter.GetBytes(vm.TgxImage.TgxHeight));
+            array.AddRange(vm.TgxImage.ImgFileAsBytearray);
+            File.WriteAllBytes(vm.UserConfig.CrusaderPath.Replace("\\gm", String.Empty) + "\\gfx\\" + actualName, array.ToArray());
+            vm.ReplaceWithSaveFileTgx = true;
+        }
+
+        String actualName = "";
+        private void ExportTgxImage(object sender, RoutedEventArgs e)
+        {
+            if (Logger.Loggeractiv) Logger.Log("\n>>ExportTgxImage start");
+            var filewithouttgxending = actualName.Replace(".tgx", "");
+
+            if (!Directory.Exists(vm.UserConfig.WorkFolderPath + "\\" + filewithouttgxending))
+            {
+                Directory.CreateDirectory(vm.UserConfig.WorkFolderPath + "\\" + filewithouttgxending);
+            }
+
+            vm.TgxImage.Bitmap.Save(vm.UserConfig.WorkFolderPath + "\\"+ filewithouttgxending+ "\\" + filewithouttgxending + ".png");
+
+            if (vm.UserConfig.OpenFolderAfterExport)
+                Process.Start("explorer.exe", vm.UserConfig.WorkFolderPath + "\\" + filewithouttgxending);
+
+
+            vm.LoadWorkfolderFiles();
+            vm.TgxButtonImportEnabled = true;
+
+            if (Logger.Loggeractiv) Logger.Log("\n>>ExportTgxImage end");
+        }
+
+        private void ImportTgxImage(object sender, RoutedEventArgs e)
+        {
+            if (Logger.Loggeractiv) Logger.Log("\n>>ImportTgxImage start");
+            var filewithouttgxending = actualName.Replace(".tgx", "");
+          
+          
+            int width = 0;
+            int height = 0;
+            var colors = Utility.LoadImage(vm.UserConfig.WorkFolderPath + "\\" + filewithouttgxending + "\\" + filewithouttgxending + ".png",ref width,ref height);
+            vm.TgxImage.ConvertImageWithoutPaletteToByteArray(colors,width,height);//todo animated color?
+            vm.TgxImage.TgxWidth = (uint)width;
+            vm.TgxImage.TgxHeight = (uint)height;
+            vm.TgxImage.CreateImageFromByteArray(null, true);
+            vm.TGXImages.Clear();
+            Image image = new Image();
+            image.MaxWidth = width;
+            image.MaxHeight = height;
+            image.Source = vm.TgxImage.Bitmap;
+            vm.TGXImages.Add(image);
+
+
+            if (Logger.Loggeractiv) Logger.Log("\n>>ImportTgxImage end");
         }
 
         private void OpenLogFile(object sender, RoutedEventArgs e)
@@ -483,12 +573,72 @@ namespace Gm1KonverterCrossPlatform.Views
             if (Logger.Loggeractiv) Logger.Log("\n>>SelectedGm1File end");
         }
 
+        private void SelectedGfxFile(object sender, SelectionChangedEventArgs e)
+        {
+            var listbox = sender as ListBox;
+            if (listboxItemBefore == listbox.SelectedItem.ToString()) return;
+            
+            if (Logger.Loggeractiv) Logger.Log("\n>>SelectedGm1File start");
+            listboxItemBefore = listbox.SelectedItem.ToString();
+            actualName = listboxItemBefore;
+            LoadTgxFile(listboxItemBefore);
+
+            if (Logger.Loggeractiv) Logger.Log("\n>>SelectedGm1File end");
+        }
+
+        private void LoadTgxFile(string listboxItemBefore)
+        {
+            if (Logger.Loggeractiv) Logger.Log("LoadGfxFile");
+            Cursor = new Avalonia.Input.Cursor(Avalonia.Input.StandardCursorType.Wait);
+            try
+            {
+               
+                vm.ColorButtonsEnabled = false;
+                vm.OrginalStrongholdAnimationButtonEnabled = false;
+                vm.ActuellColorTable = null;
+                vm.ReplaceWithSaveFile = false;
+                vm.ButtonsEnabled = false;
+                vm.ImportButtonEnabled = false;
+                vm.TgxButtonExportEnabled = true;
+                vm.ReplaceWithSaveFileTgx = false;
+                vm.DecodeTgxData(listboxItemBefore, this);
+
+                var filewithouttgxending = listboxItemBefore.Replace(".tgx", "");
+
+                if (File.Exists(vm.UserConfig.WorkFolderPath + "\\" + filewithouttgxending + "\\" + filewithouttgxending + ".png"))
+                vm.TgxButtonImportEnabled = true;
+              
+
+                if (!File.Exists(vm.UserConfig.WorkFolderPath + "\\" + filewithouttgxending + "\\" + filewithouttgxending + "Save.tgx"))
+                {
+                    vm.ReplaceWithSaveFileTgx = false;
+                }
+                else
+                {
+                   
+                    vm.ReplaceWithSaveFileTgx = true;
+                }
+
+            }
+            catch (Exception e)
+            {
+                if (Logger.Loggeractiv) Logger.Log("Exception:\n" + e.Message);
+                MessageBoxWindow messageBox = new MessageBoxWindow(MessageBoxWindow.MessageTyp.Info, "Something went wrong: pls add a issue on the Github Page\n\nError:\n" + e.Message);
+                messageBox.Show();
+            }
+
+            Cursor = new Avalonia.Input.Cursor(Avalonia.Input.StandardCursorType.Arrow);
+        }
+
         private void LoadGm1File(string listboxItemBefore)
         {
             if (Logger.Loggeractiv) Logger.Log("LoadGm1File");
             Cursor = new Avalonia.Input.Cursor(Avalonia.Input.StandardCursorType.Wait);
             try
             {
+                vm.TgxButtonExportEnabled = false;
+                vm.TgxButtonImportEnabled = false;
+                vm.ReplaceWithSaveFileTgx = false;
                 if (vm.DecodeData(listboxItemBefore, this))
                 {
                     Utility.datatype = (GM1FileHeader.DataType)vm.File.FileHeader.IDataType;

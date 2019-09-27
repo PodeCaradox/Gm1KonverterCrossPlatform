@@ -7,7 +7,7 @@ using HelperClasses.Gm1Converter;
 
 namespace Files.Gm1Converter
 {
-    class TGXImage
+    public class TGXImage
     {
 
         #region Public
@@ -20,6 +20,8 @@ namespace Files.Gm1Converter
         private byte[] imgFileAsBytearray;
         private ushort width;
         private ushort height;
+        private uint tgxwidth;
+        private uint tgxheight;
         private ushort offsetX;
         private ushort offsetY;
         private byte imagePart;
@@ -45,6 +47,9 @@ namespace Files.Gm1Converter
         #region GetterSetter
         public UInt16 Width { get => width; set => width = value; }
         public UInt16 Height { get => height; set => height = value; }
+
+        public UInt32 TgxWidth { get => tgxwidth; set => tgxwidth = value; }
+        public UInt32 TgxHeight { get => tgxheight; set => tgxheight = value; }
         public UInt16 OffsetX { get => offsetX; set => offsetX = value; }
         public UInt16 OffsetY { get => offsetY; set => offsetY = value; }
 
@@ -97,11 +102,24 @@ namespace Files.Gm1Converter
         /// Convert img byte array to IMG, use Pallete if not null
         /// </summary>
         /// <param name="palette">actual Pallete, Pallete is null if normal IMG</param>
-        public unsafe void CreateImageFromByteArray(Palette palette)
+        public unsafe void CreateImageFromByteArray(Palette palette,bool isTgxFile=false)
         {
-          
-            bmp = new WriteableBitmap(new Avalonia.PixelSize(width, height), new Avalonia.Vector(100, 100), Avalonia.Platform.PixelFormat.Bgra8888);// Bgra8888 is device-native and much faster.
-         
+            int width, height;
+            if (!isTgxFile)
+            {
+                width = this.width;
+                height = this.height;
+                bmp = new WriteableBitmap(new Avalonia.PixelSize(width, height), new Avalonia.Vector(100, 100), Avalonia.Platform.PixelFormat.Bgra8888);// Bgra8888 is device-native and much faster.
+           
+            }
+            else
+            {
+                width = (int)tgxwidth;
+                height = (int)tgxheight;
+                bmp = new WriteableBitmap(new Avalonia.PixelSize(width, height), new Avalonia.Vector(100, 100), Avalonia.Platform.PixelFormat.Bgra8888);// Bgra8888 is device-native and much faster.
+
+            }
+
             using (var buf = bmp.Lock())
             {
                 uint x = 0;
@@ -162,9 +180,9 @@ namespace Files.Gm1Converter
                             colorByte = Utility.TransparentColorByte;
                             if (palette != null)
                             {
-                                for (byte i = 0; i < this.width; i++)
+                                for (byte i = 0; i < width; i++)
                                 {
-                                    if (x >= this.width || y >= this.height)
+                                    if (x >= width || y >= height)
                                         break;
 
                                     //Bgra8888
@@ -179,7 +197,7 @@ namespace Files.Gm1Converter
                             }
 
                             y++;
-                            if (y > this.height) break;
+                            if (y > height) break;
                             x = 0;
                             break;
                         case 2://Repeating pixels 

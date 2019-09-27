@@ -29,9 +29,10 @@
     <Menu DockPanel.Dock="Top" Grid.Row="0" Grid.ColumnSpan="3" >
       <MenuItem Header="{DynamicResource File}">
         <MenuItem Header="{DynamicResource CreatenewGM1}" Name="CreatenewGM1MenueItem" IsEnabled="{Binding ButtonsEnabled}"/>
-        <Separator/>
         <MenuItem Header="{DynamicResource ReplacewithSavedGM1File}" Name="ReplacewithSavedGM1FileMenueItem" IsEnabled="{Binding ReplaceWithSaveFile}"/>
-    
+        <Separator/>
+        <MenuItem Header="{DynamicResource CreatenewTgx}" Name="CreatenewTgxMenueItem" IsEnabled="{Binding TgxButtonExportEnabled}"/>
+        <MenuItem Header="{DynamicResource ReplacewithSavedTgxFile}" Name="ReplacewithSavedTgxFileMenueItem" IsEnabled="{Binding ReplaceWithSaveFileTgx}"/>
       </MenuItem>
       <MenuItem Header="{DynamicResource Edit}">
         <MenuItem Header="{DynamicResource ExportColortable}" Name="ExportColortableMenueItem" IsEnabled="{Binding ColorButtonsEnabled}"/>
@@ -46,6 +47,10 @@
         <Separator/>
         <MenuItem Header="{DynamicResource ExportOrginalStrongholdAnimation}" Name="ExportOrginalStrongholdAnimation" IsEnabled="{Binding OrginalStrongholdAnimationButtonEnabled}"/>
         <MenuItem Header="{DynamicResource ImportOrginalStrongholdAnimation}" Name="ImportOrginalStrongholdAnimation" IsEnabled="{Binding OrginalStrongholdAnimationButtonEnabled}"/>
+        <Separator/>
+        <MenuItem Header="{DynamicResource ExportTgxImage}" Name="ExportTgxImageMenueItem" IsEnabled="{Binding TgxButtonExportEnabled}"/>
+        <MenuItem Header="{DynamicResource ImportTgxImage}" Name="ImportTgxImageMenueItem" IsEnabled="{Binding TgxButtonImportEnabled}"/>
+
       </MenuItem>
       <MenuItem Header="{DynamicResource Options}">
         <MenuItem Header="{DynamicResource Workfolder}" Name="WorkfolderMenueItem"/>
@@ -67,7 +72,9 @@
     
     <StackPanel Grid.Row="1" Grid.Column="2" MaxWidth="250">
       <TextBlock Text="{DynamicResource StrongholdFolder}" HorizontalAlignment="Left" Height="20"/>
-      <ListBox Items="{Binding StrongholdFiles}" SelectionMode="Single" Name="Gm1FilesSelector" MaxWidth="250" MaxHeight="560"/>
+      <ToggleButton Content="{Binding ToggleButtonName}" IsChecked="{Binding Gm1PreviewTrue}"></ToggleButton>
+      <ListBox Items="{Binding StrongholdFiles}" IsVisible="{Binding Gm1PreviewTrue}" SelectionMode="Single" Name="Gm1FilesSelector" MaxWidth="250" MaxHeight="560"/>
+      <ListBox  IsVisible="{Binding GfxPreviewTrue}" Items="{Binding GfxFiles}" SelectionMode="Single" Name="GfxFilesSelector" MaxWidth="250" MaxHeight="560"/>
     </StackPanel>
 
 

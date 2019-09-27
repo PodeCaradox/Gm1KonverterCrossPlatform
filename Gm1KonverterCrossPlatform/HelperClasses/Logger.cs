@@ -18,7 +18,7 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
             }
             DateTime localDate = DateTime.Now;
            
-             var writer = File.AppendText(Path + "\\LogFile from "+ localDate.ToShortDateString() + ".txt");
+             var writer = File.AppendText(Path + "\\LogFile from "+ localDate.Year +"." + localDate.Month + "." + localDate.Day   + ".txt");
             writer.WriteLine(text);
             writer.Dispose();
             writer.Close();
