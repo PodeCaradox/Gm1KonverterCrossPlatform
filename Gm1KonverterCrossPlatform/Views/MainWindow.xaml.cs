@@ -41,7 +41,12 @@ namespace Gm1KonverterCrossPlatform.Views
             ListBox listbox = this.Get<ListBox>("Gm1FilesSelector");
             listbox.SelectionChanged += SelectedGm1File;
 
+            ListBox tGXImageListBox = this.Get<ListBox>("TGXImageListBox");
+            tGXImageListBox.SelectionChanged += TGXImageChanged;
+
             
+
+
             ListBox gfxFilesSelector = this.Get<ListBox>("GfxFilesSelector");
             gfxFilesSelector.SelectionChanged += SelectedGfxFile;
 
@@ -105,11 +110,10 @@ namespace Gm1KonverterCrossPlatform.Views
 
 
             Image image = this.Get<Image>("HelpIcon");
-
-            Avalonia.Media.Imaging.Bitmap bitmap = new Avalonia.Media.Imaging.Bitmap("Images/info.png");
-            image.Source = bitmap;
             image.Tapped += OpenInfoWindow;
         }
+
+        
 
         private void ReplacewithSavedTgxFile(object sender, RoutedEventArgs e)
         {
@@ -563,14 +567,30 @@ namespace Gm1KonverterCrossPlatform.Views
         private void SelectedGm1File(object sender, SelectionChangedEventArgs e)
         {
 
-           
-            var listbox = sender as ListBox;
+            vm.OffsetExpanderVisible = false;
+             var listbox = sender as ListBox;
             if (listboxItemBefore == listbox.SelectedItem.ToString())return;
             if (Logger.Loggeractiv) Logger.Log("\n>>SelectedGm1File start");
             listboxItemBefore = listbox.SelectedItem.ToString();
             LoadGm1File(listboxItemBefore);
-
+     
             if (Logger.Loggeractiv) Logger.Log("\n>>SelectedGm1File end");
+        }
+
+
+        private void TGXImageChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (!vm.File.FileHeader.Name.Contains("anim_castle") ) return;
+            var listbox = sender as ListBox;
+            int index = listbox.SelectedIndex;
+            if (index == 0)
+            {
+                vm.OffsetExpanderVisible = true;
+            }
+            else
+            {
+                vm.OffsetExpanderVisible = false;
+            }
         }
 
         private void SelectedGfxFile(object sender, SelectionChangedEventArgs e)
@@ -689,9 +709,10 @@ namespace Gm1KonverterCrossPlatform.Views
             vm.ActualLanguage = vm.UserConfig.Language;
             vm.OpenFolderAfterExport = vm.UserConfig.OpenFolderAfterExport;
             vm.LoggerActiv = vm.UserConfig.ActivateLogger;
+            Logger.Path = vm.UserConfig.WorkFolderPath + "\\Logger";
             vm.LoadStrongholdFiles();
             vm.LoadWorkfolderFiles();
-            Logger.Path = vm.UserConfig.WorkFolderPath+ "\\Logger";
+        
            if(File.Exists(vm.UserConfig.WorkFolderPath + "\\Logger\\Log.txt")) File.Delete(vm.UserConfig.WorkFolderPath+"\\Logger\\Log.txt");
         }
 
@@ -781,9 +802,20 @@ namespace Gm1KonverterCrossPlatform.Views
       
 
         }
-        
+        private void Button_ChangeOffset(object sender, RoutedEventArgs e)
+        {
+            byte[] bytes = File.ReadAllBytes(vm.UserConfig.CrusaderPath.Replace("\\gm",String.Empty)+ "\\Stronghold_Crusader_Extreme.exe");
+           
+            int number = 939608;
+            var dummy3 = bytes[939608];
+            int offset = 20;
+            bytes[939608] = (byte)(offset);
+            File.WriteAllBytes(vm.UserConfig.CrusaderPath.Replace("\\gm", String.Empty) + "\\Stronghold_Crusader_Extreme.exe", bytes);
 
-        private void Button_ClickGifExporter(object sender, RoutedEventArgs e)
+            //96 3EFFFFFF 52
+        }
+
+            private void Button_ClickGifExporter(object sender, RoutedEventArgs e)
         {
             if (Logger.Loggeractiv) Logger.Log("\n>>Button_ClickGifExporter start");
             ListBox listBox = this.Get<ListBox>("TGXImageListBox");

@@ -88,4 +88,5 @@
     <x:String x:Key="ExportBigImage">Export Bigimage</x:String>
     <x:String x:Key="ImportBigImage">Import Bigimage</x:String>
     <x:String x:Key="OpenLogFile">Open Log Folder</x:String>
+    <x:String x:Key="ChangeOffsets">Change Offsets</x:String>
 </controls:ResourceDictionary>

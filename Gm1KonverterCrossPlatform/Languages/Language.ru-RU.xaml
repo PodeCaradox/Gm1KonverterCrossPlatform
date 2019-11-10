@@ -91,4 +91,5 @@
     <x:String x:Key="ExportBigImage">Экспорт большого изображения</x:String>
     <x:String x:Key="ImportBigImage">Импорт большое изображение</x:String>
     <x:String x:Key="OpenLogFile">Открыть Log журнала</x:String>
+    <x:String x:Key="ChangeOffsets">Изменить Offsets</x:String>
 </controls:ResourceDictionary>

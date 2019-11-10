@@ -192,7 +192,48 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             get => buttonsEnabled;
             set => this.RaiseAndSetIfChanged(ref buttonsEnabled, value);
         }
+        
 
+        private bool offsetExpanderVisible = false;
+        public bool OffsetExpanderVisible
+        {
+            get => offsetExpanderVisible;
+            set => this.RaiseAndSetIfChanged(ref offsetExpanderVisible, value);
+        }
+
+        private int xOffset;
+        public int XOffset
+        {
+            get => xOffset;
+            set {
+                if (value>255)
+                {
+                    value = 255;
+                }else if (value<0)
+                {
+                    value = 0;
+                }
+                this.RaiseAndSetIfChanged(ref xOffset, value);
+            }
+        }
+
+        private int yOffset;
+        public int YOffset
+        {
+            get => yOffset;
+            set
+            {
+                if (value > 255)
+                {
+                    value = 255;
+                }
+                else if (value < 0)
+                {
+                    value = 0;
+                }
+                this.RaiseAndSetIfChanged(ref yOffset, value);
+            }
+        }
 
         private bool gm1PreviewTrue = true;
         public bool Gm1PreviewTrue
@@ -355,12 +396,22 @@ namespace Gm1KonverterCrossPlatform.ViewModels
         /// </summary>
         internal void LoadStrongholdFiles()
         {
+            Logger.Log("LoadStrongholdFiles start");
             if (!String.IsNullOrEmpty(userConfig.CrusaderPath))
             {
                 StrongholdFiles = Utility.GetFileNames(userConfig.CrusaderPath, "*.gm1");
-                GfxFiles = Utility.GetFileNames(userConfig.CrusaderPath.Replace("\\gm",String.Empty)+ "\\gfx", "*.tgx");
+                try
+                {
+                    GfxFiles = Utility.GetFileNames(userConfig.CrusaderPath.Replace("\\gm", String.Empty) + "\\gfx", "*.tgx");
+                }
+                catch (Exception e)
+                {
+                    Logger.Log(e.Message.ToString());
+                   
+                }
+               
             }
-
+            Logger.Log("LoadStrongholdFiles end");
         }
 
         internal void LoadWorkfolderFiles()

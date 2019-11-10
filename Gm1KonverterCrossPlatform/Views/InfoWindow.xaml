@@ -14,10 +14,10 @@
       <StackPanel  MaxWidth="800"  Name="Animation">
         <TextBlock Text="{DynamicResource AnimationTitel1}"  HorizontalAlignment="Center" MaxWidth="800" />
         <TextBlock TextWrapping="Wrap" Text="{DynamicResource AnimationText1}" MaxWidth="800" Margin="0,20,0,0" />
-        <Image Name="Palette1" />
-        <Image Name="Palette2" />
+        <Image Name="Palette1" Source="avares://Gm1KonverterCrossPlatform/Assets/Palette1.png"/>
+        <Image Name="Palette2" Source="avares://Gm1KonverterCrossPlatform/Assets/Palette2.png"/>
         <TextBlock TextWrapping="Wrap" Text="{DynamicResource AnimationText2}" MaxWidth="800" Margin="0,20,0,0"/>
-        <Image Name="Palette3" />
+        <Image Name="Palette3" Source="avares://Gm1KonverterCrossPlatform/Assets/Palette3.png"/>
 
         <TextBlock TextWrapping="Wrap" Text="{DynamicResource AnimationText13}" HorizontalAlignment="Left" Margin="0,20,0,0"/>
         <TextBlock TextWrapping="Wrap" Text="{DynamicResource AnimationText3}" HorizontalAlignment="Left"/>
@@ -40,21 +40,21 @@
       <StackPanel Name="Interface" MaxWidth="800">
         <TextBlock Text="{DynamicResource InterfaceTitel1}"  HorizontalAlignment="Center" MaxWidth="800" />
         <TextBlock TextWrapping="Wrap" Text="{DynamicResource InterfaceText1}" MaxWidth="800" Margin="0,20,0,0" />
-        <Image Name="Interface1" />
-        <Image Name="Interface2" />
+        <Image Name="Interface1"  Source="avares://Gm1KonverterCrossPlatform/Assets/Interface1.JPG"/>
+        <Image Name="Interface2"  Source="avares://Gm1KonverterCrossPlatform/Assets/Interface2.JPG"/>
       </StackPanel>
 
       <StackPanel Name="TiledObject" MaxWidth="800">
         <TextBlock Text="{DynamicResource TiledObjectTitel1}"  HorizontalAlignment="Center" MaxWidth="800" />
         <TextBlock TextWrapping="Wrap" Text="{DynamicResource TiledObjectText1}" MaxWidth="800" Margin="0,20,0,0" />
-        <Image Name="TiledObject1" />
+        <Image Name="TiledObject1" Source="avares://Gm1KonverterCrossPlatform/Assets/TiledObject1.png"/>
         <TextBlock TextWrapping="Wrap" Text="{DynamicResource TiledObjectText2}" MaxWidth="800" Margin="0,20,0,0" />
-        <Image Name="TiledObject2" />
+        <Image Name="TiledObject2" Source="avares://Gm1KonverterCrossPlatform/Assets/TiledObject2.png"/>
         <TextBlock TextWrapping="Wrap" Text="{DynamicResource TiledObjectText3}" MaxWidth="800" Margin="0,20,0,0" />
-        <Image Name="TiledObject3" />
-        <Image Name="TiledObject4" />
+        <Image Name="TiledObject3" Source="avares://Gm1KonverterCrossPlatform/Assets/TiledObject3.png"/>
+        <Image Name="TiledObject4" Source="avares://Gm1KonverterCrossPlatform/Assets/TiledObject4.png"/>
         <TextBlock TextWrapping="Wrap" Text="{DynamicResource TiledObjectText4}" MaxWidth="800" Margin="0,20,0,0" />
-        <Image Name="TiledObject5" />
+        <Image Name="TiledObject5" Source="avares://Gm1KonverterCrossPlatform/Assets/TiledObject5.png"/>
       </StackPanel>
 
       <StackPanel Name="NoInfo" MaxWidth="800">

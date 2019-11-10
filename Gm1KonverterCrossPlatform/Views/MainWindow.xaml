@@ -1,4 +1,5 @@
-﻿<Window xmlns="https://github.com/avaloniaui"
+﻿<Window
+    xmlns:controls="clr-namespace:Avalonia.Controls;assembly=Avalonia.Controls" xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="clr-namespace:Gm1KonverterCrossPlatform.ViewModels;assembly=Gm1KonverterCrossPlatform"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -83,7 +84,7 @@
         
         <TextBlock Text="{Binding Filetype}" HorizontalAlignment="Center" Height="20"/>
 
-        <Image Name="HelpIcon" Margin="10,0,0,0"/>
+        <Image Name="HelpIcon" Margin="10,0,0,0" Source="avares://Gm1KonverterCrossPlatform/Assets/info.png"/><!--Source="avares://Gm1KonverterCrossPlatform/Assets/info.png"-->
       </StackPanel>
 
 
@@ -115,7 +116,19 @@
 
       </Expander>
 
-      <ListBox Items="{Binding TGXImages}" MaxHeight="400" Name="TGXImageListBox" MaxWidth="700" SelectionMode="Multiple">
+            <controls:Expander ExpandDirection="Down" Header="{DynamicResource ChangeOffsets}" IsVisible="{Binding OffsetExpanderVisible}">
+                <controls:StackPanel Orientation="Horizontal">
+                    <controls:TextBlock Text="xOffset(max 255):"/>
+                    <controls:TextBox Name="xOffsetTextBox" Width="100" Text="{Binding XOffset}"/>
+                    <controls:TextBlock Text="yOffset(max 255):"/>
+                    <TextBox Name="yOffsetTextBox" Width="100" Text="{Binding YOffset}" />
+                    <controls:Button Click="Button_ChangeOffset" Content="Change Offset"/>
+                </controls:StackPanel>
+                
+                
+            </controls:Expander>
+
+                <ListBox Items="{Binding TGXImages}" MaxHeight="400" Name="TGXImageListBox" MaxWidth="700" SelectionMode="Multiple">
         <ListBox.ItemsPanel>
           <ItemsPanelTemplate>
             <WrapPanel Orientation="Horizontal" MaxWidth="650"/>
