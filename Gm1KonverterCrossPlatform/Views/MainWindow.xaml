@@ -118,9 +118,9 @@
 
             <controls:Expander ExpandDirection="Down" Header="{DynamicResource ChangeOffsets}" IsVisible="{Binding OffsetExpanderVisible}">
                 <controls:StackPanel Orientation="Horizontal">
-                    <controls:TextBlock Text="xOffset(max 255):"/>
+                    <controls:TextBlock Text="xOffset(min 1/ max 80):"/>
                     <controls:TextBox Name="xOffsetTextBox" Width="100" Text="{Binding XOffset}"/>
-                    <controls:TextBlock Text="yOffset(max 255):"/>
+                    <controls:TextBlock Text="yOffset(min 1/max ‭4095‬):"/>
                     <TextBox Name="yOffsetTextBox" Width="100" Text="{Binding YOffset}" />
                     <controls:Button Click="Button_ChangeOffset" Content="Change Offset"/>
                 </controls:StackPanel>

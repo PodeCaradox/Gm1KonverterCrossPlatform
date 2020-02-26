@@ -157,7 +157,7 @@ namespace HelperClasses.Gm1Converter
                     if (newline == true && countSamePixel == width)
                     {
                         //newline consist out of transparent pixelstrings only TGXConstSize, idk why(TiledObject empty on Top also not only newline)
-                        if (datatype == GM1FileHeader.DataType.TGXConstSize ||datatype == GM1FileHeader.DataType.TilesObject )
+                        if (datatype == GM1FileHeader.DataType.TGXConstSize ||datatype == GM1FileHeader.DataType.TilesObject  || datatype == GM1FileHeader.DataType.Interface)
                         {
                             //TGXConstSize later only consists out of newlines?????
                             if (!CheckIfAllLinesUnderTransparent(colors, transparent, (i + 1) * width) || datatype == GM1FileHeader.DataType.TilesObject)

@@ -3,19 +3,17 @@
   <ShouldIncludeNativeSkiaSharp>True</ShouldIncludeNativeSkiaSharp>
   <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <OutputType>WinExe</OutputType>
-    <TargetFrameworks>net461</TargetFrameworks>
-	<RuntimeIdentifiers>win10-x64;osx;linux-x64</RuntimeIdentifiers>
+    <TargetFrameworks>net461;netcoreapp3.0</TargetFrameworks>
+	<RuntimeIdentifiers>win10-x64;linux-x64</RuntimeIdentifiers>
+	<PublishSingleFile>false</PublishSingleFile>
     <LangVersion>7.2</LangVersion>
     <StartupObject></StartupObject>
 	
     <ApplicationIcon>Assets\avalonia-logo.ico</ApplicationIcon>
 	
-    <Platforms>AnyCPU;x64</Platforms>
+    <Platforms>AnyCPU</Platforms>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netcoreapp2.1|AnyCPU'">
-    <PlatformTarget>x64</PlatformTarget>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netcoreapp2.1|x64'">
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netcoreapp3.0|AnyCPU'">
     <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
@@ -42,11 +40,11 @@
   </ItemGroup>
   <ItemGroup>
   
-    <PackageReference Include="Avalonia" Version="0.8.3" />
-    <PackageReference Include="Avalonia.Desktop" Version="0.8.3" />
-    <PackageReference Include="Avalonia.ReactiveUI" Version="0.8.3" />
+    <PackageReference Include="Avalonia" Version="0.9.3" />
+    <PackageReference Include="Avalonia.Desktop" Version="0.9.3" />
+    <PackageReference Include="Avalonia.ReactiveUI" Version="0.9.3" />
     <PackageReference Include="Costura.Fody" Version="4.1.0" />
-    <PackageReference Include="Fody" Version="6.0.4">
+    <PackageReference Include="Fody" Version="6.1.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

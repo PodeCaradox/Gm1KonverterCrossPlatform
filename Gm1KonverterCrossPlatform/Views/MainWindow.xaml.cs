@@ -351,33 +351,69 @@ namespace Gm1KonverterCrossPlatform.Views
                 int maxheight = 0;
                 int offsetx = 0;
                 int actualwidth = 0;
-                foreach (var image in vm.File.ImagesTGX)
+                if (((GM1FileHeader.DataType)vm.File.FileHeader.IDataType == GM1FileHeader.DataType.TilesObject))
                 {
-                    int width = image.Width;
-                    int height = image.Height;
-  
-
-
-                    actualwidth += width;
-                    if (maxwidth <= actualwidth)
+                    foreach (var image in vm.File.TilesImages)
                     {
-                        offsety += maxheight;
-                        actualwidth = width;
-                        maxheight = 0;
-                        offsetx = 0;
-                    }
+                        int width = image.Width;
+                        int height = image.Height - ((GM1FileHeader.DataType)vm.File.FileHeader.IDataType == GM1FileHeader.DataType.NOCompression ? 7 : 0);
 
-                    if (maxheight < height)
+                        actualwidth += width;
+                        if (maxwidth <= actualwidth)
+                        {
+                            offsety += maxheight;
+                            actualwidth = width;
+                            maxheight = 0;
+                            offsetx = 0;
+                        }
+
+                        if (maxheight < height)
+                        {
+                            maxheight = height;
+                        }
+
+                        var list = Utility.LoadImage(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\BigImage\\" + filewithoutgm1ending + ".png", ref width, ref height, vm.File.ImagesTGX[fileindex].AnimatedColor, 1, vm.File.FileHeader.IDataType, offsetx, offsety);
+                        if (list.Count == 0) continue;
+                        width = image.Width;
+                        height = image.Height;
+
+                        LoadNewDataForGm1File(fileindex, list, width, height);
+                        fileindex++;
+                        offsetx += width;
+                    }
+                } else {
+                    foreach (var image in vm.File.ImagesTGX)
                     {
-                        maxheight = height;
-                    }
+                        int width = image.Width;
+                        int height = image.Height - ((GM1FileHeader.DataType)vm.File.FileHeader.IDataType == GM1FileHeader.DataType.NOCompression ? 7 : 0);
 
-                    var list = Utility.LoadImage(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\BigImage\\" + filewithoutgm1ending + ".png", ref width, ref height, vm.File.ImagesTGX[fileindex].AnimatedColor, 1, vm.File.FileHeader.IDataType,offsetx,offsety);
-                    if (list.Count == 0) continue;
-                    LoadNewDataForGm1File(fileindex, list, image.Width, image.Height);
-                    fileindex++;
-                    offsetx += width;
+
+
+                        actualwidth += width;
+                        if (maxwidth <= actualwidth)
+                        {
+                            offsety += maxheight;
+                            actualwidth = width;
+                            maxheight = 0;
+                            offsetx = 0;
+                        }
+
+                        if (maxheight < height)
+                        {
+                            maxheight = height;
+                        }
+
+                        var list = Utility.LoadImage(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\BigImage\\" + filewithoutgm1ending + ".png", ref width, ref height, vm.File.ImagesTGX[fileindex].AnimatedColor, 1, vm.File.FileHeader.IDataType, offsetx, offsety);
+                        if (list.Count == 0) continue;
+                        width = image.Width;
+                        height = image.Height - ((GM1FileHeader.DataType)vm.File.FileHeader.IDataType == GM1FileHeader.DataType.NOCompression ? 7 : 0);
+
+                        LoadNewDataForGm1File(fileindex, list, width, height);
+                        fileindex++;
+                        offsetx += width;
+                    }
                 }
+              
 
 
                 
@@ -573,19 +609,61 @@ namespace Gm1KonverterCrossPlatform.Views
             if (Logger.Loggeractiv) Logger.Log("\n>>SelectedGm1File start");
             listboxItemBefore = listbox.SelectedItem.ToString();
             LoadGm1File(listboxItemBefore);
-     
+            if (vm.File.FileHeader.Name.Contains("anim_castle"))
+            {
+            
+                   _strongholdasBytes = File.ReadAllBytes(vm.UserConfig.CrusaderPath.Replace("\\gm", String.Empty) + "\\Stronghold_Crusader_Extreme.exe");
+
+            }
             if (Logger.Loggeractiv) Logger.Log("\n>>SelectedGm1File end");
         }
 
-
+        private byte[] _strongholdasBytes;
+        private Point _strongholdadress;
         private void TGXImageChanged(object sender, SelectionChangedEventArgs e)
         {
             if (!vm.File.FileHeader.Name.Contains("anim_castle") ) return;
             var listbox = sender as ListBox;
             int index = listbox.SelectedIndex;
-            if (index == 0)
+            if (index <= 3 || index >=121)
             {
                 vm.OffsetExpanderVisible = true;
+                switch (index)
+                {
+                    case 0:
+                        _strongholdadress = new Point(939606,939613);
+                        break;
+                    case 1:
+                        _strongholdadress = new Point(939834, 939841);
+                        break;
+                    case 2:
+                        _strongholdadress = new Point(940015, 940022);
+                        break;
+                    case 3:
+                        _strongholdadress = new Point(939721, 939728);
+                        break;
+                    case 121:
+                        _strongholdadress = new Point(939936, 939943);
+                        break;
+                    case 122:
+                        _strongholdadress = new Point(939936, 939943);
+                        break;
+                    case 123:
+                        _strongholdadress = new Point(939567, 939574);
+                        break;
+                    case 124:
+                        _strongholdadress = new Point(939529, 939536);
+                        break;
+                    case 125:
+                        _strongholdadress = new Point(939567, 939574);
+                        break;
+                    default:
+                        break;
+                }
+                vm.XOffset = _strongholdasBytes[(int)_strongholdadress.X];
+                var adddress = BitConverter.ToUInt32(_strongholdasBytes, (int)_strongholdadress.Y);
+                vm.YOffset = _strongholdasBytes[(int)_strongholdadress.Y];
+
             }
             else
             {
@@ -763,7 +841,7 @@ namespace Gm1KonverterCrossPlatform.Views
 
             if (!String.IsNullOrEmpty(initialDirectory))
             {
-                openFolderDialog.InitialDirectory = initialDirectory;
+                openFolderDialog.Directory = initialDirectory;
             }
             var file = await openFolderDialog.ShowAsync(this);
             if (String.IsNullOrEmpty(file))
@@ -804,15 +882,12 @@ namespace Gm1KonverterCrossPlatform.Views
         }
         private void Button_ChangeOffset(object sender, RoutedEventArgs e)
         {
-            byte[] bytes = File.ReadAllBytes(vm.UserConfig.CrusaderPath.Replace("\\gm",String.Empty)+ "\\Stronghold_Crusader_Extreme.exe");
-           
-            int number = 939608;
-            var dummy3 = bytes[939608];
-            int offset = 20;
-            bytes[939608] = (byte)(offset);
-            File.WriteAllBytes(vm.UserConfig.CrusaderPath.Replace("\\gm", String.Empty) + "\\Stronghold_Crusader_Extreme.exe", bytes);
+            var xOffset = _strongholdasBytes[(int)_strongholdadress.X];
+            var yOffset = _strongholdasBytes[(int)_strongholdadress.Y];
+            _strongholdasBytes[xOffset] = (byte)vm.XOffset;
+            _strongholdasBytes[yOffset] = (byte)vm.YOffset;
+            File.WriteAllBytes(vm.UserConfig.CrusaderPath.Replace("\\gm", String.Empty) + "\\Stronghold_Crusader_Extreme.exe", _strongholdasBytes);
 
-            //96 3EFFFFFF 52
         }
 
             private void Button_ClickGifExporter(object sender, RoutedEventArgs e)
