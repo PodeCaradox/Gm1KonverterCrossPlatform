@@ -76,10 +76,6 @@ namespace HelperClasses.Gm1Converter
             try
             {
                 var image = Image.Load(filename);
-                Console.WriteLine("Width:" + width);
-                Console.WriteLine("Height:"+height);
-                Console.WriteLine("OrginalWidth:" + image.Width);
-                Console.WriteLine("Width+Offset:" + (width + offsetx));
                 if (width==0) width = image.Width;
                 if(height==0) height = image.Height;
                 for (int y = offsety; y < height + offsety; y += pixelsize)
@@ -113,7 +109,44 @@ namespace HelperClasses.Gm1Converter
             return colors;
         }
 
-    
+        internal unsafe static WriteableBitmap LoadImageAsBitmap(String filename, ref int width, ref int height, int offsetx = 0, int offsety = 0)
+        {
+            if (Logger.Loggeractiv) Logger.Log("LoadImage");
+            var image = Image.Load(filename);
+            if (width == 0) width = image.Width;
+            if (height == 0) height = image.Height;
+            WriteableBitmap bitmap = new WriteableBitmap(new PixelSize(width, height),new Vector(300,300),Avalonia.Platform.PixelFormat.Rgba8888);
+            using (var bit = bitmap.Lock())
+            {
+                try
+                {
+                    int xBit = 0, yBit = 0;
+                    for (int y = offsety; y < height + offsety; y++)
+                    {
+                        for (int x = offsetx; x < width + offsetx; x++) //Bgra8888
+                        {
+                            var pixel = image[x, y];
+
+                            var ptr = (uint*)bit.Address;
+                            ptr += (uint)((bitmap.PixelSize.Width * yBit) + xBit);
+                            *ptr = pixel.PackedValue;
+                            xBit++;
+                        }
+                        xBit = 0;
+                        yBit++;
+                    }
+                }
+                catch (Exception e)
+                {
+                    if (Logger.Loggeractiv) Logger.Log("Exception:\n" + e.Message);
+                    MessageBoxWindow messageBox = new MessageBoxWindow(MessageBoxWindow.MessageTyp.Info, "Something went wrong: pls add a issue on the Github Page\n\nError:\n" + e.Message);
+                    messageBox.Show();
+                }
+            }
+               
+            return bitmap;
+        }
+
 
         /// <summary>
         /// Convert an IMG as Colorlist to ByteArray

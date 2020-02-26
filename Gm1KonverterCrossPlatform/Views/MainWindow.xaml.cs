@@ -169,7 +169,7 @@ namespace Gm1KonverterCrossPlatform.Views
           
             int width = 0;
             int height = 0;
-            var colors = Utility.LoadImage(vm.UserConfig.WorkFolderPath + "\\" + filewithouttgxending + "\\" + filewithouttgxending + ".png",ref width,ref height);
+            List<UInt16> colors = Utility.LoadImage(vm.UserConfig.WorkFolderPath + "\\" + filewithouttgxending + "\\" + filewithouttgxending + ".png",ref width,ref height);
             vm.TgxImage.ConvertImageWithoutPaletteToByteArray(colors,width,height);//todo animated color?
             vm.TgxImage.TgxWidth = (uint)width;
             vm.TgxImage.TgxHeight = (uint)height;
@@ -351,8 +351,10 @@ namespace Gm1KonverterCrossPlatform.Views
                 int maxheight = 0;
                 int offsetx = 0;
                 int actualwidth = 0;
+                int counter = 0;
                 if (((GM1FileHeader.DataType)vm.File.FileHeader.IDataType == GM1FileHeader.DataType.TilesObject))
                 {
+
                     foreach (var image in vm.File.TilesImages)
                     {
                         int width = image.Width;
@@ -380,6 +382,13 @@ namespace Gm1KonverterCrossPlatform.Views
                         LoadNewDataForGm1File(fileindex, list, width, height);
                         fileindex++;
                         offsetx += width;
+                       
+
+                        Avalonia.Media.Imaging.Bitmap newimage = Utility.LoadImageAsBitmap(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\BigImage\\" + filewithoutgm1ending + ".png", ref width, ref height, offsetx, offsety);
+                        vm.TGXImages[counter].Source = newimage;
+                        vm.TGXImages[counter].MaxWidth = newimage.PixelSize.Width;
+                        vm.TGXImages[counter].MaxHeight = newimage.PixelSize.Height;
+                        counter++;
                     }
                 } else {
                     foreach (var image in vm.File.ImagesTGX)
@@ -402,7 +411,8 @@ namespace Gm1KonverterCrossPlatform.Views
                         {
                             maxheight = height;
                         }
-
+                        int oldOffsetx = offsetx;
+                        int oldOffsety = offsety;
                         var list = Utility.LoadImage(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\BigImage\\" + filewithoutgm1ending + ".png", ref width, ref height, vm.File.ImagesTGX[fileindex].AnimatedColor, 1, vm.File.FileHeader.IDataType, offsetx, offsety);
                         if (list.Count == 0) continue;
                         width = image.Width;
@@ -411,6 +421,12 @@ namespace Gm1KonverterCrossPlatform.Views
                         LoadNewDataForGm1File(fileindex, list, width, height);
                         fileindex++;
                         offsetx += width;
+
+                        Avalonia.Media.Imaging.Bitmap newimage = Utility.LoadImageAsBitmap(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\BigImage\\" + filewithoutgm1ending + ".png", ref width, ref height, oldOffsetx, oldOffsety);
+                        vm.TGXImages[counter].Source = newimage;
+                        vm.TGXImages[counter].MaxWidth = newimage.PixelSize.Width;
+                        vm.TGXImages[counter].MaxHeight = newimage.PixelSize.Height;
+                        counter++;
                     }
                 }
               
@@ -631,39 +647,39 @@ namespace Gm1KonverterCrossPlatform.Views
                 switch (index)
                 {
                     case 0:
-                        _strongholdadress = new Point(939606,939613);
+                        _strongholdadress = new Point(939615, 939608);
                         break;
                     case 1:
-                        _strongholdadress = new Point(939834, 939841);
+                        _strongholdadress = new Point(939841, 939834);
                         break;
                     case 2:
-                        _strongholdadress = new Point(940015, 940022);
+                        _strongholdadress = new Point(940022, 940015);
                         break;
                     case 3:
-                        _strongholdadress = new Point(939721, 939728);
+                        _strongholdadress = new Point(939728, 939721);
                         break;
                     case 121:
-                        _strongholdadress = new Point(939936, 939943);
+                        _strongholdadress = new Point(939943, 939936);
                         break;
                     case 122:
-                        _strongholdadress = new Point(939936, 939943);
+                        _strongholdadress = new Point(939943, 939936);
                         break;
                     case 123:
-                        _strongholdadress = new Point(939567, 939574);
+                        _strongholdadress = new Point(939574, 939567);
                         break;
                     case 124:
-                        _strongholdadress = new Point(939529, 939536);
+                        _strongholdadress = new Point(939536, 939529);
                         break;
                     case 125:
-                        _strongholdadress = new Point(939567, 939574);
+                        _strongholdadress = new Point(939574, 939567);
                         break;
                     default:
                         break;
                 }
-                vm.XOffset = _strongholdasBytes[(int)_strongholdadress.X];
-                var adddress = BitConverter.ToUInt32(_strongholdasBytes, (int)_strongholdadress.Y);
-                vm.YOffset = _strongholdasBytes[(int)_strongholdadress.Y];
-
+                
+                vm.XOffset = unchecked((sbyte)_strongholdasBytes[(int)_strongholdadress.X]);
+                vm.YOffset = BitConverter.ToInt32(_strongholdasBytes, (int)_strongholdadress.Y);
+                
             }
             else
             {
@@ -882,10 +898,14 @@ namespace Gm1KonverterCrossPlatform.Views
         }
         private void Button_ChangeOffset(object sender, RoutedEventArgs e)
         {
-            var xOffset = _strongholdasBytes[(int)_strongholdadress.X];
-            var yOffset = _strongholdasBytes[(int)_strongholdadress.Y];
-            _strongholdasBytes[xOffset] = (byte)vm.XOffset;
-            _strongholdasBytes[yOffset] = (byte)vm.YOffset;
+
+            var bytesArray = BitConverter.GetBytes(vm.YOffset);
+            _strongholdasBytes[(int)_strongholdadress.X] = (byte)vm.XOffset;
+            for (int i = 0; i < bytesArray.Length; i++)
+            {
+                _strongholdasBytes[(int)_strongholdadress.Y + i] = bytesArray[i];
+            }
+            
             File.WriteAllBytes(vm.UserConfig.CrusaderPath.Replace("\\gm", String.Empty) + "\\Stronghold_Crusader_Extreme.exe", _strongholdasBytes);
 
         }

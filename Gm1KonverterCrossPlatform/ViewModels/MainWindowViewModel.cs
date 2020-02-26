@@ -201,17 +201,17 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             set => this.RaiseAndSetIfChanged(ref offsetExpanderVisible, value);
         }
 
-        private int xOffset;
-        public int XOffset
+        private sbyte xOffset;
+        public sbyte XOffset
         {
             get => xOffset;
             set {
-                if (value>255)
+                if (value> sbyte.MaxValue)
                 {
-                    value = 255;
-                }else if (value<0)
+                    value = sbyte.MaxValue;
+                }else if (value< sbyte.MinValue)
                 {
-                    value = 0;
+                    value = sbyte.MinValue;
                 }
                 this.RaiseAndSetIfChanged(ref xOffset, value);
             }
@@ -223,14 +223,6 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             get => yOffset;
             set
             {
-                if (value > 255)
-                {
-                    value = 255;
-                }
-                else if (value < 0)
-                {
-                    value = 0;
-                }
                 this.RaiseAndSetIfChanged(ref yOffset, value);
             }
         }
