@@ -1,20 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-  <ShouldIncludeNativeSkiaSharp>True</ShouldIncludeNativeSkiaSharp>
   <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <TargetFrameworks>net461</TargetFrameworks>
-	<RuntimeIdentifiers>win10-x64;linux-x64</RuntimeIdentifiers>
-	<PublishSingleFile>false</PublishSingleFile>
+	<RuntimeIdentifiers>win10-x64;osx;linux-x64</RuntimeIdentifiers>
     <LangVersion>7.2</LangVersion>
-    <StartupObject></StartupObject>
-	
-    <ApplicationIcon>Assets\avalonia-logo.ico</ApplicationIcon>
-	
-    <Platforms>AnyCPU</Platforms>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netcoreapp2.1|AnyCPU'">
-    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
     <Compile Update="**\*.xaml.cs">
@@ -24,22 +14,24 @@
       <SubType>Designer</SubType>
     </AvaloniaResource>
     <AvaloniaResource Include="Assets\*" />
+    <AvaloniaResource Remove="Images\**" />
     <AvaloniaResource Remove="Models\**" />
+    <Compile Remove="Images\**" />
     <Compile Remove="Models\**" />
+    <EmbeddedResource Remove="Images\**" />
     <EmbeddedResource Remove="Models\**" />
+    <None Remove="Images\**" />
     <None Remove="Models\**" />
-    <None Remove="Costura64\libSkiaSharp.dll" />
-    <None Remove="Costura64\libSkiaSharp.dylib" />
+    <AvaloniaResource Remove="HelperClasses\Language.de-DE.xaml" />
+    <AvaloniaResource Remove="HelperClasses\Language.xaml" />
+    <AvaloniaResource Remove="HelperClasses\Views\ChangeColorPalette.xaml" />
+    <AvaloniaResource Remove="HelperClasses\Views\MessageBoxWindow.xaml" />
+    <AvaloniaResource Remove="Views\InfoWindow.xaml" />
     <None Remove="HelperClasses\Views\ChangeColorPalette.xaml" />
     <None Remove="HelperClasses\Views\MessageBoxWindow.xaml" />
     <None Remove="Views\InfoWindow.xaml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Costura64\libSkiaSharp.dll" />
-    <EmbeddedResource Include="Costura64\libSkiaSharp.dylib" />
-  </ItemGroup>
-  <ItemGroup>
-  
     <PackageReference Include="Avalonia" Version="0.9.3" />
     <PackageReference Include="Avalonia.Desktop" Version="0.9.3" />
     <PackageReference Include="Avalonia.ReactiveUI" Version="0.9.3" />
@@ -88,39 +80,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Update="Assets\info.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </None>
-    <None Update="Assets\Interface1.JPG">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </None>
-    <None Update="Assets\Interface2.JPG">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </None>
-    <None Update="Assets\Palette1.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </None>
-    <None Update="Assets\Palette2.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </None>
-    <None Update="Assets\Palette3.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </None>
-    <None Update="Assets\TiledObject1.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </None>
-    <None Update="Assets\TiledObject2.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </None>
-    <None Update="Assets\TiledObject3.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </None>
-    <None Update="Assets\TiledObject4.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </None>
-    <None Update="Assets\TiledObject5.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </None>
     <None Update="Language.ru-RU.xaml">
       <Generator>MSBuild:Compile</Generator>
     </None>
@@ -137,25 +96,4 @@
       <Generator>MSBuild:Compile</Generator>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <None Update="C:\Users\Gaaammmler\.nuget\packages\skiasharp\1.68.0\build\net45\..\..\runtimes\win-x86\native\libSkiaSharp.dll">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <None Update="C:\Users\Gaaammmler\.nuget\packages\skiasharp\1.68.0\build\net45\..\..\runtimes\osx\native\libSkiaSharp.dylib">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Update="C:\Users\Gaaammmler\.nuget\packages\skiasharp\1.68.0\build\net45\..\..\runtimes\osx\native\libSkiaSharp.dylib" Link="Costura64\libSkiaSharp.dylib">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Update="C:\Users\Gaaammmler\.nuget\packages\skiasharp\1.68.0\build\net45\..\..\runtimes\win-x86\native\libSkiaSharp.dll" Link="Costura64\libSkiaSharp.dll">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </EmbeddedResource>
-  </ItemGroup>
-
 </Project>

@@ -106,7 +106,7 @@ namespace Gm1KonverterCrossPlatform.Views
             MenuItem exportTgxImageMenueItem = this.Get<MenuItem>("ExportTgxImageMenueItem");
             exportTgxImageMenueItem.Click += ExportTgxImage;
 
-   
+
 
 
             Image image = this.Get<Image>("HelpIcon");
@@ -546,7 +546,7 @@ namespace Gm1KonverterCrossPlatform.Views
 
 
             if (vm.UserConfig.OpenFolderAfterExport)
-                Process.Start("explorer.exe", vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\Images");
+                Process.Start("explorer.exe", vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending +((bigImage)?"\\BigImage": "\\Images"));
 
 
             vm.LoadWorkfolderFiles();
@@ -857,7 +857,7 @@ namespace Gm1KonverterCrossPlatform.Views
 
             if (!String.IsNullOrEmpty(initialDirectory))
             {
-                openFolderDialog.Directory = initialDirectory;
+                openFolderDialog.DefaultDirectory = initialDirectory;
             }
             var file = await openFolderDialog.ShowAsync(this);
             if (String.IsNullOrEmpty(file))

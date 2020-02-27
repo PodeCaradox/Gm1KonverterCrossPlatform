@@ -83,8 +83,7 @@
       <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
         
         <TextBlock Text="{Binding Filetype}" HorizontalAlignment="Center" Height="20"/>
-
-        <Image Name="HelpIcon" Margin="10,0,0,0" Source="avares://Gm1KonverterCrossPlatform/Assets/info.png"/><!--Source="avares://Gm1KonverterCrossPlatform/Assets/info.png"-->
+        <Image Name="HelpIcon" Margin="10,0,0,0" Source="avares://Gm1KonverterCrossPlatform/Assets/info.png"/>
       </StackPanel>
 
 
