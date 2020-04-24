@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Gm1KonverterCrossPlatform.Files
 {
-    class TilesImage
+    class TilesImage : IDisposable
     {
 
         #region Public
@@ -50,6 +50,14 @@ namespace Gm1KonverterCrossPlatform.Files
         #endregion
 
         #region Methods
+
+        public void Dispose()
+        {
+            if (bmp != null)
+            {
+                bmp.Dispose();
+            }
+        }
 
         /// <summary>
         /// Add the Diamond Tile Img to the bigger Img
@@ -179,6 +187,8 @@ namespace Gm1KonverterCrossPlatform.Files
         /// </summary>
         internal unsafe void CreateImagefromList()
         {
+            Dispose();
+
             if (minusHeight == 9999999)
             {
                 //is used for the correct height of the bitmap

@@ -16,7 +16,7 @@ using Gm1KonverterCrossPlatform.Views;
 
 namespace Gm1KonverterCrossPlatform.ViewModels
 {
-    public class MainWindowViewModel : ViewModelBase
+    public class MainWindowViewModel : ViewModelBase, IDisposable
     {
 
         #region Variables
@@ -383,6 +383,25 @@ namespace Gm1KonverterCrossPlatform.ViewModels
 
         #region Methods
 
+        ~MainWindowViewModel()
+        {
+            Dispose(false);
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (File != null)
+            {
+                File.Dispose();
+            }
+        }
+
         /// <summary>
         /// Load the GM1 Files from the CrusaderPath
         /// </summary>
@@ -434,6 +453,7 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             //Convert Selected file
             try
             {
+                Dispose();
                 File = new DecodedFile();
                 if (!File.DecodeGm1File(Utility.FileToByteArray(userConfig.CrusaderPath + "\\" + fileName), fileName))
                 {
