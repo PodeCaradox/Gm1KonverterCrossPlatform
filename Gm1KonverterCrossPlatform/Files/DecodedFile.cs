@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 namespace Files.Gm1Converter
 {
-    class DecodedFile
+    class DecodedFile : IDisposable
     {
 
         #region Variables
@@ -147,6 +147,17 @@ namespace Files.Gm1Converter
             return newFile.ToArray();
         }
 
+        public void Dispose()
+        {
+            if (tilesImage != null)
+            {
+                foreach (TilesImage image in tilesImage)
+                {
+                    image.Dispose();
+                }
+            }
+        }
+
         /// <summary>
         /// Creates the IMG from the byte array, handles Animation,Interfaces,TGXConstSize, Font
         /// </summary>
@@ -232,6 +243,7 @@ namespace Files.Gm1Converter
         private void CreateTileImage(byte[] array)
         {
             if (Logger.Loggeractiv) Logger.Log("CreateTileImage");
+            Dispose();
             CreateOffsetAndSizeInByteArrayList(array);
             CreateImgHeader(array);
 
