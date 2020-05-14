@@ -90,6 +90,6 @@
     <x:String x:Key="ImportBigImage">Importiere Großes Bild</x:String>
     <x:String x:Key="OpenLogFile">Öffne Log Ordner</x:String>
     <x:String x:Key="ChangeOffsets">Ändere Offsets</x:String>
-
+    <x:String x:Key="DataGm1File">Gm1 Datafelder</x:String>
     
 </controls:ResourceDictionary>

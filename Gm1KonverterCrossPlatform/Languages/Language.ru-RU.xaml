@@ -92,4 +92,6 @@
     <x:String x:Key="ImportBigImage">Импорт большое изображение</x:String>
     <x:String x:Key="OpenLogFile">Открыть Log журнала</x:String>
     <x:String x:Key="ChangeOffsets">Изменить Offsets</x:String>
+
+    <x:String x:Key="DataGm1File">Gm1 data fields</x:String>
 </controls:ResourceDictionary>

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
   <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <OutputType>Exe</OutputType>
+    <OutputType>WinExe</OutputType>
     <TargetFrameworks>net461</TargetFrameworks>
 	<RuntimeIdentifiers>win10-x64;osx;linux-x64</RuntimeIdentifiers>
     <LangVersion>7.2</LangVersion>

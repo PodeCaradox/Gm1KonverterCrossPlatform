@@ -227,6 +227,7 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             }
         }
 
+
         private bool gm1PreviewTrue = true;
         public bool Gm1PreviewTrue
         {
@@ -378,7 +379,13 @@ namespace Gm1KonverterCrossPlatform.ViewModels
         internal DecodedFile File { get; set; }
         public UserConfig UserConfig { get => userConfig; set => userConfig = value; }
 
+        internal TGXImage _actualTGXImageSelection;
 
+        internal TGXImage ActualTGXImageSelection
+        {
+            get => _actualTGXImageSelection;
+            set => this.RaiseAndSetIfChanged(ref _actualTGXImageSelection, value);
+        }
         #endregion
 
         #region Methods
@@ -484,6 +491,7 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             Image image = new Image();
             image.MaxWidth = TgxImage.TgxWidth;
             image.MaxHeight = TgxImage.TgxHeight;
+            image.Tag = TgxImage;
             image.Source = bitmap;
             TGXImages.Add(image);
 
@@ -521,6 +529,7 @@ namespace Gm1KonverterCrossPlatform.ViewModels
                 image.MaxHeight = File.ImagesTGX[j].Height;
                 image.MaxWidth = File.ImagesTGX[j].Width;
                 image.Source = bitmap;
+                image.Tag = File.ImagesTGX[j];
                 TGXImages.Add(image);
 
             }
