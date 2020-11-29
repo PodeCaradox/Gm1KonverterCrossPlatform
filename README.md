@@ -26,6 +26,13 @@ For more infos to an specific Filetype click on the Info Icon.
 
 ![img3](https://github.com/Gaaammmler/Gm1KonverterCrossPlatform/blob/master/GMConverterImages/img3.JPG)
 
+Support for the tgx Files is also there:
+![preview1](https://user-images.githubusercontent.com/5760157/65734537-a7d53580-e0d3-11e9-8e31-8ce2546aca53.JPG)
+
+Just click on the Button Gm1/GFX to change the preview list from both folder(gm/gfx).
+
+
+
 If you want Stronghold 1 Graphics in Crusader:
 ![SH1 Graphics](https://github.com/Gaaammmler/Stronghold-Crusader-Sh1-Graphics)
 
@@ -56,6 +63,10 @@ Für mehr informationen zu einem Dateityp klicke auf das Infoicon.
 
 ![img3](https://github.com/Gaaammmler/Gm1KonverterCrossPlatform/blob/master/GMConverterImages/img3.JPG)
 
+Support für die tgx Dateien ist auch vorhanden:
+![preview1](https://user-images.githubusercontent.com/5760157/65734537-a7d53580-e0d3-11e9-8e31-8ce2546aca53.JPG)
+
+Klicke hierzu einfach auf den Gm1/GFX Button um die Ansicht zu ändern(gm/gfx)
 
 Falls du Stronghold 1 Grafiken in Crusader möchtest:
 ![SH1 Graphics](https://github.com/Gaaammmler/Stronghold-Crusader-Sh1-Graphics)
