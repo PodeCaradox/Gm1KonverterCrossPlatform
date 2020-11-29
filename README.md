@@ -9,7 +9,7 @@ Hello Guys,
 
 I created a tool to import/export GM1 and TGX files for Windows and Linux.
 
-If you have any questions, just add me on Discord: Gaaammmler#1397
+If you have any questions, just add me on Discord: PodeCaradox#1397
 
 To download the program just click on the link and download the Converter.zip on the assets symbol.
 
@@ -46,7 +46,7 @@ Deutsch
 
 Hallo Leute ich habe angefangen einen GM1 Exporter/Importer für Windows und Linux zu programmieren.
 
-Falls du fragen hast adde mich auf Discord: Gaaammmler#1397
+Falls du fragen hast adde mich auf Discord: PodeCaradox#1397
 
 Um das Programm zu Donwloaden klicke auf den Link und Downloade die Converter.zip unterhalb dem Assets Symbol.
 
