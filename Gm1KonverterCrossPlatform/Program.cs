@@ -4,7 +4,6 @@ using System.IO;
 using System.Reflection;
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Logging.Serilog;
 using Gm1KonverterCrossPlatform.ViewModels;
 using Gm1KonverterCrossPlatform.Views;
 
@@ -20,13 +19,12 @@ namespace Gm1KonverterCrossPlatform
             BuildAvaloniaApp().Start(AppMain, args); 
         
         }
-     
+
 
         // Avalonia configuration, don't remove; also used by visual designer.
         public static AppBuilder BuildAvaloniaApp()
             => AppBuilder.Configure<App>()
-                .UsePlatformDetect()
-                .LogToDebug();
+                .UsePlatformDetect();
 
         // Your application's entry point. Here you can initialize your MVVM framework, DI
         // container, etc.

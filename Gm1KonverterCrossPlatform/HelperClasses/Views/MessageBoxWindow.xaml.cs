@@ -19,9 +19,7 @@ namespace Gm1KonverterCrossPlatform.HelperClasses.Views
           
             
             this.InitializeComponent();
-            #if DEBUG
-            this.AttachDevTools();
-            #endif
+       
             this.Title = typ.ToString();
             var textBox = this.Get<TextBlock>("textBox");
             textBox.Text = message;

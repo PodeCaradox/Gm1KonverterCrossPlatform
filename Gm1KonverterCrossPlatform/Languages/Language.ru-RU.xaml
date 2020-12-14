@@ -86,12 +86,14 @@
     <x:String x:Key="ImportOrginalStrongholdAnimation">Импорт оригинальной Stronghold Анимация</x:String>
     <x:String x:Key="ExportOrginalStrongholdAnimation">Экспорт оригинальной Stronghold Анимация</x:String>
 
-
-
+    <x:String x:Key="ImportOffsetsFromFile">Import Offsets from File</x:String>
+    <x:String x:Key="ImageSize">Bigimage Width</x:String>
     <x:String x:Key="ExportBigImage">Экспорт большого изображения</x:String>
     <x:String x:Key="ImportBigImage">Импорт большое изображение</x:String>
     <x:String x:Key="OpenLogFile">Открыть Log журнала</x:String>
     <x:String x:Key="ChangeOffsets">Изменить Offsets</x:String>
 
     <x:String x:Key="DataGm1File">Gm1 data fields</x:String>
+    <x:String x:Key="OpenWorkFolder">|  Open Work Folder</x:String>
+    <x:String x:Key="OpenStrongholdFolder">|    Open Stronghold Folder</x:String>
 </controls:ResourceDictionary>

@@ -27,34 +27,29 @@
     <AvaloniaResource Remove="HelperClasses\Views\ChangeColorPalette.xaml" />
     <AvaloniaResource Remove="HelperClasses\Views\MessageBoxWindow.xaml" />
     <AvaloniaResource Remove="Views\InfoWindow.xaml" />
+    <Compile Remove="Views\ChangeColorPalette.xaml.cs" />
+    <Compile Remove="Views\InfoWindow.xaml.cs" />
     <None Remove="HelperClasses\Views\ChangeColorPalette.xaml" />
     <None Remove="HelperClasses\Views\MessageBoxWindow.xaml" />
     <None Remove="Views\InfoWindow.xaml" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="0.9.3" />
-    <PackageReference Include="Avalonia.Desktop" Version="0.9.3" />
-    <PackageReference Include="Avalonia.ReactiveUI" Version="0.9.3" />
-    <PackageReference Include="Costura.Fody" Version="4.1.0" />
-    <PackageReference Include="Fody" Version="6.1.1">
+    <PackageReference Include="Avalonia" Version="0.10.0-rc1" />
+    <PackageReference Include="Avalonia.Desktop" Version="0.10.0-rc1" />
+    <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.0-rc1" />
+    <PackageReference Include="Costura.Fody" Version="5.0.0-alpha0281">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Fody" Version="6.3.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="Veldrid.ImageSharp" Version="4.7.0" />
+    <PackageReference Include="Veldrid.ImageSharp" Version="4.8.0" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="HelperClasses\Views\MessageBoxWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Views\ChangeColorPalette.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Views\InfoWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
     </EmbeddedResource>
   </ItemGroup>

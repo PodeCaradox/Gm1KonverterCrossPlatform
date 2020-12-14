@@ -14,6 +14,7 @@ using System.Linq;
 using Avalonia.Controls;
 using Gm1KonverterCrossPlatform.HelperClasses;
 using Gm1KonverterCrossPlatform.Files;
+using SixLabors.ImageSharp.PixelFormats;
 
 namespace HelperClasses.Gm1Converter
 {
@@ -24,8 +25,7 @@ namespace HelperClasses.Gm1Converter
     {
         #region Public
 
-        private static readonly Color color = Color.Transparent;
-        internal static readonly UInt32 TransparentColorByte = (UInt32)(color.B | (color.G << 8) | (color.R << 16) | (color.A << 24));
+        internal static readonly UInt32 TransparentColorByte = (UInt32)(0 | (0 << 8) | (0 << 16) | (0 << 24));
         public static GM1FileHeader.DataType datatype;
 
         #endregion
@@ -75,7 +75,7 @@ namespace HelperClasses.Gm1Converter
             List<UInt16> colors = new List<UInt16>();
             try
             {
-                var image = Image.Load(filename);
+                var image = Image.Load<Rgba32>(filename);
                 if (width==0) width = image.Width;
                 if(height==0) height = image.Height;
                 for (int y = offsety; y < height + offsety; y += pixelsize)
@@ -88,7 +88,8 @@ namespace HelperClasses.Gm1Converter
                             || ((GM1FileHeader.DataType)type) == GM1FileHeader.DataType.Animations
                             || ((GM1FileHeader.DataType)type) == GM1FileHeader.DataType.TGXConstSize
                             || ((GM1FileHeader.DataType)type) == GM1FileHeader.DataType.NOCompression
-                            || ((GM1FileHeader.DataType)type) == GM1FileHeader.DataType.NOCompression1) ? byte.MaxValue : byte.MinValue;
+                            || ((GM1FileHeader.DataType)type) == GM1FileHeader.DataType.NOCompression1
+                            || ((GM1FileHeader.DataType)type) == GM1FileHeader.DataType.Interface) ? byte.MaxValue : byte.MinValue;
                         if (pixel.A == 0)
                         {
                             colors.Add( (ushort)32767);
@@ -112,7 +113,7 @@ namespace HelperClasses.Gm1Converter
         internal unsafe static WriteableBitmap LoadImageAsBitmap(String filename, ref int width, ref int height, int offsetx = 0, int offsety = 0)
         {
             if (Logger.Loggeractiv) Logger.Log("LoadImage");
-            var image = Image.Load(filename);
+            var image = Image.Load<Rgba32>(filename);
             if (width == 0) width = image.Width;
             if (height == 0) height = image.Height;
             WriteableBitmap bitmap = new WriteableBitmap(new PixelSize(width, height),new Vector(300,300),Avalonia.Platform.PixelFormat.Rgba8888);
@@ -170,6 +171,7 @@ namespace HelperClasses.Gm1Converter
             {
                 for (int j = 0; j < width;)
                 {
+                   
                     countSamePixel = 0;
                     //check for newline
                     for (int z = j; z < width; z++)
@@ -397,7 +399,9 @@ namespace HelperClasses.Gm1Converter
             return array;
         }
 
-        internal static WriteableBitmap CreateBigImage(List<TilesImage> tilesImages)
+      
+
+        internal static WriteableBitmap CreateBigImage(List<TilesImage> tilesImages,int BigImageSize)
         {
             if (Logger.Loggeractiv) Logger.Log("CreateBigImage");
             List<WriteableBitmap> bitmaps = new List<WriteableBitmap>();
@@ -405,12 +409,12 @@ namespace HelperClasses.Gm1Converter
             {
                 bitmaps.Add(item.TileImage);
             }
-            return CreateBigImage(bitmaps);
+            return CreateBigImage(bitmaps, BigImageSize);
         }
 
-        private static unsafe WriteableBitmap CreateBigImage(List<WriteableBitmap> bitmaps)
+        private static unsafe WriteableBitmap CreateBigImage(List<WriteableBitmap> bitmaps, int BigImageSize)
         {
-            int maxwidth = 650;
+            int maxwidth = BigImageSize;
             int maxheight = 0;
             int actualwidth = 0;
             int row = 0;
@@ -486,14 +490,14 @@ namespace HelperClasses.Gm1Converter
             return bigImage;
         }
 
-        internal static WriteableBitmap CreateBigImage(List<TGXImage> imagesTGX)
+        internal static WriteableBitmap CreateBigImage(List<TGXImage> imagesTGX, int BigImageWidth)
         {
             List<WriteableBitmap> bitmaps = new List<WriteableBitmap>();
             foreach (var item in imagesTGX)
             {
                 bitmaps.Add(item.Bitmap);
             }
-            return CreateBigImage(bitmaps);
+            return CreateBigImage(bitmaps, BigImageWidth);
         }
 
         private static byte FindColorPositionInPalette(ushort color,int position, Palette palette, List<ushort>[] paletteImages)

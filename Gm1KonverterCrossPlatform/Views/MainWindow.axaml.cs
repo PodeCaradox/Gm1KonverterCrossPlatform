@@ -2,6 +2,7 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using Avalonia.Utilities;
@@ -11,7 +12,8 @@ using Gm1KonverterCrossPlatform.HelperClasses;
 using Gm1KonverterCrossPlatform.HelperClasses.Views;
 using Gm1KonverterCrossPlatform.ViewModels;
 using HelperClasses.Gm1Converter;
-using SharpDX.WIC;
+using Newtonsoft.Json;
+using SixLabors.ImageSharp.PixelFormats;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
@@ -26,93 +28,63 @@ namespace Gm1KonverterCrossPlatform.Views
 {
     public class MainWindow : Window
     {
-
+        /// <summary>
+        /// 
+        /// </summary>
         private MainWindowViewModel vm;
         public MainWindow()
         {
 
 
             InitializeComponent();
-#if DEBUG
-            this.AttachDevTools();
-#endif
+
             this.DataContextChanged += ViewModelSet;
 
-            ListBox listbox = this.Get<ListBox>("Gm1FilesSelector");
-            listbox.SelectionChanged += SelectedGm1File;
-
-            ListBox tGXImageListBox = this.Get<ListBox>("TGXImageListBox");
-            tGXImageListBox.SelectionChanged += TGXImageChanged;
 
 
-
-
-            ListBox gfxFilesSelector = this.Get<ListBox>("GfxFilesSelector");
-            gfxFilesSelector.SelectionChanged += SelectedGfxFile;
-
-            ListBox workfolderSelector = this.Get<ListBox>("WorkfolderSelector");
-            workfolderSelector.DoubleTapped += OpenWorkfolderDirectory;
-
-            MenuItem workfolderMenueItem = this.Get<MenuItem>("WorkfolderMenueItem");
-            workfolderMenueItem.Click += ChangeWorkfolder;
-            MenuItem crusaderfolderMenueItem = this.Get<MenuItem>("CrusaderfolderMenueItem");
-            crusaderfolderMenueItem.Click += ChangeCrusaderfolder;
-
-            MenuItem openLogFile = this.Get<MenuItem>("OpenLogFile");
-            openLogFile.Click += OpenLogFile;
-
-
-
-            MenuItem createnewGM1MenueItem = this.Get<MenuItem>("CreatenewGM1MenueItem");
-            createnewGM1MenueItem.Click += CreatenewGM1;
-            MenuItem replacewithSavedGM1FileMenueItem = this.Get<MenuItem>("ReplacewithSavedGM1FileMenueItem");
-            replacewithSavedGM1FileMenueItem.Click += ReplacewithSavedGM1FileM;
-
-
-            MenuItem createnewTgxMenueItem = this.Get<MenuItem>("CreatenewTgxMenueItem");
-            createnewTgxMenueItem.Click += CreatenewTgx;
-            MenuItem replacewithSavedTgxFileMenueItem = this.Get<MenuItem>("ReplacewithSavedTgxFileMenueItem");
-            replacewithSavedTgxFileMenueItem.Click += ReplacewithSavedTgxFile;
-
-
-
-            MenuItem exportColortableMenueItem = this.Get<MenuItem>("ExportColortableMenueItem");
-            exportColortableMenueItem.Click += ExportColortable;
-
-            MenuItem importColortableMenueItem = this.Get<MenuItem>("ImportColortableMenueItem");
-            importColortableMenueItem.Click += ImportColortable;
-
-            MenuItem exportBigImageMenueItem = this.Get<MenuItem>("ExportBigImageMenueItem");
-            exportBigImageMenueItem.Click += ExportBigImage;
-
-            MenuItem importBigImageMenueItem = this.Get<MenuItem>("ImportBigImageMenueItem");
-            importBigImageMenueItem.Click += ImportBigImage;
-
-            MenuItem exportImagesMenueItem = this.Get<MenuItem>("ExportImagesMenueItem");
-            exportImagesMenueItem.Click += ExportImages;
-
-            MenuItem importImagesMenueItem = this.Get<MenuItem>("ImportImagesMenueItem");
-            importImagesMenueItem.Click += ImportImages;
-
-            MenuItem exportOrginalStrongholdAnimation = this.Get<MenuItem>("ExportOrginalStrongholdAnimation");
-            exportOrginalStrongholdAnimation.Click += ExportOrginalStrongholdAnimation;
-
-            MenuItem importOrginalStrongholdAnimation = this.Get<MenuItem>("ImportOrginalStrongholdAnimation");
-            importOrginalStrongholdAnimation.Click += ImportOrginalStrongholdAnimation;
-
-            MenuItem importTgxImageMenueItem = this.Get<MenuItem>("ImportTgxImageMenueItem");
-            importTgxImageMenueItem.Click += ImportTgxImage;
-
-            MenuItem exportTgxImageMenueItem = this.Get<MenuItem>("ExportTgxImageMenueItem");
-            exportTgxImageMenueItem.Click += ExportTgxImage;
-
-
-
+            
 
             Image image = this.Get<Image>("HelpIcon");
             image.Tapped += OpenInfoWindow;
         }
 
+        private async void ImportOffsetsFromFile(object sender, RoutedEventArgs e)
+        {
+            String path = vm.UserConfig.WorkFolderPath + Path.DirectorySeparatorChar + "Offsets.json";
+            if (!File.Exists(path)) {
+                OpenFileDialog dialog = new OpenFileDialog();
+                dialog.Directory = vm.UserConfig.WorkFolderPath;
+                dialog.Title = "Select Offset File";
+                dialog.Filters.Add(new FileDialogFilter() { Name = "Text", Extensions = { "json" } });
+                dialog.AllowMultiple = false;
+                var paths = await dialog.ShowAsync(this);
+                if (paths.Length == 0) return;
+                path = paths[0];
+            }
+            var offsetData = File.ReadAllText(path);
+            var dict = JsonConvert.DeserializeObject<Dictionary<int,Point>>(offsetData);
+            foreach (var key in dict.Keys)
+            {
+                var dummy = dict[key];
+                vm.ChangeExeOffset(key,vm.OffsetsBuildings[key], (int)dummy.X, (int)dummy.Y);
+            }
+        }
+
+        private void OpenFolder(object sender, RoutedEventArgs e)
+        {
+            var menueItem = sender as MenuItem;
+            if (menueItem.Name == "OpenStrongholdFolderMenueItem")
+            {
+                Process.Start("explorer.exe", vm.UserConfig.CrusaderPath.Replace(Path.DirectorySeparatorChar + "gm",""));
+            }
+            else
+            {
+                Process.Start("explorer.exe", vm.UserConfig.WorkFolderPath);
+            }
+
+
+           
+        }
 
 
         private void ReplacewithSavedTgxFile(object sender, RoutedEventArgs e)
@@ -346,7 +318,7 @@ namespace Gm1KonverterCrossPlatform.Views
             }
             else
             {
-                int maxwidth = 650;
+                int maxwidth = SixLabors.ImageSharp.Image.Load<Rgba32>(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\BigImage\\" + filewithoutgm1ending + ".png").Width;
                 int fileindex = 0;
                 int offsety = 0;
                 int maxheight = 0;
@@ -362,6 +334,7 @@ namespace Gm1KonverterCrossPlatform.Views
                         int height = image.Height - ((GM1FileHeader.DataType)vm.File.FileHeader.IDataType == GM1FileHeader.DataType.NOCompression ? 7 : 0);
 
                         actualwidth += width;
+                      
                         if (maxwidth <= actualwidth)
                         {
                             offsety += maxheight;
@@ -379,13 +352,14 @@ namespace Gm1KonverterCrossPlatform.Views
                         if (list.Count == 0) continue;
                         width = image.Width;
                         height = image.Height;
-
+                 
                         LoadNewDataForGm1File(fileindex, list, width, height);
                         fileindex++;
-                        offsetx += width;
-
+                        
+                    
 
                         Avalonia.Media.Imaging.Bitmap newimage = Utility.LoadImageAsBitmap(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\BigImage\\" + filewithoutgm1ending + ".png", ref width, ref height, offsetx, offsety);
+                        offsetx += width;
                         vm.TGXImages[counter].Source = newimage;
                         vm.TGXImages[counter].MaxWidth = newimage.PixelSize.Width;
                         vm.TGXImages[counter].MaxHeight = newimage.PixelSize.Height;
@@ -423,9 +397,10 @@ namespace Gm1KonverterCrossPlatform.Views
 
                         LoadNewDataForGm1File(fileindex, list, width, height);
                         fileindex++;
-                        offsetx += width;
+                      
 
                         Avalonia.Media.Imaging.Bitmap newimage = Utility.LoadImageAsBitmap(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\BigImage\\" + filewithoutgm1ending + ".png", ref width, ref height, oldOffsetx, oldOffsety);
+                        offsetx += width;
                         vm.TGXImages[counter].Source = newimage;
                         vm.TGXImages[counter].MaxWidth = newimage.PixelSize.Width;
                         vm.TGXImages[counter].MaxHeight = newimage.PixelSize.Height;
@@ -458,6 +433,7 @@ namespace Gm1KonverterCrossPlatform.Views
 
         private void LoadNewDataForGm1File(int fileindex, List<ushort> list, int width, int height)
         {
+         
             if ((GM1FileHeader.DataType)vm.File.FileHeader.IDataType == GM1FileHeader.DataType.Animations)
             {
                 vm.File.ImagesTGX[fileindex].ConvertImageWithPaletteToByteArray(list, width, height, vm.File.Palette);
@@ -522,7 +498,7 @@ namespace Gm1KonverterCrossPlatform.Views
                 }
                 else
                 {
-                    Utility.CreateBigImage(vm.File.TilesImages).Save(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\BigImage\\" + filewithoutgm1ending + ".png");
+                    Utility.CreateBigImage(vm.File.TilesImages,vm.BigImageWidth).Save(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\BigImage\\" + filewithoutgm1ending + ".png");
                 }
 
             }
@@ -540,7 +516,7 @@ namespace Gm1KonverterCrossPlatform.Views
                 }
                 else
                 {
-                    Utility.CreateBigImage(vm.File.ImagesTGX).Save(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\BigImage\\" + filewithoutgm1ending + ".png"); ;
+                    Utility.CreateBigImage(vm.File.ImagesTGX, vm.BigImageWidth).Save(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\BigImage\\" + filewithoutgm1ending + ".png"); ;
                 }
 
 
@@ -635,10 +611,10 @@ namespace Gm1KonverterCrossPlatform.Views
                 {
                     if (File.Exists(vm.UserConfig.CrusaderPath.Replace("\\gm", String.Empty) + "\\Stronghold Crusader.exe"))
 
-                        _strongholdasBytes = File.ReadAllBytes(vm.UserConfig.CrusaderPath.Replace("\\gm", String.Empty) + "\\Stronghold Crusader.exe");
+                        vm.StrongholdasBytes = File.ReadAllBytes(vm.UserConfig.CrusaderPath.Replace("\\gm", String.Empty) + "\\Stronghold Crusader.exe");
 
                     if (File.Exists(vm.UserConfig.CrusaderPath.Replace("\\gm", String.Empty) + "\\Stronghold_Crusader_Extreme.exe"))
-                        _strongholdExtremeasBytes = File.ReadAllBytes(vm.UserConfig.CrusaderPath.Replace("\\gm", String.Empty) + "\\Stronghold_Crusader_Extreme.exe");
+                        vm.StrongholdExtremeasBytes = File.ReadAllBytes(vm.UserConfig.CrusaderPath.Replace("\\gm", String.Empty) + "\\Stronghold_Crusader_Extreme.exe");
                 }
                 catch (Exception em)
                 {
@@ -653,9 +629,7 @@ namespace Gm1KonverterCrossPlatform.Views
             if (Logger.Loggeractiv) Logger.Log("\n>>SelectedGm1File end");
         }
 
-        private byte[] _strongholdasBytes;
-        private byte[] _strongholdExtremeasBytes;
-        private Point _strongholdadress;
+
         private void TGXImageChanged(object sender, SelectionChangedEventArgs e)
         {
             var listbox = sender as ListBox;
@@ -665,63 +639,21 @@ namespace Gm1KonverterCrossPlatform.Views
             if (dummy is TGXImage) vm.ActualTGXImageSelection = (TGXImage)dummy;
             else vm.ActualTGXImageSelection = null;
             if (vm.File == null || vm.File.FileHeader == null || !vm.File.FileHeader.Name.Contains("anim_castle")) return;
-         
+            Point offset = default;
+            int strongholdValue = 912;
             //Point offset = new Point(2496, 2496);
-            if (index <= 3 || index >= 121 || index == 12 || index == 13 || index == 43 || index == 44)
+            if (vm.OffsetsBuildings.TryGetValue(index, out offset))
             {
                 vm.OffsetExpanderVisible = true;
-                switch (index)
+                vm.Strongholdadress = offset;
+                if (vm.StrongholdasBytes != null)
                 {
-                    case 0:
-                        _strongholdadress = new Point(939615, 939608);
-                        break;
-                    case 1:
-                        _strongholdadress = new Point(939841, 939834);
-                        break;
-                    case 2:
-                        _strongholdadress = new Point(940022, 940015);
-                        break;
-                    case 3:
-                        _strongholdadress = new Point(939728, 939721);
-                        break;
-                    case 12:
-                        _strongholdadress = new Point(939031, 939027);
-                        break;
-                    case 13:
-                        _strongholdadress = new Point(939000, 938996);
-                        break;
-                    case 43:
-                        _strongholdadress = new Point(938969, 938962);
-                        break;
-                    case 44:
-                        _strongholdadress = new Point(938935, 938928);
-                        break;
-                    case 121:
-                        _strongholdadress = new Point(939943, 939936);
-                        break;
-                    case 122:
-                        _strongholdadress = new Point(939943, 939936);
-                        break;
-                    case 123:
-                        _strongholdadress = new Point(939574, 939567);
-                        break;
-                    case 124:
-                        _strongholdadress = new Point(939536, 939529);
-                        break;
-                    case 125:
-                        _strongholdadress = new Point(939574, 939567);
-                        break;
-                    default:
-                        break;
-                }
-                int strongholdValue = 912;
-                if (_strongholdasBytes != null)
-                {
-                    vm.XOffset = unchecked((sbyte)_strongholdasBytes[(int)_strongholdadress.X - strongholdValue]);
-                    vm.YOffset = BitConverter.ToInt32(_strongholdasBytes, (int)_strongholdadress.Y - strongholdValue);
-                    if (index == 12 || index == 13 || index == 43 || index == 44)
+                    vm.XOffset = unchecked((sbyte)vm.StrongholdasBytes[(int)vm.Strongholdadress.X - 912]);
+                    vm.YOffset = BitConverter.ToInt32(vm.StrongholdasBytes, (int)vm.Strongholdadress.Y - 912);
+                    
+                    if (index == 12 || index == 13)
                     {
-                        vm.YOffset = unchecked((sbyte)_strongholdExtremeasBytes[(int)_strongholdadress.Y - strongholdValue]);
+                        vm.YOffset = unchecked((sbyte)vm.StrongholdasBytes[(int)vm.Strongholdadress.Y - 912]);
                     }
                 }
 
@@ -867,7 +799,7 @@ namespace Gm1KonverterCrossPlatform.Views
 
         }
 
-        private void CreatenewGM1(object sender, EventArgs e)
+        private void CreatenewGM1(object sender, RoutedEventArgs e)
         {
             if (Logger.Loggeractiv) Logger.Log("\n>>CreatenewGM1 start");
             Cursor = new Avalonia.Input.Cursor(Avalonia.Input.StandardCursorType.Wait);
@@ -955,48 +887,10 @@ namespace Gm1KonverterCrossPlatform.Views
         }
         private void Button_ChangeOffset(object sender, RoutedEventArgs e)
         {
-            int strongholdValue = 912;
-            var bytesArray = BitConverter.GetBytes(vm.YOffset);
-            if (_strongholdExtremeasBytes != null)
-            {
-                _strongholdExtremeasBytes[(int)_strongholdadress.X] = (byte)vm.XOffset;
-            }
-
-            _strongholdasBytes[(int)_strongholdadress.X - strongholdValue] = (byte)vm.XOffset;
-
             ListBox tGXImageListBox = this.Get<ListBox>("TGXImageListBox");
             var index = tGXImageListBox.SelectedIndex;
-            if (index == 12 || index == 13 || index == 43 || index == 44)
-            {
-                if (_strongholdExtremeasBytes != null)
-                {
-                    _strongholdExtremeasBytes[(int)_strongholdadress.Y] = (byte)vm.YOffset;
-                }
-              
-                _strongholdasBytes[(int)_strongholdadress.Y - strongholdValue] = (byte)vm.YOffset;
-            }
-            else
-            {
-                if (_strongholdExtremeasBytes != null)
-                {
-                    for (int i = 0; i < bytesArray.Length; i++)
-                    {
-
-                        _strongholdExtremeasBytes[(int)_strongholdadress.Y + i] = bytesArray[i];
-
-
-                    }
-                }
-                for (int i = 0; i < bytesArray.Length; i++)
-                {
-                    _strongholdasBytes[(int)_strongholdadress.Y - strongholdValue + i] = bytesArray[i];
-                }
-            }
-
-
-
-            File.WriteAllBytes(vm.UserConfig.CrusaderPath.Replace("\\gm", String.Empty) + "\\Stronghold_Crusader_Extreme.exe", _strongholdExtremeasBytes);
-            File.WriteAllBytes(vm.UserConfig.CrusaderPath.Replace("\\gm", String.Empty) + "\\Stronghold Crusader.exe", _strongholdasBytes);
+            vm.ChangeExeOffset(index, vm.Strongholdadress, vm.XOffset, vm.YOffset);
+           
         }
 
         private void Button_ClickGifExporter(object sender, RoutedEventArgs e)
@@ -1017,14 +911,14 @@ namespace Gm1KonverterCrossPlatform.Views
 
             foreach (var img in listBox.SelectedItems)
             {
-                if (gif.DefaultWidth < ((Image)img).Source.PixelSize.Width) gif.DefaultWidth = ((Image)img).Source.PixelSize.Width;
-                if (gif.DefaultHeight < ((Image)img).Source.PixelSize.Height) gif.DefaultHeight = ((Image)img).Source.PixelSize.Height;
+                if (gif.DefaultWidth < ((Image)img).Source.Size.Width) gif.DefaultWidth = (int)((Image)img).Source.Size.Width;
+                if (gif.DefaultHeight < ((Image)img).Source.Size.Height) gif.DefaultHeight = (int)((Image)img).Source.Size.Height;
             }
 
             foreach (var img in listBox.SelectedItems)
             {
                 Stream imgStream = new MemoryStream();
-                ((Image)img).Source.Save(imgStream);
+                ((Image)img).Source = new Bitmap(imgStream);
                 System.Drawing.Image imageGif = System.Drawing.Image.FromStream(imgStream);
                 gif.WriteFrame(imageGif);
             }

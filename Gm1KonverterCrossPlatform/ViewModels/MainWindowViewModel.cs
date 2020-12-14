@@ -13,6 +13,7 @@ using Gm1KonverterCrossPlatform.HelperClasses;
 using Avalonia;
 using System.Linq;
 using Gm1KonverterCrossPlatform.Views;
+using Newtonsoft.Json;
 
 namespace Gm1KonverterCrossPlatform.ViewModels
 {
@@ -228,6 +229,19 @@ namespace Gm1KonverterCrossPlatform.ViewModels
         }
 
 
+
+        private int _bigImageWidth = 900;
+        public int BigImageWidth
+        {
+            get => _bigImageWidth;
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _bigImageWidth, value);
+            }
+        }
+        
+
+
         private bool gm1PreviewTrue = true;
         public bool Gm1PreviewTrue
         {
@@ -386,6 +400,14 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             get => _actualTGXImageSelection;
             set => this.RaiseAndSetIfChanged(ref _actualTGXImageSelection, value);
         }
+        public Dictionary<int, Point> OffsetsBuildings { get => offsetsBuildings; set => offsetsBuildings = value; }
+        public byte[] StrongholdasBytes { get => _strongholdasBytes; set => _strongholdasBytes = value; }
+        public byte[] StrongholdExtremeasBytes { get => _strongholdExtremeasBytes; set => _strongholdExtremeasBytes = value; }
+        public Point Strongholdadress { get => _strongholdadress; set => _strongholdadress = value; }
+
+        private byte[] _strongholdasBytes;
+        private byte[] _strongholdExtremeasBytes;
+        private Point _strongholdadress;
         #endregion
 
         #region Methods
@@ -602,7 +624,89 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             ShowTGXImgToWindow();
         }
 
-       
+
+
+        #endregion
+
+
+        #region Offsets
+
+        private Dictionary<int, Point> offsetsBuildings = new Dictionary<int, Point>() {
+
+            { 0,new Point(939615, 939608) },
+            { 1,new Point(939841, 939834) },
+            { 2,new Point(940022, 940015) },
+            { 3,new Point(939728, 939721) },
+            { 12,new Point(939000, 938996) },
+            { 13,new Point(939031, 939027) },
+            { 43,new Point(938935, 938928) },
+            { 44,new Point(938969, 938962) },
+            { 121,new Point(939943, 939936) },
+            { 122,new Point(939943, 939936) },
+            { 123,new Point(939574, 939567) },
+            { 124,new Point(939536, 939529) },
+            { 125,new Point(939574, 939567) },
+            { 23,new Point(938858, 938851) }
+    };
+
+        public Dictionary<int, Point> NewOffsetsInExe { get; set; } = new Dictionary<int, Point>();
+        internal void ChangeExeOffset(int index,Point strongholdadress,int xOffset,int yOffset)
+        {
+            if (NewOffsetsInExe.ContainsKey(index))
+            {
+                NewOffsetsInExe[index] = new Point(xOffset, yOffset);
+            }
+            else
+            {
+                NewOffsetsInExe.Add(index, new Point(xOffset, yOffset));
+
+            }
+
+            var offsetData = JsonConvert.SerializeObject(NewOffsetsInExe);
+            System.IO.File.WriteAllText(UserConfig.WorkFolderPath + Path.DirectorySeparatorChar + "Offsets.json", offsetData);
+
+            int strongholdValue = 912;
+            var bytesArray = BitConverter.GetBytes(YOffset);
+            if (_strongholdExtremeasBytes != null)
+            {
+                _strongholdExtremeasBytes[(int)strongholdadress.X] = (byte)xOffset;
+            }
+
+            _strongholdasBytes[(int)strongholdadress.X - strongholdValue] = (byte)xOffset;
+
+     
+            if (index == 12 || index == 13)
+            {
+                if (_strongholdExtremeasBytes != null)
+                {
+                    _strongholdExtremeasBytes[(int)strongholdadress.Y] = (byte)yOffset;
+                }
+
+                _strongholdasBytes[(int)strongholdadress.Y - strongholdValue] = (byte)yOffset;
+            }
+            else
+            {
+                if (_strongholdExtremeasBytes != null)
+                {
+                    for (int i = 0; i < bytesArray.Length; i++)
+                    {
+
+                        _strongholdExtremeasBytes[(int)strongholdadress.Y + i] = bytesArray[i];
+
+
+                    }
+                }
+                for (int i = 0; i < bytesArray.Length; i++)
+                {
+                    _strongholdasBytes[(int)_strongholdadress.Y - strongholdValue + i] = bytesArray[i];
+                }
+            }
+
+
+
+            System.IO.File.WriteAllBytes(UserConfig.CrusaderPath.Replace("\\gm", String.Empty) + "\\Stronghold_Crusader_Extreme.exe", _strongholdExtremeasBytes);
+            System.IO.File.WriteAllBytes(UserConfig.CrusaderPath.Replace("\\gm", String.Empty) + "\\Stronghold Crusader.exe", _strongholdasBytes);
+        }
 
         #endregion
 

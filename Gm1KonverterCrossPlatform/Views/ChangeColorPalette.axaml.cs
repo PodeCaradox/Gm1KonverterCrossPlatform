@@ -19,9 +19,7 @@ namespace Gm1KonverterCrossPlatform.HelperClasses.Views
         public ChangeColorPalette()
         {
             this.InitializeComponent();
-            #if DEBUG
-            this.AttachDevTools();
-            #endif
+           
             this.Closing += WindowClosed;
             image = this.Get<Image>("PaletteImage");
             canvas = this.Get<Canvas>("Cnv");
