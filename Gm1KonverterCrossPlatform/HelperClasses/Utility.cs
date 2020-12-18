@@ -116,7 +116,7 @@ namespace HelperClasses.Gm1Converter
             var image = Image.Load<Rgba32>(filename);
             if (width == 0) width = image.Width;
             if (height == 0) height = image.Height;
-            WriteableBitmap bitmap = new WriteableBitmap(new PixelSize(width, height),new Vector(300,300),Avalonia.Platform.PixelFormat.Rgba8888);
+            WriteableBitmap bitmap = new WriteableBitmap(new PixelSize(width, height),new Vector(96,96),Avalonia.Platform.PixelFormat.Rgba8888);
             using (var bit = bitmap.Lock())
             {
                 try
@@ -444,7 +444,7 @@ namespace HelperClasses.Gm1Converter
             }
 
 
-            WriteableBitmap bigImage = new WriteableBitmap(new Avalonia.PixelSize(maxwidth, maxheight), new Avalonia.Vector(100, 100), Avalonia.Platform.PixelFormat.Bgra8888);// Bgra8888 is device-native and much faster.
+            WriteableBitmap bigImage = new WriteableBitmap(new Avalonia.PixelSize(maxwidth, maxheight), new Avalonia.Vector(96, 96), Avalonia.Platform.PixelFormat.Bgra8888);// Bgra8888 is device-native and much faster.
             using (var buf = bigImage.Lock())
             {
                 int xoffset = 0;

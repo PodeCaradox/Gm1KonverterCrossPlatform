@@ -3,8 +3,13 @@
   <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <OutputType>WinExe</OutputType>
     <TargetFrameworks>net461</TargetFrameworks>
-	<RuntimeIdentifiers>win10-x64;osx;linux-x64</RuntimeIdentifiers>
+	<RuntimeIdentifiers>win10-x64;osx;linux-x64;win7-x32</RuntimeIdentifiers>
     <LangVersion>7.2</LangVersion>
+    <ApplicationIcon>Assets\avalonia-logo.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net461|AnyCPU'">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Compile Update="**\*.xaml.cs">

@@ -46,7 +46,7 @@
                 <MenuItem Header="{DynamicResource ImportImages}" Name="ImportImagesMenueItem" IsEnabled="{Binding ImportButtonEnabled}" Click="ImportImages"/>
                 <Separator/>
                 <MenuItem Header="{DynamicResource ImageSize}" Name="BigImageSizeMenueItem" IsEnabled="{Binding ButtonsEnabled}">
-                    <TextBox Name="BigImageSizeTeytItem" Width="100" Text="{Binding BigImageWidth}"/>
+                    <TextBox Name="BigImageSizeTeytItem" Width="100" Text="{Binding BigImageWidth}" />
                 </MenuItem>
                 <MenuItem Header="{DynamicResource ExportBigImage}" Name="ExportBigImageMenueItem" IsEnabled="{Binding ButtonsEnabled}" Click="ExportBigImage"/>
                 <MenuItem Header="{DynamicResource ImportBigImage}" Name="ImportBigImageMenueItem" IsEnabled="{Binding ImportButtonEnabled}" Click="ImportBigImage"/>

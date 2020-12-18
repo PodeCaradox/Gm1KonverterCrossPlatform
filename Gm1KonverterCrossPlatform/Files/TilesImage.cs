@@ -195,7 +195,7 @@ namespace Gm1KonverterCrossPlatform.Files
                 minusHeight = Puffer;
             }
             height = height - minusHeight;
-            bmp = new WriteableBitmap(new Avalonia.PixelSize(width, height), new Avalonia.Vector(100, 100), Avalonia.Platform.PixelFormat.Bgra8888);// Bgra8888 is device-native and much faster.
+            bmp = new WriteableBitmap(new Avalonia.PixelSize(width, height), new Avalonia.Vector(96, 96), Avalonia.Platform.PixelFormat.Bgra8888);// Bgra8888 is device-native and much faster.
 
             using (var buf = bmp.Lock())
             {

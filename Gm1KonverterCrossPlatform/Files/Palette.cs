@@ -98,7 +98,7 @@ namespace Files.Gm1Converter
                 int height = 8 * pixelSize;
                 int width = 32 * pixelSize;
                 UInt32 colorByte=0;
-                WriteableBitmap bitmap = new WriteableBitmap(new Avalonia.PixelSize(width, height), new Avalonia.Vector(100, 100), Avalonia.Platform.PixelFormat.Bgra8888);// Bgra8888 is device-native and much faster.
+                WriteableBitmap bitmap = new WriteableBitmap(new Avalonia.PixelSize(width, height), new Avalonia.Vector(96, 96), Avalonia.Platform.PixelFormat.Bgra8888);// Bgra8888 is device-native and much faster.
                 using (var buf = bitmap.Lock())
                 {
                     for (int y = 0; y < height; y++)
