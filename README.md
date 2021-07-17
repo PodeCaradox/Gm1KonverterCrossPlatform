@@ -41,6 +41,8 @@ Thanks to
 
 ![metalvoidzz](https://github.com/metalvoidzz) for his tutorial on how to decode GM1 Files
 
+![StrongholdOverlordsMod](https://github.com/StrongholdOverlordsMod) Contributer for future updates.
+
 Deutsch
 ---------
 
