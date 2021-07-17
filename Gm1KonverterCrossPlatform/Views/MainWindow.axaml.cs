@@ -255,7 +255,6 @@ namespace Gm1KonverterCrossPlatform.Views
             if (Logger.Loggeractiv) Logger.Log("\n>>ImportImages start");
             ImportImagesMethod(false);
             if (Logger.Loggeractiv) Logger.Log("\n>>ImportImages end");
-
         }
 
         private void ImportBigImage(object sender, RoutedEventArgs e)
@@ -263,7 +262,6 @@ namespace Gm1KonverterCrossPlatform.Views
             if (Logger.Loggeractiv) Logger.Log("\n>>ImportBigImage start");
             ImportImagesMethod(true);
             if (Logger.Loggeractiv) Logger.Log("\n>>ImportBigImage end");
-
         }
 
         private void ImportImagesMethod(bool bigImage)
@@ -277,7 +275,6 @@ namespace Gm1KonverterCrossPlatform.Views
 
             if (!bigImage)
             {
-
                 var files = Directory.GetFiles(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\Images", "*.png", SearchOption.TopDirectoryOnly);
                 //sort because 11 is before 2
                 files = files.OrderBy(x => x.Length).ThenBy(x => x).ToArray<String>();
@@ -338,10 +335,10 @@ namespace Gm1KonverterCrossPlatform.Views
                         if (list.Count == 0) continue;
                         width = image.Width;
                         height = image.Height;
-                        
+
                         LoadNewDataForGm1File(fileindex, list, width, height);
                         fileindex++;
-                        
+
                         Avalonia.Media.Imaging.Bitmap newimage = Utility.LoadImageAsBitmap(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\BigImage\\" + filewithoutgm1ending + ".png", ref width, ref height, offsetx, offsety);
                         offsetx += width;
                         vm.TGXImages[counter].Source = newimage;
@@ -523,7 +520,6 @@ namespace Gm1KonverterCrossPlatform.Views
                     vm.GeneratePaletteAndImgNew();
                     vm.File.Palette.Bitmaps[fileindex] = bitmap;
                 }
-
             }
             Cursor = new Avalonia.Input.Cursor(Avalonia.Input.StandardCursorType.Arrow);
             vm.ActuellColorTable = vm.File.Palette.Bitmaps[vm.File.Palette.ActualPalette];
@@ -587,7 +583,6 @@ namespace Gm1KonverterCrossPlatform.Views
                     if (Logger.Loggeractiv) Logger.Log("Exception:\n" + em.Message);
                     MessageBoxWindow messageBox = new MessageBoxWindow(MessageBoxWindow.MessageTyp.Info, "Something went wrong: pls add a issue on the Github Page\n\nError:\n" + em.Message);
                     messageBox.Show();
-
                 }
             }
             if (Logger.Loggeractiv) Logger.Log("\n>>SelectedGm1File end");
@@ -784,7 +779,6 @@ namespace Gm1KonverterCrossPlatform.Views
 
         private async void ChangeWorkfolder(object sender, RoutedEventArgs e)
         {
-
             var folderFromTask = await GetFolderAsync(Utility.GetText("Workfolder"), vm.UserConfig.WorkFolderPath);
             vm.UserConfig.WorkFolderPath = folderFromTask;
             vm.LoadWorkfolderFiles();
