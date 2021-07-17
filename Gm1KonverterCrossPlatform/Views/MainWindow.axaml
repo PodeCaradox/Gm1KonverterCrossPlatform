@@ -21,13 +21,8 @@
       <RowDefinition Height="38"/>
       <RowDefinition Height="*"/>
     </Grid.RowDefinitions>
-    <Grid.ColumnDefinitions>
-      <ColumnDefinition Width="250"/>
-      <ColumnDefinition Width="*"/>
-      <ColumnDefinition Width="250"/>
-    </Grid.ColumnDefinitions>
 
-    <Menu DockPanel.Dock="Top" Grid.Row="0" Grid.ColumnSpan="3">
+    <Menu DockPanel.Dock="Top" Grid.Row="0">
       <MenuItem Header="{DynamicResource File}">
         <MenuItem Header="{DynamicResource CreatenewGM1}" Name="CreatenewGM1MenueItem" IsEnabled="{Binding ButtonsEnabled}" Click="CreatenewGM1"/>
         <MenuItem Header="{DynamicResource ReplacewithSavedGM1File}" Name="ReplacewithSavedGM1FileMenueItem" IsEnabled="{Binding ReplaceWithSaveFile}" Click="ReplacewithSavedGM1FileM"/>
@@ -75,7 +70,7 @@
       <MenuItem Header="{DynamicResource OpenStrongholdFolder}" Name="OpenStrongholdFolderMenueItem" Click="OpenFolder"/>
     </Menu>
 
-    <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.ColumnSpan="3">
+    <StackPanel Orientation="Horizontal" Grid.Row="1">
       <StackPanel.Styles>
         <Style Selector="Button">
           <Setter Property="Width" Value="32"/>
@@ -148,144 +143,152 @@
       </Button>
     </StackPanel>
 
-    <Grid Grid.Row="2" Grid.Column="0">
-      <Grid.RowDefinitions>
-        <RowDefinition Height="20"/>
-        <RowDefinition Height="*"/>
-      </Grid.RowDefinitions>
+    <Grid Grid.Row="2">
       <Grid.ColumnDefinitions>
         <ColumnDefinition Width="250"/>
-      </Grid.ColumnDefinitions>
-
-      <TextBlock Text="{DynamicResource Workfolder}" HorizontalAlignment="Left" Grid.Column="0" Grid.Row="0"/>
-      <ListBox Items="{Binding WorkfolderFiles}" SelectionMode="Single" Name="WorkfolderSelector" Grid.Column="0" Grid.Row="1" ScrollViewer.HorizontalScrollBarVisibility="Disabled" DoubleTapped="OpenWorkfolderDirectory"/>
-    </Grid>
-
-    <Grid Grid.Row="2" Grid.Column="2">
-      <Grid.RowDefinitions>
-        <RowDefinition Height="20"/>
-        <RowDefinition Height="Auto"/>
-        <RowDefinition Height="*"/>
-      </Grid.RowDefinitions>
-      <Grid.ColumnDefinitions>
-        <ColumnDefinition Width="250"/>
-      </Grid.ColumnDefinitions>
-
-      <TextBlock Text="{DynamicResource StrongholdFolder}" HorizontalAlignment="Left" Grid.Column="0" Grid.Row="0"/>
-      <ToggleButton Content="{Binding ToggleButtonName}" IsChecked="{Binding Gm1PreviewTrue}" Grid.Column="0" Grid.Row="1"></ToggleButton>
-      <ListBox Items="{Binding StrongholdFiles}" IsVisible="{Binding Gm1PreviewTrue}" SelectionMode="Single" Name="Gm1FilesSelector" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Grid.Column="0" Grid.Row="2" SelectionChanged="SelectedGm1File"/>
-      <ListBox  IsVisible="{Binding GfxPreviewTrue}" Items="{Binding GfxFiles}" SelectionMode="Single" Name="GfxFilesSelector" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Grid.Column="0" Grid.Row="2" SelectionChanged="SelectedGfxFile"/>
-    </Grid>
-
-    <Grid Grid.Row="2" Grid.Column="1">
-      <Grid.RowDefinitions>
-        <RowDefinition Height="Auto"/>
-        <RowDefinition Height="Auto"/>
-        <RowDefinition Height="Auto"/>
-        <RowDefinition Height="Auto"/>
-        <RowDefinition Height="Auto"/>
-        <RowDefinition Height="*"/>
-      </Grid.RowDefinitions>
-      <Grid.ColumnDefinitions>
         <ColumnDefinition Width="*"/>
+        <ColumnDefinition Width="250"/>
       </Grid.ColumnDefinitions>
+      
+      <Grid Grid.Column="0">
+        <Grid.RowDefinitions>
+          <RowDefinition Height="20"/>
+          <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="250"/>
+        </Grid.ColumnDefinitions>
 
-      <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="0" Grid.Column="0">
-        <TextBlock Text="{Binding Filetype}" HorizontalAlignment="Center" Height="20"/>
-        <Image Name="HelpIcon" Margin="10,0,0,0" Source="avares://Gm1KonverterCrossPlatform/Assets/info.png" Tapped="OpenInfoWindow"/>
-      </StackPanel>
+        <TextBlock Text="{DynamicResource Workfolder}" HorizontalAlignment="Left" Grid.Column="0" Grid.Row="0"/>
+        <ListBox Items="{Binding WorkfolderFiles}" SelectionMode="Single" Name="WorkfolderSelector" Grid.Column="0" Grid.Row="1" ScrollViewer.HorizontalScrollBarVisibility="Disabled" DoubleTapped="OpenWorkfolderDirectory"/>
+      </Grid>
 
-      <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="0">
-        <TextBlock Text="{Binding ActualPalette}" IsVisible="{Binding ColorButtonsEnabled}" HorizontalAlignment="Center"/>
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-          <Button IsEnabled="{Binding ColorButtonsEnabled}" Content="««" Width="40" Click="Button_ClickPalleteminus" IsVisible="{Binding ColorButtonsEnabled}" HorizontalAlignment="Center"/>
-          <Image Source="{Binding ActuellColorTable}" IsVisible="{Binding ColorButtonsEnabled}" HorizontalAlignment="Center"/>
-          <Button IsEnabled="{Binding ColorButtonsEnabled}" Content="»»" Width="40" Click="Button_ClickPalleteplus" IsVisible="{Binding ColorButtonsEnabled}" HorizontalAlignment="Center"/>
-          <Button IsEnabled="{Binding ColorButtonsEnabled}" Click="Button_ClickChangeColorTable" IsVisible="{Binding ColorButtonsEnabled}" HorizontalAlignment="Right" Content="{DynamicResource ChangeColorTable}"/>
+      <Grid Grid.Column="2">
+        <Grid.RowDefinitions>
+          <RowDefinition Height="20"/>
+          <RowDefinition Height="Auto"/>
+          <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="250"/>
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Text="{DynamicResource StrongholdFolder}" HorizontalAlignment="Left" Grid.Column="0" Grid.Row="0"/>
+        <ToggleButton Content="{Binding ToggleButtonName}" IsChecked="{Binding Gm1PreviewTrue}" Grid.Column="0" Grid.Row="1"></ToggleButton>
+        <ListBox Items="{Binding StrongholdFiles}" IsVisible="{Binding Gm1PreviewTrue}" SelectionMode="Single" Name="Gm1FilesSelector" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Grid.Column="0" Grid.Row="2" SelectionChanged="SelectedGm1File"/>
+        <ListBox  IsVisible="{Binding GfxPreviewTrue}" Items="{Binding GfxFiles}" SelectionMode="Single" Name="GfxFilesSelector" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Grid.Column="0" Grid.Row="2" SelectionChanged="SelectedGfxFile"/>
+      </Grid>
+
+      <Grid Grid.Column="1">
+        <Grid.RowDefinitions>
+          <RowDefinition Height="Auto"/>
+          <RowDefinition Height="Auto"/>
+          <RowDefinition Height="Auto"/>
+          <RowDefinition Height="Auto"/>
+          <RowDefinition Height="Auto"/>
+          <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="0" Grid.Column="0">
+          <TextBlock Text="{Binding Filetype}" HorizontalAlignment="Center" Height="20"/>
+          <Image Name="HelpIcon" Margin="10,0,0,0" Source="avares://Gm1KonverterCrossPlatform/Assets/info.png" Tapped="OpenInfoWindow"/>
         </StackPanel>
-      </StackPanel>
 
-      <Expander ExpandDirection="Down" Header="{DynamicResource GifExporter}" Grid.Row="2" Grid.Column="0">
-        <StackPanel Orientation="Horizontal">
-          <StackPanel>
-            <TextBlock Text="{DynamicResource SelectGif}"/>
-            <StackPanel Orientation="Horizontal">
-              <TextBlock Text="{DynamicResource Delay}"/>
-              <TextBox Width="100" Text="{Binding Delay}"/>
-            </StackPanel>
+        <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="0">
+          <TextBlock Text="{Binding ActualPalette}" IsVisible="{Binding ColorButtonsEnabled}" HorizontalAlignment="Center"/>
+          <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+            <Button IsEnabled="{Binding ColorButtonsEnabled}" Content="««" Width="40" Click="Button_ClickPalleteminus" IsVisible="{Binding ColorButtonsEnabled}" HorizontalAlignment="Center"/>
+            <Image Source="{Binding ActuellColorTable}" IsVisible="{Binding ColorButtonsEnabled}" HorizontalAlignment="Center"/>
+            <Button IsEnabled="{Binding ColorButtonsEnabled}" Content="»»" Width="40" Click="Button_ClickPalleteplus" IsVisible="{Binding ColorButtonsEnabled}" HorizontalAlignment="Center"/>
+            <Button IsEnabled="{Binding ColorButtonsEnabled}" Click="Button_ClickChangeColorTable" IsVisible="{Binding ColorButtonsEnabled}" HorizontalAlignment="Right" Content="{DynamicResource ChangeColorTable}"/>
           </StackPanel>
-
-          <Button Name="GifExporter"  Content="{DynamicResource ExportGif}" Click="Button_ClickGifExporter"/>
         </StackPanel>
-      </Expander>
 
-      <Expander ExpandDirection="Down" Header="{DynamicResource DataGm1File}"  Name="DataGm1File" Grid.Row="3" Grid.Column="0">
+        <Expander ExpandDirection="Down" Header="{DynamicResource GifExporter}" Grid.Row="2" Grid.Column="0">
+          <StackPanel Orientation="Horizontal">
+            <StackPanel>
+              <TextBlock Text="{DynamicResource SelectGif}"/>
+              <StackPanel Orientation="Horizontal">
+                <TextBlock Text="{DynamicResource Delay}"/>
+                <TextBox Width="100" Text="{Binding Delay}"/>
+              </StackPanel>
+            </StackPanel>
 
-        <Grid DataContext="{Binding ActualTGXImageSelection}">
-          <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-          </Grid.RowDefinitions>
+            <Button Name="GifExporter"  Content="{DynamicResource ExportGif}" Click="Button_ClickGifExporter"/>
+          </StackPanel>
+        </Expander>
 
-          <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="Auto"/>
-          </Grid.ColumnDefinitions>
+        <Expander ExpandDirection="Down" Header="{DynamicResource DataGm1File}"  Name="DataGm1File" Grid.Row="3" Grid.Column="0">
 
-          <TextBlock Grid.Row="0" Grid.Column="0" Text="Width:"/>
-          <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Width}"/>
-          <TextBlock Grid.Row="1" Grid.Column="0" Text="Height:"/>
-          <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Height}"/>
-          <TextBlock Grid.Row="2" Grid.Column="0" Text="TgxWidth:"/>
-          <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding TgxWidth}"/>
-          <TextBlock Grid.Row="3" Grid.Column="0" Text="TgxHeight:"/>
-          <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding TgxHeight}"/>
-          <TextBlock Grid.Row="4" Grid.Column="0" Text="OffsetX:"/>
-          <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding OffsetX}"/>
-          <TextBlock Grid.Row="5" Grid.Column="0" Text="OffsetY:"/>
-          <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding OffsetY}"/>
-          <TextBlock Grid.Row="6" Grid.Column="0" Text="ImagePart:"/>
-          <TextBlock Grid.Row="6" Grid.Column="1" Text="{Binding ImagePart}"/>
-          <TextBlock Grid.Row="7" Grid.Column="0" Text="SubParts:"/>
-          <TextBlock Grid.Row="7" Grid.Column="1" Text="{Binding SubParts}"/>
-          <TextBlock Grid.Row="8" Grid.Column="0" Text="TileOffset:"/>
-          <TextBlock Grid.Row="8" Grid.Column="1" Text="{Binding TileOffset}"/>
-          <TextBlock Grid.Row="9" Grid.Column="0" Text="Direction:"/>
-          <TextBlock Grid.Row="9" Grid.Column="1" Text="{Binding Direction}"/>
-          <TextBlock Grid.Row="10" Grid.Column="0" Text="HorizontalOffsetOfImage:"/>
-          <TextBlock Grid.Row="10" Grid.Column="1" Text="{Binding HorizontalOffsetOfImage}"/>
-          <TextBlock Grid.Row="11" Grid.Column="0" Text="BuildingWidth:"/>
-          <TextBlock Grid.Row="11" Grid.Column="1" Text="{Binding BuildingWidth}"/>
-        </Grid>
-      </Expander>
+          <Grid DataContext="{Binding ActualTGXImageSelection}">
+            <Grid.RowDefinitions>
+              <RowDefinition Height="*"/>
+              <RowDefinition Height="*"/>
+              <RowDefinition Height="*"/>
+              <RowDefinition Height="*"/>
+              <RowDefinition Height="*"/>
+              <RowDefinition Height="*"/>
+              <RowDefinition Height="*"/>
+              <RowDefinition Height="*"/>
+              <RowDefinition Height="*"/>
+              <RowDefinition Height="*"/>
+              <RowDefinition Height="*"/>
+              <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
-      <Expander Grid.Row="4" Grid.Column="0" ExpandDirection="Down" Header="{DynamicResource ChangeOffsets}" IsVisible="{Binding OffsetExpanderVisible}">
-        <StackPanel Orientation="Horizontal">
-          <TextBlock Text="xOffset(min -128/ max 127):"/>
-          <TextBox Name="xOffsetTextBox" Width="100" Text="{Binding XOffset}"/>
-          <TextBlock Text="yOffset:"/>
-          <TextBox Name="yOffsetTextBox" Width="100" Text="{Binding YOffset}" />
-          <Button Click="Button_ChangeOffset" Content="Change Offset"/>
-        </StackPanel>
-      </Expander>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="Auto"/>
+              <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
 
-      <ListBox Items="{Binding TGXImages}" Name="TGXImageListBox"  SelectionMode="Multiple" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Grid.Row="5" Grid.Column="0" SelectionChanged="TGXImageChanged">
-        <ListBox.ItemsPanel>
-          <ItemsPanelTemplate>
-            <WrapPanel Orientation="Horizontal" />
-          </ItemsPanelTemplate>
-        </ListBox.ItemsPanel>
-      </ListBox>
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="Width:"/>
+            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Width}"/>
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="Height:"/>
+            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Height}"/>
+            <TextBlock Grid.Row="2" Grid.Column="0" Text="TgxWidth:"/>
+            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding TgxWidth}"/>
+            <TextBlock Grid.Row="3" Grid.Column="0" Text="TgxHeight:"/>
+            <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding TgxHeight}"/>
+            <TextBlock Grid.Row="4" Grid.Column="0" Text="OffsetX:"/>
+            <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding OffsetX}"/>
+            <TextBlock Grid.Row="5" Grid.Column="0" Text="OffsetY:"/>
+            <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding OffsetY}"/>
+            <TextBlock Grid.Row="6" Grid.Column="0" Text="ImagePart:"/>
+            <TextBlock Grid.Row="6" Grid.Column="1" Text="{Binding ImagePart}"/>
+            <TextBlock Grid.Row="7" Grid.Column="0" Text="SubParts:"/>
+            <TextBlock Grid.Row="7" Grid.Column="1" Text="{Binding SubParts}"/>
+            <TextBlock Grid.Row="8" Grid.Column="0" Text="TileOffset:"/>
+            <TextBlock Grid.Row="8" Grid.Column="1" Text="{Binding TileOffset}"/>
+            <TextBlock Grid.Row="9" Grid.Column="0" Text="Direction:"/>
+            <TextBlock Grid.Row="9" Grid.Column="1" Text="{Binding Direction}"/>
+            <TextBlock Grid.Row="10" Grid.Column="0" Text="HorizontalOffsetOfImage:"/>
+            <TextBlock Grid.Row="10" Grid.Column="1" Text="{Binding HorizontalOffsetOfImage}"/>
+            <TextBlock Grid.Row="11" Grid.Column="0" Text="BuildingWidth:"/>
+            <TextBlock Grid.Row="11" Grid.Column="1" Text="{Binding BuildingWidth}"/>
+          </Grid>
+        </Expander>
+
+        <Expander Grid.Row="4" Grid.Column="0" ExpandDirection="Down" Header="{DynamicResource ChangeOffsets}" IsVisible="{Binding OffsetExpanderVisible}">
+          <StackPanel Orientation="Horizontal">
+            <TextBlock Text="xOffset(min -128/ max 127):"/>
+            <TextBox Name="xOffsetTextBox" Width="100" Text="{Binding XOffset}"/>
+            <TextBlock Text="yOffset:"/>
+            <TextBox Name="yOffsetTextBox" Width="100" Text="{Binding YOffset}" />
+            <Button Click="Button_ChangeOffset" Content="Change Offset"/>
+          </StackPanel>
+        </Expander>
+
+        <ListBox Items="{Binding TGXImages}" Name="TGXImageListBox"  SelectionMode="Multiple" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Grid.Row="5" Grid.Column="0" SelectionChanged="TGXImageChanged">
+          <ListBox.ItemsPanel>
+            <ItemsPanelTemplate>
+              <WrapPanel Orientation="Horizontal" />
+            </ItemsPanelTemplate>
+          </ListBox.ItemsPanel>
+        </ListBox>
+      </Grid>
     </Grid>
   </Grid>
 </Window>
