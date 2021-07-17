@@ -94,6 +94,6 @@
     <x:String x:Key="ChangeOffsets">Изменить Offsets</x:String>
 
     <x:String x:Key="DataGm1File">Gm1 data fields</x:String>
-    <x:String x:Key="OpenWorkFolder">|  Open Work Folder</x:String>
-    <x:String x:Key="OpenStrongholdFolder">|    Open Stronghold Folder</x:String>
+    <x:String x:Key="OpenWorkFolder">Open Work Folder</x:String>
+    <x:String x:Key="OpenStrongholdFolder">Open Stronghold Folder</x:String>
 </controls:ResourceDictionary>

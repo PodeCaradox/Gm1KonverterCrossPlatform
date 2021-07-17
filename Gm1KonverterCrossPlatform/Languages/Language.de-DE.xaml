@@ -92,8 +92,8 @@
     <x:String x:Key="ChangeOffsets">Ändere Offsets</x:String>
     <x:String x:Key="DataGm1File">Gm1 Datafelder</x:String>
     <x:String x:Key="ImportOffsetsFromFile">Import Offsets From File</x:String>
-    <x:String x:Key="OpenWorkFolder">|  Open Work Folder</x:String>
-    <x:String x:Key="OpenStrongholdFolder">|    Open Stronghold Folder</x:String>
+    <x:String x:Key="OpenWorkFolder">Open Work Folder</x:String>
+    <x:String x:Key="OpenStrongholdFolder">Open Stronghold Folder</x:String>
 
 
     
