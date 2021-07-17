@@ -103,7 +103,6 @@
           <Image Source="avares://Gm1KonverterCrossPlatform/Assets/CreateGm1.png" />
         </Panel>
       </Button>
-
       <Button IsEnabled="{Binding ReplaceWithSaveFile}" Click="ReplacewithSavedGM1FileM" ToolTip.Tip="{DynamicResource ReplacewithSavedGM1File}">
         <Panel>
           <Image Source="avares://Gm1KonverterCrossPlatform/Assets/ReplacewithSavedGM1File.png" />
@@ -117,7 +116,6 @@
           <Image Source="avares://Gm1KonverterCrossPlatform/Assets/ExportColortable.png" ToolTip.Tip="{DynamicResource ExportColortable}"/>
         </Panel>
       </Button>
-
       <Button IsEnabled="{Binding ColorButtonsEnabled}" Click="ImportColortable">
         <Panel>
           <Image Source="avares://Gm1KonverterCrossPlatform/Assets/ImportColortable.png" ToolTip.Tip="{DynamicResource ImportColortable}"/>
@@ -131,7 +129,6 @@
           <Image Source="avares://Gm1KonverterCrossPlatform/Assets/ExportImages.png" ToolTip.Tip="{DynamicResource ExportImages}"/>
         </Panel>
       </Button>
-
       <Button IsEnabled="{Binding ImportButtonEnabled}" Click="ImportImages">
         <Panel>
           <Image Source="avares://Gm1KonverterCrossPlatform/Assets/ImportImages.png" ToolTip.Tip="{DynamicResource ImportImages}"/>
@@ -145,7 +142,6 @@
           <Image Source="avares://Gm1KonverterCrossPlatform/Assets/ExportBigImage.png" ToolTip.Tip="{DynamicResource ExportBigImage}"/>
         </Panel>
       </Button>
-
       <Button IsEnabled="{Binding ImportButtonEnabled}" Click="ImportBigImage">
         <Panel>
           <Image Source="avares://Gm1KonverterCrossPlatform/Assets/ImportBigImage.png" ToolTip.Tip="{DynamicResource ImportBigImage}"/>
