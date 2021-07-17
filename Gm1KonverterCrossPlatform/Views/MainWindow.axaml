@@ -1,298 +1,291 @@
 ﻿<Window
-   xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="clr-namespace:Gm1KonverterCrossPlatform.ViewModels;assembly=Gm1KonverterCrossPlatform"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="600"
-        Width="1200"
-        Height="600"
-        x:Class="Gm1KonverterCrossPlatform.Views.MainWindow"
-        Icon="/Assets/avalonia-logo.ico"
-        
-        Title="{DynamicResource GM1Converter}">
+  xmlns="https://github.com/avaloniaui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:vm="clr-namespace:Gm1KonverterCrossPlatform.ViewModels;assembly=Gm1KonverterCrossPlatform"
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="600"
+  Width="1200"
+  Height="600"
+  x:Class="Gm1KonverterCrossPlatform.Views.MainWindow"
+  Icon="/Assets/avalonia-logo.ico"
+  Title="{DynamicResource GM1Converter}">
 
-    <Design.DataContext>
-        <vm:MainWindowViewModel/>
-    </Design.DataContext>
+  <Design.DataContext>
+    <vm:MainWindowViewModel/>
+  </Design.DataContext>
 
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="20"/>
+      <RowDefinition Height="38"/>
+      <RowDefinition Height="*"/>
+    </Grid.RowDefinitions>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="250"/>
+      <ColumnDefinition Width="*"/>
+      <ColumnDefinition Width="250"/>
+    </Grid.ColumnDefinitions>
 
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="20"/>
-            <RowDefinition Height="32"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="250"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="250"/>
-        </Grid.ColumnDefinitions>
-        <Menu DockPanel.Dock="Top" Grid.Row="0" Grid.ColumnSpan="3" >
-            <MenuItem Header="{DynamicResource File}">
+    <Menu DockPanel.Dock="Top" Grid.Row="0" Grid.ColumnSpan="3">
+      <MenuItem Header="{DynamicResource File}">
+        <MenuItem Header="{DynamicResource CreatenewGM1}" Name="CreatenewGM1MenueItem" IsEnabled="{Binding ButtonsEnabled}" Click="CreatenewGM1"/>
+        <MenuItem Header="{DynamicResource ReplacewithSavedGM1File}" Name="ReplacewithSavedGM1FileMenueItem" IsEnabled="{Binding ReplaceWithSaveFile}" Click="ReplacewithSavedGM1FileM"/>
+        <Separator/>
+        <MenuItem Header="{DynamicResource CreatenewTgx}" Name="CreatenewTgxMenueItem" IsEnabled="{Binding TgxButtonExportEnabled}" Click="CreatenewTgx"/>
+        <MenuItem Header="{DynamicResource ReplacewithSavedTgxFile}" Name="ReplacewithSavedTgxFileMenueItem" IsEnabled="{Binding ReplaceWithSaveFileTgx}" Click="ReplacewithSavedTgxFile"/>
+      </MenuItem>
 
-                <MenuItem Header="{DynamicResource CreatenewGM1}" Name="CreatenewGM1MenueItem" IsEnabled="{Binding ButtonsEnabled}" Click="CreatenewGM1"/>
-            <MenuItem Header="{DynamicResource ReplacewithSavedGM1File}" Name="ReplacewithSavedGM1FileMenueItem" IsEnabled="{Binding ReplaceWithSaveFile}" Click="ReplacewithSavedGM1FileM"/>
-            <Separator/>
-            <MenuItem Header="{DynamicResource CreatenewTgx}" Name="CreatenewTgxMenueItem" IsEnabled="{Binding TgxButtonExportEnabled}" Click="CreatenewTgx"/>
-            <MenuItem Header="{DynamicResource ReplacewithSavedTgxFile}" Name="ReplacewithSavedTgxFileMenueItem" IsEnabled="{Binding ReplaceWithSaveFileTgx}" Click="ReplacewithSavedTgxFile"/>
-            </MenuItem>
-            <MenuItem Header="{DynamicResource Edit}">
-                <MenuItem Header="{DynamicResource ExportColortable}" Name="ExportColortableMenueItem" IsEnabled="{Binding ColorButtonsEnabled}" Click="ExportColortable"/>
-                <MenuItem Header="{DynamicResource ImportColortable}" Name="ImportColortableMenueItem" IsEnabled="{Binding ColorButtonsEnabled}" Click="ImportColortable"/>
-                <Separator/>
+      <MenuItem Header="{DynamicResource Edit}">
+        <MenuItem Header="{DynamicResource ExportColortable}" Name="ExportColortableMenueItem" IsEnabled="{Binding ColorButtonsEnabled}" Click="ExportColortable"/>
+        <MenuItem Header="{DynamicResource ImportColortable}" Name="ImportColortableMenueItem" IsEnabled="{Binding ColorButtonsEnabled}" Click="ImportColortable"/>
+        <Separator/>
+        <MenuItem Header="{DynamicResource ExportImages}" Name="ExportImagesMenueItem" IsEnabled="{Binding ButtonsEnabled}" Click="ExportImages"/>
+        <MenuItem Header="{DynamicResource ImportImages}" Name="ImportImagesMenueItem" IsEnabled="{Binding ImportButtonEnabled}" Click="ImportImages"/>
+        <Separator/>
+        <MenuItem Header="{DynamicResource ImageSize}" Name="BigImageSizeMenueItem" IsEnabled="{Binding ButtonsEnabled}">
+          <TextBox Name="BigImageSizeTeytItem" Width="100" Text="{Binding BigImageWidth}" />
+        </MenuItem>
+        <MenuItem Header="{DynamicResource ExportBigImage}" Name="ExportBigImageMenueItem" IsEnabled="{Binding ButtonsEnabled}" Click="ExportBigImage"/>
+        <MenuItem Header="{DynamicResource ImportBigImage}" Name="ImportBigImageMenueItem" IsEnabled="{Binding ImportButtonEnabled}" Click="ImportBigImage"/>
+        <Separator/>
+        <MenuItem Header="{DynamicResource ExportTgxImage}" Name="ExportTgxImageMenueItem" IsEnabled="{Binding TgxButtonExportEnabled}" Click="ExportTgxImage"/>
+        <MenuItem Header="{DynamicResource ImportTgxImage}" Name="ImportTgxImageMenueItem" IsEnabled="{Binding TgxButtonImportEnabled}" Click="ImportTgxImage"/>
+        <Separator/>
+        <MenuItem Header="{DynamicResource ImportOffsetsFromFile}" Name="ImportOffsetsFromFileMenueItem" Click="ImportOffsetsFromFile" />
+        <Separator/>
+        <MenuItem Header="{DynamicResource ExportOrginalStrongholdAnimation}" Name="ExportOrginalStrongholdAnimation" IsEnabled="{Binding OrginalStrongholdAnimationButtonEnabled}" Click="ExportOrginalStrongholdAnimation"/>
+        <MenuItem Header="{DynamicResource ImportOrginalStrongholdAnimation}" Name="ImportOrginalStrongholdAnimation" IsEnabled="{Binding OrginalStrongholdAnimationButtonEnabled}" Click="ImportOrginalStrongholdAnimation"/>
+      </MenuItem>
 
-                <MenuItem Header="{DynamicResource ExportImages}" Name="ExportImagesMenueItem" IsEnabled="{Binding ButtonsEnabled}" Click="ExportImages"/>
-                <MenuItem Header="{DynamicResource ImportImages}" Name="ImportImagesMenueItem" IsEnabled="{Binding ImportButtonEnabled}" Click="ImportImages"/>
-                <Separator/>
-                <MenuItem Header="{DynamicResource ImageSize}" Name="BigImageSizeMenueItem" IsEnabled="{Binding ButtonsEnabled}">
-                    <TextBox Name="BigImageSizeTeytItem" Width="100" Text="{Binding BigImageWidth}" />
-                </MenuItem>
-                <MenuItem Header="{DynamicResource ExportBigImage}" Name="ExportBigImageMenueItem" IsEnabled="{Binding ButtonsEnabled}" Click="ExportBigImage"/>
-                <MenuItem Header="{DynamicResource ImportBigImage}" Name="ImportBigImageMenueItem" IsEnabled="{Binding ImportButtonEnabled}" Click="ImportBigImage"/>
-                <Separator/>
-                <MenuItem Header="{DynamicResource ExportTgxImage}" Name="ExportTgxImageMenueItem" IsEnabled="{Binding TgxButtonExportEnabled}" Click="ExportTgxImage"/>
-                <MenuItem Header="{DynamicResource ImportTgxImage}" Name="ImportTgxImageMenueItem" IsEnabled="{Binding TgxButtonImportEnabled}" Click="ImportTgxImage"/>
-                <Separator/>
-                <MenuItem Header="{DynamicResource ImportOffsetsFromFile}" Name="ImportOffsetsFromFileMenueItem" Click="ImportOffsetsFromFile" />
-                <Separator/>
-                <MenuItem Header="{DynamicResource ExportOrginalStrongholdAnimation}" Name="ExportOrginalStrongholdAnimation" IsEnabled="{Binding OrginalStrongholdAnimationButtonEnabled}" Click="ExportOrginalStrongholdAnimation"/>
-                <MenuItem Header="{DynamicResource ImportOrginalStrongholdAnimation}" Name="ImportOrginalStrongholdAnimation" IsEnabled="{Binding OrginalStrongholdAnimationButtonEnabled}" Click="ImportOrginalStrongholdAnimation"/>
+      <MenuItem Header="{DynamicResource Options}">
+        <MenuItem Header="{DynamicResource Workfolder}" Name="WorkfolderMenueItem" Click="ChangeWorkfolder"/>
+        <Separator/>
+        <MenuItem Header="{DynamicResource StrongholdFolder}" Name="CrusaderfolderMenueItem" Click="ChangeCrusaderfolder"/>
+        <Separator/>
+        <CheckBox Content="{DynamicResource OpenFolderafterExport}" Name="UserConfigOpenFolderafterExport" IsChecked="{Binding OpenFolderAfterExport}"/>
+        <Separator/>
+        <CheckBox Content="{DynamicResource ActivateLogger}" IsChecked="{Binding LoggerActiv}"/>
+        <MenuItem Header="{DynamicResource OpenLogFile}" Name="OpenLogFile" Click="OpenLogFile"/>
+        <Separator/>
+        <ComboBox Items="{Binding Languages}" SelectedItem="{Binding ActualLanguage}"></ComboBox>
+      </MenuItem>
 
+      <MenuItem Header="{DynamicResource OpenWorkFolder}" Name="OpenWorkFolderMenueItem" Click="OpenFolder"/>
+      <MenuItem Header="{DynamicResource OpenStrongholdFolder}" Name="OpenStrongholdFolderMenueItem" Click="OpenFolder"/>
+    </Menu>
 
-            </MenuItem>
-            <MenuItem Header="{DynamicResource Options}">
-                <MenuItem Header="{DynamicResource Workfolder}" Name="WorkfolderMenueItem" Click="ChangeWorkfolder"/>
-                <Separator/>
-                <MenuItem Header="{DynamicResource StrongholdFolder}" Name="CrusaderfolderMenueItem" Click="ChangeCrusaderfolder"/>
-                <Separator/>
-                <CheckBox Content="{DynamicResource OpenFolderafterExport}" Name="UserConfigOpenFolderafterExport" IsChecked="{Binding OpenFolderAfterExport}"/>
-                <Separator/>
-                <CheckBox Content="{DynamicResource ActivateLogger}" IsChecked="{Binding LoggerActiv}"/>
-                <MenuItem Header="{DynamicResource OpenLogFile}" Name="OpenLogFile" Click="OpenLogFile"/>
-                <Separator/>
-                <ComboBox Items="{Binding Languages}" SelectedItem="{Binding ActualLanguage}"></ComboBox>
-            </MenuItem>
-            <MenuItem Header="{DynamicResource OpenWorkFolder}" Name="OpenWorkFolderMenueItem" Click="OpenFolder">
-            </MenuItem>
-            <MenuItem Header="{DynamicResource OpenStrongholdFolder}" Name="OpenStrongholdFolderMenueItem" Click="OpenFolder">
-            </MenuItem>
-        </Menu>
+    <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.ColumnSpan="3">
+      <StackPanel.Styles>
+        <Style Selector="Button">
+          <Setter Property="Width" Value="32"/>
+          <Setter Property="Height" Value="32"/>
+          <Setter Property="Margin" Value="2"/>
+          <Setter Property="Cursor" Value="9"/>
+        </Style>
+        <Style Selector="Image">
+          <Setter Property="Width" Value="24"/>
+          <Setter Property="Height" Value="24"/>
+          <Setter Property="VerticalAlignment" Value="Center"/>
+          <Setter Property="HorizontalAlignment" Value="Center"/>
+        </Style>
+        <Style Selector="Separator">
+          <Setter Property="Width" Value="1"/>
+          <Setter Property="Height" Value="32"/>
+          <Setter Property="Margin" Value="10, 2"/>
+          <Setter Property="Background" Value="Gray"/>
+        </Style>
+      </StackPanel.Styles>
 
-        <Menu DockPanel.Dock="Top" Grid.Row="1" Grid.ColumnSpan="3">
-            <MenuItem IsEnabled="{Binding ButtonsEnabled}" Click="CreatenewGM1" ToolTip.Tip="{DynamicResource CreatenewGM1}">
-                <MenuItem.Header>
-                    <Image Source="avares://Gm1KonverterCrossPlatform/Assets/CreateGm1.png" />
-            </MenuItem.Header>
-            </MenuItem>
-			<Separator/>
-			<MenuItem IsEnabled="{Binding ReplaceWithSaveFile}" Click="ReplacewithSavedGM1FileM" ToolTip.Tip="{DynamicResource ReplacewithSavedGM1File}">
-				<MenuItem.Header>
-					<Image Source="avares://Gm1KonverterCrossPlatform/Assets/ReplacewithSavedGM1File.png" />
-				</MenuItem.Header>
-			</MenuItem>
-			<Separator/>
-			<Separator/>
+      <Button IsEnabled="{Binding ButtonsEnabled}" Click="CreatenewGM1" ToolTip.Tip="{DynamicResource CreatenewGM1}">
+        <Panel>
+          <Image Source="avares://Gm1KonverterCrossPlatform/Assets/CreateGm1.png" />
+        </Panel>
+      </Button>
+      <Button IsEnabled="{Binding ReplaceWithSaveFile}" Click="ReplacewithSavedGM1FileM" ToolTip.Tip="{DynamicResource ReplacewithSavedGM1File}">
+        <Panel>
+          <Image Source="avares://Gm1KonverterCrossPlatform/Assets/ReplacewithSavedGM1File.png" />
+        </Panel>
+      </Button>
 
-			<MenuItem IsEnabled="{Binding ColorButtonsEnabled}" Click="ExportColortable">
-				<MenuItem.Header>
-					<Image Source="avares://Gm1KonverterCrossPlatform/Assets/ExportColortable.png" ToolTip.Tip="{DynamicResource ExportColortable}"/>
-				</MenuItem.Header>
-			</MenuItem>
-			<Separator/>
-			<MenuItem IsEnabled="{Binding ColorButtonsEnabled}" Click="ImportColortable">
-				<MenuItem.Header>
-					<Image Source="avares://Gm1KonverterCrossPlatform/Assets/ImportColortable.png" ToolTip.Tip="{DynamicResource ImportColortable}"/>
-				</MenuItem.Header>
-			</MenuItem>
-			<Separator/>
-			<Separator/>
-			<MenuItem IsEnabled="{Binding ButtonsEnabled}" Click="ExportImages">
-				<MenuItem.Header>
-					<Image Source="avares://Gm1KonverterCrossPlatform/Assets/ExportImages.png" ToolTip.Tip="{DynamicResource ExportImages}"/>
-				</MenuItem.Header>
-			</MenuItem>
-			<Separator/>
-			<MenuItem IsEnabled="{Binding ImportButtonEnabled}" Click="ImportImages">
-				<MenuItem.Header>
-					<Image Source="avares://Gm1KonverterCrossPlatform/Assets/ImportImages.png" ToolTip.Tip="{DynamicResource ImportImages}"/>
-				</MenuItem.Header>
-			</MenuItem>
-			<Separator/>
-			<Separator/>
-			<MenuItem IsEnabled="{Binding ButtonsEnabled}" Click="ExportBigImage">
-				<MenuItem.Header>
-					<Image Source="avares://Gm1KonverterCrossPlatform/Assets/ExportBigImage.png" ToolTip.Tip="{DynamicResource ExportBigImage}"/>
-				</MenuItem.Header>
-			</MenuItem>
-			<Separator/>
-			<MenuItem IsEnabled="{Binding ImportButtonEnabled}" Click="ImportBigImage">
-				<MenuItem.Header>
-					<Image Source="avares://Gm1KonverterCrossPlatform/Assets/ImportBigImage.png" ToolTip.Tip="{DynamicResource ImportBigImage}"/>
-				</MenuItem.Header>
-			</MenuItem>
-        </Menu>
+      <Separator/>
 
-        <Grid Grid.Row="2" Grid.Column="0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="20"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="250"/>
-            </Grid.ColumnDefinitions>
-            <TextBlock Text="{DynamicResource Workfolder}" HorizontalAlignment="Left" Grid.Column="0" Grid.Row="0"/>
-            <ListBox Items="{Binding WorkfolderFiles}" SelectionMode="Single" Name="WorkfolderSelector" Grid.Column="0" Grid.Row="1" ScrollViewer.HorizontalScrollBarVisibility="Disabled" DoubleTapped="OpenWorkfolderDirectory"/>
-        </Grid>
+      <Button IsEnabled="{Binding ColorButtonsEnabled}" Click="ExportColortable">
+        <Panel>
+          <Image Source="avares://Gm1KonverterCrossPlatform/Assets/ExportColortable.png" ToolTip.Tip="{DynamicResource ExportColortable}"/>
+        </Panel>
+      </Button>
+      <Button IsEnabled="{Binding ColorButtonsEnabled}" Click="ImportColortable">
+        <Panel>
+          <Image Source="avares://Gm1KonverterCrossPlatform/Assets/ImportColortable.png" ToolTip.Tip="{DynamicResource ImportColortable}"/>
+        </Panel>
+      </Button>
 
-        <Grid Grid.Row="2" Grid.Column="2" >
-            <Grid.RowDefinitions>
-                <RowDefinition Height="20"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="250"/>
-            </Grid.ColumnDefinitions>
-            <TextBlock Text="{DynamicResource StrongholdFolder}" HorizontalAlignment="Left" Grid.Column="0" Grid.Row="0"/>
-            <ToggleButton Content="{Binding ToggleButtonName}" IsChecked="{Binding Gm1PreviewTrue}" Grid.Column="0" Grid.Row="1"></ToggleButton>
-            <ListBox Items="{Binding StrongholdFiles}" IsVisible="{Binding Gm1PreviewTrue}" SelectionMode="Single" Name="Gm1FilesSelector" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Grid.Column="0" Grid.Row="2" SelectionChanged="SelectedGm1File"/>
-            <ListBox  IsVisible="{Binding GfxPreviewTrue}" Items="{Binding GfxFiles}" SelectionMode="Single" Name="GfxFilesSelector" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Grid.Column="0" Grid.Row="2" SelectionChanged="SelectedGfxFile"/>
-        </Grid>
+      <Separator/>
 
+      <Button IsEnabled="{Binding ButtonsEnabled}" Click="ExportImages">
+        <Panel>
+          <Image Source="avares://Gm1KonverterCrossPlatform/Assets/ExportImages.png" ToolTip.Tip="{DynamicResource ExportImages}"/>
+        </Panel>
+      </Button>
+      <Button IsEnabled="{Binding ImportButtonEnabled}" Click="ImportImages">
+        <Panel>
+          <Image Source="avares://Gm1KonverterCrossPlatform/Assets/ImportImages.png" ToolTip.Tip="{DynamicResource ImportImages}"/>
+        </Panel>
+      </Button>
 
-        <Grid Grid.Column="1" Grid.Row="2">
-            <Grid.RowDefinitions>
+      <Separator/>
 
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
+      <Button IsEnabled="{Binding ButtonsEnabled}" Click="ExportBigImage">
+        <Panel>
+          <Image Source="avares://Gm1KonverterCrossPlatform/Assets/ExportBigImage.png" ToolTip.Tip="{DynamicResource ExportBigImage}"/>
+        </Panel>
+      </Button>
+      <Button IsEnabled="{Binding ImportButtonEnabled}" Click="ImportBigImage">
+        <Panel>
+          <Image Source="avares://Gm1KonverterCrossPlatform/Assets/ImportBigImage.png" ToolTip.Tip="{DynamicResource ImportBigImage}"/>
+        </Panel>
+      </Button>
+    </StackPanel>
 
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="0" Grid.Column="0">
+    <Grid Grid.Row="2" Grid.Column="0">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="20"/>
+        <RowDefinition Height="*"/>
+      </Grid.RowDefinitions>
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="250"/>
+      </Grid.ColumnDefinitions>
 
-                <TextBlock Text="{Binding Filetype}" HorizontalAlignment="Center" Height="20"/>
-                <Image Name="HelpIcon" Margin="10,0,0,0" Source="avares://Gm1KonverterCrossPlatform/Assets/info.png" Tapped="OpenInfoWindow"/>
-            </StackPanel>
-
-
-
-            <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="0">
-                <TextBlock Text="{Binding ActualPalette}" IsVisible="{Binding ColorButtonsEnabled}" HorizontalAlignment="Center"/>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <Button IsEnabled="{Binding ColorButtonsEnabled}" Content="««" Width="40" Click="Button_ClickPalleteminus" IsVisible="{Binding ColorButtonsEnabled}" HorizontalAlignment="Center"/>
-                    <Image Source="{Binding ActuellColorTable}" IsVisible="{Binding ColorButtonsEnabled}" HorizontalAlignment="Center"/>
-                    <Button IsEnabled="{Binding ColorButtonsEnabled}" Content="»»" Width="40" Click="Button_ClickPalleteplus" IsVisible="{Binding ColorButtonsEnabled}" HorizontalAlignment="Center"/>
-
-                    <Button IsEnabled="{Binding ColorButtonsEnabled}" Click="Button_ClickChangeColorTable" IsVisible="{Binding ColorButtonsEnabled}" HorizontalAlignment="Right" Content="{DynamicResource ChangeColorTable}"/>
-                </StackPanel>
-            </StackPanel>
-
-
-
-            <Expander ExpandDirection="Down" Header="{DynamicResource GifExporter}" Grid.Row="2" Grid.Column="0">
-                <StackPanel Orientation="Horizontal">
-                    <StackPanel>
-                        <TextBlock Text="{DynamicResource SelectGif}"/>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="{DynamicResource Delay}"/>
-                            <TextBox Width="100" Text="{Binding Delay}"/>
-                        </StackPanel>
-                    </StackPanel>
-
-                    <Button Name="GifExporter"  Content="{DynamicResource ExportGif}" Click="Button_ClickGifExporter"/>
-
-                </StackPanel>
-
-            </Expander>
-
-            <Expander ExpandDirection="Down" Header="{DynamicResource DataGm1File}"  Name="DataGm1File" Grid.Row="3" Grid.Column="0">
-
-                <Grid DataContext="{Binding ActualTGXImageSelection}">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-
-
-                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Width:"/>
-                    <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Width}"/>
-                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Height:"/>
-                    <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Height}"/>
-                    <TextBlock Grid.Row="2" Grid.Column="0" Text="TgxWidth:"/>
-                    <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding TgxWidth}"/>
-                    <TextBlock Grid.Row="3" Grid.Column="0" Text="TgxHeight:"/>
-                    <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding TgxHeight}"/>
-                    <TextBlock Grid.Row="4" Grid.Column="0" Text="OffsetX:"/>
-                    <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding OffsetX}"/>
-                    <TextBlock Grid.Row="5" Grid.Column="0" Text="OffsetY:"/>
-                    <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding OffsetY}"/>
-                    <TextBlock Grid.Row="6" Grid.Column="0" Text="ImagePart:"/>
-                    <TextBlock Grid.Row="6" Grid.Column="1" Text="{Binding ImagePart}"/>
-                    <TextBlock Grid.Row="7" Grid.Column="0" Text="SubParts:"/>
-                    <TextBlock Grid.Row="7" Grid.Column="1" Text="{Binding SubParts}"/>
-                    <TextBlock Grid.Row="8" Grid.Column="0" Text="TileOffset:"/>
-                    <TextBlock Grid.Row="8" Grid.Column="1" Text="{Binding TileOffset}"/>
-                    <TextBlock Grid.Row="9" Grid.Column="0" Text="Direction:"/>
-                    <TextBlock Grid.Row="9" Grid.Column="1" Text="{Binding Direction}"/>
-                    <TextBlock Grid.Row="10" Grid.Column="0" Text="HorizontalOffsetOfImage:"/>
-                    <TextBlock Grid.Row="10" Grid.Column="1" Text="{Binding HorizontalOffsetOfImage}"/>
-                    <TextBlock Grid.Row="11" Grid.Column="0" Text="BuildingWidth:"/>
-                    <TextBlock Grid.Row="11" Grid.Column="1" Text="{Binding BuildingWidth}"/>
-
-
-                </Grid>
-            </Expander>
-
-
-            <Expander Grid.Row="4" Grid.Column="0" ExpandDirection="Down" Header="{DynamicResource ChangeOffsets}" IsVisible="{Binding OffsetExpanderVisible}">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="xOffset(min -128/ max 127):"/>
-                    <TextBox Name="xOffsetTextBox" Width="100" Text="{Binding XOffset}"/>
-                    <TextBlock Text="yOffset:"/>
-                    <TextBox Name="yOffsetTextBox" Width="100" Text="{Binding YOffset}" />
-                    <Button Click="Button_ChangeOffset" Content="Change Offset"/>
-                </StackPanel>
-
-
-            </Expander>
-
-            <ListBox Items="{Binding TGXImages}" Name="TGXImageListBox"  SelectionMode="Multiple" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Grid.Row="5" Grid.Column="0" SelectionChanged="TGXImageChanged">
-                <ListBox.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <WrapPanel Orientation="Horizontal" />
-                    </ItemsPanelTemplate>
-                </ListBox.ItemsPanel>
-            </ListBox>
-        </Grid>
+      <TextBlock Text="{DynamicResource Workfolder}" HorizontalAlignment="Left" Grid.Column="0" Grid.Row="0"/>
+      <ListBox Items="{Binding WorkfolderFiles}" SelectionMode="Single" Name="WorkfolderSelector" Grid.Column="0" Grid.Row="1" ScrollViewer.HorizontalScrollBarVisibility="Disabled" DoubleTapped="OpenWorkfolderDirectory"/>
     </Grid>
 
+    <Grid Grid.Row="2" Grid.Column="2">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="20"/>
+        <RowDefinition Height="Auto"/>
+        <RowDefinition Height="*"/>
+      </Grid.RowDefinitions>
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="250"/>
+      </Grid.ColumnDefinitions>
 
+      <TextBlock Text="{DynamicResource StrongholdFolder}" HorizontalAlignment="Left" Grid.Column="0" Grid.Row="0"/>
+      <ToggleButton Content="{Binding ToggleButtonName}" IsChecked="{Binding Gm1PreviewTrue}" Grid.Column="0" Grid.Row="1"></ToggleButton>
+      <ListBox Items="{Binding StrongholdFiles}" IsVisible="{Binding Gm1PreviewTrue}" SelectionMode="Single" Name="Gm1FilesSelector" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Grid.Column="0" Grid.Row="2" SelectionChanged="SelectedGm1File"/>
+      <ListBox  IsVisible="{Binding GfxPreviewTrue}" Items="{Binding GfxFiles}" SelectionMode="Single" Name="GfxFilesSelector" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Grid.Column="0" Grid.Row="2" SelectionChanged="SelectedGfxFile"/>
+    </Grid>
 
+    <Grid Grid.Row="2" Grid.Column="1">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="Auto"/>
+        <RowDefinition Height="Auto"/>
+        <RowDefinition Height="Auto"/>
+        <RowDefinition Height="Auto"/>
+        <RowDefinition Height="Auto"/>
+        <RowDefinition Height="*"/>
+      </Grid.RowDefinitions>
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*"/>
+      </Grid.ColumnDefinitions>
 
+      <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="0" Grid.Column="0">
+        <TextBlock Text="{Binding Filetype}" HorizontalAlignment="Center" Height="20"/>
+        <Image Name="HelpIcon" Margin="10,0,0,0" Source="avares://Gm1KonverterCrossPlatform/Assets/info.png" Tapped="OpenInfoWindow"/>
+      </StackPanel>
 
+      <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="0">
+        <TextBlock Text="{Binding ActualPalette}" IsVisible="{Binding ColorButtonsEnabled}" HorizontalAlignment="Center"/>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+          <Button IsEnabled="{Binding ColorButtonsEnabled}" Content="««" Width="40" Click="Button_ClickPalleteminus" IsVisible="{Binding ColorButtonsEnabled}" HorizontalAlignment="Center"/>
+          <Image Source="{Binding ActuellColorTable}" IsVisible="{Binding ColorButtonsEnabled}" HorizontalAlignment="Center"/>
+          <Button IsEnabled="{Binding ColorButtonsEnabled}" Content="»»" Width="40" Click="Button_ClickPalleteplus" IsVisible="{Binding ColorButtonsEnabled}" HorizontalAlignment="Center"/>
+          <Button IsEnabled="{Binding ColorButtonsEnabled}" Click="Button_ClickChangeColorTable" IsVisible="{Binding ColorButtonsEnabled}" HorizontalAlignment="Right" Content="{DynamicResource ChangeColorTable}"/>
+        </StackPanel>
+      </StackPanel>
 
+      <Expander ExpandDirection="Down" Header="{DynamicResource GifExporter}" Grid.Row="2" Grid.Column="0">
+        <StackPanel Orientation="Horizontal">
+          <StackPanel>
+            <TextBlock Text="{DynamicResource SelectGif}"/>
+            <StackPanel Orientation="Horizontal">
+              <TextBlock Text="{DynamicResource Delay}"/>
+              <TextBox Width="100" Text="{Binding Delay}"/>
+            </StackPanel>
+          </StackPanel>
 
+          <Button Name="GifExporter"  Content="{DynamicResource ExportGif}" Click="Button_ClickGifExporter"/>
+        </StackPanel>
+      </Expander>
 
+      <Expander ExpandDirection="Down" Header="{DynamicResource DataGm1File}"  Name="DataGm1File" Grid.Row="3" Grid.Column="0">
 
+        <Grid DataContext="{Binding ActualTGXImageSelection}">
+          <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+          </Grid.RowDefinitions>
+
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+          </Grid.ColumnDefinitions>
+
+          <TextBlock Grid.Row="0" Grid.Column="0" Text="Width:"/>
+          <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Width}"/>
+          <TextBlock Grid.Row="1" Grid.Column="0" Text="Height:"/>
+          <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Height}"/>
+          <TextBlock Grid.Row="2" Grid.Column="0" Text="TgxWidth:"/>
+          <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding TgxWidth}"/>
+          <TextBlock Grid.Row="3" Grid.Column="0" Text="TgxHeight:"/>
+          <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding TgxHeight}"/>
+          <TextBlock Grid.Row="4" Grid.Column="0" Text="OffsetX:"/>
+          <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding OffsetX}"/>
+          <TextBlock Grid.Row="5" Grid.Column="0" Text="OffsetY:"/>
+          <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding OffsetY}"/>
+          <TextBlock Grid.Row="6" Grid.Column="0" Text="ImagePart:"/>
+          <TextBlock Grid.Row="6" Grid.Column="1" Text="{Binding ImagePart}"/>
+          <TextBlock Grid.Row="7" Grid.Column="0" Text="SubParts:"/>
+          <TextBlock Grid.Row="7" Grid.Column="1" Text="{Binding SubParts}"/>
+          <TextBlock Grid.Row="8" Grid.Column="0" Text="TileOffset:"/>
+          <TextBlock Grid.Row="8" Grid.Column="1" Text="{Binding TileOffset}"/>
+          <TextBlock Grid.Row="9" Grid.Column="0" Text="Direction:"/>
+          <TextBlock Grid.Row="9" Grid.Column="1" Text="{Binding Direction}"/>
+          <TextBlock Grid.Row="10" Grid.Column="0" Text="HorizontalOffsetOfImage:"/>
+          <TextBlock Grid.Row="10" Grid.Column="1" Text="{Binding HorizontalOffsetOfImage}"/>
+          <TextBlock Grid.Row="11" Grid.Column="0" Text="BuildingWidth:"/>
+          <TextBlock Grid.Row="11" Grid.Column="1" Text="{Binding BuildingWidth}"/>
+        </Grid>
+      </Expander>
+
+      <Expander Grid.Row="4" Grid.Column="0" ExpandDirection="Down" Header="{DynamicResource ChangeOffsets}" IsVisible="{Binding OffsetExpanderVisible}">
+        <StackPanel Orientation="Horizontal">
+          <TextBlock Text="xOffset(min -128/ max 127):"/>
+          <TextBox Name="xOffsetTextBox" Width="100" Text="{Binding XOffset}"/>
+          <TextBlock Text="yOffset:"/>
+          <TextBox Name="yOffsetTextBox" Width="100" Text="{Binding YOffset}" />
+          <Button Click="Button_ChangeOffset" Content="Change Offset"/>
+        </StackPanel>
+      </Expander>
+
+      <ListBox Items="{Binding TGXImages}" Name="TGXImageListBox"  SelectionMode="Multiple" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Grid.Row="5" Grid.Column="0" SelectionChanged="TGXImageChanged">
+        <ListBox.ItemsPanel>
+          <ItemsPanelTemplate>
+            <WrapPanel Orientation="Horizontal" />
+          </ItemsPanelTemplate>
+        </ListBox.ItemsPanel>
+      </ListBox>
+    </Grid>
+  </Grid>
 </Window>
