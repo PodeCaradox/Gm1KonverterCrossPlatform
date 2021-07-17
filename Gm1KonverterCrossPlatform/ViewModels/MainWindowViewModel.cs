@@ -666,7 +666,7 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             System.IO.File.WriteAllText(UserConfig.WorkFolderPath + Path.DirectorySeparatorChar + "Offsets.json", offsetData);
 
             int strongholdValue = 912;
-            var bytesArray = BitConverter.GetBytes(YOffset);
+            var bytesArray = BitConverter.GetBytes(yOffset);
             if (_strongholdExtremeasBytes != null)
             {
                 _strongholdExtremeasBytes[(int)strongholdadress.X] = (byte)xOffset;
@@ -698,7 +698,7 @@ namespace Gm1KonverterCrossPlatform.ViewModels
                 }
                 for (int i = 0; i < bytesArray.Length; i++)
                 {
-                    _strongholdasBytes[(int)_strongholdadress.Y - strongholdValue + i] = bytesArray[i];
+                    _strongholdasBytes[(int)strongholdadress.Y - strongholdValue + i] = bytesArray[i];
                 }
             }
 

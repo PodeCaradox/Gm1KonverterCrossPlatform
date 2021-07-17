@@ -51,6 +51,13 @@ namespace Gm1KonverterCrossPlatform.Views
             }
             var offsetData = File.ReadAllText(path);
             var dict = JsonConvert.DeserializeObject<Dictionary<int,Point>>(offsetData);
+
+            if (vm.StrongholdasBytes == null && File.Exists(vm.UserConfig.CrusaderPath.Replace("\\gm", String.Empty) + "\\Stronghold Crusader.exe"))
+                vm.StrongholdasBytes = File.ReadAllBytes(vm.UserConfig.CrusaderPath.Replace("\\gm", String.Empty) + "\\Stronghold Crusader.exe");
+
+            if (vm.StrongholdExtremeasBytes == null && File.Exists(vm.UserConfig.CrusaderPath.Replace("\\gm", String.Empty) + "\\Stronghold_Crusader_Extreme.exe"))
+                vm.StrongholdExtremeasBytes = File.ReadAllBytes(vm.UserConfig.CrusaderPath.Replace("\\gm", String.Empty) + "\\Stronghold_Crusader_Extreme.exe");
+
             foreach (var key in dict.Keys)
             {
                 var dummy = dict[key];
