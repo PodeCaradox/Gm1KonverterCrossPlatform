@@ -174,9 +174,9 @@
         </Grid.ColumnDefinitions>
 
         <TextBlock Text="{DynamicResource StrongholdFolder}" HorizontalAlignment="Left" Grid.Column="0" Grid.Row="0"/>
-        <ToggleButton Content="{Binding ToggleButtonName}" IsChecked="{Binding Gm1PreviewTrue}" Grid.Column="0" Grid.Row="1"></ToggleButton>
-        <ListBox Items="{Binding StrongholdFiles}" IsVisible="{Binding Gm1PreviewTrue}" SelectionMode="Single" Name="Gm1FilesSelector" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Grid.Column="0" Grid.Row="2" SelectionChanged="SelectedGm1File"/>
-        <ListBox  IsVisible="{Binding GfxPreviewTrue}" Items="{Binding GfxFiles}" SelectionMode="Single" Name="GfxFilesSelector" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Grid.Column="0" Grid.Row="2" SelectionChanged="SelectedGfxFile"/>
+        <ToggleButton Content="{Binding ToggleButtonName}" IsChecked="{Binding Gm1PreviewTrue}" Grid.Column="0" Grid.Row="1"/>
+        <ListBox IsVisible="{Binding Gm1PreviewTrue}" Items="{Binding StrongholdFiles}" SelectionMode="Single" Name="Gm1FilesSelector" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Grid.Column="0" Grid.Row="2" SelectionChanged="SelectedGm1File"/>
+        <ListBox IsVisible="{Binding GfxPreviewTrue}" Items="{Binding GfxFiles}" SelectionMode="Single" Name="GfxFilesSelector" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Grid.Column="0" Grid.Row="2" SelectionChanged="SelectedGfxFile"/>
       </Grid>
 
       <Grid Grid.Column="1">
@@ -222,7 +222,6 @@
         </Expander>
 
         <Expander ExpandDirection="Down" Header="{DynamicResource DataGm1File}"  Name="DataGm1File" Grid.Row="3" Grid.Column="0">
-
           <Grid DataContext="{Binding ActualTGXImageSelection}">
             <Grid.RowDefinitions>
               <RowDefinition Height="*"/>
