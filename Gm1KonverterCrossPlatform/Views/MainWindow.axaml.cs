@@ -749,6 +749,13 @@ namespace Gm1KonverterCrossPlatform.Views
             }
         }
 
+        private async void SetLanguage(object sender, RoutedEventArgs e)
+        {
+            MenuItem source = e.Source as MenuItem;
+            UserConfig.Languages language = (UserConfig.Languages)source.Header;
+            vm.ActualLanguage = language;
+        }
+
         private void CreatenewGM1(object sender, RoutedEventArgs e)
         {
             if (Logger.Loggeractiv) Logger.Log("\n>>CreatenewGM1 start");

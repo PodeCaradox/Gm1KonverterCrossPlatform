@@ -81,7 +81,13 @@
           <CheckBox Content="{DynamicResource ActivateLogger}" IsChecked="{Binding LoggerActiv}"/>
           <MenuItem Header="{DynamicResource OpenLogFile}" Name="OpenLogFile" Click="OpenLogFile"/>
           <Separator/>
-          <ComboBox Items="{Binding Languages}" SelectedItem="{Binding ActualLanguage}"/>
+          <MenuItem Items="{Binding Languages}" Click="SetLanguage">
+            <MenuItem.Header>
+              <MultiBinding StringFormat="Language ({0})">
+                <Binding Path="ActualLanguage"/>
+              </MultiBinding>
+            </MenuItem.Header>
+          </MenuItem>
         </MenuItem>
       </Menu>
       
