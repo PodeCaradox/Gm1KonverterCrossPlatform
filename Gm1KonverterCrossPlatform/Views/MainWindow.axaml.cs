@@ -749,7 +749,7 @@ namespace Gm1KonverterCrossPlatform.Views
             }
         }
 
-        private async void SetLanguage(object sender, RoutedEventArgs e)
+        private async void ChangeLanguage(object sender, RoutedEventArgs e)
         {
             MenuItem source = e.Source as MenuItem;
             UserConfig.Languages language = (UserConfig.Languages)source.Header;

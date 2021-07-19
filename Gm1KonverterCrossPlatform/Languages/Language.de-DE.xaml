@@ -95,6 +95,5 @@
     <x:String x:Key="OpenWorkFolder">Open Work Folder</x:String>
     <x:String x:Key="OpenStrongholdFolder">Open Stronghold Folder</x:String>
 
-
-    
+    <x:String x:Key="Language">Sprache</x:String>
 </controls:ResourceDictionary>
