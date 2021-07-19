@@ -12,10 +12,10 @@ namespace Gm1KonverterCrossPlatform.TexturePack
         public String Name;
         public float StrongholdVersion;
         public float VersionNumber;
+
         public TexturePack()
         {
            
-
         }
     }
 }
