@@ -19,7 +19,6 @@ namespace Gm1KonverterCrossPlatform.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase, IDisposable
     {
-
         #region Variables
 
         private UserConfig userConfig;
@@ -27,21 +26,16 @@ namespace Gm1KonverterCrossPlatform.ViewModels
         private String colorAsText = "";
         public String ColorAsText
         {
-
             get => colorAsText;
             set
             {
                 this.RaiseAndSetIfChanged(ref colorAsText, value);
-
-
             }
         }
-
         
         private UserConfig.Languages actualLanguage = UserConfig.Languages.English;
         public UserConfig.Languages ActualLanguage
         {
-
             get => actualLanguage;
             set {
                 this.RaiseAndSetIfChanged(ref actualLanguage, value);
@@ -55,34 +49,26 @@ namespace Gm1KonverterCrossPlatform.ViewModels
         {
             if (File == null) return; 
             Filetype = Utility.GetText("Datatype") + ((GM1FileHeader.DataType)File.FileHeader.IDataType);
-           if(File.Palette!=null) ActualPalette = Utility.GetText("Palette") + (File.Palette.ActualPalette + 1);
-
-
+            if(File.Palette!=null) ActualPalette = Utility.GetText("Palette") + (File.Palette.ActualPalette + 1);
         }
 
         private UserConfig.Languages[] languages = new UserConfig.Languages[]{ UserConfig.Languages.Deutsch, UserConfig.Languages.English, UserConfig.Languages.Русский };
         public UserConfig.Languages[] Languages
         {
-
             get => languages;
             set => this.RaiseAndSetIfChanged(ref languages, value);
         }
-
-     
+        
         private String filetype = "Datatype: ";
         public String Filetype
         {
-
             get => filetype;
             set => this.RaiseAndSetIfChanged(ref filetype, value);
         }
 
-    
-
         private Image gifImage;
         public Image GIFImage
         {
-
             get => gifImage;
             set => this.RaiseAndSetIfChanged(ref gifImage, value);
         }
@@ -90,14 +76,13 @@ namespace Gm1KonverterCrossPlatform.ViewModels
         private int delay = 100;
         public int Delay
         {
-
             get => delay;
             set => this.RaiseAndSetIfChanged(ref delay, value);
         }
+
         private int red = 0;
         public int Red
         {
-
             get => red;
             set {
                 if (value > 255)
@@ -116,7 +101,6 @@ namespace Gm1KonverterCrossPlatform.ViewModels
         private int blue = 0;
         public int Blue
         {
-
             get => blue;
             set
             {
@@ -128,7 +112,6 @@ namespace Gm1KonverterCrossPlatform.ViewModels
                 {
                     value = 0;
                 }
-
                 this.RaiseAndSetIfChanged(ref blue, value);
                 ColorAsText = "#" + 255.ToString("X2") + red.ToString("X2") + green.ToString("X2") + blue.ToString("X2");
             }
@@ -137,7 +120,6 @@ namespace Gm1KonverterCrossPlatform.ViewModels
         private int green = 0;
         public int Green
         {
-
             get => green;
             set
             {
@@ -153,17 +135,13 @@ namespace Gm1KonverterCrossPlatform.ViewModels
                 ColorAsText = "#" + 255.ToString("X2") + red.ToString("X2") + green.ToString("X2") + blue.ToString("X2");
             }
         }
-
-      
+        
         private String actualPalette = Utility.GetText("Palette")+"1";
         public String ActualPalette
         {
-
             get => actualPalette;
             set => this.RaiseAndSetIfChanged(ref actualPalette, value);
         }
-
-        
 
         internal String[] workfolderFiles;
         internal String[] WorkfolderFiles
@@ -189,11 +167,9 @@ namespace Gm1KonverterCrossPlatform.ViewModels
         private bool buttonsEnabled = false;
         public bool ButtonsEnabled
         {
-
             get => buttonsEnabled;
             set => this.RaiseAndSetIfChanged(ref buttonsEnabled, value);
         }
-        
 
         private bool offsetExpanderVisible = false;
         public bool OffsetExpanderVisible
@@ -228,8 +204,6 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             }
         }
 
-
-
         private int _bigImageWidth = 900;
         public int BigImageWidth
         {
@@ -239,13 +213,10 @@ namespace Gm1KonverterCrossPlatform.ViewModels
                 this.RaiseAndSetIfChanged(ref _bigImageWidth, value);
             }
         }
-        
-
 
         private bool gm1PreviewTrue = true;
         public bool Gm1PreviewTrue
         {
-
             get => gm1PreviewTrue;
             set {
                 this.RaiseAndSetIfChanged(ref gm1PreviewTrue, value);
@@ -264,7 +235,6 @@ namespace Gm1KonverterCrossPlatform.ViewModels
         private bool gfxPreviewTrue = false;
         public bool GfxPreviewTrue
         {
-
             get => gfxPreviewTrue;
             set => this.RaiseAndSetIfChanged(ref gfxPreviewTrue, value);
         }
@@ -272,16 +242,13 @@ namespace Gm1KonverterCrossPlatform.ViewModels
         private String toggleButtonName = "GM1";
         public String ToggleButtonName
         {
-
             get => toggleButtonName;
             set => this.RaiseAndSetIfChanged(ref toggleButtonName, value);
         }
 
-
         private bool openFolderAfterExport = false;
         public bool OpenFolderAfterExport
         {
-
             get => openFolderAfterExport;
             set
             {
@@ -293,7 +260,6 @@ namespace Gm1KonverterCrossPlatform.ViewModels
         private bool loggerActiv = false;
         public bool LoggerActiv
         {
-
             get => loggerActiv;
             set {
                 this.RaiseAndSetIfChanged(ref loggerActiv, value);
@@ -305,7 +271,6 @@ namespace Gm1KonverterCrossPlatform.ViewModels
         private bool replaceWithSaveFile = false;
         public bool ReplaceWithSaveFile
         {
-
             get => replaceWithSaveFile;
             set => this.RaiseAndSetIfChanged(ref replaceWithSaveFile, value);
         }
@@ -313,27 +278,20 @@ namespace Gm1KonverterCrossPlatform.ViewModels
         private bool replaceWithSaveFileTgx = false;
         public bool ReplaceWithSaveFileTgx
         {
-
             get => replaceWithSaveFileTgx;
             set => this.RaiseAndSetIfChanged(ref replaceWithSaveFileTgx, value);
         }
 
-
-        
-
         private bool colorButtonsEnabled = false;
         public bool ColorButtonsEnabled
         {
-
             get => colorButtonsEnabled;
             set => this.RaiseAndSetIfChanged(ref colorButtonsEnabled, value);
         }
-
         
         private bool tgxButtonExportEnabled = false;
         public bool TgxButtonExportEnabled
         {
-
             get => tgxButtonExportEnabled;
             set => this.RaiseAndSetIfChanged(ref tgxButtonExportEnabled, value);
         }
@@ -341,14 +299,12 @@ namespace Gm1KonverterCrossPlatform.ViewModels
         private bool tgxButtonImportEnabled = false;
         public bool TgxButtonImportEnabled
         {
-
             get => tgxButtonImportEnabled;
             set => this.RaiseAndSetIfChanged(ref tgxButtonImportEnabled, value);
         }
         private bool orginalStrongholdAnimationButtonEnabled = false;
         public bool OrginalStrongholdAnimationButtonEnabled
         {
-
             get => orginalStrongholdAnimationButtonEnabled;
             set => this.RaiseAndSetIfChanged(ref orginalStrongholdAnimationButtonEnabled, value);
         }
@@ -356,7 +312,6 @@ namespace Gm1KonverterCrossPlatform.ViewModels
         private bool importButtonEnabled = false;
         public bool ImportButtonEnabled
         {
-
             get => importButtonEnabled;
             set => this.RaiseAndSetIfChanged(ref importButtonEnabled, value);
         }
@@ -364,7 +319,6 @@ namespace Gm1KonverterCrossPlatform.ViewModels
         private bool decodeButtonEnabled = false;
         public bool DecodeButtonEnabled
         {
-
             get => decodeButtonEnabled;
             set => this.RaiseAndSetIfChanged(ref decodeButtonEnabled, value);
         }
@@ -384,22 +338,22 @@ namespace Gm1KonverterCrossPlatform.ViewModels
         }
 
         internal ObservableCollection<Image> images = new ObservableCollection<Image>();
-
         internal ObservableCollection<Image> TGXImages
         {
             get => images;
             set => this.RaiseAndSetIfChanged(ref images, value);
         }
+
         internal DecodedFile File { get; set; }
         public UserConfig UserConfig { get => userConfig; set => userConfig = value; }
 
         internal TGXImage _actualTGXImageSelection;
-
         internal TGXImage ActualTGXImageSelection
         {
             get => _actualTGXImageSelection;
             set => this.RaiseAndSetIfChanged(ref _actualTGXImageSelection, value);
         }
+
         public Dictionary<int, Point> OffsetsBuildings { get => offsetsBuildings; set => offsetsBuildings = value; }
         public byte[] StrongholdasBytes { get => _strongholdasBytes; set => _strongholdasBytes = value; }
         public byte[] StrongholdExtremeasBytes { get => _strongholdExtremeasBytes; set => _strongholdExtremeasBytes = value; }
@@ -447,9 +401,7 @@ namespace Gm1KonverterCrossPlatform.ViewModels
                 catch (Exception e)
                 {
                     Logger.Log(e.Message.ToString());
-                   
                 }
-               
             }
             Logger.Log("LoadStrongholdFiles end");
         }
@@ -464,11 +416,8 @@ namespace Gm1KonverterCrossPlatform.ViewModels
                 }
 
                 WorkfolderFiles = Utility.GetDirectoryNames(userConfig.WorkFolderPath);
-
             }
-
         }
-
 
         /// <summary>
         /// Decode the GM1 File to IMGS and Headers
@@ -499,7 +448,6 @@ namespace Gm1KonverterCrossPlatform.ViewModels
                 {
                     ShowTGXImgToWindow();
                 }
-
             }
             catch (Exception e)
             {
@@ -508,13 +456,10 @@ namespace Gm1KonverterCrossPlatform.ViewModels
                 messageBox.Show();
                 return false;
             }
-        
 
             return true;
-
-
-          
         }
+
         public TGXImage TgxImage;
         internal void DecodeTgxData(string fileName, MainWindow mainWindow)
         {
@@ -523,10 +468,10 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             var array = Utility.FileToByteArray(userConfig.CrusaderPath.Replace("\\gm",String.Empty)+"\\gfx" + "\\" + fileName);
             TgxImage = new TGXImage();
 
-            TgxImage.TgxWidth = BitConverter.ToUInt32(array,  0);
-            TgxImage.TgxHeight = BitConverter.ToUInt32(array,  4);
+            TgxImage.TgxWidth = BitConverter.ToUInt32(array, 0);
+            TgxImage.TgxHeight = BitConverter.ToUInt32(array, 4);
             TgxImage.ImgFileAsBytearray = new byte[array.Length - 8];
-            Array.Copy(array, 8, TgxImage.ImgFileAsBytearray,0, TgxImage.ImgFileAsBytearray.Length);
+            Array.Copy(array, 8, TgxImage.ImgFileAsBytearray, 0, TgxImage.ImgFileAsBytearray.Length);
             TgxImage.CreateImageFromByteArray(null,true);
             TGXImages = new ObservableCollection<Image>();
             var bitmap = TgxImage.Bitmap;
@@ -536,8 +481,7 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             image.Tag = TgxImage;
             image.Source = bitmap;
             TGXImages.Add(image);
-
-         }
+        }
 
         /// <summary>
         /// Show the Imgs to the main Window
@@ -554,7 +498,6 @@ namespace Gm1KonverterCrossPlatform.ViewModels
                 image.MaxWidth = File.TilesImages[j].Width;
                 image.Source = bitmap;
                 TGXImages.Add(image);
-
             }
         }
 
@@ -573,13 +516,11 @@ namespace Gm1KonverterCrossPlatform.ViewModels
                 image.Source = bitmap;
                 image.Tag = File.ImagesTGX[j];
                 TGXImages.Add(image);
-
             }
             if (File.Palette!=null)
             {
                 ActuellColorTable = File.Palette.Bitmaps[File.Palette.ActualPalette];
             }
-           
         }
 
         /// <summary>
@@ -590,25 +531,25 @@ namespace Gm1KonverterCrossPlatform.ViewModels
         {
             if (number>0)
             {
-                    if (File.Palette.ActualPalette+ number>9)
-                    {
+                if (File.Palette.ActualPalette + number > 9)
+                {
                     File.Palette.ActualPalette = 0;
-                    }
-                    else
-                    {
+                }
+                else
+                {
                     File.Palette.ActualPalette += number;
-                    }
+                }
             }
             else
             {
-                    if (File.Palette.ActualPalette + number < 0)
-                    {
+                if (File.Palette.ActualPalette + number < 0)
+                {
                     File.Palette.ActualPalette = 9;
-                    }
-                    else
-                    {
+                }
+                else
+                {
                     File.Palette.ActualPalette += number;
-                    }
+                }
             }
             ActualPalette = Utility.GetText("Palette")  + (File.Palette.ActualPalette+1);
             File.DecodeGm1File(File.FileArray, File.FileHeader.Name);
@@ -624,15 +565,12 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             ShowTGXImgToWindow();
         }
 
-
-
         #endregion
 
 
         #region Offsets
 
         private Dictionary<int, Point> offsetsBuildings = new Dictionary<int, Point>() {
-
             { 0,new Point(939615, 939608) },
             { 1,new Point(939841, 939834) },
             { 2,new Point(940022, 940015) },
@@ -647,10 +585,10 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             { 124,new Point(939536, 939529) },
             { 125,new Point(939574, 939567) },
             { 23,new Point(938858, 938851) }
-    };
-
+        };
+        
         public Dictionary<int, Point> NewOffsetsInExe { get; set; } = new Dictionary<int, Point>();
-        internal void ChangeExeOffset(int index,Point strongholdadress,int xOffset,int yOffset)
+        internal void ChangeExeOffset(int index, Point strongholdadress, int xOffset, int yOffset)
         {
             if (NewOffsetsInExe.ContainsKey(index))
             {
@@ -659,7 +597,6 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             else
             {
                 NewOffsetsInExe.Add(index, new Point(xOffset, yOffset));
-
             }
 
             var offsetData = JsonConvert.SerializeObject(NewOffsetsInExe);
@@ -673,7 +610,6 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             }
 
             _strongholdasBytes[(int)strongholdadress.X - strongholdValue] = (byte)xOffset;
-
      
             if (index == 12 || index == 13)
             {
@@ -690,10 +626,7 @@ namespace Gm1KonverterCrossPlatform.ViewModels
                 {
                     for (int i = 0; i < bytesArray.Length; i++)
                     {
-
                         _strongholdExtremeasBytes[(int)strongholdadress.Y + i] = bytesArray[i];
-
-
                     }
                 }
                 for (int i = 0; i < bytesArray.Length; i++)
@@ -701,8 +634,6 @@ namespace Gm1KonverterCrossPlatform.ViewModels
                     _strongholdasBytes[(int)strongholdadress.Y - strongholdValue + i] = bytesArray[i];
                 }
             }
-
-
 
             System.IO.File.WriteAllBytes(UserConfig.CrusaderPath.Replace("\\gm", String.Empty) + "\\Stronghold_Crusader_Extreme.exe", _strongholdExtremeasBytes);
             System.IO.File.WriteAllBytes(UserConfig.CrusaderPath.Replace("\\gm", String.Empty) + "\\Stronghold Crusader.exe", _strongholdasBytes);

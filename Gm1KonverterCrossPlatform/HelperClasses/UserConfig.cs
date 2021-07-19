@@ -1,8 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace Gm1KonverterCrossPlatform.HelperClasses
 {
@@ -12,9 +10,10 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
 
         #region Variables
         private Languages language = Languages.English;
-        private String path;
-        private String crusaderPath;
-        private String workFolderPath;
+        private readonly string path;
+        private readonly string fileName = "UserConfig.txt";
+        private string crusaderPath;
+        private string workFolderPath;
         private bool openFolderAfterExport;
         private bool activateLogger;
         #endregion
@@ -23,7 +22,8 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
 
         public UserConfig()
         {
-            path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Gm1ConverterCrossPlatform";
+            string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            path = Path.Combine(appData, "Gm1ConverterCrossPlatform");
         }
 
         #endregion
@@ -49,12 +49,12 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
                 SaveData();
             }
         }
+
         public string WorkFolderPath
         {
             get => workFolderPath;
             set
             {
-
                 workFolderPath = value;
                 SaveData();
             }
@@ -84,14 +84,16 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
         #endregion
 
         #region Methods
+
         /// <summary>
         /// Load the Userconfig
         /// </summary>
         public void LoadData()
         {
-            if (Directory.Exists(path))
+            string filePath = Path.Combine(path, fileName);
+            if (File.Exists(filePath))
             {
-                var json = File.ReadAllText(path + "\\UserConfig.txt");
+                string json = File.ReadAllText(filePath);
                 var obj = JsonConvert.DeserializeObject<UserConfig>(json);
                 crusaderPath = obj.CrusaderPath;
                 workFolderPath = obj.WorkFolderPath;
@@ -99,24 +101,22 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
                 activateLogger = obj.ActivateLogger;
                 language = obj.Language;
             }
-            else
-            {
-                Directory.CreateDirectory(path);
-            }
-
         }
+
         /// <summary>
         /// Save the Userconfig
         /// </summary>
         private void SaveData()
         {
-            String json = JsonConvert.SerializeObject(this);
-            File.WriteAllText(path + "\\UserConfig.txt", json);
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+            string filePath = Path.Combine(path, fileName);
+            string json = JsonConvert.SerializeObject(this, Formatting.Indented);
+            File.WriteAllText(filePath, json);
         }
 
         #endregion
-
-
-
     }
 }
