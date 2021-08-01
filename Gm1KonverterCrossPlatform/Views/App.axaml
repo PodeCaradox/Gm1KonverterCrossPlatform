@@ -7,16 +7,6 @@
     <local:ViewLocator/>
   </Application.DataTemplates>
 
-  <Application.Resources>
-    <ResourceDictionary>
-      <ResourceDictionary.MergedDictionaries>
-        <ResourceInclude Source='/Languages/Language.ru_RU.xaml'/>
-        <ResourceInclude Source='/Languages/Language.de_DE.xaml'/>
-        <ResourceInclude Source='/Languages/Language.en_US.xaml'/>
-      </ResourceDictionary.MergedDictionaries>
-    </ResourceDictionary>
-  </Application.Resources>
-
   <Application.Styles>
     <StyleInclude Source="avares://Avalonia.Themes.Default/DefaultTheme.xaml"/>
     <StyleInclude Source="avares://Gm1KonverterCrossPlatform/Styles/Core.xaml"/>
