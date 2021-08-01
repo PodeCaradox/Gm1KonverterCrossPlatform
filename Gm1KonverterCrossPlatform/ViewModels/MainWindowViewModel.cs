@@ -10,7 +10,6 @@ using System.IO;
 using System;
 using Gm1KonverterCrossPlatform.HelperClasses;
 using Avalonia;
-using System.Linq;
 using Gm1KonverterCrossPlatform.Views;
 using Newtonsoft.Json;
 
@@ -22,8 +21,8 @@ namespace Gm1KonverterCrossPlatform.ViewModels
 
         private UserConfig userConfig;
 
-        private String colorAsText = "";
-        public String ColorAsText
+        private string colorAsText = "";
+        public string ColorAsText
         {
             get => colorAsText;
             set
@@ -77,8 +76,8 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             }
         }
 
-        private String filetype = "Datatype: ";
-        public String Filetype
+        private string filetype = "Datatype: ";
+        public string Filetype
         {
             get => filetype;
             set => this.RaiseAndSetIfChanged(ref filetype, value);
@@ -154,29 +153,29 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             }
         }
         
-        private String actualPalette = Utility.GetText("Palette")+"1";
-        public String ActualPalette
+        private string actualPalette = Utility.GetText("Palette")+"1";
+        public string ActualPalette
         {
             get => actualPalette;
             set => this.RaiseAndSetIfChanged(ref actualPalette, value);
         }
 
-        internal String[] workfolderFiles;
-        internal String[] WorkfolderFiles
+        internal string[] workfolderFiles;
+        internal string[] WorkfolderFiles
         {
             get => workfolderFiles;
             set => this.RaiseAndSetIfChanged(ref workfolderFiles, value);
         }
 
-        internal String[] strongholdFiles;
-        internal String[] StrongholdFiles
+        internal string[] strongholdFiles;
+        internal string[] StrongholdFiles
         {
             get => strongholdFiles;
             set => this.RaiseAndSetIfChanged(ref strongholdFiles, value);
         }
 
-        internal String[] gfxFiles;
-        internal String[] GfxFiles
+        internal string[] gfxFiles;
+        internal string[] GfxFiles
         {
             get => gfxFiles;
             set => this.RaiseAndSetIfChanged(ref gfxFiles, value);
@@ -257,8 +256,8 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             set => this.RaiseAndSetIfChanged(ref gfxPreviewTrue, value);
         }
 
-        private String toggleButtonName = "GM1";
-        public String ToggleButtonName
+        private string toggleButtonName = "GM1";
+        public string ToggleButtonName
         {
             get => toggleButtonName;
             set => this.RaiseAndSetIfChanged(ref toggleButtonName, value);
@@ -282,7 +281,6 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             set {
                 this.RaiseAndSetIfChanged(ref loggerActiv, value);
                 userConfig.ActivateLogger = value;
-
             }
         }
 
@@ -320,6 +318,7 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             get => tgxButtonImportEnabled;
             set => this.RaiseAndSetIfChanged(ref tgxButtonImportEnabled, value);
         }
+
         private bool orginalStrongholdAnimationButtonEnabled = false;
         public bool OrginalStrongholdAnimationButtonEnabled
         {
@@ -589,20 +588,20 @@ namespace Gm1KonverterCrossPlatform.ViewModels
         #region Offsets
 
         private Dictionary<int, Point> offsetsBuildings = new Dictionary<int, Point>() {
-            { 0,new Point(939615, 939608) },
-            { 1,new Point(939841, 939834) },
-            { 2,new Point(940022, 940015) },
-            { 3,new Point(939728, 939721) },
-            { 12,new Point(939000, 938996) },
-            { 13,new Point(939031, 939027) },
-            { 43,new Point(938935, 938928) },
-            { 44,new Point(938969, 938962) },
-            { 121,new Point(939943, 939936) },
-            { 122,new Point(939943, 939936) },
-            { 123,new Point(939574, 939567) },
-            { 124,new Point(939536, 939529) },
-            { 125,new Point(939574, 939567) },
-            { 23,new Point(938858, 938851) }
+            { 0, new Point(939615, 939608) },
+            { 1, new Point(939841, 939834) },
+            { 2, new Point(940022, 940015) },
+            { 3, new Point(939728, 939721) },
+            { 12, new Point(939000, 938996) },
+            { 13, new Point(939031, 939027) },
+            { 43, new Point(938935, 938928) },
+            { 44, new Point(938969, 938962) },
+            { 121, new Point(939943, 939936) },
+            { 122, new Point(939943, 939936) },
+            { 123, new Point(939574, 939567) },
+            { 124, new Point(939536, 939529) },
+            { 125, new Point(939574, 939567) },
+            { 23, new Point(938858, 938851) }
         };
         
         public Dictionary<int, Point> NewOffsetsInExe { get; set; } = new Dictionary<int, Point>();
@@ -653,8 +652,8 @@ namespace Gm1KonverterCrossPlatform.ViewModels
                 }
             }
 
-            System.IO.File.WriteAllBytes(UserConfig.CrusaderPath.Replace("\\gm", String.Empty) + "\\Stronghold_Crusader_Extreme.exe", _strongholdExtremeasBytes);
-            System.IO.File.WriteAllBytes(UserConfig.CrusaderPath.Replace("\\gm", String.Empty) + "\\Stronghold Crusader.exe", _strongholdasBytes);
+            System.IO.File.WriteAllBytes(UserConfig.CrusaderPath.Replace("\\gm", string.Empty) + "\\Stronghold_Crusader_Extreme.exe", _strongholdExtremeasBytes);
+            System.IO.File.WriteAllBytes(UserConfig.CrusaderPath.Replace("\\gm", string.Empty) + "\\Stronghold Crusader.exe", _strongholdasBytes);
         }
 
         #endregion
