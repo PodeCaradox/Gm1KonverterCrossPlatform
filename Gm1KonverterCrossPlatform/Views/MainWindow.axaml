@@ -209,8 +209,10 @@
           <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="0" Grid.Column="0">
-          <TextBlock Text="{Binding Filetype}" HorizontalAlignment="Center" Height="20"/>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" IsVisible="{Binding FileSelected}" Grid.Row="0" Grid.Column="0">
+          <TextBlock Text="{DynamicResource Datatype}"/>
+          <TextBlock Text=" "/>
+          <TextBlock Text="{Binding Filetype}"/>
           <Image Name="HelpIcon" Margin="10,0,0,0" Source="avares://Gm1KonverterCrossPlatform/Assets/info.png" Tapped="OpenInfoWindow"/>
         </StackPanel>
 

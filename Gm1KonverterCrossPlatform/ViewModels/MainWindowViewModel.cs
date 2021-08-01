@@ -38,15 +38,8 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             set {
                 this.RaiseAndSetIfChanged(ref actualLanguage, value);
                 HelperClasses.Languages.SelectLanguage(value);
-                ChangeLanguages();
                 userConfig.Language = value;
             }
-        }
-
-        private void ChangeLanguages()
-        {
-            if (File == null) return;
-            Filetype = Utility.GetText("Datatype") + ((GM1FileHeader.DataType)File.FileHeader.IDataType);
         }
 
         private Languages.Language[] languages = new Languages.Language[] { HelperClasses.Languages.Language.Deutsch, HelperClasses.Languages.Language.English, HelperClasses.Languages.Language.Русский };
@@ -75,8 +68,8 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             }
         }
 
-        private string filetype = "Datatype: ";
-        public string Filetype
+        private GM1FileHeader.DataType filetype;
+        public GM1FileHeader.DataType Filetype
         {
             get => filetype;
             set => this.RaiseAndSetIfChanged(ref filetype, value);
@@ -360,7 +353,21 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             set => this.RaiseAndSetIfChanged(ref images, value);
         }
 
-        internal DecodedFile File { get; set; }
+        internal bool fileSelected = false;
+        internal bool FileSelected {
+            get => fileSelected;
+            set => this.RaiseAndSetIfChanged(ref fileSelected, value);
+        }
+
+        internal DecodedFile file;
+        internal DecodedFile File {
+            get => file;
+            set {
+                file = value;
+                FileSelected = (file != null);
+            }
+        }
+
         public UserConfig UserConfig { get => userConfig; set => userConfig = value; }
 
         internal TGXImage _actualTGXImageSelection;

@@ -681,7 +681,7 @@ namespace Gm1KonverterCrossPlatform.Views
                 {
                     Utility.datatype = (GM1FileHeader.DataType)vm.File.FileHeader.IDataType;
 
-                    vm.Filetype = Utility.GetText("Datatype") + ((GM1FileHeader.DataType)vm.File.FileHeader.IDataType);
+                    vm.Filetype = (GM1FileHeader.DataType)vm.File.FileHeader.IDataType;
                     if (vm.File.Palette == null)
                     {
                         vm.ImportButtonEnabled = true;
