@@ -727,6 +727,7 @@ namespace Gm1KonverterCrossPlatform.Views
                 vm.UserConfig = new UserConfig();
                 vm.UserConfig.LoadData();
                 vm.ActualLanguage = vm.UserConfig.Language;
+                vm.ActualColorTheme = vm.UserConfig.ColorTheme;
                 vm.OpenFolderAfterExport = vm.UserConfig.OpenFolderAfterExport;
                 vm.LoggerActiv = vm.UserConfig.ActivateLogger;
                 Logger.Path = vm.UserConfig.WorkFolderPath + "\\Logger";
@@ -748,6 +749,13 @@ namespace Gm1KonverterCrossPlatform.Views
             MenuItem source = e.Source as MenuItem;
             Languages.Language language = (Languages.Language)source.Header;
             vm.ActualLanguage = language;
+        }
+
+        private void ChangeColorTheme(object sender, RoutedEventArgs e)
+        {
+            MenuItem source = e.Source as MenuItem;
+            ColorThemes.ColorTheme colorTheme = (ColorThemes.ColorTheme)source.Header;
+            vm.ActualColorTheme = colorTheme;
         }
 
         private void CreatenewGM1(object sender, RoutedEventArgs e)

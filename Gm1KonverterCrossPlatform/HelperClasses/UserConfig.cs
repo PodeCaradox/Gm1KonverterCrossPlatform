@@ -8,6 +8,7 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
     {
         #region Variables
         private Languages.Language language = Languages.DefaultLanguage;
+        private ColorThemes.ColorTheme colorTheme = ColorThemes.DefaultColorTheme;
         private readonly string path;
         private readonly string fileName = "UserConfig.txt";
         private string crusaderPath;
@@ -44,6 +45,16 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
             set
             {
                 language = value;
+                SaveData();
+            }
+        }
+
+        public ColorThemes.ColorTheme ColorTheme
+        {
+            get => colorTheme;
+            set
+            {
+                colorTheme = value;
                 SaveData();
             }
         }
@@ -98,6 +109,7 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
                 openFolderAfterExport = obj.OpenFolderAfterExport;
                 activateLogger = obj.ActivateLogger;
                 language = obj.Language;
+                colorTheme = obj.colorTheme;
             }
         }
 

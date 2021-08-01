@@ -73,6 +73,14 @@
               </StackPanel>
             </MenuItem.Header>
           </MenuItem>
+          <Separator/>
+          <MenuItem Items="{Binding ColorThemes}" Click="ChangeColorTheme">
+            <MenuItem.Header>
+              <StackPanel Orientation="Horizontal">
+                <TextBlock Text="{DynamicResource ColorTheme}"/><TextBlock Text=" ("/><TextBlock Text="{Binding ActualColorTheme}"/><TextBlock Text=")"/>
+              </StackPanel>
+            </MenuItem.Header>
+          </MenuItem>
         </MenuItem>
       </Menu>
       

@@ -57,7 +57,26 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             get => languages;
             set => this.RaiseAndSetIfChanged(ref languages, value);
         }
-        
+
+        private ColorThemes.ColorTheme actualColorTheme = HelperClasses.ColorThemes.DefaultColorTheme;
+
+        private ColorThemes.ColorTheme[] colorThemes = new ColorThemes.ColorTheme[] { HelperClasses.ColorThemes.ColorTheme.Light, HelperClasses.ColorThemes.ColorTheme.Dark };
+        public ColorThemes.ColorTheme[] ColorThemes
+        {
+            get => colorThemes;
+            set => this.RaiseAndSetIfChanged(ref colorThemes, value);
+        }
+        public ColorThemes.ColorTheme ActualColorTheme
+        {
+            get => actualColorTheme;
+            set
+            {
+                this.RaiseAndSetIfChanged(ref actualColorTheme, value);
+                HelperClasses.ColorThemes.SelectColorTheme(value);
+                userConfig.ColorTheme = value;
+            }
+        }
+
         private String filetype = "Datatype: ";
         public String Filetype
         {
