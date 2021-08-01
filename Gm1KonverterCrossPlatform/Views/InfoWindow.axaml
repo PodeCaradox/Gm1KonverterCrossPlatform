@@ -9,11 +9,12 @@
         MaxHeight="800"
         x:Class="Gm1KonverterCrossPlatform.Views.InfoWindow"
         Title="Info">
-  <ScrollViewer >
+
+  <ScrollViewer>
     <StackPanel>
       <StackPanel  MaxWidth="800"  Name="Animation">
-        <TextBlock Text="{DynamicResource AnimationTitel1}"  HorizontalAlignment="Center" MaxWidth="800" />
-        <TextBlock TextWrapping="Wrap" Text="{DynamicResource AnimationText1}" MaxWidth="800" Margin="0,20,0,0" />
+        <TextBlock Text="{DynamicResource AnimationTitel1}"  HorizontalAlignment="Center" MaxWidth="800"/>
+        <TextBlock TextWrapping="Wrap" Text="{DynamicResource AnimationText1}" MaxWidth="800" Margin="0,20,0,0"/>
         <Image Name="Palette1" Source="avares://Gm1KonverterCrossPlatform/Assets/Palette1.png"/>
         <Image Name="Palette2" Source="avares://Gm1KonverterCrossPlatform/Assets/Palette2.png"/>
         <TextBlock TextWrapping="Wrap" Text="{DynamicResource AnimationText2}" MaxWidth="800" Margin="0,20,0,0"/>
@@ -30,38 +31,31 @@
         <TextBlock TextWrapping="Wrap" Text="{DynamicResource AnimationText10}" HorizontalAlignment="Left"/>
         <TextBlock TextWrapping="Wrap" Text="{DynamicResource AnimationText11}" HorizontalAlignment="Left"/>
         <TextBlock TextWrapping="Wrap" Text="{DynamicResource AnimationText12}" HorizontalAlignment="Left"/>
-
-
       </StackPanel>
 
-
-
-
       <StackPanel Name="Interface" MaxWidth="800">
-        <TextBlock Text="{DynamicResource InterfaceTitel1}"  HorizontalAlignment="Center" MaxWidth="800" />
-        <TextBlock TextWrapping="Wrap" Text="{DynamicResource InterfaceText1}" MaxWidth="800" Margin="0,20,0,0" />
+        <TextBlock Text="{DynamicResource InterfaceTitel1}"  HorizontalAlignment="Center" MaxWidth="800"/>
+        <TextBlock TextWrapping="Wrap" Text="{DynamicResource InterfaceText1}" MaxWidth="800" Margin="0,20,0,0"/>
         <Image Name="Interface1"  Source="avares://Gm1KonverterCrossPlatform/Assets/Interface1.JPG"/>
         <Image Name="Interface2"  Source="avares://Gm1KonverterCrossPlatform/Assets/Interface2.JPG"/>
       </StackPanel>
 
       <StackPanel Name="TiledObject" MaxWidth="800">
-        <TextBlock Text="{DynamicResource TiledObjectTitel1}"  HorizontalAlignment="Center" MaxWidth="800" />
-        <TextBlock TextWrapping="Wrap" Text="{DynamicResource TiledObjectText1}" MaxWidth="800" Margin="0,20,0,0" />
+        <TextBlock Text="{DynamicResource TiledObjectTitel1}"  HorizontalAlignment="Center" MaxWidth="800"/>
+        <TextBlock TextWrapping="Wrap" Text="{DynamicResource TiledObjectText1}" MaxWidth="800" Margin="0,20,0,0"/>
         <Image Name="TiledObject1" Source="avares://Gm1KonverterCrossPlatform/Assets/TiledObject1.png"/>
-        <TextBlock TextWrapping="Wrap" Text="{DynamicResource TiledObjectText2}" MaxWidth="800" Margin="0,20,0,0" />
+        <TextBlock TextWrapping="Wrap" Text="{DynamicResource TiledObjectText2}" MaxWidth="800" Margin="0,20,0,0"/>
         <Image Name="TiledObject2" Source="avares://Gm1KonverterCrossPlatform/Assets/TiledObject2.png"/>
-        <TextBlock TextWrapping="Wrap" Text="{DynamicResource TiledObjectText3}" MaxWidth="800" Margin="0,20,0,0" />
+        <TextBlock TextWrapping="Wrap" Text="{DynamicResource TiledObjectText3}" MaxWidth="800" Margin="0,20,0,0"/>
         <Image Name="TiledObject3" Source="avares://Gm1KonverterCrossPlatform/Assets/TiledObject3.png"/>
         <Image Name="TiledObject4" Source="avares://Gm1KonverterCrossPlatform/Assets/TiledObject4.png"/>
-        <TextBlock TextWrapping="Wrap" Text="{DynamicResource TiledObjectText4}" MaxWidth="800" Margin="0,20,0,0" />
+        <TextBlock TextWrapping="Wrap" Text="{DynamicResource TiledObjectText4}" MaxWidth="800" Margin="0,20,0,0"/>
         <Image Name="TiledObject5" Source="avares://Gm1KonverterCrossPlatform/Assets/TiledObject5.png"/>
       </StackPanel>
 
       <StackPanel Name="NoInfo" MaxWidth="800">
-        <TextBlock Text="{DynamicResource NoInfoYet}"  HorizontalAlignment="Center" MaxWidth="800" />
-      
+        <TextBlock Text="{DynamicResource NoInfoYet}"  HorizontalAlignment="Center" MaxWidth="800"/>
       </StackPanel>
-
     </StackPanel>
   </ScrollViewer>
 </Window>
