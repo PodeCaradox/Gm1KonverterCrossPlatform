@@ -214,17 +214,17 @@
           <Image Name="HelpIcon" Margin="10,0,0,0" Source="avares://Gm1KonverterCrossPlatform/Assets/info.png" Tapped="OpenInfoWindow"/>
         </StackPanel>
 
-        <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="0">
-          <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" IsVisible="{Binding ColorButtonsEnabled}">
+        <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="0" IsVisible="{Binding ColorButtonsEnabled}">
+          <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
             <TextBlock Text="{DynamicResource Palette}"/>
             <TextBlock Text=" "/>
             <TextBlock Text="{Binding ActualPalette}"/>
           </StackPanel>
           <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-            <Button IsEnabled="{Binding ColorButtonsEnabled}" Content="««" Width="40" Click="Button_ClickPalleteminus" IsVisible="{Binding ColorButtonsEnabled}" HorizontalAlignment="Center"/>
-            <Image Source="{Binding ActuellColorTable}" IsVisible="{Binding ColorButtonsEnabled}" HorizontalAlignment="Center"/>
-            <Button IsEnabled="{Binding ColorButtonsEnabled}" Content="»»" Width="40" Click="Button_ClickPalleteplus" IsVisible="{Binding ColorButtonsEnabled}" HorizontalAlignment="Center"/>
-            <Button IsEnabled="{Binding ColorButtonsEnabled}" Click="Button_ClickChangeColorTable" IsVisible="{Binding ColorButtonsEnabled}" HorizontalAlignment="Right" Content="{DynamicResource ChangeColorTable}"/>
+            <Button IsEnabled="{Binding ColorButtonsEnabled}" Content="««" Width="40" Click="Button_ClickPalleteminus" HorizontalAlignment="Center"/>
+            <Image Source="{Binding ActuellColorTable}" HorizontalAlignment="Center"/>
+            <Button IsEnabled="{Binding ColorButtonsEnabled}" Content="»»" Width="40" Click="Button_ClickPalleteplus" HorizontalAlignment="Center"/>
+            <Button IsEnabled="{Binding ColorButtonsEnabled}" Click="Button_ClickChangeColorTable" HorizontalAlignment="Right" Content="{DynamicResource ChangeColorTable}"/>
           </StackPanel>
         </StackPanel>
 
