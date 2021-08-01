@@ -17,8 +17,7 @@ namespace Gm1KonverterCrossPlatform.Views
             public InfoWindow(GM1FileHeader.DataType dataType)
         {
             this.InitializeComponent();
-           
-         
+
             StackPanel animation = this.Get<StackPanel>("Animation");
             animation.IsVisible = false;
             StackPanel interfaceS = this.Get<StackPanel>("Interface");
