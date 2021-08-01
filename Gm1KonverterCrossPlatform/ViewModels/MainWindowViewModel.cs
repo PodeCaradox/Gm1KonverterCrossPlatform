@@ -47,7 +47,6 @@ namespace Gm1KonverterCrossPlatform.ViewModels
         {
             if (File == null) return;
             Filetype = Utility.GetText("Datatype") + ((GM1FileHeader.DataType)File.FileHeader.IDataType);
-            if(File.Palette!=null) ActualPalette = Utility.GetText("Palette") + (File.Palette.ActualPalette + 1);
         }
 
         private Languages.Language[] languages = new Languages.Language[] { HelperClasses.Languages.Language.Deutsch, HelperClasses.Languages.Language.English, HelperClasses.Languages.Language.Русский };
@@ -153,8 +152,8 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             }
         }
         
-        private string actualPalette = Utility.GetText("Palette")+"1";
-        public string ActualPalette
+        private int actualPalette = 1;
+        public int ActualPalette
         {
             get => actualPalette;
             set => this.RaiseAndSetIfChanged(ref actualPalette, value);
@@ -568,7 +567,7 @@ namespace Gm1KonverterCrossPlatform.ViewModels
                     File.Palette.ActualPalette += number;
                 }
             }
-            ActualPalette = Utility.GetText("Palette")  + (File.Palette.ActualPalette+1);
+            ActualPalette = File.Palette.ActualPalette + 1;
             File.DecodeGm1File(File.FileArray, File.FileHeader.Name);
             ShowTGXImgToWindow();
         }

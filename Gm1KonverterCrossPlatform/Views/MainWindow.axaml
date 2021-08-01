@@ -215,7 +215,11 @@
         </StackPanel>
 
         <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="0">
-          <TextBlock Text="{Binding ActualPalette}" IsVisible="{Binding ColorButtonsEnabled}" HorizontalAlignment="Center"/>
+          <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" IsVisible="{Binding ColorButtonsEnabled}">
+            <TextBlock Text="{DynamicResource Palette}"/>
+            <TextBlock Text=" "/>
+            <TextBlock Text="{Binding ActualPalette}"/>
+          </StackPanel>
           <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
             <Button IsEnabled="{Binding ColorButtonsEnabled}" Content="««" Width="40" Click="Button_ClickPalleteminus" IsVisible="{Binding ColorButtonsEnabled}" HorizontalAlignment="Center"/>
             <Image Source="{Binding ActuellColorTable}" IsVisible="{Binding ColorButtonsEnabled}" HorizontalAlignment="Center"/>
