@@ -1,15 +1,8 @@
-﻿
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Gm1KonverterCrossPlatform.TexturePack
+﻿namespace Gm1KonverterCrossPlatform.TexturePack
 {
     public class TexturePack
     {
-        public String Name;
+        public string Name;
         public float StrongholdVersion;
         public float VersionNumber;
 
