@@ -86,7 +86,7 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
         #region Methods
 
         /// <summary>
-        /// Load the Userconfig
+        /// Load the UserConfig from a file.
         /// </summary>
         public void LoadData()
         {
@@ -104,7 +104,7 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
         }
 
         /// <summary>
-        /// Save the Userconfig
+        /// Save the UserConfig to a file.
         /// </summary>
         private void SaveData()
         {
