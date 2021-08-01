@@ -1,17 +1,12 @@
-﻿using Avalonia.Media;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Drawing;
-using Color = System.Drawing.Color;
 using Avalonia.Media.Imaging;
 using Files.Gm1Converter;
 using Image = SixLabors.ImageSharp.Image;
 using Gm1KonverterCrossPlatform.HelperClasses.Views;
-using SixLabors.ImageSharp.Formats;
 using Avalonia;
 using System.Linq;
-using Avalonia.Controls;
 using Gm1KonverterCrossPlatform.HelperClasses;
 using Gm1KonverterCrossPlatform.Files;
 using SixLabors.ImageSharp.PixelFormats;
@@ -39,13 +34,12 @@ namespace HelperClasses.Gm1Converter
         /// <returns></returns>
         internal static byte[] FileToByteArray(string fileName)
         {
-            byte[] buff = null;
             FileStream fs = new FileStream(fileName,
                                            FileMode.Open,
                                            FileAccess.Read);
             BinaryReader br = new BinaryReader(fs);
             long numBytes = new FileInfo(fileName).Length;
-            buff = br.ReadBytes((int)numBytes);
+            byte[] buff = br.ReadBytes((int)numBytes);
             return buff;
         }
 
@@ -58,7 +52,6 @@ namespace HelperClasses.Gm1Converter
         {
             File.WriteAllBytes(fileName, array);
         }
-
 
         /// <summary>
         /// Load the IMG as Color 2byte list
@@ -76,8 +69,8 @@ namespace HelperClasses.Gm1Converter
             try
             {
                 var image = Image.Load<Rgba32>(filename);
-                if (width==0) width = image.Width;
-                if(height==0) height = image.Height;
+                if (width == 0) width = image.Width;
+                if (height == 0) height = image.Height;
                 for (int y = offsety; y < height + offsety; y += pixelsize)
                 {
                     for (int x = offsetx; x < width + offsetx; x += pixelsize) //Bgra8888
@@ -148,7 +141,6 @@ namespace HelperClasses.Gm1Converter
             return bitmap;
         }
 
-
         /// <summary>
         /// Convert an IMG as Colorlist to ByteArray
         /// </summary>
@@ -161,17 +153,16 @@ namespace HelperClasses.Gm1Converter
         {
             if (Logger.Loggeractiv) Logger.Log("ImgToGM1ByteArray");
             int transparent =  32767;
-            ushort alpha=(animatedColor==0)?(ushort)0b1000_0000_0000_0000: (ushort)0b0;
+            ushort alpha = (animatedColor == 0) ? (ushort)0b1000_0000_0000_0000 : (ushort)0b0;
             List<byte> array = new List<byte>();
-            byte length = 0;  // value 1-32  | 0 will be 1
-            byte header = 0;   //3 bytes
+            byte length = 0; // value 1-32  | 0 will be 1
+            byte header = 0; // 3 bytes
             int countSamePixel = 0;
             bool newline = false;
             for (int i = 0; i < height; i++)
             {
                 for (int j = 0; j < width;)
                 {
-                   
                     countSamePixel = 0;
                     //check for newline
                     for (int z = j; z < width; z++)
@@ -192,7 +183,7 @@ namespace HelperClasses.Gm1Converter
                     if (newline == true && countSamePixel == width)
                     {
                         //newline consist out of transparent pixelstrings only TGXConstSize, idk why(TiledObject empty on Top also not only newline)
-                        if (datatype == GM1FileHeader.DataType.TGXConstSize ||datatype == GM1FileHeader.DataType.TilesObject  || datatype == GM1FileHeader.DataType.Interface)
+                        if (datatype == GM1FileHeader.DataType.TGXConstSize || datatype == GM1FileHeader.DataType.TilesObject  || datatype == GM1FileHeader.DataType.Interface)
                         {
                             //TGXConstSize later only consists out of newlines?????
                             if (!CheckIfAllLinesUnderTransparent(colors, transparent, (i + 1) * width) || datatype == GM1FileHeader.DataType.TilesObject)
@@ -210,7 +201,6 @@ namespace HelperClasses.Gm1Converter
                                 {
                                     length = (byte)(dummy - 1);//-1 because in the decoding +1
                                     array.Add((byte)(header | length));
-
                                 }
                             }
                         }
@@ -225,18 +215,18 @@ namespace HelperClasses.Gm1Converter
                     {
                         //transparent pixelstring?
                         var dummy = countSamePixel;
-                            header = 0b0010_0000;
-                            while (dummy / 32 > 0)
-                            {
-                                length = 0b0001_1111;
-                                array.Add((byte)(header | length));
-                                dummy -= 32;
-                            }
-                            if (dummy != 0)
-                            {
-                                length = (byte)(dummy - 1);//-1 because in the decoding +1
+                        header = 0b0010_0000;
+                        while (dummy / 32 > 0)
+                        {
+                            length = 0b0001_1111;
                             array.Add((byte)(header | length));
-                            }
+                            dummy -= 32;
+                        }
+                        if (dummy != 0)
+                        {
+                            length = (byte)(dummy - 1);//-1 because in the decoding +1
+                            array.Add((byte)(header | length));
+                        }
                         j += countSamePixel;
                         if (j == width)
                         {
@@ -256,7 +246,7 @@ namespace HelperClasses.Gm1Converter
                                 {
                                     break;
                                 }
-                                else if(repeatingPixel>1)
+                                else if (repeatingPixel>1)
                                 {
                                     countSamePixel += repeatingPixel - 1;
                                     repeatingPixel = 1;
@@ -280,10 +270,9 @@ namespace HelperClasses.Gm1Converter
                             }
                             else
                             {
-                                if (repeatingPixel < 3) {
-
+                                if (repeatingPixel < 3)
+                                {
                                     countSamePixel += repeatingPixel - 1;
-
                                 }
                                 break;
                             }
@@ -300,7 +289,7 @@ namespace HelperClasses.Gm1Converter
                                 length = 0b0001_1111;
                                 array.Add((byte)(header | length));
                               
-                                    var color = (ushort)(colors[j + i * width + 1] | alpha);
+                                var color = (ushort)(colors[j + i * width + 1] | alpha);
                                 if (palette == null)
                                 {
                                     array.AddRange(BitConverter.GetBytes(color));
@@ -318,7 +307,7 @@ namespace HelperClasses.Gm1Converter
                                 length = (byte)(dummy - 1);//-1 because in the decoding +1
                                 array.Add((byte)(header | length));
                                
-                                    var color = (ushort)(colors[j  + i * width + 1] | alpha);
+                                var color = (ushort)(colors[j  + i * width + 1] | alpha);
                                 if (palette==null)
                                 {
                                     array.AddRange(BitConverter.GetBytes(color));
@@ -328,9 +317,6 @@ namespace HelperClasses.Gm1Converter
                                     byte positioninColortable = FindColorPositionInPalette(color, j + i * width + 1, palette, paletteImages);
                                     array.Add(positioninColortable);
                                 }
-                                  
-
-                               
                             }
                         }
                         else
@@ -381,27 +367,19 @@ namespace HelperClasses.Gm1Converter
                             }
                         }
 
-                       
-
                         j += countSamePixel;
                         if (j == width)
                         {
                             array.Add(0b1000_0000);
-                          
                         }
                     }
-
-
                 }
             }
-  
 
             return array;
         }
 
-      
-
-        internal static WriteableBitmap CreateBigImage(List<TilesImage> tilesImages,int BigImageSize)
+        internal static WriteableBitmap CreateBigImage(List<TilesImage> tilesImages, int BigImageSize)
         {
             if (Logger.Loggeractiv) Logger.Log("CreateBigImage");
             List<WriteableBitmap> bitmaps = new List<WriteableBitmap>();
@@ -435,14 +413,12 @@ namespace HelperClasses.Gm1Converter
                 {
                     heighrows[row] = bitmap.PixelSize.Height;
                 }
-
             }
 
             foreach (var height in heighrows)
             {
                 maxheight += height;
             }
-
 
             WriteableBitmap bigImage = new WriteableBitmap(new Avalonia.PixelSize(maxwidth, maxheight), new Avalonia.Vector(96, 96), Avalonia.Platform.PixelFormat.Bgra8888);// Bgra8888 is device-native and much faster.
             using (var buf = bigImage.Lock())
@@ -461,7 +437,6 @@ namespace HelperClasses.Gm1Converter
                         yoffset += heighrows[row];
                         row++;
                     }
-
 
                     using (var bit = bitmap.Lock())
                     {
@@ -482,10 +457,7 @@ namespace HelperClasses.Gm1Converter
                     }
 
                     xoffset += bitmap.PixelSize.Width;
-              
-
                 }
-
             }
             return bigImage;
         }
@@ -502,9 +474,8 @@ namespace HelperClasses.Gm1Converter
 
         private static byte FindColorPositionInPalette(ushort color,int position, Palette palette, List<ushort>[] paletteImages)
         {
-    
             byte newPosition = 0;
-            if (paletteImages==null)//not orginal Stronghold Files do not need to check all
+            if (paletteImages == null)//not orginal Stronghold Files do not need to check all
             {
                 for (byte i = 0; i < byte.MaxValue; i++)
                 {
@@ -513,7 +484,6 @@ namespace HelperClasses.Gm1Converter
                         newPosition = i;
                         break;
                     }
-                    
                 }
             }
             else // Orginal ones
@@ -526,10 +496,9 @@ namespace HelperClasses.Gm1Converter
                         positions.Add(i);
                     }
                 }
-                if (positions.Count>1|| positions.Count==0)
+                if (positions.Count > 1 || positions.Count == 0)
                 {
-                  
-                    for (int j = 0; j < 9; j++)//other 9 pictures check for only one position
+                    for (int j = 0; j < 9; j++) //other 9 pictures check for only one position
                     {
                         List<byte> otherPositions = new List<byte>();
                         for (byte i = 0; i < byte.MaxValue; i++)
@@ -543,16 +512,15 @@ namespace HelperClasses.Gm1Converter
                         {
                             newPosition = otherPositions[0];
                             break;
-                        }else if (otherPositions.Count > 1)
+                        }
+                        else if (otherPositions.Count > 1)
                         {
                             newPosition = otherPositions[0];
                         }
                     }
-
                 }
                 else
                 {
-                 
                     newPosition = positions[0];
                 }
             }
@@ -569,7 +537,7 @@ namespace HelperClasses.Gm1Converter
         {
             for (int i = offset; i < colors.Count; i++)
             {
-                if (colors[i]!= transparent)
+                if (colors[i] != transparent)
                 {
                     return false;
                 }
@@ -591,7 +559,6 @@ namespace HelperClasses.Gm1Converter
             if (Logger.Loggeractiv) Logger.Log("ConvertImgToTiles");
             List<TGXImage> newImageList = new List<TGXImage>();
 
-
             //calculate Parts one part 16 x 30
             int partwidth = width / 30;//todo not exactly 30 width because 2 pixels between(can ignored because Church bigest tiledImage and work)
             int totalTiles = partwidth;
@@ -612,7 +579,6 @@ namespace HelperClasses.Gm1Converter
             datatype = GM1FileHeader.DataType.TilesObject;
             for (int part = 0; part < totalTiles; part++)
             {
-               
                 counter++;
                 int x = 0;
                 int y = 0;
@@ -630,7 +596,7 @@ namespace HelperClasses.Gm1Converter
                     y++;
                     x = 0;
                 }
-                if (part ==3 || part==5)
+                if (part == 3 || part == 5)
                 {
 
                 }
@@ -646,7 +612,6 @@ namespace HelperClasses.Gm1Converter
                 if(totalTiles==1) halfreached = true;
                 if (halfreached)
                 {
-
                     //tileoffset=1st pixel from tile and than height
                     if (counter == 1)//left
                     {
@@ -666,7 +631,6 @@ namespace HelperClasses.Gm1Converter
                                 if (newImage.TileOffset == ushort.MaxValue) newImage.TileOffset = 0;
                                 newImage.Height = (ushort)(colorListImgOnTop.Count / imageOnTopwidth + 9);
                             }
-                           
                         }
                         else
                         {
@@ -690,7 +654,6 @@ namespace HelperClasses.Gm1Converter
                     }
                     else if (counter == partsPerLine)//right
                     {
-                  
                         newImage.BuildingWidth = 16;
                         newImage.Direction = 3;
                         int imageOnTopwidth = 16;
@@ -706,8 +669,6 @@ namespace HelperClasses.Gm1Converter
                             if (newImage.TileOffset == ushort.MaxValue) newImage.TileOffset = 0;
                         }
                         newImage.HorizontalOffsetOfImage = 14;
-
-
                     }
                 }
                 newImageList.Add(newImage);
@@ -738,11 +699,7 @@ namespace HelperClasses.Gm1Converter
                     }
 
                     savedOffsetX = xOffset;
-
                 }
-
-
-
             }
 
             XOffsetBefore += width;
@@ -768,7 +725,6 @@ namespace HelperClasses.Gm1Converter
 
                     if (list[orgWidth * y + x] != 32767 || y > height - 8)
                     {
-
                         dummy.Add(list[orgWidth * y + x]);
                         allTransparent = false;
                     }
@@ -857,7 +813,6 @@ namespace HelperClasses.Gm1Converter
             int corner = 1;
             while (true)
             {
-
                 if (anzParts - actualParts - corner == 0)
                 {
                     width = corner - corner / 2;
@@ -870,7 +825,6 @@ namespace HelperClasses.Gm1Converter
                 }
                 actualParts += corner;
                 corner += 2;
-
             }
 
             return width;
@@ -881,11 +835,10 @@ namespace HelperClasses.Gm1Converter
         public static String GetText(String key)
         {
             var dictionaryList = Application.Current.Resources.MergedDictionaries;
-            object dummy=null;
+            object dummy = null;
             var resourceDictionary = dictionaryList.Last(d => d.TryGetResource(key, out dummy) == true);
 
             return dummy.ToString();
         }
-
     }
 }
