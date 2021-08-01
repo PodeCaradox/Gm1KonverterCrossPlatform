@@ -8,35 +8,34 @@
         Height="400"
         x:Class="Gm1KonverterCrossPlatform.HelperClasses.Views.ChangeColorPalette"
         Title="{DynamicResource ChangeColorPalette}">
+
   <StackPanel >
-    <TextBlock HorizontalAlignment="Center" Text="{DynamicResource ClickontheColoryouwanttoChange}" />
+    <TextBlock HorizontalAlignment="Center" Text="{DynamicResource ClickontheColoryouwanttoChange}"/>
     <Image HorizontalAlignment="Left" Name="PaletteImage" MaxWidth="640" MaxHeight="160" MinWidth="640" MinHeight="160" Margin="0" Source="{Binding ActuellColorTableChangeColorWindow}"/>
     <Canvas HorizontalAlignment="Left" x:Name="Cnv"/>
+    
     <StackPanel Orientation="Horizontal">
       <TextBlock Margin="50,0,0,0" VerticalAlignment="Center" Text="{DynamicResource HEXColor}"/>
       <TextBox Name="TextBoxColor" Text="{Binding ColorAsText}" Width="100" Height="30" VerticalAlignment="Center"/>
       <StackPanel>
         <StackPanel Orientation="Horizontal">
-          <TextBlock>R</TextBlock>
-          <Slider  Maximum="255" Minimum="0" TickFrequency="1" Width="255" Value="{Binding Red}"></Slider>
-          <TextBox Width="40" Text="{Binding Red}"></TextBox>
+          <TextBlock Text="R"/>
+          <Slider Maximum="255" Minimum="0" TickFrequency="1" Width="255" Value="{Binding Red}"/>
+          <TextBox Width="40" Text="{Binding Red}"/>
         </StackPanel>
         <StackPanel Orientation="Horizontal">
-          <TextBlock>B</TextBlock>
-          <Slider Maximum="255" Minimum="0" TickFrequency="1" Width="255" Value="{Binding Blue}"></Slider>
-          <TextBox Width="40" Text="{Binding Blue}"></TextBox>
+          <TextBlock Text="B"/>
+          <Slider Maximum="255" Minimum="0" TickFrequency="1" Width="255" Value="{Binding Blue}"/>
+          <TextBox Width="40" Text="{Binding Blue}"/>
         </StackPanel>
         <StackPanel Orientation="Horizontal">
-          <TextBlock>G</TextBlock>
-          <Slider Maximum="255" Minimum="0" TickFrequency="1" Width="255" Value="{Binding Green}"></Slider>
-          <TextBox Width="40" Text="{Binding Green}"></TextBox>
+          <TextBlock Text="G"/>
+          <Slider Maximum="255" Minimum="0" TickFrequency="1" Width="255" Value="{Binding Green}"/>
+          <TextBox Width="40" Text="{Binding Green}"/>
         </StackPanel>
-
       </StackPanel>
-      <Button Click="Button_ClickGeneratePallete" Height="30" Margin="10,0,0,0" Width="100" VerticalAlignment="Center" Content="{DynamicResource ChangeColor}" />
+      <Button Click="Button_ClickGeneratePallete" Height="30" Margin="10,0,0,0" Width="100" VerticalAlignment="Center" Content="{DynamicResource ChangeColor}"/>
       <Button Click="Button_ClickSavePalette" Height="30" Margin="10,0,0,0" VerticalAlignment="Center" Width="100" Content="{DynamicResource Save}"/>
     </StackPanel>
-
-  </StackPanel >
-  
+  </StackPanel>
 </Window>

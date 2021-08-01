@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Shapes;
@@ -7,7 +6,6 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
-using Files.Gm1Converter;
 using Gm1KonverterCrossPlatform.ViewModels;
 using HelperClasses.Gm1Converter;
 
@@ -47,8 +45,6 @@ namespace Gm1KonverterCrossPlatform.HelperClasses.Views
             canvas.Children.Add(rect[3]);
         }
 
-
-
         Image image;
         private Canvas canvas;
         Rectangle[] rect = new Rectangle[4];
@@ -76,6 +72,7 @@ namespace Gm1KonverterCrossPlatform.HelperClasses.Views
             vm.Green = g;
             vm.Blue = b;
         }
+
         private void Button_ClickGeneratePallete(object sender, RoutedEventArgs e)
         {
             var vm = DataContext as MainWindowViewModel;
@@ -84,8 +81,6 @@ namespace Gm1KonverterCrossPlatform.HelperClasses.Views
 
             vm.File.Palette.ArrayPaletten[vm.File.Palette.ActualPalette, positionInPalette] = newColor;
             vm.ActuellColorTableChangeColorWindow = vm.File.Palette.GetBitmap(vm.File.Palette.ActualPalette, pixelsize);
-
-
         }
 
         private void Button_ClickSavePalette(object sender, RoutedEventArgs e)
@@ -95,6 +90,7 @@ namespace Gm1KonverterCrossPlatform.HelperClasses.Views
 
             this.Close();
         }
+
         ushort[,] safeList;
         private void WindowClosed(object sender, CancelEventArgs e)
         {
@@ -103,7 +99,6 @@ namespace Gm1KonverterCrossPlatform.HelperClasses.Views
             {
                 vm.File.Palette.ArrayPaletten = safeList;
             }
-         
         }
 
         public void LoadPalette()
@@ -111,7 +106,6 @@ namespace Gm1KonverterCrossPlatform.HelperClasses.Views
             var vm = DataContext as MainWindowViewModel;
             safeList =(ushort[,]) vm.File.Palette.ArrayPaletten.Clone();
             vm.ActuellColorTableChangeColorWindow = vm.File.Palette.GetBitmap(vm.File.Palette.ActualPalette, pixelsize);
-            
         }
 
         private void InitializeComponent()
