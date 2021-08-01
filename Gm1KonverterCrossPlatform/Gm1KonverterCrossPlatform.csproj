@@ -80,9 +80,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Update="Language.ru-RU.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
     <None Update="Languages\Language.de-DE.xaml">
       <Generator>MSBuild:Compile</Generator>
     </None>
