@@ -9,9 +9,9 @@
   <Application.Resources>
     <ResourceDictionary>
       <ResourceDictionary.MergedDictionaries>
-        <ResourceInclude Source='/Languages/Language.ru-RU.xaml'/>
-        <ResourceInclude Source='/Languages/Language.de-DE.xaml'/>
-        <ResourceInclude Source='/Languages/Language.xaml'/>
+        <ResourceInclude Source='/Languages/Language.ru_RU.xaml'/>
+        <ResourceInclude Source='/Languages/Language.de_DE.xaml'/>
+        <ResourceInclude Source='/Languages/Language.en_US.xaml'/>
       </ResourceDictionary.MergedDictionaries>
     </ResourceDictionary>
   </Application.Resources>

@@ -80,13 +80,13 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Update="Languages\Language.de-DE.xaml">
+    <None Update="Languages\Language.de_DE.xaml">
       <Generator>MSBuild:Compile</Generator>
     </None>
-    <None Update="Languages\Language.ru-RU.xaml">
+    <None Update="Languages\Language.ru_RU.xaml">
       <Generator>MSBuild:Compile</Generator>
     </None>
-    <None Update="Languages\Language.xaml">
+    <None Update="Languages\Language.en_US.xaml">
       <Generator>MSBuild:Compile</Generator>
     </None>
     <None Update="Views\ChangeColorPalette.xaml">
