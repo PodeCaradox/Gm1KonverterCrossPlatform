@@ -46,7 +46,7 @@ namespace Gm1KonverterCrossPlatform.ViewModels
 
         private void ChangeLanguages()
         {
-            if (File == null) return; 
+            if (File == null) return;
             Filetype = Utility.GetText("Datatype") + ((GM1FileHeader.DataType)File.FileHeader.IDataType);
             if(File.Palette!=null) ActualPalette = Utility.GetText("Palette") + (File.Palette.ActualPalette + 1);
         }
