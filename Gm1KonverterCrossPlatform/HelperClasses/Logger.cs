@@ -14,11 +14,12 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
             {
                 Directory.CreateDirectory(Path);
             }
-            DateTime localDate = DateTime.Now;
 
-            var fileName = "LogFile from " + localDate.Year + "." + localDate.Month + "." + localDate.Day + ".txt";
+            var fileName = "Log " + DateTime.Now.ToString("yyyy-MM-dd") + ".txt";
             var writer = File.AppendText(System.IO.Path.Combine(Path, fileName));
-            writer.WriteLine(text);
+
+            writer.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+            writer.WriteLine(text + Environment.NewLine);
             writer.Dispose();
             writer.Close();
         }
