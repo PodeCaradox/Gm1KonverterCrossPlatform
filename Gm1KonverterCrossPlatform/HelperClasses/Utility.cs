@@ -876,22 +876,7 @@ namespace HelperClasses.Gm1Converter
             return width;
         }
 
-
         #endregion
-
-        public static void SelectCulture(UserConfig.Languages language)
-        {
-            var dictionaryList = Application.Current.Resources.MergedDictionaries;
-
-            object dummy;
-            var resourceDictionary = dictionaryList.FirstOrDefault(d => d.TryGetResource(language.ToString(),out dummy) == true);
-            
-            if (resourceDictionary != null)
-            {
-                Application.Current.Resources.MergedDictionaries.Remove(resourceDictionary);
-                Application.Current.Resources.MergedDictionaries.Add(resourceDictionary);
-            }
-        }
 
         public static String GetText(String key)
         {

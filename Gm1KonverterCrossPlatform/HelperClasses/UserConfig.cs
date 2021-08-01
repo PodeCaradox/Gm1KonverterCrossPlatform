@@ -6,10 +6,8 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
 {
     public class UserConfig
     {
-        public enum Languages { English, Deutsch, Русский };
-
         #region Variables
-        private Languages language = Languages.English;
+        private Languages.Language language = Languages.DefaultLanguage;
         private readonly string path;
         private readonly string fileName = "UserConfig.txt";
         private string crusaderPath;
@@ -40,7 +38,7 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
             }
         }
 
-        public Languages Language
+        public Languages.Language Language
         {
             get => language;
             set

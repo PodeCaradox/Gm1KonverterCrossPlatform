@@ -31,14 +31,14 @@ namespace Gm1KonverterCrossPlatform.ViewModels
                 this.RaiseAndSetIfChanged(ref colorAsText, value);
             }
         }
-        
-        private UserConfig.Languages actualLanguage = UserConfig.Languages.English;
-        public UserConfig.Languages ActualLanguage
+
+        private Languages.Language actualLanguage = HelperClasses.Languages.DefaultLanguage;
+        public Languages.Language ActualLanguage
         {
             get => actualLanguage;
             set {
                 this.RaiseAndSetIfChanged(ref actualLanguage, value);
-                Utility.SelectCulture(value);
+                HelperClasses.Languages.SelectLanguage(value);
                 ChangeLanguages();
                 userConfig.Language = value;
             }
@@ -51,8 +51,8 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             if(File.Palette!=null) ActualPalette = Utility.GetText("Palette") + (File.Palette.ActualPalette + 1);
         }
 
-        private UserConfig.Languages[] languages = new UserConfig.Languages[]{ UserConfig.Languages.Deutsch, UserConfig.Languages.English, UserConfig.Languages.Русский };
-        public UserConfig.Languages[] Languages
+        private Languages.Language[] languages = new Languages.Language[] { HelperClasses.Languages.Language.Deutsch, HelperClasses.Languages.Language.English, HelperClasses.Languages.Language.Русский };
+        public Languages.Language[] Languages
         {
             get => languages;
             set => this.RaiseAndSetIfChanged(ref languages, value);
