@@ -1,8 +1,4 @@
-﻿using System;
-using System.Globalization;
-using System.IO;
-using System.Reflection;
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Gm1KonverterCrossPlatform.ViewModels;
 using Gm1KonverterCrossPlatform.Views;
@@ -14,12 +10,10 @@ namespace Gm1KonverterCrossPlatform
         // Initialization code. Don't use any Avalonia, third-party APIs or any
         // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
         // yet and stuff might break.
-        public static void Main(string[] args) {
-           
+        public static void Main(string[] args)
+        {
             BuildAvaloniaApp().Start(AppMain, args); 
-        
         }
-
 
         // Avalonia configuration, don't remove; also used by visual designer.
         public static AppBuilder BuildAvaloniaApp()
