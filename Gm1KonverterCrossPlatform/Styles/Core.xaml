@@ -1,0 +1,37 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <Style Selector="Grid.Main > Separator">
+    <Setter Property="Height" Value="1"/>
+    <Setter Property="Background" Value="{DynamicResource ThemeBorderLowColor}"/>
+  </Style>
+
+  <Style Selector="DockPanel.TextMenu">
+  </Style>
+    <Style Selector="DockPanel.TextMenu > Separator">
+      <Setter Property="Width" Value="1"/>
+      <Setter Property="Background" Value="{DynamicResource ThemeBorderHighColor}"/>
+      <Setter Property="Margin" Value="3"/>
+    </Style>
+    <Style Selector="DockPanel.TextMenu MenuItem">
+    </Style>
+
+  <Style Selector="DockPanel.ImageMenu">
+    <Setter Property="Margin" Value="2"/>
+  </Style>
+    <Style Selector="DockPanel.ImageMenu Separator">
+      <Setter Property="Width" Value="1"/>
+      <Setter Property="Margin" Value="3"/>
+      <Setter Property="Background" Value="{DynamicResource ThemeBorderHighColor}"/>
+    </Style>
+    <Style Selector="DockPanel.ImageMenu MenuItem">
+      <Setter Property="Width" Value="32"/>
+      <Setter Property="Height" Value="32"/>
+    </Style>
+      <Style Selector="DockPanel.ImageMenu MenuItem > Image">
+        <Setter Property="Width" Value="32"/>
+        <Setter Property="Height" Value="32"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+      </Style>
+</Styles>

@@ -15,7 +15,7 @@
     <vm:MainWindowViewModel/>
   </Design.DataContext>
 
-  <Grid>
+  <Grid Classes="Main">
     <Grid.RowDefinitions>
       <RowDefinition Height="auto"/>
       <RowDefinition Height="1"/>
@@ -24,22 +24,7 @@
       <RowDefinition Height="*"/>
     </Grid.RowDefinitions>
 
-    <Grid.Styles>
-      <Style Selector="Grid > Separator">
-        <Setter Property="Height" Value="1"/>
-        <Setter Property="Background" Value="Lightgray"/>
-      </Style>
-    </Grid.Styles>
-
-    <DockPanel Dock="Left" Grid.Row="0">
-      <DockPanel.Styles>
-        <Style Selector="DockPanel > Separator">
-          <Setter Property="Width" Value="1"/>
-          <Setter Property="Background" Value="Gray"/>
-          <Setter Property="Margin" Value="3"/>
-        </Style>
-      </DockPanel.Styles>
-      
+    <DockPanel Dock="Left" Grid.Row="0" Classes="TextMenu">
       <Menu>
         <MenuItem Header="{DynamicResource File}">
           <MenuItem Header="{DynamicResource CreatenewGM1}" Name="CreatenewGM1MenueItem" IsEnabled="{Binding ButtonsEnabled}" Click="CreatenewGM1"/>
@@ -106,25 +91,7 @@
 
     <Separator Grid.Row="1"/>
 
-    <DockPanel Dock="Left" Grid.Row="2" Margin="2">
-      <DockPanel.Styles>
-        <Style Selector="Separator">
-          <Setter Property="Width" Value="1"/>
-          <Setter Property="Margin" Value="3"/>
-          <Setter Property="Background" Value="Gray"/>
-        </Style>
-        <Style Selector="MenuItem">
-          <Setter Property="Width" Value="32"/>
-          <Setter Property="Height" Value="32"/>
-        </Style>
-        <Style Selector="MenuItem > Image">
-          <Setter Property="Width" Value="32"/>
-          <Setter Property="Height" Value="32"/>
-          <Setter Property="VerticalAlignment" Value="Center"/>
-          <Setter Property="HorizontalAlignment" Value="Center"/>
-        </Style>
-      </DockPanel.Styles>
-
+    <DockPanel Dock="Left" Grid.Row="2" Margin="2" Classes="ImageMenu">
       <Menu>
         <MenuItem IsEnabled="{Binding ButtonsEnabled}" Click="CreatenewGM1" ToolTip.Tip="{DynamicResource CreatenewGM1}">
           <MenuItem.Header>
