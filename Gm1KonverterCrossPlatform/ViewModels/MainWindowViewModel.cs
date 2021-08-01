@@ -31,7 +31,7 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             }
         }
 
-        private Languages.Language actualLanguage = HelperClasses.Languages.DefaultLanguage;
+        private Languages.Language actualLanguage;
         public Languages.Language ActualLanguage
         {
             get => actualLanguage;
@@ -49,7 +49,7 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             set => this.RaiseAndSetIfChanged(ref languages, value);
         }
 
-        private ColorThemes.ColorTheme actualColorTheme = HelperClasses.ColorThemes.DefaultColorTheme;
+        private ColorThemes.ColorTheme actualColorTheme;
 
         private ColorThemes.ColorTheme[] colorThemes = new ColorThemes.ColorTheme[] { HelperClasses.ColorThemes.ColorTheme.Light, HelperClasses.ColorThemes.ColorTheme.Dark };
         public ColorThemes.ColorTheme[] ColorThemes
