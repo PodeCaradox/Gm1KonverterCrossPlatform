@@ -8,7 +8,8 @@
         Height="550"
         MaxHeight="800"
         x:Class="Gm1KonverterCrossPlatform.Views.InfoWindow"
-        Title="Info">
+        Title="Info"
+        WindowStartupLocation="CenterOwner">
 
   <ScrollViewer>
     <StackPanel>

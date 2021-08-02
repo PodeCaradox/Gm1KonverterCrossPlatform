@@ -8,7 +8,8 @@
         Height="600"
         x:Class="Gm1KonverterCrossPlatform.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
-        Title="{DynamicResource GM1Converter}">
+        Title="{DynamicResource GM1Converter}"
+        WindowStartupLocation="CenterScreen">
 
   <Design.DataContext>
     <vm:MainWindowViewModel/>
