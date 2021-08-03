@@ -13,6 +13,7 @@ namespace Gm1KonverterCrossPlatform
         public static void Main(string[] args)
         {
             BuildAvaloniaApp().Start(AppMain, args);
+            System.AppDomain.CurrentDomain.FirstChanceException += HelperClasses.Logger.LogFirstChanceException;
         }
 
         // Avalonia configuration, don't remove; also used by visual designer.
