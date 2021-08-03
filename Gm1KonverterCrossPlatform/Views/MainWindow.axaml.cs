@@ -234,7 +234,7 @@ namespace Gm1KonverterCrossPlatform.Views
             if (vm.File == null) return;
 
             InfoWindow infoWindow = new InfoWindow((GM1FileHeader.DataType)vm.File.FileHeader.IDataType);
-            infoWindow.Show();
+            infoWindow.Show(this);
         }
 
         private void OpenWorkfolderDirectory(object sender, RoutedEventArgs e)
