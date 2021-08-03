@@ -12,7 +12,7 @@ namespace Gm1KonverterCrossPlatform
         // yet and stuff might break.
         public static void Main(string[] args)
         {
-            BuildAvaloniaApp().Start(AppMain, args); 
+            BuildAvaloniaApp().Start(AppMain, args);
         }
 
         // Avalonia configuration, don't remove; also used by visual designer.
