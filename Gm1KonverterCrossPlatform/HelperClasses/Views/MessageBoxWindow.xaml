@@ -5,8 +5,8 @@
         mc:Ignorable="d" d:DesignWidth="200" d:DesignHeight="450"
         Width="300"
         Height="150"
-        x:Class="Gm1KonverterCrossPlatform.HelperClasses.Views.MessageBoxWindow"
-        >
+        x:Class="Gm1KonverterCrossPlatform.HelperClasses.Views.MessageBoxWindow">
+
   <Window.Styles>
     <Style Selector="TextBlock.h1">
       <Setter Property="FontSize" Value="14"/>
@@ -17,7 +17,5 @@
   <StackPanel>
     <TextBlock Classes="h1" Name="textBox"/>
     <Button Click="Button_Click">OK</Button>
-    
-    
   </StackPanel>
 </Window>
