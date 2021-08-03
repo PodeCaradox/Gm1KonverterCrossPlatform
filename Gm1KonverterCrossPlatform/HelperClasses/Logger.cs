@@ -11,32 +11,26 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
         public static void Log(string text)
         {
             if (!Loggeractiv) return;
-            if (!Directory.Exists(Path))
-            {
-                Directory.CreateDirectory(Path);
-            }
-
             var fileName = "Log " + DateTime.Now.ToString("yyyy-MM-dd") + ".txt";
-            var writer = File.AppendText(System.IO.Path.Combine(Path, fileName));
-
-            writer.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-            writer.WriteLine(text + Environment.NewLine);
-            writer.Dispose();
-            writer.Close();
+            WriteText(fileName, text);
         }
 
         internal static void LogFirstChanceException(object source, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
+        {
+            var fileName = "ErrorLog " + DateTime.Now.ToString("yyyy-MM-dd") + ".txt";
+            WriteText(fileName, e.Exception.Message);
+        }
+
+        private static void WriteText(string fileName, string text)
         {
             if (!Directory.Exists(Path))
             {
                 Directory.CreateDirectory(Path);
             }
 
-            var fileName = "ErrorLog " + DateTime.Now.ToString("yyyy-MM-dd") + ".txt";
             var writer = File.AppendText(System.IO.Path.Combine(Path, fileName));
-
             writer.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-            writer.WriteLine(e.Exception.Message + Environment.NewLine);
+            writer.WriteLine(text + Environment.NewLine);
             writer.Dispose();
             writer.Close();
         }
