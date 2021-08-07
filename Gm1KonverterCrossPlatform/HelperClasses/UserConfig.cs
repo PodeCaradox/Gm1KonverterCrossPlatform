@@ -7,37 +7,18 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
     public class UserConfig
     {
         #region Variables
+        private readonly string path = Config.AppDataPath;
+        private readonly string fileName = "UserConfig.txt";
+
         private Languages.Language language = Languages.DefaultLanguage;
         private ColorThemes.ColorTheme colorTheme = ColorThemes.DefaultColorTheme;
-        private readonly string path;
-        private readonly string fileName = "UserConfig.txt";
         private string crusaderPath;
         private string workFolderPath;
         private bool openFolderAfterExport;
         private bool activateLogger;
         #endregion
-
-        #region Construtor
-
-        public UserConfig()
-        {
-            string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            path = Path.Combine(appData, "Gm1ConverterCrossPlatform");
-        }
-
-        #endregion
         
         #region GetterSetter
-
-        public string CrusaderPath
-        {
-            get => crusaderPath;
-            set
-            {
-                crusaderPath = value;
-                SaveData();
-            }
-        }
 
         public Languages.Language Language
         {
@@ -55,6 +36,16 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
             set
             {
                 colorTheme = value;
+                SaveData();
+            }
+        }
+
+        public string CrusaderPath
+        {
+            get => crusaderPath;
+            set
+            {
+                crusaderPath = value;
                 SaveData();
             }
         }
@@ -103,13 +94,14 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
             if (File.Exists(filePath))
             {
                 string json = File.ReadAllText(filePath);
-                var obj = JsonConvert.DeserializeObject<UserConfig>(json);
+                UserConfig obj = JsonConvert.DeserializeObject<UserConfig>(json);
+
+                language = obj.Language;
+                colorTheme = obj.colorTheme;
                 crusaderPath = obj.CrusaderPath;
                 workFolderPath = obj.WorkFolderPath;
                 openFolderAfterExport = obj.OpenFolderAfterExport;
                 activateLogger = obj.ActivateLogger;
-                language = obj.Language;
-                colorTheme = obj.colorTheme;
             }
         }
 
