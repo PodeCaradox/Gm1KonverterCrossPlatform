@@ -6,7 +6,7 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
     internal static class Logger
     {
         public static bool Loggeractiv = false;
-        public static string Path = "";
+        public static readonly string Path = System.IO.Path.Combine(Config.LocalAppDataPath, "Logs");
 
         public static void Log(string text)
         {

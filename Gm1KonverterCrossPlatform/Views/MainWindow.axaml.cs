@@ -730,7 +730,6 @@ namespace Gm1KonverterCrossPlatform.Views
                 vm.ActualColorTheme = vm.UserConfig.ColorTheme;
                 vm.OpenFolderAfterExport = vm.UserConfig.OpenFolderAfterExport;
                 vm.LoggerActiv = vm.UserConfig.ActivateLogger;
-                Logger.Path = vm.UserConfig.WorkFolderPath + "\\Logger";
                 vm.LoadStrongholdFiles();
                 vm.LoadWorkfolderFiles();
 
