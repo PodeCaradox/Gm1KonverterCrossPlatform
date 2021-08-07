@@ -15,15 +15,7 @@
     <vm:MainWindowViewModel/>
   </Design.DataContext>
 
-  <Grid Classes="Main">
-    <Grid.RowDefinitions>
-      <RowDefinition Height="auto"/>
-      <RowDefinition Height="1"/>
-      <RowDefinition Height="auto"/>
-      <RowDefinition Height="1"/>
-      <RowDefinition Height="*"/>
-    </Grid.RowDefinitions>
-
+  <Grid Classes="Main" RowDefinitions="Auto,1,Auto,1,*">
     <DockPanel Dock="Left" Grid.Row="0" Classes="TextMenu">
       <Menu>
         <MenuItem Header="{DynamicResource File}">
@@ -172,49 +164,20 @@
 
       <GridSplitter Grid.Column="1" Width="3"/>
       <GridSplitter Grid.Column="3" Width="3"/>
-      
-      <Grid Grid.Column="0">
-        <Grid.RowDefinitions>
-          <RowDefinition Height="20"/>
-          <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-          <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
 
+      <Grid Grid.Column="0" RowDefinitions="20,*" ColumnDefinitions="*">
         <TextBlock Text="{DynamicResource Workfolder}" HorizontalAlignment="Left" Grid.Column="0" Grid.Row="0"/>
         <ListBox Items="{Binding WorkfolderFiles}" SelectionMode="Single" Name="WorkfolderSelector" Grid.Column="0" Grid.Row="1" ScrollViewer.HorizontalScrollBarVisibility="Disabled" DoubleTapped="OpenWorkfolderDirectory"/>
       </Grid>
 
-      <Grid Grid.Column="4">
-        <Grid.RowDefinitions>
-          <RowDefinition Height="20"/>
-          <RowDefinition Height="Auto"/>
-          <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-          <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-
+      <Grid Grid.Column="4" RowDefinitions="20,auto,*" ColumnDefinitions="*">
         <TextBlock Text="{DynamicResource StrongholdFolder}" HorizontalAlignment="Left" Grid.Column="0" Grid.Row="0"/>
         <ToggleButton Content="{Binding ToggleButtonName}" IsChecked="{Binding Gm1PreviewTrue}" Grid.Column="0" Grid.Row="1"/>
         <ListBox IsVisible="{Binding Gm1PreviewTrue}" Items="{Binding StrongholdFiles}" SelectionMode="Single" Name="Gm1FilesSelector" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Grid.Column="0" Grid.Row="2" SelectionChanged="SelectedGm1File"/>
         <ListBox IsVisible="{Binding GfxPreviewTrue}" Items="{Binding GfxFiles}" SelectionMode="Single" Name="GfxFilesSelector" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Grid.Column="0" Grid.Row="2" SelectionChanged="SelectedGfxFile"/>
       </Grid>
 
-      <Grid Grid.Column="2">
-        <Grid.RowDefinitions>
-          <RowDefinition Height="Auto"/>
-          <RowDefinition Height="Auto"/>
-          <RowDefinition Height="Auto"/>
-          <RowDefinition Height="Auto"/>
-          <RowDefinition Height="Auto"/>
-          <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-          <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-
+      <Grid Grid.Column="2" RowDefinitions="Auto,Auto,Auto,Auto,Auto,*" ColumnDefinitions="*">
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" IsVisible="{Binding FileSelected}" Grid.Row="0" Grid.Column="0">
           <TextBlock Text="{DynamicResource Datatype}"/>
           <TextBlock Text=" "/>
