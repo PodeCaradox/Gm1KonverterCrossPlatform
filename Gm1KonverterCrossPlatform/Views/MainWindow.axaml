@@ -164,14 +164,14 @@
     <Grid Grid.Row="4">
       <Grid.ColumnDefinitions>
         <ColumnDefinition MinWidth="150" Width="250"/>
-        <ColumnDefinition Width="2"/>
+        <ColumnDefinition Width="3"/>
         <ColumnDefinition MinWidth="520" Width="*"/>
-        <ColumnDefinition Width="2"/>
+        <ColumnDefinition Width="3"/>
         <ColumnDefinition MinWidth="150" Width="250"/>
       </Grid.ColumnDefinitions>
 
-      <GridSplitter Grid.Column="1" Width="2"/>
-      <GridSplitter Grid.Column="3" Width="2"/>
+      <GridSplitter Grid.Column="1" Width="3"/>
+      <GridSplitter Grid.Column="3" Width="3"/>
       
       <Grid Grid.Column="0">
         <Grid.RowDefinitions>
