@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using Avalonia;
 using Avalonia.Media.Imaging;
 using Files.Gm1Converter;
-using Image = SixLabors.ImageSharp.Image;
 using Gm1KonverterCrossPlatform.HelperClasses.Views;
-using Avalonia;
-using System.Linq;
 using Gm1KonverterCrossPlatform.HelperClasses;
 using Gm1KonverterCrossPlatform.Files;
+using Image = SixLabors.ImageSharp.Image;
 using SixLabors.ImageSharp.PixelFormats;
 
 namespace HelperClasses.Gm1Converter
