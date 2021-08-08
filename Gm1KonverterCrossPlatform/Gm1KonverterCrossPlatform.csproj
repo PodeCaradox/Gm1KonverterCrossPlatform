@@ -6,6 +6,7 @@
 	<RuntimeIdentifiers>win10-x64;osx;linux-x64;win7-x32</RuntimeIdentifiers>
     <LangVersion>7.2</LangVersion>
     <ApplicationIcon>Assets\avalonia-logo.ico</ApplicationIcon>
+    <ApplicationManifest>Properties\PublishProfiles\app.manifest</ApplicationManifest>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net461|AnyCPU'">
     <PlatformTarget>AnyCPU</PlatformTarget>
