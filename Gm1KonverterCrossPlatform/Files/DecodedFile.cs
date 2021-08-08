@@ -10,7 +10,6 @@ namespace Files.Gm1Converter
 {
     class DecodedFile : IDisposable
     {
-
         #region Variables
 
         private Palette palette;
@@ -36,7 +35,6 @@ namespace Files.Gm1Converter
 
         #endregion
 
-
         #region Methods
 
         /// <summary>
@@ -59,7 +57,6 @@ namespace Files.Gm1Converter
                 }
                 if (Logger.Loggeractiv) Logger.Log("Datatype" + ((GM1FileHeader.DataType)fileHeader.IDataType));
             }
-
 
             actualPositionInByteArray = (GM1FileHeader.fileHeaderSize + Palette.paletteSize);
             this._TGXImage = new List<TGXImage>();
@@ -93,12 +90,9 @@ namespace Files.Gm1Converter
                 messageBox.Show();
                 return false;
             }
-           
 
             return false;
         }
-
-
 
         /// <summary>
         /// Create the new GM1 Files from IMGS and Headers(1. FileHeader,2. Palette,3. OffsetList,4. SizeList,5. ImgHeaderList,6. ImgsasByteList)
@@ -106,7 +100,6 @@ namespace Files.Gm1Converter
         /// <returns></returns>
         public byte[] GetNewGM1Bytes()
         {
-
             if (Logger.Loggeractiv) Logger.Log("GetNewGM1Bytes");
             List<byte> newFile = new List<byte>();
             var headerBytes = fileHeader.GetBytes();
@@ -130,7 +123,6 @@ namespace Files.Gm1Converter
             for (int i = 0; i < fileHeader.INumberOfPictureinFile; i++)
             {
                 newFile.AddRange(BitConverter.GetBytes(_TGXImage[i].SizeinByteArray));
-
             }
 
             for (int i = 0; i < fileHeader.INumberOfPictureinFile; i++)
@@ -142,7 +134,6 @@ namespace Files.Gm1Converter
             {
                 newFile.AddRange(_TGXImage[i].ImgFileAsBytearray);
             }
-
 
             return newFile.ToArray();
         }
@@ -164,7 +155,6 @@ namespace Files.Gm1Converter
         /// <param name="array">The GM1 File as byte Array</param>
         private void CreateImages(byte[] array)
         {
-    
             if (Logger.Loggeractiv) Logger.Log("Create Images");
             CreateOffsetAndSizeInByteArrayList(array);
             CreateImgHeader(array);
@@ -176,7 +166,6 @@ namespace Files.Gm1Converter
             }
         }
 
-
         private void CreateNoCompressionImages(byte[] array, int offset)
         {
             if (Logger.Loggeractiv) Logger.Log("CreateNoCompressionImages");
@@ -187,7 +176,6 @@ namespace Files.Gm1Converter
             {
                 _TGXImage[(int)i].CreateNoComppressionImageFromByteArray(palette, offset);
             }
-
         }
 
         private List<TGXImage> newTileList = new List<TGXImage>();
@@ -211,7 +199,6 @@ namespace Files.Gm1Converter
             //Image Header has a length of 16 bytes 
             for (int i = 0; i < this.fileHeader.INumberOfPictureinFile; i++)
             {
-
                 _TGXImage[i].Width = BitConverter.ToUInt16(array, actualPositionInByteArray + i * TGXImage.iImageHeaderSize + 0);
                 _TGXImage[i].Height = BitConverter.ToUInt16(array, actualPositionInByteArray + i * TGXImage.iImageHeaderSize + 2);
                 _TGXImage[i].OffsetX = BitConverter.ToUInt16(array, actualPositionInByteArray + i * TGXImage.iImageHeaderSize + 4);
@@ -232,9 +219,6 @@ namespace Files.Gm1Converter
                 Buffer.BlockCopy(array, actualPositionInByteArray + (int)image.OffsetinByteArray, image.ImgFileAsBytearray, 0, (int)image.SizeinByteArray);
             }
         }
-
-
-
 
         /// <summary>
         /// Creates IMGS from TGX and Tile(the IMG consist out of many smaller IMGS)
@@ -260,13 +244,9 @@ namespace Files.Gm1Converter
             if (Logger.Loggeractiv) Logger.Log("CreateTileImage for Loop");
             for (int i = 0; i < _TGXImage.Count; i++)
             {
-
-
                 if (_TGXImage[i].ImagePart == 0)
                 {
-
                     width = Utility.GetDiamondWidth(_TGXImage[i].SubParts);
-
 
                     partsBefore += _TGXImage[i].SubParts;
 
@@ -281,10 +261,8 @@ namespace Files.Gm1Converter
                     halfReached = false;
                 }
 
-
                 if (_TGXImage[i].ImgFileAsBytearray.Length > 512)
                 {
-
                     int right = 0;
                     if (_TGXImage[i].Direction == 3)
                     {
@@ -295,12 +273,8 @@ namespace Files.Gm1Converter
                     {
                         tilesImage[counter].MinusHeight = offsetY - _TGXImage[i].TileOffset;
                     }
-
                 }
                 tilesImage[counter].AddDiamondToImg(_TGXImage[i].ImgFileAsBytearray, offsetX, offsetY);
-
-
-
 
                 offsetX += 32;
                 actualItemsPerRow++;
@@ -332,11 +306,6 @@ namespace Files.Gm1Converter
                     safeoffset = offsetX;
                     actualItemsPerRow = 0;
                 }
-
-
-
-
-
             }
 
             foreach (var image in tilesImage)
@@ -360,16 +329,11 @@ namespace Files.Gm1Converter
             }
             actualPositionInByteArray += (int)this.fileHeader.INumberOfPictureinFile * 4;
 
-
             for (int i = 0; i < this.fileHeader.INumberOfPictureinFile; i++)
             {
-
                 _TGXImage[i].SizeinByteArray = BitConverter.ToUInt32(array, actualPositionInByteArray + i * 4);
-
             }
             actualPositionInByteArray += (int)this.fileHeader.INumberOfPictureinFile * 4;
-
-
         }
 
         public void SetNewTileList()
@@ -386,10 +350,8 @@ namespace Files.Gm1Converter
             fileHeader.INumberOfPictureinFile = (uint)_TGXImage.Count;
             newTileList = new List<TGXImage>();
         }
+
         #endregion
-
-
-
 
         #region GetterSetter
 
@@ -400,6 +362,5 @@ namespace Files.Gm1Converter
         internal List<TilesImage> TilesImages { get => tilesImage; set => tilesImage = value; }
 
         #endregion
-
     }
 }
