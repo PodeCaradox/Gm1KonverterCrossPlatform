@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
 using Avalonia.Media.Imaging;
 using HelperClasses.Gm1Converter;
 
@@ -9,7 +7,6 @@ namespace Files.Gm1Converter
 {
     public class TGXImage
     {
-
         #region Public
 
         public static readonly int iImageHeaderSize = 16;
