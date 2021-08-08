@@ -1,14 +1,11 @@
 ﻿using Avalonia.Media.Imaging;
 using HelperClasses.Gm1Converter;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Gm1KonverterCrossPlatform.Files
 {
     class TilesImage : IDisposable
     {
-
         #region Public
 
         public static int Puffer = 500;
@@ -18,9 +15,9 @@ namespace Gm1KonverterCrossPlatform.Files
         #region Variables
 
         private static int[] array = {
-                2, 6, 10, 14, 18, 22, 26, 30,
-                30, 26, 22, 18, 14, 10, 6, 2
-            };
+            2, 6, 10, 14, 18, 22, 26, 30,
+            30, 26, 22, 18, 14, 10, 6, 2
+        };
         private int width, height;
         private WriteableBitmap bmp;
         private int minusHeight = 9999999;
@@ -35,7 +32,6 @@ namespace Gm1KonverterCrossPlatform.Files
             this.width = width;
             this.height = height;
             colors = new UInt32[width * height];
-
         }
 
         #endregion
@@ -72,8 +68,6 @@ namespace Gm1KonverterCrossPlatform.Files
             int bytePos = 0;
             byte r, g, b, a;
 
-
-
             for (int i = 0; i < 16; i++)
             {
                 for (int j = 0; j < array[i]; j++)
@@ -91,10 +85,6 @@ namespace Gm1KonverterCrossPlatform.Files
                 x = 0;
                 y++;
             }
-
-
-
-
         }
 
         /// <summary>
@@ -105,16 +95,12 @@ namespace Gm1KonverterCrossPlatform.Files
         /// <param name="offsetY"></param>
         internal void AddImgTileOnTopToImg(byte[] imgFileAsBytearray, int offsetX, int offsetY)
         {
-
             uint x = 0;
             uint y = 0;
             byte r, g, b, a;
 
-
             for (uint bytePos = 512; bytePos < imgFileAsBytearray.Length;)
             {
-
-
                 byte token = imgFileAsBytearray[bytePos];
                 byte tokentype = (byte)(token >> 5);
                 byte length = (byte)((token & 31) + 1);
@@ -126,14 +112,12 @@ namespace Gm1KonverterCrossPlatform.Files
                 ushort pixelColor;
                 switch (tokentype)
                 {
-                    case 0://Stream-of-pixels 
+                    case 0: //Stream-of-pixels 
 
                         for (byte i = 0; i < length; i++)
                         {
-
                             pixelColor = BitConverter.ToUInt16(imgFileAsBytearray, (int)bytePos);
                             bytePos += 2;
-
 
                             Utility.ReadColor(pixelColor, out r, out g, out b, out a);
                             a = byte.MaxValue;
@@ -141,20 +125,20 @@ namespace Gm1KonverterCrossPlatform.Files
                             colors[number] = (UInt32)(b | (g << 8) | (r << 16) | (a << 24));
 
                             x++;
-
                         }
                         break;
-                    case 4://Newline
+
+                    case 4: //Newline
 
                         y++;
                         if (y > this.height) break;
                         x = 0;
                         break;
-                    case 2://Repeating pixels 
+
+                    case 2: //Repeating pixels
 
                         pixelColor = BitConverter.ToUInt16(imgFileAsBytearray, (int)bytePos);
                         bytePos += 2;
-
 
                         Utility.ReadColor(pixelColor, out r, out g, out b, out a);
 
@@ -167,7 +151,9 @@ namespace Gm1KonverterCrossPlatform.Files
                             x++;
                         }
                         break;
-                    case 1://Transparent-Pixel-String 
+
+                    case 1: //Transparent-Pixel-String
+
                         colorByte = Utility.TransparentColorByte;
                         for (byte i = 0; i < length; i++)
                         {
@@ -175,9 +161,9 @@ namespace Gm1KonverterCrossPlatform.Files
                             x++;
                         }
                         break;
+
                     default:
                         break;
-
                 }
             }
         }
@@ -215,6 +201,5 @@ namespace Gm1KonverterCrossPlatform.Files
         }
 
         #endregion
-
     }
 }
