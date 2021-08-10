@@ -8,6 +8,7 @@ namespace Gm1KonverterCrossPlatform.HelperClasses.Views
     {
         public MessageBoxWindow()
         {
+
         }
 
         public enum MessageTyp { Fehler, Info }

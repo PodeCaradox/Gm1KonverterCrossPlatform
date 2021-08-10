@@ -1,5 +1,4 @@
-﻿
-using ReactiveUI;
+﻿using ReactiveUI;
 using Avalonia.Controls;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -11,7 +10,6 @@ using System.IO;
 using System;
 using Gm1KonverterCrossPlatform.HelperClasses;
 using Avalonia;
-using System.Linq;
 using Gm1KonverterCrossPlatform.Views;
 using Newtonsoft.Json;
 
@@ -23,8 +21,8 @@ namespace Gm1KonverterCrossPlatform.ViewModels
 
         private UserConfig userConfig;
 
-        private String colorAsText = "";
-        public String ColorAsText
+        private string colorAsText = "";
+        public string ColorAsText
         {
             get => colorAsText;
             set
@@ -32,35 +30,46 @@ namespace Gm1KonverterCrossPlatform.ViewModels
                 this.RaiseAndSetIfChanged(ref colorAsText, value);
             }
         }
-        
-        private UserConfig.Languages actualLanguage = UserConfig.Languages.English;
-        public UserConfig.Languages ActualLanguage
+
+        private Languages.Language actualLanguage;
+        public Languages.Language ActualLanguage
         {
             get => actualLanguage;
             set {
                 this.RaiseAndSetIfChanged(ref actualLanguage, value);
-                Utility.SelectCulture(value);
-                ChangeLanguages();
+                HelperClasses.Languages.SelectLanguage(value);
                 userConfig.Language = value;
             }
         }
 
-        private void ChangeLanguages()
-        {
-            if (File == null) return; 
-            Filetype = Utility.GetText("Datatype") + ((GM1FileHeader.DataType)File.FileHeader.IDataType);
-            if(File.Palette!=null) ActualPalette = Utility.GetText("Palette") + (File.Palette.ActualPalette + 1);
-        }
-
-        private UserConfig.Languages[] languages = new UserConfig.Languages[]{ UserConfig.Languages.Deutsch, UserConfig.Languages.English, UserConfig.Languages.Русский };
-        public UserConfig.Languages[] Languages
+        private Languages.Language[] languages = new Languages.Language[] { HelperClasses.Languages.Language.Deutsch, HelperClasses.Languages.Language.English, HelperClasses.Languages.Language.Русский };
+        public Languages.Language[] Languages
         {
             get => languages;
             set => this.RaiseAndSetIfChanged(ref languages, value);
         }
-        
-        private String filetype = "Datatype: ";
-        public String Filetype
+
+        private ColorThemes.ColorTheme actualColorTheme;
+
+        private ColorThemes.ColorTheme[] colorThemes = new ColorThemes.ColorTheme[] { HelperClasses.ColorThemes.ColorTheme.Light, HelperClasses.ColorThemes.ColorTheme.Dark };
+        public ColorThemes.ColorTheme[] ColorThemes
+        {
+            get => colorThemes;
+            set => this.RaiseAndSetIfChanged(ref colorThemes, value);
+        }
+        public ColorThemes.ColorTheme ActualColorTheme
+        {
+            get => actualColorTheme;
+            set
+            {
+                this.RaiseAndSetIfChanged(ref actualColorTheme, value);
+                HelperClasses.ColorThemes.SelectColorTheme(value);
+                userConfig.ColorTheme = value;
+            }
+        }
+
+        private GM1FileHeader.DataType filetype;
+        public GM1FileHeader.DataType Filetype
         {
             get => filetype;
             set => this.RaiseAndSetIfChanged(ref filetype, value);
@@ -136,29 +145,29 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             }
         }
         
-        private String actualPalette = Utility.GetText("Palette")+"1";
-        public String ActualPalette
+        private int actualPalette = 1;
+        public int ActualPalette
         {
             get => actualPalette;
             set => this.RaiseAndSetIfChanged(ref actualPalette, value);
         }
 
-        internal String[] workfolderFiles;
-        internal String[] WorkfolderFiles
+        internal string[] workfolderFiles;
+        internal string[] WorkfolderFiles
         {
             get => workfolderFiles;
             set => this.RaiseAndSetIfChanged(ref workfolderFiles, value);
         }
 
-        internal String[] strongholdFiles;
-        internal String[] StrongholdFiles
+        internal string[] strongholdFiles;
+        internal string[] StrongholdFiles
         {
             get => strongholdFiles;
             set => this.RaiseAndSetIfChanged(ref strongholdFiles, value);
         }
 
-        internal String[] gfxFiles;
-        internal String[] GfxFiles
+        internal string[] gfxFiles;
+        internal string[] GfxFiles
         {
             get => gfxFiles;
             set => this.RaiseAndSetIfChanged(ref gfxFiles, value);
@@ -239,8 +248,8 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             set => this.RaiseAndSetIfChanged(ref gfxPreviewTrue, value);
         }
 
-        private String toggleButtonName = "GM1";
-        public String ToggleButtonName
+        private string toggleButtonName = "GM1";
+        public string ToggleButtonName
         {
             get => toggleButtonName;
             set => this.RaiseAndSetIfChanged(ref toggleButtonName, value);
@@ -264,7 +273,6 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             set {
                 this.RaiseAndSetIfChanged(ref loggerActiv, value);
                 userConfig.ActivateLogger = value;
-
             }
         }
 
@@ -302,6 +310,7 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             get => tgxButtonImportEnabled;
             set => this.RaiseAndSetIfChanged(ref tgxButtonImportEnabled, value);
         }
+
         private bool orginalStrongholdAnimationButtonEnabled = false;
         public bool OrginalStrongholdAnimationButtonEnabled
         {
@@ -344,7 +353,21 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             set => this.RaiseAndSetIfChanged(ref images, value);
         }
 
-        internal DecodedFile File { get; set; }
+        internal bool fileSelected = false;
+        internal bool FileSelected {
+            get => fileSelected;
+            set => this.RaiseAndSetIfChanged(ref fileSelected, value);
+        }
+
+        internal DecodedFile file;
+        internal DecodedFile File {
+            get => file;
+            set {
+                file = value;
+                FileSelected = (file != null);
+            }
+        }
+
         public UserConfig UserConfig { get => userConfig; set => userConfig = value; }
 
         internal TGXImage _actualTGXImageSelection;
@@ -551,7 +574,7 @@ namespace Gm1KonverterCrossPlatform.ViewModels
                     File.Palette.ActualPalette += number;
                 }
             }
-            ActualPalette = Utility.GetText("Palette")  + (File.Palette.ActualPalette+1);
+            ActualPalette = File.Palette.ActualPalette + 1;
             File.DecodeGm1File(File.FileArray, File.FileHeader.Name);
             ShowTGXImgToWindow();
         }
@@ -571,20 +594,20 @@ namespace Gm1KonverterCrossPlatform.ViewModels
         #region Offsets
 
         private Dictionary<int, Point> offsetsBuildings = new Dictionary<int, Point>() {
-            { 0,new Point(939615, 939608) },
-            { 1,new Point(939841, 939834) },
-            { 2,new Point(940022, 940015) },
-            { 3,new Point(939728, 939721) },
-            { 12,new Point(939000, 938996) },
-            { 13,new Point(939031, 939027) },
-            { 43,new Point(938935, 938928) },
-            { 44,new Point(938969, 938962) },
-            { 121,new Point(939943, 939936) },
-            { 122,new Point(939943, 939936) },
-            { 123,new Point(939574, 939567) },
-            { 124,new Point(939536, 939529) },
-            { 125,new Point(939574, 939567) },
-            { 23,new Point(938858, 938851) }
+            { 0, new Point(939615, 939608) },
+            { 1, new Point(939841, 939834) },
+            { 2, new Point(940022, 940015) },
+            { 3, new Point(939728, 939721) },
+            { 12, new Point(939000, 938996) },
+            { 13, new Point(939031, 939027) },
+            { 43, new Point(938935, 938928) },
+            { 44, new Point(938969, 938962) },
+            { 121, new Point(939943, 939936) },
+            { 122, new Point(939943, 939936) },
+            { 123, new Point(939574, 939567) },
+            { 124, new Point(939536, 939529) },
+            { 125, new Point(939574, 939567) },
+            { 23, new Point(938858, 938851) }
         };
         
         public Dictionary<int, Point> NewOffsetsInExe { get; set; } = new Dictionary<int, Point>();
@@ -635,8 +658,8 @@ namespace Gm1KonverterCrossPlatform.ViewModels
                 }
             }
 
-            System.IO.File.WriteAllBytes(UserConfig.CrusaderPath.Replace("\\gm", String.Empty) + "\\Stronghold_Crusader_Extreme.exe", _strongholdExtremeasBytes);
-            System.IO.File.WriteAllBytes(UserConfig.CrusaderPath.Replace("\\gm", String.Empty) + "\\Stronghold Crusader.exe", _strongholdasBytes);
+            System.IO.File.WriteAllBytes(UserConfig.CrusaderPath.Replace("\\gm", string.Empty) + "\\Stronghold_Crusader_Extreme.exe", _strongholdExtremeasBytes);
+            System.IO.File.WriteAllBytes(UserConfig.CrusaderPath.Replace("\\gm", string.Empty) + "\\Stronghold Crusader.exe", _strongholdasBytes);
         }
 
         #endregion

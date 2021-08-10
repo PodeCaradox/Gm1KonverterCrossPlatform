@@ -1,45 +1,22 @@
-﻿<Window
-  xmlns="https://github.com/avaloniaui"
-  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-  xmlns:vm="clr-namespace:Gm1KonverterCrossPlatform.ViewModels;assembly=Gm1KonverterCrossPlatform"
-  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-  mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="600"
-  Width="1200"
-  Height="600"
-  x:Class="Gm1KonverterCrossPlatform.Views.MainWindow"
-  Icon="/Assets/avalonia-logo.ico"
-  Title="{DynamicResource GM1Converter}">
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:Gm1KonverterCrossPlatform.ViewModels;assembly=Gm1KonverterCrossPlatform"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="600"
+        Width="1200"
+        Height="600"
+        x:Class="Gm1KonverterCrossPlatform.Views.MainWindow"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="{DynamicResource GM1Converter}"
+        WindowStartupLocation="CenterScreen">
 
   <Design.DataContext>
     <vm:MainWindowViewModel/>
   </Design.DataContext>
 
-  <Grid>
-    <Grid.RowDefinitions>
-      <RowDefinition Height="auto"/>
-      <RowDefinition Height="1"/>
-      <RowDefinition Height="auto"/>
-      <RowDefinition Height="1"/>
-      <RowDefinition Height="*"/>
-    </Grid.RowDefinitions>
-
-    <Grid.Styles>
-      <Style Selector="Grid > Separator">
-        <Setter Property="Height" Value="1"/>
-        <Setter Property="Background" Value="Lightgray"/>
-      </Style>
-    </Grid.Styles>
-
-    <DockPanel Dock="Left" Grid.Row="0">
-      <DockPanel.Styles>
-        <Style Selector="DockPanel > Separator">
-          <Setter Property="Width" Value="1"/>
-          <Setter Property="Background" Value="Gray"/>
-          <Setter Property="Margin" Value="3"/>
-        </Style>
-      </DockPanel.Styles>
-      
+  <Grid Classes="Main" RowDefinitions="Auto,1,Auto,1,*">
+    <DockPanel Dock="Left" Grid.Row="0" Classes="TextMenu">
       <Menu>
         <MenuItem Header="{DynamicResource File}">
           <MenuItem Header="{DynamicResource CreatenewGM1}" Name="CreatenewGM1MenueItem" IsEnabled="{Binding ButtonsEnabled}" Click="CreatenewGM1"/>
@@ -88,6 +65,14 @@
               </StackPanel>
             </MenuItem.Header>
           </MenuItem>
+          <Separator/>
+          <MenuItem Items="{Binding ColorThemes}" Click="ChangeColorTheme">
+            <MenuItem.Header>
+              <StackPanel Orientation="Horizontal">
+                <TextBlock Text="{DynamicResource ColorTheme}"/><TextBlock Text=" ("/><TextBlock Text="{Binding ActualColorTheme}"/><TextBlock Text=")"/>
+              </StackPanel>
+            </MenuItem.Header>
+          </MenuItem>
         </MenuItem>
       </Menu>
       
@@ -106,25 +91,7 @@
 
     <Separator Grid.Row="1"/>
 
-    <DockPanel Dock="Left" Grid.Row="2" Margin="2">
-      <DockPanel.Styles>
-        <Style Selector="Separator">
-          <Setter Property="Width" Value="1"/>
-          <Setter Property="Margin" Value="3"/>
-          <Setter Property="Background" Value="Gray"/>
-        </Style>
-        <Style Selector="MenuItem">
-          <Setter Property="Width" Value="32"/>
-          <Setter Property="Height" Value="32"/>
-        </Style>
-        <Style Selector="MenuItem > Image">
-          <Setter Property="Width" Value="32"/>
-          <Setter Property="Height" Value="32"/>
-          <Setter Property="VerticalAlignment" Value="Center"/>
-          <Setter Property="HorizontalAlignment" Value="Center"/>
-        </Style>
-      </DockPanel.Styles>
-
+    <DockPanel Dock="Left" Grid.Row="2" Margin="2" Classes="ImageMenu">
       <Menu>
         <MenuItem IsEnabled="{Binding ButtonsEnabled}" Click="CreatenewGM1" ToolTip.Tip="{DynamicResource CreatenewGM1}">
           <MenuItem.Header>
@@ -188,65 +155,47 @@
 
     <Grid Grid.Row="4">
       <Grid.ColumnDefinitions>
-        <ColumnDefinition Width="250"/>
-        <ColumnDefinition Width="*"/>
-        <ColumnDefinition Width="250"/>
+        <ColumnDefinition MinWidth="150" Width="250"/>
+        <ColumnDefinition Width="3"/>
+        <ColumnDefinition MinWidth="520" Width="*"/>
+        <ColumnDefinition Width="3"/>
+        <ColumnDefinition MinWidth="150" Width="250"/>
       </Grid.ColumnDefinitions>
-      
-      <Grid Grid.Column="0">
-        <Grid.RowDefinitions>
-          <RowDefinition Height="20"/>
-          <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-          <ColumnDefinition Width="250"/>
-        </Grid.ColumnDefinitions>
 
+      <GridSplitter Grid.Column="1" Width="3"/>
+      <GridSplitter Grid.Column="3" Width="3"/>
+
+      <Grid Grid.Column="0" RowDefinitions="20,*" ColumnDefinitions="*">
         <TextBlock Text="{DynamicResource Workfolder}" HorizontalAlignment="Left" Grid.Column="0" Grid.Row="0"/>
         <ListBox Items="{Binding WorkfolderFiles}" SelectionMode="Single" Name="WorkfolderSelector" Grid.Column="0" Grid.Row="1" ScrollViewer.HorizontalScrollBarVisibility="Disabled" DoubleTapped="OpenWorkfolderDirectory"/>
       </Grid>
 
-      <Grid Grid.Column="2">
-        <Grid.RowDefinitions>
-          <RowDefinition Height="20"/>
-          <RowDefinition Height="Auto"/>
-          <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-          <ColumnDefinition Width="250"/>
-        </Grid.ColumnDefinitions>
-
+      <Grid Grid.Column="4" RowDefinitions="20,auto,*" ColumnDefinitions="*">
         <TextBlock Text="{DynamicResource StrongholdFolder}" HorizontalAlignment="Left" Grid.Column="0" Grid.Row="0"/>
         <ToggleButton Content="{Binding ToggleButtonName}" IsChecked="{Binding Gm1PreviewTrue}" Grid.Column="0" Grid.Row="1"/>
         <ListBox IsVisible="{Binding Gm1PreviewTrue}" Items="{Binding StrongholdFiles}" SelectionMode="Single" Name="Gm1FilesSelector" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Grid.Column="0" Grid.Row="2" SelectionChanged="SelectedGm1File"/>
         <ListBox IsVisible="{Binding GfxPreviewTrue}" Items="{Binding GfxFiles}" SelectionMode="Single" Name="GfxFilesSelector" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Grid.Column="0" Grid.Row="2" SelectionChanged="SelectedGfxFile"/>
       </Grid>
 
-      <Grid Grid.Column="1">
-        <Grid.RowDefinitions>
-          <RowDefinition Height="Auto"/>
-          <RowDefinition Height="Auto"/>
-          <RowDefinition Height="Auto"/>
-          <RowDefinition Height="Auto"/>
-          <RowDefinition Height="Auto"/>
-          <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-          <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="0" Grid.Column="0">
-          <TextBlock Text="{Binding Filetype}" HorizontalAlignment="Center" Height="20"/>
+      <Grid Grid.Column="2" RowDefinitions="Auto,Auto,Auto,Auto,Auto,*" ColumnDefinitions="*">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" IsVisible="{Binding FileSelected}" Grid.Row="0" Grid.Column="0">
+          <TextBlock Text="{DynamicResource Datatype}"/>
+          <TextBlock Text=" "/>
+          <TextBlock Text="{Binding Filetype}"/>
           <Image Name="HelpIcon" Margin="10,0,0,0" Source="avares://Gm1KonverterCrossPlatform/Assets/info.png" Tapped="OpenInfoWindow"/>
         </StackPanel>
 
-        <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="0">
-          <TextBlock Text="{Binding ActualPalette}" IsVisible="{Binding ColorButtonsEnabled}" HorizontalAlignment="Center"/>
+        <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="0" IsVisible="{Binding ColorButtonsEnabled}">
           <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-            <Button IsEnabled="{Binding ColorButtonsEnabled}" Content="««" Width="40" Click="Button_ClickPalleteminus" IsVisible="{Binding ColorButtonsEnabled}" HorizontalAlignment="Center"/>
-            <Image Source="{Binding ActuellColorTable}" IsVisible="{Binding ColorButtonsEnabled}" HorizontalAlignment="Center"/>
-            <Button IsEnabled="{Binding ColorButtonsEnabled}" Content="»»" Width="40" Click="Button_ClickPalleteplus" IsVisible="{Binding ColorButtonsEnabled}" HorizontalAlignment="Center"/>
-            <Button IsEnabled="{Binding ColorButtonsEnabled}" Click="Button_ClickChangeColorTable" IsVisible="{Binding ColorButtonsEnabled}" HorizontalAlignment="Right" Content="{DynamicResource ChangeColorTable}"/>
+            <TextBlock Text="{DynamicResource Palette}"/>
+            <TextBlock Text=" "/>
+            <TextBlock Text="{Binding ActualPalette}"/>
+          </StackPanel>
+          <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+            <Button IsEnabled="{Binding ColorButtonsEnabled}" Content="««" Width="40" Click="Button_ClickPalleteminus" HorizontalAlignment="Center"/>
+            <Image Source="{Binding ActuellColorTable}" HorizontalAlignment="Center"/>
+            <Button IsEnabled="{Binding ColorButtonsEnabled}" Content="»»" Width="40" Click="Button_ClickPalleteplus" HorizontalAlignment="Center"/>
+            <Button IsEnabled="{Binding ColorButtonsEnabled}" Click="Button_ClickChangeColorTable" HorizontalAlignment="Right" Content="{DynamicResource ChangeColorTable}"/>
           </StackPanel>
         </StackPanel>
 

@@ -1,6 +1,4 @@
-﻿using System;
-using Avalonia;
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Files.Gm1Converter;
 
@@ -8,17 +6,15 @@ namespace Gm1KonverterCrossPlatform.Views
 {
     public class InfoWindow : Window
     {
-
         public InfoWindow()
         {
 
-
         }
-            public InfoWindow(GM1FileHeader.DataType dataType)
+
+        public InfoWindow(GM1FileHeader.DataType dataType)
         {
             this.InitializeComponent();
-           
-         
+
             StackPanel animation = this.Get<StackPanel>("Animation");
             animation.IsVisible = false;
             StackPanel interfaceS = this.Get<StackPanel>("Interface");
@@ -33,7 +29,6 @@ namespace Gm1KonverterCrossPlatform.Views
                 case GM1FileHeader.DataType.Animations:
                     animation.IsVisible = true;
                     break;
-
                 case GM1FileHeader.DataType.Interface:
                     interfaceS.IsVisible = true;
                     break;
@@ -55,14 +50,11 @@ namespace Gm1KonverterCrossPlatform.Views
                 default:
                     break;
             }
-
-
         }
 
         private void InitializeComponent()
         {
             AvaloniaXamlLoader.Load(this);
         }
-
     }
 }

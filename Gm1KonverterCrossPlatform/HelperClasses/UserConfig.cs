@@ -6,29 +6,39 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
 {
     public class UserConfig
     {
-        public enum Languages { English, Deutsch, Русский };
-
         #region Variables
-        private Languages language = Languages.English;
-        private readonly string path;
+        private readonly string path = Config.AppDataPath;
         private readonly string fileName = "UserConfig.txt";
+
+        private Languages.Language language = Languages.DefaultLanguage;
+        private ColorThemes.ColorTheme colorTheme = ColorThemes.DefaultColorTheme;
         private string crusaderPath;
         private string workFolderPath;
         private bool openFolderAfterExport;
         private bool activateLogger;
         #endregion
-
-        #region Construtor
-
-        public UserConfig()
-        {
-            string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            path = Path.Combine(appData, "Gm1ConverterCrossPlatform");
-        }
-
-        #endregion
         
         #region GetterSetter
+
+        public Languages.Language Language
+        {
+            get => language;
+            set
+            {
+                language = value;
+                SaveData();
+            }
+        }
+
+        public ColorThemes.ColorTheme ColorTheme
+        {
+            get => colorTheme;
+            set
+            {
+                colorTheme = value;
+                SaveData();
+            }
+        }
 
         public string CrusaderPath
         {
@@ -36,16 +46,6 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
             set
             {
                 crusaderPath = value;
-                SaveData();
-            }
-        }
-
-        public Languages Language
-        {
-            get => language;
-            set
-            {
-                language = value;
                 SaveData();
             }
         }
@@ -86,7 +86,7 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
         #region Methods
 
         /// <summary>
-        /// Load the Userconfig
+        /// Load the UserConfig from a file.
         /// </summary>
         public void LoadData()
         {
@@ -94,17 +94,19 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
             if (File.Exists(filePath))
             {
                 string json = File.ReadAllText(filePath);
-                var obj = JsonConvert.DeserializeObject<UserConfig>(json);
+                UserConfig obj = JsonConvert.DeserializeObject<UserConfig>(json);
+
+                language = obj.Language;
+                colorTheme = obj.colorTheme;
                 crusaderPath = obj.CrusaderPath;
                 workFolderPath = obj.WorkFolderPath;
                 openFolderAfterExport = obj.OpenFolderAfterExport;
                 activateLogger = obj.ActivateLogger;
-                language = obj.Language;
             }
         }
 
         /// <summary>
-        /// Save the Userconfig
+        /// Save the UserConfig to a file.
         /// </summary>
         private void SaveData()
         {

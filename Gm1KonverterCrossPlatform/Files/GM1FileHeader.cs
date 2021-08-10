@@ -66,7 +66,6 @@ namespace Files.Gm1Converter
         /// <param name="array"></param>
         public GM1FileHeader(byte[] array)
         {
-            
             this.iUnknown1 = BitConverter.ToUInt32(array, 0);
             this.iUnknown2 = BitConverter.ToUInt32(array, 4);
             this.iUnknown3 = BitConverter.ToUInt32(array, 8);
@@ -80,8 +79,6 @@ namespace Files.Gm1Converter
             this.size = new UInt32[2];
             this.size[0] = iUnknown5[6];
             this.size[1] = iUnknown5[7];
-
-
 
             this.iDataSize = BitConverter.ToUInt32(array, 80);
             this.iUnknown6 = BitConverter.ToUInt32(array, 84);

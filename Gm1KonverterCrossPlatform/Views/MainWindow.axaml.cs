@@ -2,11 +2,7 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
-using Avalonia.Media;
 using Avalonia.Media.Imaging;
-using Avalonia.Platform;
-using Avalonia.Utilities;
-using Avalonia.Win32;
 using Files.Gm1Converter;
 using Gm1KonverterCrossPlatform.HelperClasses;
 using Gm1KonverterCrossPlatform.HelperClasses.Views;
@@ -14,10 +10,8 @@ using Gm1KonverterCrossPlatform.ViewModels;
 using HelperClasses.Gm1Converter;
 using Newtonsoft.Json;
 using SixLabors.ImageSharp.PixelFormats;
-using SkiaSharp;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -240,7 +234,7 @@ namespace Gm1KonverterCrossPlatform.Views
             if (vm.File == null) return;
 
             InfoWindow infoWindow = new InfoWindow((GM1FileHeader.DataType)vm.File.FileHeader.IDataType);
-            infoWindow.Show();
+            infoWindow.Show(this);
         }
 
         private void OpenWorkfolderDirectory(object sender, RoutedEventArgs e)
@@ -687,7 +681,7 @@ namespace Gm1KonverterCrossPlatform.Views
                 {
                     Utility.datatype = (GM1FileHeader.DataType)vm.File.FileHeader.IDataType;
 
-                    vm.Filetype = Utility.GetText("Datatype") + ((GM1FileHeader.DataType)vm.File.FileHeader.IDataType);
+                    vm.Filetype = (GM1FileHeader.DataType)vm.File.FileHeader.IDataType;
                     if (vm.File.Palette == null)
                     {
                         vm.ImportButtonEnabled = true;
@@ -733,9 +727,9 @@ namespace Gm1KonverterCrossPlatform.Views
                 vm.UserConfig = new UserConfig();
                 vm.UserConfig.LoadData();
                 vm.ActualLanguage = vm.UserConfig.Language;
+                vm.ActualColorTheme = vm.UserConfig.ColorTheme;
                 vm.OpenFolderAfterExport = vm.UserConfig.OpenFolderAfterExport;
                 vm.LoggerActiv = vm.UserConfig.ActivateLogger;
-                Logger.Path = vm.UserConfig.WorkFolderPath + "\\Logger";
                 vm.LoadStrongholdFiles();
                 vm.LoadWorkfolderFiles();
 
@@ -749,11 +743,18 @@ namespace Gm1KonverterCrossPlatform.Views
             }
         }
 
-        private async void ChangeLanguage(object sender, RoutedEventArgs e)
+        private void ChangeLanguage(object sender, RoutedEventArgs e)
         {
             MenuItem source = e.Source as MenuItem;
-            UserConfig.Languages language = (UserConfig.Languages)source.Header;
+            Languages.Language language = (Languages.Language)source.Header;
             vm.ActualLanguage = language;
+        }
+
+        private void ChangeColorTheme(object sender, RoutedEventArgs e)
+        {
+            MenuItem source = e.Source as MenuItem;
+            ColorThemes.ColorTheme colorTheme = (ColorThemes.ColorTheme)source.Header;
+            vm.ActualColorTheme = colorTheme;
         }
 
         private void CreatenewGM1(object sender, RoutedEventArgs e)

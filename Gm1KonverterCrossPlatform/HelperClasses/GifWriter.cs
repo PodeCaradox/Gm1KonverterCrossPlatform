@@ -1,16 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 
 namespace Gm1KonverterCrossPlatform.HelperClasses
 {
-    using Avalonia.Media.Imaging;
-    using System;
-    using System.Drawing;
-    using System.Drawing.Imaging;
-    using System.IO;
-    using System.Threading.Tasks;
-
     /// <summary>
     /// Creates a GIF using .Net GIF encoding and additional animation headers.
     /// </summary>
@@ -86,7 +80,6 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
         /// <param name="Delay">Delay in Milliseconds between this and last frame... 0 = <see cref="DefaultFrameDelay"/></param>
         public void WriteFrame(Image Image, int Delay = 0)
         {
-        
             lock (_syncLock)
                 using (var gifStream = new MemoryStream())
                 {

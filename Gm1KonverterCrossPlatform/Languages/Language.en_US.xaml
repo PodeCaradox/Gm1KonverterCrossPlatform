@@ -99,4 +99,6 @@
     <x:String x:Key="OpenStrongholdFolder">Open Stronghold Folder</x:String>
 
     <x:String x:Key="Language">Language</x:String>
+    
+    <x:String x:Key="ColorTheme">Theme</x:String>
 </controls:ResourceDictionary>

@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
 using Avalonia.Media.Imaging;
 using HelperClasses.Gm1Converter;
 
@@ -9,7 +7,6 @@ namespace Files.Gm1Converter
 {
     public class TGXImage
     {
-
         #region Public
 
         public static readonly int iImageHeaderSize = 16;
@@ -45,6 +42,7 @@ namespace Files.Gm1Converter
         #endregion
 
         #region GetterSetter
+
         public UInt16 Width { get => width; set => width = value; }
         public UInt16 Height { get => height; set => height = value; }
 
@@ -97,7 +95,6 @@ namespace Files.Gm1Converter
 
         #region Methods
 
-
         /// <summary>
         /// Convert img byte array to IMG, use Pallete if not null
         /// </summary>
@@ -110,14 +107,12 @@ namespace Files.Gm1Converter
                 width = this.width;
                 height = this.height;
                 bmp = new WriteableBitmap(new Avalonia.PixelSize(width, height), new Avalonia.Vector(96, 96), Avalonia.Platform.PixelFormat.Bgra8888);// Bgra8888 is device-native and much faster.
-           
             }
             else
             {
                 width = (int)tgxwidth;
                 height = (int)tgxheight;
                 bmp = new WriteableBitmap(new Avalonia.PixelSize(width, height), new Avalonia.Vector(96, 96), Avalonia.Platform.PixelFormat.Bgra8888);// Bgra8888 is device-native and much faster.
-
             }
 
             using (var buf = bmp.Lock())
@@ -125,12 +120,9 @@ namespace Files.Gm1Converter
                 uint x = 0;
                 uint y = 0;
                 byte r, g, b, a;
-      
 
                 for (uint bytePos = 0; bytePos < imgFileAsBytearray.Length;)
                 {
-            
-
                     byte token = imgFileAsBytearray[bytePos];
                     byte tokentype = (byte)(token >> 5);
                     byte length = (byte)((token & 31) + 1);
@@ -144,7 +136,7 @@ namespace Files.Gm1Converter
                     ushort pixelColor;
                     switch (tokentype)
                     {
-                        case 0://Stream-of-pixels 
+                        case 0: //Stream-of-pixels 
 
                             for (byte i = 0; i < length; i++)
                             {
@@ -173,10 +165,9 @@ namespace Files.Gm1Converter
                                 *ptr = colorByte;
                                
                                 x++;
-                               
                             }
                             break;
-                        case 4://Newline
+                        case 4: //Newline
                             colorByte = Utility.TransparentColorByte;
                             if (palette != null)
                             {
@@ -192,7 +183,6 @@ namespace Files.Gm1Converter
                                     *ptr = colorByte;
                                  
                                     x++;
-
                                 }
                             }
 
@@ -200,7 +190,7 @@ namespace Files.Gm1Converter
                             if (y > height) break;
                             x = 0;
                             break;
-                        case 2://Repeating pixels 
+                        case 2: //Repeating pixels 
 
                             if (palette != null)
                             {
@@ -227,34 +217,26 @@ namespace Files.Gm1Converter
                                 *ptr = colorByte;
                                 
                                 x++;
-                                
                             }
                             break;
-                        case 1://Transparent-Pixel-String 
+                        case 1: //Transparent-Pixel-String 
                             colorByte = Utility.TransparentColorByte;
                             for (byte i = 0; i < length; i++)
                             {
-
-                                
                                 var ptr = (uint*)buf.Address;
                                 ptr += (uint)((width * y) + x);
                                 *ptr = colorByte;
                               
                                 x++;
-                               
                             }
                             break;
                         default:
                             break;
-
                     }
-
                 }
-
             }
-            
-          
         }
+
         internal void ConvertImageWithPaletteToByteArray(List<ushort> colors, int width, int height, Palette palette, List<ushort>[] colorsImages = null)
         {
             var array = Utility.ImgToGM1ByteArray(colors, width, height, animatedColor, palette, colorsImages);
@@ -269,7 +251,6 @@ namespace Files.Gm1Converter
 
             using (var buf = bmp.Lock())
             {
-                
                 byte r, g, b, a;
                 uint x = 0;
                 uint y = 0;
@@ -287,10 +268,6 @@ namespace Files.Gm1Converter
                         x = 0;
                     }
                 }
-
-
-                      
-              
             }
         }
 
@@ -302,7 +279,7 @@ namespace Files.Gm1Converter
         /// <param name="height">Height of the new IMG</param>
         internal void ConvertImageWithoutPaletteToByteArray(List<ushort> colors, int width, int height)
         {
-            var array = Utility.ImgToGM1ByteArray(colors, width, height,animatedColor);
+            var array = Utility.ImgToGM1ByteArray(colors, width, height, animatedColor);
             //for (int i = 0; i < imgFileAsBytearray.Length; i++)
             //{
             //    if (imgFileAsBytearray[i]!= array[i])
@@ -311,11 +288,7 @@ namespace Files.Gm1Converter
             //    }
             //}
 
-          
-
             imgFileAsBytearray = array.ToArray();
-
-
         }
 
         internal void ConvertNoCommpressionImageToByteArray(List<ushort> list, int width, int height)
@@ -351,7 +324,6 @@ namespace Files.Gm1Converter
             array.Add(animatedColor);
             return array.ToArray();
         }
-
 
         #endregion
     }
