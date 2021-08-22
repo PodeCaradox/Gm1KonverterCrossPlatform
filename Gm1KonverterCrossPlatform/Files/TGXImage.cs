@@ -27,7 +27,7 @@ namespace Files.Gm1Converter
         private byte direction;
         private byte horizontalOffsetOfImage;
         private byte buildingWidth;
-        private byte animatedColor;//if alpha 1 
+        private byte animatedColor; // if alpha 1 
         private UInt32 offsetinByteArray;
         private UInt32 sizeinByteArray;
         private WriteableBitmap bmp;
@@ -67,7 +67,7 @@ namespace Files.Gm1Converter
         public UInt16 TileOffset { get => tileOffset; set => tileOffset = value; }
 
         /// <summary>
-        /// left,right, center... used for buildings only. 
+        /// left, right, center... used for buildings only. 
         /// </summary>
         public byte Direction { get => direction; set => direction = value; }
 

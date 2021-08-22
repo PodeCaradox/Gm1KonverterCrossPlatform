@@ -1,5 +1,4 @@
-﻿using Avalonia.Controls;
-using Gm1KonverterCrossPlatform.Files;
+﻿using Gm1KonverterCrossPlatform.Files;
 using Gm1KonverterCrossPlatform.HelperClasses;
 using Gm1KonverterCrossPlatform.HelperClasses.Views;
 using HelperClasses.Gm1Converter;
@@ -51,6 +50,7 @@ namespace Files.Gm1Converter
             {
                 this.fileHeader = new GM1FileHeader(array);
                 this.fileHeader.Name = name;
+
                 if (fileHeader.IDataType == (UInt32)GM1FileHeader.DataType.Animations)
                 {
                     this.palette = new Palette(array);
@@ -150,7 +150,7 @@ namespace Files.Gm1Converter
         }
 
         /// <summary>
-        /// Creates the IMG from the byte array, handles Animation,Interfaces,TGXConstSize, Font
+        /// Creates the IMG from the byte array, handles Animation, Interfaces, TGXConstSize, Font
         /// </summary>
         /// <param name="array">The GM1 File as byte Array</param>
         private void CreateImages(byte[] array)
@@ -161,7 +161,6 @@ namespace Files.Gm1Converter
             if (Logger.Loggeractiv) Logger.Log("CreateImageFromByteArray");
             for (uint i = 0; i < fileHeader.INumberOfPictureinFile; i++)
             {
-
                 _TGXImage[(int)i].CreateImageFromByteArray(palette);
             }
         }
