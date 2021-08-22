@@ -8,7 +8,7 @@ using Files.Gm1Converter;
 using Gm1KonverterCrossPlatform.HelperClasses.Views;
 using Gm1KonverterCrossPlatform.HelperClasses;
 using Gm1KonverterCrossPlatform.Files;
-using Image = SixLabors.ImageSharp.Image;
+using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 
 namespace HelperClasses.Gm1Converter
@@ -54,24 +54,54 @@ namespace HelperClasses.Gm1Converter
         }
 
         /// <summary>
-        /// Load the IMG as Color 2byte list
+        /// Load the IMG as Color 2-byte list
         /// </summary>
-        /// <param name="filename">The Filepath/Filenamee to load</param>
+        /// <param name="filename">The Filepath/Filename to load</param>
         /// <param name="width">The width from the IMG</param>
         /// <param name="height">The Height from the IMG</param>
         /// <param name="animatedColor">Needed if alpha is 0 or 1</param>
         /// <param name="pixelsize">Pixelsize of a pixel needed for Colortable</param>
-        /// <returns></returns>
-        internal static List<UInt16> LoadImage(String filename, ref int width, ref int height, int animatedColor = 1, int pixelsize = 1, uint type = 0, int offsetx = 0, int offsety = 0)
+        internal static List<UInt16> LoadImage(
+            string filename,
+            ref int width,
+            ref int height,
+            int animatedColor = 1,
+            int pixelsize = 1,
+            uint type = 0,
+            int offsetx = 0,
+            int offsety = 0)
         {
             if (Logger.Loggeractiv) Logger.Log($"LoadImage {filename}");
+
+            Image<Rgba32> image = Image.Load<Rgba32>(filename);
+
+            return LoadImage(image, ref width, ref height, animatedColor, pixelsize, type, offsetx, offsety);
+        }
+
+        /// <summary>
+        /// Load the IMG as Color 2-byte list
+        /// </summary>
+        /// <param name="image">SixLabors.ImageSharp.Image data</param>
+        /// <param name="width">The width from the IMG</param>
+        /// <param name="height">The Height from the IMG</param>
+        /// <param name="animatedColor">Needed if alpha is 0 or 1</param>
+        /// <param name="pixelsize">Pixelsize of a pixel needed for Colortable</param>
+        internal static List<UInt16> LoadImage(
+            Image<Rgba32> image,
+            ref int width,
+            ref int height,
+            int animatedColor = 1,
+            int pixelsize = 1,
+            uint type = 0,
+            int offsetx = 0,
+            int offsety = 0)
+        {
+            if (Logger.Loggeractiv) Logger.Log("LoadImage from image data");
 
             List<UInt16> colors = new List<UInt16>();
 
             try
             {
-                var image = Image.Load<Rgba32>(filename);
-
                 if (width == 0) width = image.Width;
                 if (height == 0) height = image.Height;
 
@@ -111,11 +141,28 @@ namespace HelperClasses.Gm1Converter
             return colors;
         }
 
-        internal unsafe static WriteableBitmap LoadImageAsBitmap(String filename, ref int width, ref int height, int offsetx = 0, int offsety = 0)
+        internal unsafe static WriteableBitmap LoadImageAsBitmap(
+            String filename,
+            ref int width,
+            ref int height,
+            int offsetx = 0,
+            int offsety = 0)
         {
             if (Logger.Loggeractiv) Logger.Log($"LoadImageAsBitmap {filename}");
 
-            var image = Image.Load<Rgba32>(filename);
+            Image<Rgba32> image = Image.Load<Rgba32>(filename);
+
+            return LoadImageAsBitmap(image, ref width, ref height, offsetx, offsety);
+        }
+
+        internal unsafe static WriteableBitmap LoadImageAsBitmap(
+            Image<Rgba32> image,
+            ref int width,
+            ref int height,
+            int offsetx = 0,
+            int offsety = 0)
+        {
+            if (Logger.Loggeractiv) Logger.Log("LoadImageAsBitmap from image data");
 
             if (width == 0) width = image.Width;
             if (height == 0) height = image.Height;
