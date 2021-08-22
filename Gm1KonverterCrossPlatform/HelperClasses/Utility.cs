@@ -62,30 +62,37 @@ namespace HelperClasses.Gm1Converter
         /// <param name="animatedColor">Needed if alpha is 0 or 1</param>
         /// <param name="pixelsize">Pixelsize of a pixel needed for Colortable</param>
         /// <returns></returns>
-        internal static List<UInt16> LoadImage(String filename, ref int width, ref int height, int animatedColor = 1, int pixelsize = 1, uint type = 0,int offsetx=0,int offsety=0)
+        internal static List<UInt16> LoadImage(String filename, ref int width, ref int height, int animatedColor = 1, int pixelsize = 1, uint type = 0, int offsetx = 0, int offsety = 0)
         {
-            if (Logger.Loggeractiv) Logger.Log("LoadImage");
+            if (Logger.Loggeractiv) Logger.Log($"LoadImage {filename}");
+
             List<UInt16> colors = new List<UInt16>();
+
             try
             {
                 var image = Image.Load<Rgba32>(filename);
+
                 if (width == 0) width = image.Width;
                 if (height == 0) height = image.Height;
+
+                GM1FileHeader.DataType dataType = (GM1FileHeader.DataType)type;
+                byte a = (animatedColor >= 1
+                    || dataType == GM1FileHeader.DataType.TilesObject
+                    || dataType == GM1FileHeader.DataType.Animations
+                    || dataType == GM1FileHeader.DataType.TGXConstSize
+                    || dataType == GM1FileHeader.DataType.NOCompression
+                    || dataType == GM1FileHeader.DataType.NOCompression1
+                    || dataType == GM1FileHeader.DataType.Interface) ? byte.MaxValue : byte.MinValue;
+
                 for (int y = offsety; y < height + offsety; y += pixelsize)
                 {
                     for (int x = offsetx; x < width + offsetx; x += pixelsize) //Bgra8888
                     {
-                        var pixel = image[x, y];
-                        byte a = (animatedColor >= 1 
-                            || ((GM1FileHeader.DataType)type) == GM1FileHeader.DataType.TilesObject
-                            || ((GM1FileHeader.DataType)type) == GM1FileHeader.DataType.Animations
-                            || ((GM1FileHeader.DataType)type) == GM1FileHeader.DataType.TGXConstSize
-                            || ((GM1FileHeader.DataType)type) == GM1FileHeader.DataType.NOCompression
-                            || ((GM1FileHeader.DataType)type) == GM1FileHeader.DataType.NOCompression1
-                            || ((GM1FileHeader.DataType)type) == GM1FileHeader.DataType.Interface) ? byte.MaxValue : byte.MinValue;
+                        Rgba32 pixel = image[x, y];
+
                         if (pixel.A == 0)
                         {
-                            colors.Add( (ushort)32767);
+                            colors.Add(32767);
                         }
                         else
                         {
@@ -100,6 +107,7 @@ namespace HelperClasses.Gm1Converter
                 MessageBoxWindow messageBox = new MessageBoxWindow(MessageBoxWindow.MessageTyp.Info, "Something went wrong: pls add a issue on the Github Page\n\nError:\n" + e.Message);
                 messageBox.Show();
             }
+
             return colors;
         }
 
