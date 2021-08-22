@@ -494,30 +494,39 @@ namespace Gm1KonverterCrossPlatform.Views
 
         private void ImportColortable(object sender, RoutedEventArgs e)
         {
-            if (Logger.Loggeractiv) Logger.Log("\n>>ImportColortable start");
-            Cursor = new Avalonia.Input.Cursor(Avalonia.Input.StandardCursorType.Wait);
-            var filewithoutgm1ending = vm.File.FileHeader.Name.Replace(".gm1", "");
-            var files = Directory.GetFiles(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\Colortables", "*.png");
+            if (Logger.Loggeractiv) Logger.Log(">>ImportColortables start");
 
-            foreach (var file in files)
+            Cursor = new Avalonia.Input.Cursor(Avalonia.Input.StandardCursorType.Wait);
+
+            string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(vm.File.FileHeader.Name);
+            string directory = Path.Combine(vm.UserConfig.WorkFolderPath, fileNameWithoutExtension, "Colortables");
+
+            for (int i = 1; i <= Palette.ColortableCount; i++)
             {
-                var filename = Path.GetFileName(file);
-                if (filename.StartsWith("ColorTable"))
+                string fileName = $"ColorTable{i}.png";
+                string filePath = Path.Combine(directory, fileName);
+
+                if (!File.Exists(filePath))
                 {
-                    int width = 0, height = 0;
-                    var fileindex = int.Parse(filename.Replace("ColorTable", "").Replace(".png", "")) - 1;
-                    var list = Utility.LoadImage(file, ref width, ref height, 1, Palette.pixelSize, vm.File.FileHeader.IDataType);
-                    if (list.Count == 0) return;
-                    vm.File.Palette.SetPaleteUInt(fileindex, list.ToArray());
-                    var bitmap = vm.File.Palette.GetBitmap(fileindex, Palette.pixelSize);
-                    vm.File.Palette.Bitmaps[fileindex] = bitmap;
-                    vm.GeneratePaletteAndImgNew();
-                    vm.File.Palette.Bitmaps[fileindex] = bitmap;
+                    throw new Exception($"File {filePath} not found!");
                 }
+
+                int width = 0, height = 0;
+                int colortableindex = i - 1;
+                var list = Utility.LoadImage(filePath, ref width, ref height, 1, Palette.pixelSize, vm.File.FileHeader.IDataType);
+                if (list.Count == 0) return;
+                vm.File.Palette.SetPaleteUInt(colortableindex, list.ToArray());
+                var bitmap = vm.File.Palette.GetBitmap(colortableindex, Palette.pixelSize);
+                vm.File.Palette.Bitmaps[colortableindex] = bitmap;
+                vm.GeneratePaletteAndImgNew();
+                vm.File.Palette.Bitmaps[colortableindex] = bitmap;
             }
-            Cursor = new Avalonia.Input.Cursor(Avalonia.Input.StandardCursorType.Arrow);
+
             vm.ActuellColorTable = vm.File.Palette.Bitmaps[vm.File.Palette.ActualPalette];
-            if (Logger.Loggeractiv) Logger.Log("\n>>ImportColortable end");
+
+            Cursor = new Avalonia.Input.Cursor(Avalonia.Input.StandardCursorType.Arrow);
+
+            if (Logger.Loggeractiv) Logger.Log(">>ImportColortables end");
         }
 
         private void ExportColortable(object sender, RoutedEventArgs e)
