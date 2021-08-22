@@ -10,7 +10,9 @@ namespace Files.Gm1Converter
         #region Public
 
         /// <summary>
-        /// The palette is always 5120 bytes in Size.
+        /// The palette is always 5120 bytes in size.
+        /// The palette consist of 10 colortables, each being 512 bytes in size
+        /// and consisting of 256 2-byte colors.
         /// </summary>
         public const int ByteSize = 5120;
 
@@ -23,14 +25,14 @@ namespace Files.Gm1Converter
         #region Variables
 
         private int actualPalette = 0;
-        private ushort[,] arrayPaletten = new ushort[10,256];
+        private ushort[,] arrayPaletten = new ushort[10, 256];
         private WriteableBitmap[] bitmaps = new WriteableBitmap[10];
 
         #endregion
 
         #region Construtor
         /// <summary>
-        /// Palette is 5120 bytes in Size and is used in Animation files.
+        /// The palette consist of 10 colortables, each consisting of 256 colors, and is used in Animation files.
         /// </summary>
         /// <param name="array">The GM1 File as byte Array</param>
         public Palette(byte[] array)
@@ -57,7 +59,7 @@ namespace Files.Gm1Converter
         public ushort[,] ArrayPaletten { get => arrayPaletten; set => arrayPaletten = value; }
         public int ActualPalette { get => actualPalette; set => actualPalette = value; }
         public bool PaletteChanged { get; internal set; } = false;
-        public void SetPaleteUInt(int index,ushort[] array)
+        public void SetPaleteUInt(int index, ushort[] array)
         {
             for (int i = 0; i < arrayPaletten.GetLength(1); i++)
             {
