@@ -113,10 +113,13 @@ namespace HelperClasses.Gm1Converter
 
         internal unsafe static WriteableBitmap LoadImageAsBitmap(String filename, ref int width, ref int height, int offsetx = 0, int offsety = 0)
         {
-            if (Logger.Loggeractiv) Logger.Log("LoadImage");
+            if (Logger.Loggeractiv) Logger.Log($"LoadImageAsBitmap {filename}");
+
             var image = Image.Load<Rgba32>(filename);
+
             if (width == 0) width = image.Width;
             if (height == 0) height = image.Height;
+
             WriteableBitmap bitmap = new WriteableBitmap(new PixelSize(width, height),new Vector(96,96),Avalonia.Platform.PixelFormat.Rgba8888);
             using (var bit = bitmap.Lock())
             {
