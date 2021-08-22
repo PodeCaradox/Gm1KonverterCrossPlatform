@@ -77,7 +77,7 @@ namespace Gm1KonverterCrossPlatform.HelperClasses.Views
         {
             var vm = DataContext as MainWindowViewModel;
             var color = Color.Parse(vm.ColorAsText).ToUint32();
-            var newColor=Utility.EncodeColorTo2Byte(color);
+            var newColor = Utility.EncodeColorTo2Byte(color);
 
             vm.File.Palette.ArrayPaletten[vm.File.Palette.ActualPalette, positionInPalette] = newColor;
             vm.ActuellColorTableChangeColorWindow = vm.File.Palette.GetBitmap(vm.File.Palette.ActualPalette, pixelsize);
