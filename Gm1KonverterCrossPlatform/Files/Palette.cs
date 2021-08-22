@@ -9,7 +9,11 @@ namespace Files.Gm1Converter
     {
         #region Public
 
-        public readonly static int paletteSize = 5120;
+        /// <summary>
+        /// The palette is always 5120 bytes in Size.
+        /// </summary>
+        public const int ByteSize = 5120;
+
         public readonly static int pixelSize = 10;
         public readonly static ushort width = 32;
         public readonly static ushort height = 8;
@@ -20,7 +24,6 @@ namespace Files.Gm1Converter
 
         private int actualPalette = 0;
         private ushort[,] arrayPaletten = new ushort[10,256];
-        private byte[] arrayPaletteByte = new byte[5120];
         private WriteableBitmap[] bitmaps = new WriteableBitmap[10];
 
         #endregion
@@ -32,7 +35,10 @@ namespace Files.Gm1Converter
         /// <param name="array">The GM1 File as byte Array</param>
         public Palette(byte[] array)
         {
-            Buffer.BlockCopy(array, GM1FileHeader.ByteSize, arrayPaletteByte, 0, paletteSize);
+            // palette is located immediately after header
+            byte[] arrayPaletteByte = new byte[ByteSize];
+            Buffer.BlockCopy(array, GM1FileHeader.ByteSize, arrayPaletteByte, 0, ByteSize);
+
             for (int i = 0; i < arrayPaletten.GetLength(0); i++)
             {
                 for (int j = 0; j < arrayPaletten.GetLength(1); j++)
@@ -47,7 +53,6 @@ namespace Files.Gm1Converter
 
         #region GetterSetter
         
-        public byte[] ArrayPaletteByte { get => arrayPaletteByte; set => arrayPaletteByte = value; }
         public WriteableBitmap[] Bitmaps { get => bitmaps; set => bitmaps = value; }
         public ushort[,] ArrayPaletten { get => arrayPaletten; set => arrayPaletten = value; }
         public int ActualPalette { get => actualPalette; set => actualPalette = value; }
@@ -69,9 +74,9 @@ namespace Files.Gm1Converter
         #region Methods
 
         /// <summary>
-        /// Calculate the new Bytearray to save new imported ColorTables
+        /// Calculate the new ByteArray to save ColorTables
         /// </summary>
-        internal void CalculateNewBytes()
+        internal byte[] GetBytes()
         {
             List<byte> newArray = new List<byte>();
             for (int i = 0; i < arrayPaletten.GetLength(0); i++)
@@ -82,9 +87,9 @@ namespace Files.Gm1Converter
                 }
             }
 
-            arrayPaletteByte = newArray.ToArray();
+            return newArray.ToArray();
         }
-        
+
         /// <summary>
         /// Calculate new Palette IMG with the new Pixelsize
         /// </summary>
@@ -96,7 +101,7 @@ namespace Files.Gm1Converter
             byte r, g, b, a;
             int height = 8 * pixelSize;
             int width = 32 * pixelSize;
-            UInt32 colorByte=0;
+            UInt32 colorByte = 0;
             WriteableBitmap bitmap = new WriteableBitmap(new Avalonia.PixelSize(width, height), new Avalonia.Vector(96, 96), Avalonia.Platform.PixelFormat.Bgra8888);// Bgra8888 is device-native and much faster.
             using (var buf = bitmap.Lock())
             {

@@ -5,7 +5,7 @@ namespace Files.Gm1Converter
 {
     public class GM1FileHeader
     {
-        #region Public Variables
+        #region Public
 
         /// <summary>
         /// The header has a length of 88-bytes, composed of 22 unsigned 32-bit integers. 
@@ -24,7 +24,7 @@ namespace Files.Gm1Converter
 
         #endregion
         
-        #region Private Variables
+        #region Variables
 
         private string name;
 
@@ -38,7 +38,7 @@ namespace Files.Gm1Converter
         private uint iDataSize;
         private uint iUnknown6;
         
-        private uint[] size;
+        private uint[] size = new uint[2];
 
 		#endregion
 
@@ -46,7 +46,8 @@ namespace Files.Gm1Converter
 
 		internal byte[] GetBytes()
         {
-            var bytearray = new List<byte>();
+            List<byte> bytearray = new List<byte>();
+
             bytearray.AddRange(BitConverter.GetBytes(iUnknown1));
             bytearray.AddRange(BitConverter.GetBytes(iUnknown2));
             bytearray.AddRange(BitConverter.GetBytes(iUnknown3));
@@ -79,12 +80,11 @@ namespace Files.Gm1Converter
             {
                 this.iUnknown5[i] = BitConverter.ToUInt32(array, 24 + i * 4);
             }
-            this.size = new uint[2];
-            this.size[0] = iUnknown5[6];
-            this.size[1] = iUnknown5[7];
-
             this.iDataSize = BitConverter.ToUInt32(array, 80);
             this.iUnknown6 = BitConverter.ToUInt32(array, 84);
+
+            this.size[0] = iUnknown5[6];
+            this.size[1] = iUnknown5[7];
         }
 
         #endregion

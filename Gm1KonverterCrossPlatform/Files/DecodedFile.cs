@@ -58,7 +58,7 @@ namespace Files.Gm1Converter
                 if (Logger.Loggeractiv) Logger.Log("Datatype" + ((GM1FileHeader.DataType)fileHeader.IDataType));
             }
 
-            actualPositionInByteArray = (GM1FileHeader.ByteSize + Palette.paletteSize);
+            actualPositionInByteArray = (GM1FileHeader.ByteSize + Palette.ByteSize);
             this._TGXImage = new List<TGXImage>();
             this.tilesImage = new List<TilesImage>();
             //Supported Types
@@ -101,23 +101,23 @@ namespace Files.Gm1Converter
         public byte[] GetNewGM1Bytes()
         {
             if (Logger.Loggeractiv) Logger.Log("GetNewGM1Bytes");
+            
             List<byte> newFile = new List<byte>();
             var headerBytes = fileHeader.GetBytes();
             newFile.AddRange(headerBytes);
+            
             if (palette == null)
             {
-                newFile.AddRange(new byte[Palette.paletteSize]);
+                newFile.AddRange(new byte[Palette.ByteSize]);
             }
             else
             {
-                palette.CalculateNewBytes();
-                newFile.AddRange(palette.ArrayPaletteByte);
+                newFile.AddRange(palette.GetBytes());
             }
 
             for (int i = 0; i < fileHeader.INumberOfPictureinFile; i++)
             {
                 newFile.AddRange(BitConverter.GetBytes(_TGXImage[i].OffsetinByteArray));
-
             }
 
             for (int i = 0; i < fileHeader.INumberOfPictureinFile; i++)
