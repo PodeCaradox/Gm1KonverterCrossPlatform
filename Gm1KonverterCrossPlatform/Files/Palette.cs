@@ -16,6 +16,17 @@ namespace Files.Gm1Converter
         /// </summary>
         public const int ByteSize = 5120;
 
+        /// <summary>
+        /// A file always contains 10 colortables.
+        /// </summary>
+        public const int ColortableCount = 10;
+
+        /// <summary>
+        /// A colortable always contains 256 colors.
+        /// </summary>
+        public const int ColortableColorCount = 256;
+
+
         public readonly static int pixelSize = 10;
         public readonly static ushort width = 32;
         public readonly static ushort height = 8;
@@ -25,7 +36,7 @@ namespace Files.Gm1Converter
         #region Variables
 
         private int actualPalette = 0;
-        private ushort[,] arrayPaletten = new ushort[10, 256];
+        private ushort[,] arrayPaletten = new ushort[ColortableCount, ColortableColorCount];
         private WriteableBitmap[] bitmaps = new WriteableBitmap[10];
 
         #endregion
