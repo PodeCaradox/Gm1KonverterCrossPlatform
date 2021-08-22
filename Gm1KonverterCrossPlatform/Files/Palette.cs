@@ -80,16 +80,16 @@ namespace Files.Gm1Converter
         /// </summary>
         internal byte[] GetBytes()
         {
-            List<byte> newArray = new List<byte>();
+            List<byte> byteArray = new List<byte>();
             for (int i = 0; i < arrayPaletten.GetLength(0); i++)
             {
                 for (int j = 0; j < arrayPaletten.GetLength(1); j++)
                 {
-                    newArray.AddRange(BitConverter.GetBytes(arrayPaletten[i, j]));
+                    byteArray.AddRange(BitConverter.GetBytes(arrayPaletten[i, j]));
                 }
             }
 
-            return newArray.ToArray();
+            return byteArray.ToArray();
         }
 
         /// <summary>

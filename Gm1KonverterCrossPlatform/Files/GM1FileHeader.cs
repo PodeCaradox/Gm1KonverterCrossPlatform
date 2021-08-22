@@ -46,22 +46,22 @@ namespace Files.Gm1Converter
 
 		internal byte[] GetBytes()
         {
-            List<byte> bytearray = new List<byte>();
+            List<byte> byteArray = new List<byte>();
 
-            bytearray.AddRange(BitConverter.GetBytes(iUnknown1));
-            bytearray.AddRange(BitConverter.GetBytes(iUnknown2));
-            bytearray.AddRange(BitConverter.GetBytes(iUnknown3));
-            bytearray.AddRange(BitConverter.GetBytes(iNumberOfPictureinFile));
-            bytearray.AddRange(BitConverter.GetBytes(iUnknown4));
-            bytearray.AddRange(BitConverter.GetBytes(iDataType));
+            byteArray.AddRange(BitConverter.GetBytes(iUnknown1));
+            byteArray.AddRange(BitConverter.GetBytes(iUnknown2));
+            byteArray.AddRange(BitConverter.GetBytes(iUnknown3));
+            byteArray.AddRange(BitConverter.GetBytes(iNumberOfPictureinFile));
+            byteArray.AddRange(BitConverter.GetBytes(iUnknown4));
+            byteArray.AddRange(BitConverter.GetBytes(iDataType));
             for (int i = 0; i < iUnknown5.Length; i++)
             {
-                bytearray.AddRange(BitConverter.GetBytes(this.iUnknown5[i]));
+                byteArray.AddRange(BitConverter.GetBytes(this.iUnknown5[i]));
             }
-            bytearray.AddRange(BitConverter.GetBytes(iDataSize));
-            bytearray.AddRange(BitConverter.GetBytes(iUnknown6));
+            byteArray.AddRange(BitConverter.GetBytes(iDataSize));
+            byteArray.AddRange(BitConverter.GetBytes(iUnknown6));
 
-            return bytearray.ToArray();
+            return byteArray.ToArray();
         }
 
         #endregion
