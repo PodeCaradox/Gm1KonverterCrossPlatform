@@ -265,12 +265,13 @@ namespace Gm1KonverterCrossPlatform.Views
             Utility.XOffsetBefore = 0;
             Utility.YOffsetBefore = 0;
 
-            var filewithoutgm1ending = vm.File.FileHeader.Name.Replace(".gm1", "");
+            string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(vm.File.FileHeader.Name);
 
             if (!bigImage)
             {
-                var files = Directory.GetFiles(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\Images", "*.png", SearchOption.TopDirectoryOnly);
-                //sort because 11 is before 2
+                string imagesDirectory = Path.Combine(vm.UserConfig.WorkFolderPath, fileNameWithoutExtension, "Images");
+                var files = Directory.GetFiles(imagesDirectory, "*.png", SearchOption.TopDirectoryOnly);
+                // sort because 11 is before 2
                 files = files.OrderBy(x => x.Length).ThenBy(x => x).ToArray<String>();
 
                 int counter = 1;
@@ -296,13 +297,17 @@ namespace Gm1KonverterCrossPlatform.Views
             }
             else
             {
-                int maxwidth = SixLabors.ImageSharp.Image.Load<Rgba32>(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\BigImage\\" + filewithoutgm1ending + ".png").Width;
+                string bigImageDirectory = Path.Combine(vm.UserConfig.WorkFolderPath, fileNameWithoutExtension, "BigImage");
+                string bigImageFilePath = Path.Combine(bigImageDirectory, $"{fileNameWithoutExtension}.png");
+
+                int maxwidth = SixLabors.ImageSharp.Image.Load<Rgba32>(bigImageFilePath).Width;
                 int fileindex = 0;
                 int offsety = 0;
                 int maxheight = 0;
                 int offsetx = 0;
                 int actualwidth = 0;
                 int counter = 0;
+
                 if (((GM1FileHeader.DataType)vm.File.FileHeader.IDataType == GM1FileHeader.DataType.TilesObject))
                 {
                     foreach (var image in vm.File.TilesImages)
@@ -325,7 +330,7 @@ namespace Gm1KonverterCrossPlatform.Views
                             maxheight = height;
                         }
 
-                        var list = Utility.LoadImage(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\BigImage\\" + filewithoutgm1ending + ".png", ref width, ref height, vm.File.ImagesTGX[fileindex].AnimatedColor, 1, vm.File.FileHeader.IDataType, offsetx, offsety);
+                        var list = Utility.LoadImage(bigImageFilePath, ref width, ref height, vm.File.ImagesTGX[fileindex].AnimatedColor, 1, vm.File.FileHeader.IDataType, offsetx, offsety);
                         if (list.Count == 0) continue;
                         width = image.Width;
                         height = image.Height;
@@ -333,7 +338,7 @@ namespace Gm1KonverterCrossPlatform.Views
                         LoadNewDataForGm1File(fileindex, list, width, height);
                         fileindex++;
 
-                        Avalonia.Media.Imaging.Bitmap newimage = Utility.LoadImageAsBitmap(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\BigImage\\" + filewithoutgm1ending + ".png", ref width, ref height, offsetx, offsety);
+                        Avalonia.Media.Imaging.Bitmap newimage = Utility.LoadImageAsBitmap(bigImageFilePath, ref width, ref height, offsetx, offsety);
                         offsetx += width;
                         vm.TGXImages[counter].Source = newimage;
                         vm.TGXImages[counter].MaxWidth = newimage.PixelSize.Width;
@@ -363,7 +368,7 @@ namespace Gm1KonverterCrossPlatform.Views
                         }
                         int oldOffsetx = offsetx;
                         int oldOffsety = offsety;
-                        var list = Utility.LoadImage(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\BigImage\\" + filewithoutgm1ending + ".png", ref width, ref height, vm.File.ImagesTGX[fileindex].AnimatedColor, 1, vm.File.FileHeader.IDataType, offsetx, offsety);
+                        var list = Utility.LoadImage(bigImageFilePath, ref width, ref height, vm.File.ImagesTGX[fileindex].AnimatedColor, 1, vm.File.FileHeader.IDataType, offsetx, offsety);
                         if (list.Count == 0) continue;
                         width = image.Width;
                         height = image.Height - ((GM1FileHeader.DataType)vm.File.FileHeader.IDataType == GM1FileHeader.DataType.NOCompression ? 7 : 0);
@@ -371,7 +376,7 @@ namespace Gm1KonverterCrossPlatform.Views
                         LoadNewDataForGm1File(fileindex, list, width, height);
                         fileindex++;
 
-                        Avalonia.Media.Imaging.Bitmap newimage = Utility.LoadImageAsBitmap(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\BigImage\\" + filewithoutgm1ending + ".png", ref width, ref height, oldOffsetx, oldOffsety);
+                        Avalonia.Media.Imaging.Bitmap newimage = Utility.LoadImageAsBitmap(bigImageFilePath, ref width, ref height, oldOffsetx, oldOffsety);
                         offsetx += width;
                         vm.TGXImages[counter].Source = newimage;
                         vm.TGXImages[counter].MaxWidth = newimage.PixelSize.Width;
