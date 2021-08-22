@@ -754,16 +754,14 @@ namespace HelperClasses.Gm1Converter
         /// <returns></returns>
         internal static UInt16 EncodeColorTo2Byte(uint colorAsInt32)
         {
-            byte[] arrray = { (byte)(204), (byte)196 };
-            var testtt = BitConverter.ToUInt16(arrray, 0);
             var colors = BitConverter.GetBytes(colorAsInt32);
 
             UInt16 b = (UInt16)((colors[0] >> 3) & 0b0001_1111);
             UInt16 g = (UInt16)(((colors[1] >> 3) & 0b0001_1111) << 5);
             UInt16 r = (UInt16)(((colors[2] >> 3) & 0b0001_1111) << 10);
             UInt16 a = (UInt16)((colors[3] & 0b1000_0000) << 8);
-            UInt16 color = (UInt16)(b | g | r | a);
-            return color;
+
+            return (UInt16)(b | g | r | a);
         }
 
         /// <summary>
