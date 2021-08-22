@@ -5,35 +5,46 @@ namespace Files.Gm1Converter
 {
     public class GM1FileHeader
     {
-
-        #region Public
-
-        public readonly static int fileHeaderSize = 88;
+        #region Public Variables
 
         /// <summary>
-        ///  Data type is and ID that represents what kind of images are stored, they are as follows:
-        ///1 – Interface items and some building animations.Images are stored similar to TGX images. 
-        ///2 – Animations.
-        ///3 – Buildings.Images are stored similar to TGX images but with a Tile object. 
-        ///4 – Font.TGX format. 
-        ///5 and 7 – Walls, grass, stones and other.No compression, stored with 2-bytes per pixel.
+        /// The header has a length of 88-bytes, composed of 22 unsigned 32-bit integers. 
         /// </summary>
-        public enum DataType : UInt32 { Interface = 1, Animations = 2, TilesObject = 3, Font = 4, NOCompression = 5, TGXConstSize = 6, NOCompression1 = 7 };
+        public const int ByteSize = 88;
+
+        /// <summary>
+        /// Data type is and ID that represents what kind of images are stored, they are as follows:
+        /// <para>1 – Interface items and some building animations. Images are stored similar to TGX images.</para>
+        /// <para>2 – Animations.</para>
+        /// <para>3 – Buildings. Images are stored similar to TGX images but with a Tile object.</para>
+        /// <para>4 – Font. TGX format.</para>
+        /// <para>5 and 7 – Walls, grass, stones and other. No compression, stored with 2-bytes per pixel.</para>
+        /// </summary>
+        public enum DataType : uint { Interface = 1, Animations = 2, TilesObject = 3, Font = 4, NOCompression = 5, TGXConstSize = 6, NOCompression1 = 7 };
 
         #endregion
         
-        #region Variables
+        #region Private Variables
 
-        private String name;
-        private UInt32 iUnknown1;
-        private UInt32 iUnknown2;
-        private UInt32 iUnknown3;
-        private UInt32 iNumberOfPictureinFile;
-        private UInt32 iUnknown4;
-        private UInt32 iDataType;
-        private UInt32[] iUnknown5 = new UInt32[14];
+        private string name;
 
-        internal byte[] GetBytes()
+        private uint iUnknown1;
+        private uint iUnknown2;
+        private uint iUnknown3;
+        private uint iNumberOfPictureinFile;
+        private uint iUnknown4;
+        private uint iDataType;
+        private uint[] iUnknown5 = new uint[14];
+        private uint iDataSize;
+        private uint iUnknown6;
+        
+        private uint[] size;
+
+		#endregion
+
+		#region Methods
+
+		internal byte[] GetBytes()
         {
             var bytearray = new List<byte>();
             bytearray.AddRange(BitConverter.GetBytes(iUnknown1));
@@ -52,18 +63,10 @@ namespace Files.Gm1Converter
             return bytearray.ToArray();
         }
 
-        private UInt32 iDataSize;
-        private UInt32 iUnknown6;
-        private UInt32[] size;
-
         #endregion
 
         #region Construtor
 
-        /// <summary>
-        /// The header has a length of 88-bytes, composed of unsigned 32-bit integers: 
-        /// </summary>
-        /// <param name="array"></param>
         public GM1FileHeader(byte[] array)
         {
             this.iUnknown1 = BitConverter.ToUInt32(array, 0);
@@ -76,7 +79,7 @@ namespace Files.Gm1Converter
             {
                 this.iUnknown5[i] = BitConverter.ToUInt32(array, 24 + i * 4);
             }
-            this.size = new UInt32[2];
+            this.size = new uint[2];
             this.size[0] = iUnknown5[6];
             this.size[1] = iUnknown5[7];
 
@@ -88,19 +91,18 @@ namespace Files.Gm1Converter
 
         #region GetterSetter
 
-        public UInt32 IUnknown1 { get => iUnknown1; }
-        public UInt32 IUnknown2 { get => iUnknown2; }
-        public UInt32 IUnknown3 { get => iUnknown3; }
-        public UInt32 INumberOfPictureinFile { get => iNumberOfPictureinFile; set => iNumberOfPictureinFile = value; }
-        public UInt32 IUnknown4 { get => iUnknown4; }
-        public UInt32 IDataType { get => iDataType; }
-        public UInt32[] IUnknown5 { get => iUnknown5; }
-        public UInt32 IDataSize { get => iDataSize; set => iDataSize = value; }
-        public UInt32 IUnknown6 { get => iUnknown6; }
-        public UInt32[] Size { get => size; }
+        public uint IUnknown1 { get => iUnknown1; }
+        public uint IUnknown2 { get => iUnknown2; }
+        public uint IUnknown3 { get => iUnknown3; }
+        public uint INumberOfPictureinFile { get => iNumberOfPictureinFile; set => iNumberOfPictureinFile = value; }
+        public uint IUnknown4 { get => iUnknown4; }
+        public uint IDataType { get => iDataType; }
+        public uint[] IUnknown5 { get => iUnknown5; }
+        public uint IDataSize { get => iDataSize; set => iDataSize = value; }
+        public uint IUnknown6 { get => iUnknown6; }
+        public uint[] Size { get => size; }
         public string Name { get => name; set => name = value; }
 
         #endregion
-
     }
 }

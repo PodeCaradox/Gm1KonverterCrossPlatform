@@ -32,7 +32,7 @@ namespace Files.Gm1Converter
         /// <param name="array">The GM1 File as byte Array</param>
         public Palette(byte[] array)
         {
-            Buffer.BlockCopy(array, GM1FileHeader.fileHeaderSize, arrayPaletteByte, 0, paletteSize);
+            Buffer.BlockCopy(array, GM1FileHeader.ByteSize, arrayPaletteByte, 0, paletteSize);
             for (int i = 0; i < arrayPaletten.GetLength(0); i++)
             {
                 for (int j = 0; j < arrayPaletten.GetLength(1); j++)

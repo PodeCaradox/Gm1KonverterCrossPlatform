@@ -58,7 +58,7 @@ namespace Files.Gm1Converter
                 if (Logger.Loggeractiv) Logger.Log("Datatype" + ((GM1FileHeader.DataType)fileHeader.IDataType));
             }
 
-            actualPositionInByteArray = (GM1FileHeader.fileHeaderSize + Palette.paletteSize);
+            actualPositionInByteArray = (GM1FileHeader.ByteSize + Palette.paletteSize);
             this._TGXImage = new List<TGXImage>();
             this.tilesImage = new List<TilesImage>();
             //Supported Types
