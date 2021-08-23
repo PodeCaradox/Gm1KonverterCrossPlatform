@@ -226,7 +226,7 @@ namespace Files.Gm1Converter
                                 var ptr = (uint*)buf.Address;
                                 ptr += (uint)((width * y) + x);
                                 *ptr = colorByte;
-                              
+                                
                                 x++;
                             }
                             break;

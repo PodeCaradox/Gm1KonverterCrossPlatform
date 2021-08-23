@@ -28,29 +28,29 @@ namespace HelperClasses.Gm1Converter
         #region Methods
 
         /// <summary>
-        /// Load the File as Bytearray
+        /// Load the File as Byte array
         /// </summary>
         /// <param name="fileName">The Filepath/Filenamee to load</param>
-        /// <returns></returns>
         internal static byte[] FileToByteArray(string fileName)
         {
-            FileStream fs = new FileStream(fileName,
-                                           FileMode.Open,
-                                           FileAccess.Read);
-            BinaryReader br = new BinaryReader(fs);
-            long numBytes = new FileInfo(fileName).Length;
-            byte[] buff = br.ReadBytes((int)numBytes);
-            return buff;
+            return File.ReadAllBytes(fileName);
         }
 
         /// <summary>
-        /// Save the bytearray as File
+        /// Save the Byte array as File
         /// </summary>
         /// <param name="fileName">The Filepath/Filenamee to save</param>
         /// <param name="array">The byte array to save</param>
         internal static void ByteArraytoFile(string fileName, byte[] array)
         {
             File.WriteAllBytes(fileName, array);
+        }
+
+        internal static Image<Rgba32> LoadImageData(string filePath)
+        {
+            if (Logger.Loggeractiv) Logger.Log($"LoadImageData {filePath}");
+
+            return Image.Load<Rgba32>(filePath);
         }
 
         /// <summary>

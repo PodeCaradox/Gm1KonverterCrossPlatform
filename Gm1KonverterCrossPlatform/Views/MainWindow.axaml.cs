@@ -44,7 +44,7 @@ namespace Gm1KonverterCrossPlatform.Views
                 path = paths[0];
             }
             var offsetData = File.ReadAllText(path);
-            var dict = JsonConvert.DeserializeObject<Dictionary<int,Point>>(offsetData);
+            var dict = JsonConvert.DeserializeObject<Dictionary<int, Point>>(offsetData);
 
             if (vm.StrongholdasBytes == null && File.Exists(vm.UserConfig.CrusaderPath.Replace("\\gm", String.Empty) + "\\Stronghold Crusader.exe"))
                 vm.StrongholdasBytes = File.ReadAllBytes(vm.UserConfig.CrusaderPath.Replace("\\gm", String.Empty) + "\\Stronghold Crusader.exe");
@@ -99,17 +99,20 @@ namespace Gm1KonverterCrossPlatform.Views
         private void ExportTgxImage(object sender, RoutedEventArgs e)
         {
             if (Logger.Loggeractiv) Logger.Log("\n>>ExportTgxImage start");
-            var filewithouttgxending = actualName.Replace(".tgx", "");
 
-            if (!Directory.Exists(vm.UserConfig.WorkFolderPath + "\\" + filewithouttgxending))
+            string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(actualName);
+            string directory = Path.Combine(vm.UserConfig.WorkFolderPath, fileNameWithoutExtension);
+            string filePath = Path.Combine(directory, $"{fileNameWithoutExtension}.png");
+
+            if (!Directory.Exists(directory))
             {
-                Directory.CreateDirectory(vm.UserConfig.WorkFolderPath + "\\" + filewithouttgxending);
+                Directory.CreateDirectory(directory);
             }
 
-            vm.TgxImage.Bitmap.Save(vm.UserConfig.WorkFolderPath + "\\" + filewithouttgxending + "\\" + filewithouttgxending + ".png");
+            vm.TgxImage.Bitmap.Save(filePath);
 
             if (vm.UserConfig.OpenFolderAfterExport)
-                Process.Start("explorer.exe", vm.UserConfig.WorkFolderPath + "\\" + filewithouttgxending);
+                Process.Start("explorer.exe", directory);
 
             vm.LoadWorkfolderFiles();
             vm.TgxButtonImportEnabled = true;
@@ -120,20 +123,29 @@ namespace Gm1KonverterCrossPlatform.Views
         private void ImportTgxImage(object sender, RoutedEventArgs e)
         {
             if (Logger.Loggeractiv) Logger.Log("\n>>ImportTgxImage start");
-            var filewithouttgxending = actualName.Replace(".tgx", "");
 
-            int width = 0;
-            int height = 0;
-            List<UInt16> colors = Utility.LoadImage(vm.UserConfig.WorkFolderPath + "\\" + filewithouttgxending + "\\" + filewithouttgxending + ".png", ref width, ref height);
+            string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(actualName);
+            string directory = Path.Combine(vm.UserConfig.WorkFolderPath, fileNameWithoutExtension);
+            string filePath = Path.Combine(directory, $"{fileNameWithoutExtension}.png");
+
+            var imageData = Utility.LoadImageData(filePath);
+
+            int width = imageData.Width;
+            int height = imageData.Height;
+
+            List<UInt16> colors = Utility.LoadImage(imageData, ref width, ref height);
+            
             vm.TgxImage.ConvertImageWithoutPaletteToByteArray(colors, width, height);//todo animated color?
             vm.TgxImage.TgxWidth = (uint)width;
             vm.TgxImage.TgxHeight = (uint)height;
             vm.TgxImage.CreateImageFromByteArray(null, true);
             vm.TGXImages.Clear();
-            Image image = new Image();
-            image.MaxWidth = width;
-            image.MaxHeight = height;
-            image.Source = vm.TgxImage.Bitmap;
+            Image image = new Image()
+            {
+                MaxWidth = width,
+                MaxHeight = height,
+                Source = vm.TgxImage.Bitmap
+            };
             vm.TGXImages.Add(image);
 
             if (Logger.Loggeractiv) Logger.Log("\n>>ImportTgxImage end");
@@ -300,8 +312,7 @@ namespace Gm1KonverterCrossPlatform.Views
                 string bigImageDirectory = Path.Combine(vm.UserConfig.WorkFolderPath, fileNameWithoutExtension, "BigImage");
                 string bigImageFilePath = Path.Combine(bigImageDirectory, $"{fileNameWithoutExtension}.png");
 
-                if (Logger.Loggeractiv) Logger.Log($"Loading image data from a file {bigImageFilePath}");
-                var imageData = SixLabors.ImageSharp.Image.Load<Rgba32>(bigImageFilePath);
+                var imageData = Utility.LoadImageData(bigImageFilePath);
 
                 int maxwidth = imageData.Width;
                 int fileindex = 0;
@@ -522,14 +533,14 @@ namespace Gm1KonverterCrossPlatform.Views
                 }
 
                 int width = 0, height = 0;
-                int colortableindex = i - 1;
+                int colorTableIndex = i - 1;
                 var list = Utility.LoadImage(filePath, ref width, ref height, 1, Palette.pixelSize, vm.File.FileHeader.IDataType);
                 if (list.Count == 0) return;
-                vm.File.Palette.SetPaleteUInt(colortableindex, list.ToArray());
-                var bitmap = vm.File.Palette.GetBitmap(colortableindex, Palette.pixelSize);
-                vm.File.Palette.Bitmaps[colortableindex] = bitmap;
+                vm.File.Palette.SetPaleteUInt(colorTableIndex, list.ToArray());
+                var bitmap = vm.File.Palette.GetBitmap(colorTableIndex, Palette.pixelSize);
+                vm.File.Palette.Bitmaps[colorTableIndex] = bitmap;
                 vm.GeneratePaletteAndImgNew();
-                vm.File.Palette.Bitmaps[colortableindex] = bitmap;
+                vm.File.Palette.Bitmaps[colorTableIndex] = bitmap;
             }
 
             vm.ActuellColorTable = vm.File.Palette.Bitmaps[vm.File.Palette.ActualPalette];
