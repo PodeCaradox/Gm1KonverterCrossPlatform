@@ -44,7 +44,8 @@ namespace Files.Gm1Converter
         /// <returns></returns>
         public bool DecodeGm1File(byte[] array, String name)
         {
-            if (Logger.Loggeractiv) Logger.Log("DecodeGm1File:\nFile:"+name);
+            if (Logger.Loggeractiv) Logger.Log($"DecodeGm1File: {name}");
+            
             fileArray = array;
             if (this.fileHeader == null)
             {
@@ -55,7 +56,7 @@ namespace Files.Gm1Converter
                 {
                     this.palette = new Palette(array);
                 }
-                if (Logger.Loggeractiv) Logger.Log("Datatype" + ((GM1FileHeader.DataType)fileHeader.IDataType));
+                if (Logger.Loggeractiv) Logger.Log($"DataType {(GM1FileHeader.DataType)fileHeader.IDataType}");
             }
 
             actualPositionInByteArray = (GM1FileHeader.ByteSize + Palette.ByteSize);
@@ -95,9 +96,14 @@ namespace Files.Gm1Converter
         }
 
         /// <summary>
-        /// Create the new GM1 Files from IMGS and Headers(1. FileHeader,2. Palette,3. OffsetList,4. SizeList,5. ImgHeaderList,6. ImgsasByteList)
+        /// Create the new GM1 File. File content:
+        /// <para>1. FileHeader</para>
+        /// <para>2. Palette</para>
+        /// <para>3. OffsetList</para>
+        /// <para>4. SizeList</para>
+        /// <para>5. ImgHeaderList</para>
+        /// <para>6. ImgsasByteList</para>
         /// </summary>
-        /// <returns></returns>
         public byte[] GetNewGM1Bytes()
         {
             if (Logger.Loggeractiv) Logger.Log("GetNewGM1Bytes");
