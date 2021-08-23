@@ -228,13 +228,13 @@ namespace Files.Gm1Converter
         /// <summary>
         /// Creates IMGS from TGX and Tile(the IMG consist out of many smaller IMGS)
         /// </summary>
-        /// <param name="array">The GM1 File as byte Array</param>
-        private void CreateTileImage(byte[] array)
+        /// <param name="byteArray">The GM1 File as byte Array</param>
+        private void CreateTileImage(byte[] byteArray)
         {
             if (Logger.Loggeractiv) Logger.Log("CreateTileImage");
             Dispose();
-            CreateOffsetAndSizeInByteArrayList(array);
-            CreateImgHeader(array);
+            CreateOffsetAndSizeInByteArrayList(byteArray);
+            CreateImgHeader(byteArray);
 
             int offsetX = 0, offsetY = 0;
             int midx = 0;
@@ -322,21 +322,21 @@ namespace Files.Gm1Converter
         /// <summary>
         ///  Create the offset and size Lists
         /// </summary>
-        /// <param name="array">The GM1 File as byte Array</param>
-        private void CreateOffsetAndSizeInByteArrayList(byte[] array)
+        /// <param name="byteArray">The GM1 File as byte Array</param>
+        private void CreateOffsetAndSizeInByteArrayList(byte[] byteArray)
         {
             if (Logger.Loggeractiv) Logger.Log("CreateOffsetAndSizeInByteArrayList");
             for (int i = 0; i < this.fileHeader.INumberOfPictureinFile; i++)
             {
                 var image = new TGXImage();
-                image.OffsetinByteArray = BitConverter.ToUInt32(array, actualPositionInByteArray + i * 4);
+                image.OffsetinByteArray = BitConverter.ToUInt32(byteArray, actualPositionInByteArray + i * 4);
                 _TGXImage.Add(image);
             }
             actualPositionInByteArray += (int)this.fileHeader.INumberOfPictureinFile * 4;
 
             for (int i = 0; i < this.fileHeader.INumberOfPictureinFile; i++)
             {
-                _TGXImage[i].SizeinByteArray = BitConverter.ToUInt32(array, actualPositionInByteArray + i * 4);
+                _TGXImage[i].SizeinByteArray = BitConverter.ToUInt32(byteArray, actualPositionInByteArray + i * 4);
             }
             actualPositionInByteArray += (int)this.fileHeader.INumberOfPictureinFile * 4;
         }

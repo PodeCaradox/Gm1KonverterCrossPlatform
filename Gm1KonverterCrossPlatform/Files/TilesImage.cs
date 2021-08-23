@@ -58,10 +58,10 @@ namespace Gm1KonverterCrossPlatform.Files
         /// <summary>
         /// Add the Diamond Tile Img to the bigger Img
         /// </summary>
-        /// <param name="imgFileAsBytearray">The Diamond byte array</param>
+        /// <param name="imgFileAsByteArray">The Diamond byte array</param>
         /// <param name="xOffset">The xOffset in the bigger IMG</param>
         /// <param name="yOffset">The yOffset in the bigger IMG</param>
-        internal void AddDiamondToImg(byte[] imgFileAsBytearray, int xOffset, int yOffset)
+        internal void AddDiamondToImg(byte[] imgFileAsByteArray, int xOffset, int yOffset)
         {
             int x = 0;
             int y = 0;
@@ -72,14 +72,14 @@ namespace Gm1KonverterCrossPlatform.Files
             {
                 for (int j = 0; j < array[i]; j++)
                 {
-                    UInt16 pixelColor = BitConverter.ToUInt16(imgFileAsBytearray, (int)bytePos);
+                    UInt16 pixelColor = BitConverter.ToUInt16(imgFileAsByteArray, (int)bytePos);
                     bytePos += 2;
                     Utility.ReadColor(pixelColor, out r, out g, out b, out a);
                     a = byte.MaxValue;
                     int number = ((width * (y + yOffset)) + x + xOffset + 15 - array[i] / 2);
-               
+                    
                     colors[number] = (UInt32)(b | (g << 8) | (r << 16) | (a << 24));
-                
+                    
                     x++;
                 }
                 x = 0;

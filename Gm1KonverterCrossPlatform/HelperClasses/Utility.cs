@@ -798,20 +798,20 @@ namespace HelperClasses.Gm1Converter
         }
 
         /// <summary>
-        /// Convert Color 4 byte to 2 byte Color
+        /// Convert 4 byte Color to 2 byte Color
         /// </summary>
         /// <param name="colorAsInt32">The Color to Convert</param>
         /// <returns></returns>
-        internal static UInt16 EncodeColorTo2Byte(uint colorAsInt32)
+        internal static ushort EncodeColorTo2Byte(uint colorAsInt32)
         {
             var colors = BitConverter.GetBytes(colorAsInt32);
 
-            UInt16 b = (UInt16)((colors[0] >> 3) & 0b0001_1111);
-            UInt16 g = (UInt16)(((colors[1] >> 3) & 0b0001_1111) << 5);
-            UInt16 r = (UInt16)(((colors[2] >> 3) & 0b0001_1111) << 10);
-            UInt16 a = (UInt16)((colors[3] & 0b1000_0000) << 8);
+            ushort b = (ushort)((colors[0] >> 3) & 0b0001_1111);
+            ushort g = (ushort)(((colors[1] >> 3) & 0b0001_1111) << 5);
+            ushort r = (ushort)(((colors[2] >> 3) & 0b0001_1111) << 10);
+            ushort a = (ushort)((colors[3] & 0b1000_0000) << 8);
 
-            return (UInt16)(b | g | r | a);
+            return (ushort)(b | g | r | a);
         }
 
         /// <summary>
@@ -836,24 +836,27 @@ namespace HelperClasses.Gm1Converter
         }
 
         /// <summary>
-        /// Get File names in an Path
+        /// Get File names in a directory
         /// </summary>
-        /// <param name="path">The Path to lookup</param>
-        /// <param name="filter">The Filer, which files only</param>
-        /// <returns></returns>
-        internal static string[] GetFileNames(string path, string filter)
+        /// <param name="directory">The Path to lookup</param>
+        /// <param name="filter">The Filer, which files to select</param>
+        internal static string[] GetFileNames(string directory, string filter)
         {
-            string[] files = Directory.GetFiles(path, filter, SearchOption.TopDirectoryOnly);
+            string[] files = Directory.GetFiles(directory, filter, SearchOption.TopDirectoryOnly);
+            
             for (int i = 0; i < files.Length; i++)
                 files[i] = Path.GetFileName(files[i]);
+
             return files;
         }
 
-        internal static string[] GetDirectoryNames(string path)
+        internal static string[] GetDirectoryNames(string directory)
         {
-            string[] files = Directory.GetDirectories(path, "*", SearchOption.TopDirectoryOnly);
+            string[] files = Directory.GetDirectories(directory, "*", SearchOption.TopDirectoryOnly);
+
             for (int i = 0; i < files.Length; i++)
                 files[i] = Path.GetFileName(files[i]);
+
             return files;
         }
 
