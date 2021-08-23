@@ -281,7 +281,7 @@ namespace Gm1KonverterCrossPlatform.Views
                     var filename = Path.GetFileName(file);
                     if (filename.Equals("Image" + counter + ".png"))
                     {
-                        Avalonia.Media.Imaging.Bitmap image = new Avalonia.Media.Imaging.Bitmap(file);
+                        Bitmap image = new Bitmap(file);
                         vm.TGXImages[counter - 1].Source = image;
                         vm.TGXImages[counter - 1].MaxWidth = image.PixelSize.Width;
                         vm.TGXImages[counter - 1].MaxHeight = image.PixelSize.Height;
@@ -316,7 +316,7 @@ namespace Gm1KonverterCrossPlatform.Views
                     foreach (var image in vm.File.TilesImages)
                     {
                         int width = image.Width;
-                        int height = image.Height - ((GM1FileHeader.DataType)vm.File.FileHeader.IDataType == GM1FileHeader.DataType.NOCompression ? 7 : 0);
+                        int height = image.Height;
 
                         actualwidth += width;
                         
@@ -341,13 +341,15 @@ namespace Gm1KonverterCrossPlatform.Views
                         LoadNewDataForGm1File(fileindex, list, width, height);
                         fileindex++;
 
-                        Avalonia.Media.Imaging.Bitmap newimage = Utility.LoadImageAsBitmap(imageData, ref width, ref height, offsetx, offsety);
+                        Bitmap newimage = Utility.LoadImageAsBitmap(imageData, ref width, ref height, offsetx, offsety);
                         offsetx += width;
                         vm.TGXImages[counter].Source = newimage;
                         vm.TGXImages[counter].MaxWidth = newimage.PixelSize.Width;
                         vm.TGXImages[counter].MaxHeight = newimage.PixelSize.Height;
                         counter++;
                     }
+
+                    vm.File.SetNewTileList();
                 }
                 else
                 {
@@ -379,7 +381,7 @@ namespace Gm1KonverterCrossPlatform.Views
                         LoadNewDataForGm1File(fileindex, list, width, height);
                         fileindex++;
 
-                        Avalonia.Media.Imaging.Bitmap newimage = Utility.LoadImageAsBitmap(imageData, ref width, ref height, oldOffsetx, oldOffsety);
+                        Bitmap newimage = Utility.LoadImageAsBitmap(imageData, ref width, ref height, oldOffsetx, oldOffsety);
                         offsetx += width;
                         vm.TGXImages[counter].Source = newimage;
                         vm.TGXImages[counter].MaxWidth = newimage.PixelSize.Width;
@@ -389,9 +391,8 @@ namespace Gm1KonverterCrossPlatform.Views
                 }
             }
 
-            if ((GM1FileHeader.DataType)vm.File.FileHeader.IDataType == GM1FileHeader.DataType.TilesObject) vm.File.SetNewTileList();
-
             if (vm.File.ImagesTGX.Count > 0) vm.File.ImagesTGX[0].SizeinByteArray = (uint)vm.File.ImagesTGX[0].ImgFileAsBytearray.Length;
+            
             uint zaehler = 0;
             for (int i = 1; i < vm.File.ImagesTGX.Count; i++)
             {
@@ -401,9 +402,10 @@ namespace Gm1KonverterCrossPlatform.Views
             }
 
             //datasize neu setzten
-            uint newDataSize = vm.File.ImagesTGX[vm.File.ImagesTGX.Count - 1].OffsetinByteArray + vm.File.ImagesTGX[vm.File.ImagesTGX.Count - 1].SizeinByteArray; ;
+            uint newDataSize = vm.File.ImagesTGX[vm.File.ImagesTGX.Count - 1].OffsetinByteArray + vm.File.ImagesTGX[vm.File.ImagesTGX.Count - 1].SizeinByteArray;
 
             vm.File.FileHeader.IDataSize = newDataSize;
+
             Cursor = new Avalonia.Input.Cursor(Avalonia.Input.StandardCursorType.Arrow);
         }
 

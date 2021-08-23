@@ -530,14 +530,14 @@ namespace HelperClasses.Gm1Converter
             return CreateBigImage(bitmaps, BigImageWidth);
         }
 
-        private static byte FindColorPositionInPalette(ushort color,int position, Palette palette, List<ushort>[] paletteImages)
+        private static byte FindColorPositionInPalette(ushort color, int position, Palette palette, List<ushort>[] paletteImages)
         {
             byte newPosition = 0;
             if (paletteImages == null)//not orginal Stronghold Files do not need to check all
             {
                 for (byte i = 0; i < byte.MaxValue; i++)
                 {
-                    if (color == palette.ArrayPaletten[0,i])
+                    if (color == palette.ArrayPaletten[0, i])
                     {
                         newPosition = i;
                         break;
@@ -843,7 +843,7 @@ namespace HelperClasses.Gm1Converter
         /// <returns></returns>
         internal static string[] GetFileNames(string path, string filter)
         {
-            string[] files = Directory.GetFiles(path, filter,SearchOption.TopDirectoryOnly);
+            string[] files = Directory.GetFiles(path, filter, SearchOption.TopDirectoryOnly);
             for (int i = 0; i < files.Length; i++)
                 files[i] = Path.GetFileName(files[i]);
             return files;
