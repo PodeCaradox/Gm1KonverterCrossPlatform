@@ -68,20 +68,20 @@ namespace Files.Gm1Converter
 
         #region Construtor
 
-        public GM1FileHeader(byte[] array)
+        public GM1FileHeader(byte[] byteArray)
         {
-            this.iUnknown1 = BitConverter.ToUInt32(array, 0);
-            this.iUnknown2 = BitConverter.ToUInt32(array, 4);
-            this.iUnknown3 = BitConverter.ToUInt32(array, 8);
-            this.iNumberOfPictureinFile = BitConverter.ToUInt32(array, 12);
-            this.iUnknown4 = BitConverter.ToUInt32(array, 16);
-            this.iDataType = BitConverter.ToUInt32(array, 20);
+            this.iUnknown1 = BitConverter.ToUInt32(byteArray, 0);
+            this.iUnknown2 = BitConverter.ToUInt32(byteArray, 4);
+            this.iUnknown3 = BitConverter.ToUInt32(byteArray, 8);
+            this.iNumberOfPictureinFile = BitConverter.ToUInt32(byteArray, 12);
+            this.iUnknown4 = BitConverter.ToUInt32(byteArray, 16);
+            this.iDataType = BitConverter.ToUInt32(byteArray, 20);
             for (int i = 0; i < iUnknown5.Length; i++)
             {
-                this.iUnknown5[i] = BitConverter.ToUInt32(array, 24 + i * 4);
+                this.iUnknown5[i] = BitConverter.ToUInt32(byteArray, 24 + i * 4);
             }
-            this.iDataSize = BitConverter.ToUInt32(array, 80);
-            this.iUnknown6 = BitConverter.ToUInt32(array, 84);
+            this.iDataSize = BitConverter.ToUInt32(byteArray, 80);
+            this.iUnknown6 = BitConverter.ToUInt32(byteArray, 84);
 
             this.size[0] = iUnknown5[6];
             this.size[1] = iUnknown5[7];

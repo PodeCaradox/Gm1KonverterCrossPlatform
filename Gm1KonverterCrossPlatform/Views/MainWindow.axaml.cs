@@ -344,12 +344,12 @@ namespace Gm1KonverterCrossPlatform.Views
                             maxheight = height;
                         }
 
-                        var list = Utility.LoadImage(imageData, ref width, ref height, vm.File.ImagesTGX[fileindex].AnimatedColor, 1, vm.File.FileHeader.IDataType, offsetx, offsety);
-                        if (list.Count == 0) continue;
+                        var colorList = Utility.LoadImage(imageData, ref width, ref height, vm.File.ImagesTGX[fileindex].AnimatedColor, 1, vm.File.FileHeader.IDataType, offsetx, offsety);
+                        if (colorList.Count == 0) continue;
                         width = image.Width;
                         height = image.Height;
 
-                        LoadNewDataForGm1File(fileindex, list, width, height);
+                        LoadNewDataForGm1File(fileindex, colorList, width, height);
                         fileindex++;
 
                         Bitmap newimage = Utility.LoadImageAsBitmap(imageData, ref width, ref height, offsetx, offsety);
@@ -384,12 +384,12 @@ namespace Gm1KonverterCrossPlatform.Views
                         }
                         int oldOffsetx = offsetx;
                         int oldOffsety = offsety;
-                        var list = Utility.LoadImage(imageData, ref width, ref height, vm.File.ImagesTGX[fileindex].AnimatedColor, 1, vm.File.FileHeader.IDataType, offsetx, offsety);
-                        if (list.Count == 0) continue;
+                        var colorList = Utility.LoadImage(imageData, ref width, ref height, vm.File.ImagesTGX[fileindex].AnimatedColor, 1, vm.File.FileHeader.IDataType, offsetx, offsety);
+                        if (colorList.Count == 0) continue;
                         width = image.Width;
                         height = image.Height - ((GM1FileHeader.DataType)vm.File.FileHeader.IDataType == GM1FileHeader.DataType.NOCompression ? 7 : 0);
 
-                        LoadNewDataForGm1File(fileindex, list, width, height);
+                        LoadNewDataForGm1File(fileindex, colorList, width, height);
                         fileindex++;
 
                         Bitmap newimage = Utility.LoadImageAsBitmap(imageData, ref width, ref height, oldOffsetx, oldOffsety);
@@ -522,7 +522,7 @@ namespace Gm1KonverterCrossPlatform.Views
             string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(vm.File.FileHeader.Name);
             string directory = Path.Combine(vm.UserConfig.WorkFolderPath, fileNameWithoutExtension, "Colortables");
 
-            for (int i = 1; i <= Palette.ColortableCount; i++)
+            for (int i = 1; i <= Palette.ColorTableCount; i++)
             {
                 string fileName = $"ColorTable{i}.png";
                 string filePath = Path.Combine(directory, fileName);

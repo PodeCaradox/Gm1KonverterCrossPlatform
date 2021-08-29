@@ -24,7 +24,7 @@ namespace Files.Gm1Converter
         /// <summary>
         /// A colortable always contains 256 colors.
         /// </summary>
-        public const int ColortableColorCount = 256;
+        public const int ColorTableColorCount = 256;
 
 
         public readonly static int pixelSize = 10;
@@ -36,7 +36,7 @@ namespace Files.Gm1Converter
         #region Variables
 
         private int actualPalette = 0;
-        private ushort[,] arrayPaletten = new ushort[ColorTableCount, ColortableColorCount];
+        private ushort[,] arrayPaletten = new ushort[ColorTableCount, ColorTableColorCount];
         private WriteableBitmap[] bitmaps = new WriteableBitmap[10];
 
         #endregion
@@ -45,18 +45,14 @@ namespace Files.Gm1Converter
         /// <summary>
         /// The palette consist of 10 colortables, each consisting of 256 colors, and is used in Animation files.
         /// </summary>
-        /// <param name="array">The GM1 File as byte Array</param>
-        public Palette(byte[] array)
+        /// <param name="byteArray">The palette byte array</param>
+        public Palette(byte[] byteArray)
         {
-            // palette is located immediately after header
-            byte[] arrayPaletteByte = new byte[ByteSize];
-            Buffer.BlockCopy(array, GM1FileHeader.ByteSize, arrayPaletteByte, 0, ByteSize);
-
-            for (int i = 0; i < arrayPaletten.GetLength(0); i++)
+            for (int i = 0; i < ColorTableCount; i++)
             {
-                for (int j = 0; j < arrayPaletten.GetLength(1); j++)
+                for (int j = 0; j < ColorTableColorCount; j++)
                 {
-                    this.arrayPaletten[i,j] = BitConverter.ToUInt16(arrayPaletteByte, (i*256+j) * 2);
+                    this.arrayPaletten[i, j] = BitConverter.ToUInt16(byteArray, (i * ColorTableColorCount + j) * 2);
                 }
                 bitmaps[i] = PalleteToImG(i, pixelSize);
             }

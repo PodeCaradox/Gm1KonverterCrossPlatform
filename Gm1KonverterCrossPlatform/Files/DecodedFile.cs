@@ -49,12 +49,19 @@ namespace Files.Gm1Converter
             fileArray = array;
             if (this.fileHeader == null)
             {
-                this.fileHeader = new GM1FileHeader(array);
+                // header is located at start of the file
+                byte[] headerByteArray = new byte[GM1FileHeader.ByteSize];
+                Array.Copy(array, 0, headerByteArray, 0, GM1FileHeader.ByteSize);
+                this.fileHeader = new GM1FileHeader(headerByteArray);
+
                 this.fileHeader.Name = name;
 
                 if (fileHeader.IDataType == (UInt32)GM1FileHeader.DataType.Animations)
                 {
-                    this.palette = new Palette(array);
+                    // palette is located immediately after the header
+                    byte[] paletteByteArray = new byte[Palette.ByteSize];
+                    Array.Copy(array, GM1FileHeader.ByteSize, paletteByteArray, 0, Palette.ByteSize);
+                    this.palette = new Palette(paletteByteArray);
                 }
                 if (Logger.Loggeractiv) Logger.Log($"DataType {(GM1FileHeader.DataType)fileHeader.IDataType}");
             }
