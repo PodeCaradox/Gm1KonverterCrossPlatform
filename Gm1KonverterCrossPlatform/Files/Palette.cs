@@ -19,7 +19,7 @@ namespace Files.Gm1Converter
         /// <summary>
         /// A file always contains 10 colortables.
         /// </summary>
-        public const int ColortableCount = 10;
+        public const int ColorTableCount = 10;
 
         /// <summary>
         /// A colortable always contains 256 colors.
@@ -36,7 +36,7 @@ namespace Files.Gm1Converter
         #region Variables
 
         private int actualPalette = 0;
-        private ushort[,] arrayPaletten = new ushort[ColortableCount, ColortableColorCount];
+        private ushort[,] arrayPaletten = new ushort[ColorTableCount, ColortableColorCount];
         private WriteableBitmap[] bitmaps = new WriteableBitmap[10];
 
         #endregion
@@ -106,34 +106,53 @@ namespace Files.Gm1Converter
         /// <summary>
         /// Calculate new Palette IMG with the new Pixelsize
         /// </summary>
-        /// <param name="palette">Selected Palette 0-9</param>
-        /// <param name="pixelSize">Make the Pallete pixelssize bigger for bigger IMGS</param>
+        /// <param name="colorTable">Selected Palette 0-9</param>
+        /// <param name="scale">Scale the palette to desired size</param>
         /// <returns></returns>
-        private unsafe WriteableBitmap PalleteToImG(int palette, int pixelSize)
+        private unsafe WriteableBitmap PalleteToImG(int colorTable, int scale)
         {
-            byte r, g, b, a;
-            int height = 8 * pixelSize;
-            int width = 32 * pixelSize;
-            UInt32 colorByte = 0;
-            WriteableBitmap bitmap = new WriteableBitmap(new Avalonia.PixelSize(width, height), new Avalonia.Vector(96, 96), Avalonia.Platform.PixelFormat.Bgra8888);// Bgra8888 is device-native and much faster.
-            using (var buf = bitmap.Lock())
+            // layout used to draw color list to an image
+            // total value of width * height must equal 256
+            int width = 32;
+            int height = 8;
+
+            int bitmapWidth = width * scale;
+            int bitmapHeight = height * scale;
+
+            WriteableBitmap bitmap = new WriteableBitmap(
+                new Avalonia.PixelSize(bitmapWidth, bitmapHeight),
+                new Avalonia.Vector(96, 96),
+                Avalonia.Platform.PixelFormat.Bgra8888 // Bgra8888 is device-native and much faster
+            );
+
+            using (var buffer = bitmap.Lock())
             {
-                for (int y = 0; y < height; y++)
-                {
-                    for (int x = 0; x < width; x++)
+                for (int i = 0; i < 256; i++)
+				{
+                    // position of color in bitmap
+                    int y = i / width;
+                    int x = i - (y * width);
+
+                    y *= scale;
+                    x *= scale;
+
+                    // get converted color
+                    Utility.ReadColor(arrayPaletten[colorTable, i], out byte r, out byte g, out byte b, out byte a);
+                    uint colorByte = (uint)(b | (g << 8) | (r << 16) | (a << 24));
+
+                    // write color to bitmap
+                    for (int yy = 0; yy < scale; yy++)
                     {
-                        if (x % pixelSize==0)
+                        for (int xx = 0; xx < scale; xx++)
                         {
-                            var pos = y/pixelSize * width/ pixelSize + x/ pixelSize;
-                            Utility.ReadColor(arrayPaletten[palette, pos], out r, out g, out b, out a);
-                            colorByte = (UInt32)(b | (g << 8) | (r << 16) | (a << 24));
+                            var ptr = (uint*)buffer.Address;
+                            ptr += (uint)(((y + yy) * bitmapWidth) + (x + xx));
+                            *ptr = colorByte;
                         }
-                        var ptr = (uint*)buf.Address;
-                        ptr += (uint)((width * y) + x);
-                        *ptr = colorByte;
                     }
                 }
             }
+
             return bitmap;
         }
 
