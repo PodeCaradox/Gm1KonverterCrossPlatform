@@ -128,6 +128,11 @@ namespace Files.Gm1Converter
             return bitmap;
         }
 
+        public ColorTable Copy()
+        {
+            return new ColorTable(colorList);
+        }
+
         #endregion
     }
 }
