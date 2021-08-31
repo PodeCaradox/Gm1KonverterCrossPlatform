@@ -10,7 +10,7 @@
         Title="{DynamicResource ChangeColorPalette}"
         WindowStartupLocation="CenterOwner">
 
-  <StackPanel >
+  <StackPanel>
     <TextBlock HorizontalAlignment="Center" Text="{DynamicResource ClickontheColoryouwanttoChange}"/>
     <Image HorizontalAlignment="Left" Name="PaletteImage" MaxWidth="640" MaxHeight="160" MinWidth="640" MinHeight="160" Margin="0" Source="{Binding ActuellColorTableChangeColorWindow}"/>
     <Canvas HorizontalAlignment="Left" x:Name="Cnv"/>
@@ -21,17 +21,17 @@
       <StackPanel>
         <StackPanel Orientation="Horizontal">
           <TextBlock Text="R"/>
-          <Slider Maximum="255" Minimum="0" TickFrequency="1" Width="255" Value="{Binding Red}"/>
+          <Slider Minimum="0" Maximum="255" TickFrequency="1" Width="255" Value="{Binding Red}"/>
           <TextBox Width="40" Text="{Binding Red}"/>
         </StackPanel>
         <StackPanel Orientation="Horizontal">
           <TextBlock Text="B"/>
-          <Slider Maximum="255" Minimum="0" TickFrequency="1" Width="255" Value="{Binding Blue}"/>
+          <Slider Minimum="0" Maximum="255" TickFrequency="1" Width="255" Value="{Binding Blue}"/>
           <TextBox Width="40" Text="{Binding Blue}"/>
         </StackPanel>
         <StackPanel Orientation="Horizontal">
           <TextBlock Text="G"/>
-          <Slider Maximum="255" Minimum="0" TickFrequency="1" Width="255" Value="{Binding Green}"/>
+          <Slider Minimum="0" Maximum="255" TickFrequency="1" Width="255" Value="{Binding Green}"/>
           <TextBox Width="40" Text="{Binding Green}"/>
         </StackPanel>
       </StackPanel>
