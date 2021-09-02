@@ -23,6 +23,7 @@ namespace Gm1KonverterCrossPlatform.Views
     public class MainWindow : Window
     {
         private MainWindowViewModel vm;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -861,11 +862,18 @@ namespace Gm1KonverterCrossPlatform.Views
 
         private void Button_ClickChangeColorTable(object sender, RoutedEventArgs e)
         {
-            ChangeColorPalette changeColorPalette = new ChangeColorPalette();
-            changeColorPalette.Closed += OnWindowClosed;
-            changeColorPalette.DataContext = this.DataContext;
-            changeColorPalette.LoadPalette();
-            changeColorPalette.ShowDialog(this);
+            ushort[] colorList = new ushort[256];
+
+            for (int i = 0; i < 256; i++) {
+                colorList[i] = vm.File.Palette.ArrayPaletten[vm.File.Palette.ActualPalette, i];
+            }
+
+            ChangeColorTable changeColorTable = new ChangeColorTable(
+                new ColorTable(colorList),
+                OnWindowClosed
+            );
+
+            changeColorTable.ShowDialog(this);
         }
 
         private void Button_ChangeOffset(object sender, RoutedEventArgs e)
@@ -911,17 +919,18 @@ namespace Gm1KonverterCrossPlatform.Views
             if (Logger.Loggeractiv) Logger.Log("\n>>Button_ClickGifExporter end");
         }
 
-        private void OnWindowClosed(object sender, EventArgs e)
+        private void OnWindowClosed(ColorTable colorTable)
         {
-            if (vm.File.Palette.PaletteChanged)
+            for (int i = 0; i < 256; i++)
             {
-                var bitmap = vm.File.Palette.GetBitmap(vm.File.Palette.ActualPalette, Palette.pixelSize);
-                vm.ActuellColorTable = bitmap;
-                vm.File.Palette.Bitmaps[vm.File.Palette.ActualPalette] = bitmap;
-                vm.GeneratePaletteAndImgNew();
-                vm.File.Palette.PaletteChanged = false;
-                vm.DecodeButtonEnabled = true;
+                vm.File.Palette.ArrayPaletten[vm.File.Palette.ActualPalette, i] = colorTable.ColorList[i];
             }
+
+            vm.File.Palette.Bitmaps[vm.File.Palette.ActualPalette] = colorTable.GetBitmap(Palette.pixelSize);
+            
+            vm.GeneratePaletteAndImgNew();
+
+            vm.DecodeButtonEnabled = true;
         }
     }
 }

@@ -65,7 +65,6 @@ namespace Files.Gm1Converter
         public WriteableBitmap[] Bitmaps { get => bitmaps; set => bitmaps = value; }
         public ushort[,] ArrayPaletten { get => arrayPaletten; set => arrayPaletten = value; }
         public int ActualPalette { get => actualPalette; set => actualPalette = value; }
-        public bool PaletteChanged { get; internal set; } = false;
         public void SetPaleteUInt(int index, ushort[] array)
         {
             for (int i = 0; i < arrayPaletten.GetLength(1); i++)

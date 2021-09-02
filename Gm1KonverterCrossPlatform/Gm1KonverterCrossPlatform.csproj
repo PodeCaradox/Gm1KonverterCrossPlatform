@@ -30,12 +30,9 @@
     <None Remove="Models\**" />
     <AvaloniaResource Remove="HelperClasses\Language.de-DE.xaml" />
     <AvaloniaResource Remove="HelperClasses\Language.xaml" />
-    <AvaloniaResource Remove="HelperClasses\Views\ChangeColorPalette.xaml" />
     <AvaloniaResource Remove="HelperClasses\Views\MessageBoxWindow.xaml" />
     <AvaloniaResource Remove="Views\InfoWindow.xaml" />
-    <Compile Remove="Views\ChangeColorPalette.xaml.cs" />
     <Compile Remove="Views\InfoWindow.xaml.cs" />
-    <None Remove="HelperClasses\Views\ChangeColorPalette.xaml" />
     <None Remove="HelperClasses\Views\MessageBoxWindow.xaml" />
     <None Remove="Views\InfoWindow.xaml" />
   </ItemGroup>
@@ -88,9 +85,6 @@
       <Generator>MSBuild:Compile</Generator>
     </None>
     <None Update="Languages\Language.en_US.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="Views\ChangeColorPalette.xaml">
       <Generator>MSBuild:Compile</Generator>
     </None>
   </ItemGroup>

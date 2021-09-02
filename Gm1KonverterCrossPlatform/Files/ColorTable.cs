@@ -24,7 +24,6 @@ namespace Files.Gm1Converter
         #region Variables
 
         private ushort[] colorList = new ushort[ColorCount];
-        private WriteableBitmap bitmap;
 
         #endregion
 
@@ -36,8 +35,6 @@ namespace Files.Gm1Converter
             {
                 colorList[colorIndex] = BitConverter.ToUInt16(byteArray, colorIndex * 2);
             }
-
-            bitmap = GenerateBitmap(10);
         }
 
         public ColorTable(ushort[] ushortArray)
@@ -47,8 +44,6 @@ namespace Files.Gm1Converter
             }
 
             colorList = ushortArray;
-
-            bitmap = GenerateBitmap(10);
         }
 
         #endregion
@@ -56,7 +51,6 @@ namespace Files.Gm1Converter
         #region GetterSetter
 
         public ushort[] ColorList { get => colorList; set => colorList = value; }
-        public WriteableBitmap Bitmap { get => bitmap; set => bitmap = value; }
 
         #endregion
 
@@ -80,16 +74,16 @@ namespace Files.Gm1Converter
         /// <summary>
         /// Create new image from color list.
         /// </summary>
-        /// <param name="scale">Scale the palette to desired size</param>
-        unsafe private WriteableBitmap GenerateBitmap(int scale)
+        /// <param name="pixelSize">Scale the palette to desired size pixel size</param>
+        unsafe public WriteableBitmap GetBitmap(int pixelSize)
         {
             // layout used to draw color list to an image
             // total value of width * height must equal 256
             int width = 32;
             int height = 8;
 
-            int bitmapWidth = width * scale;
-            int bitmapHeight = height * scale;
+            int bitmapWidth = width * pixelSize;
+            int bitmapHeight = height * pixelSize;
 
             WriteableBitmap bitmap = new WriteableBitmap(
                 new Avalonia.PixelSize(bitmapWidth, bitmapHeight),
@@ -105,17 +99,17 @@ namespace Files.Gm1Converter
                     int y = i / width;
                     int x = i - (y * width);
 
-                    y *= scale;
-                    x *= scale;
+                    y *= pixelSize;
+                    x *= pixelSize;
 
                     // get converted color
                     Utility.ReadColor(colorList[i], out byte r, out byte g, out byte b, out byte a);
                     uint colorByte = (uint)(b | (g << 8) | (r << 16) | (a << 24));
 
                     // write color to bitmap
-                    for (int yy = 0; yy < scale; yy++)
+                    for (int yy = 0; yy < pixelSize; yy++)
                     {
-                        for (int xx = 0; xx < scale; xx++)
+                        for (int xx = 0; xx < pixelSize; xx++)
                         {
                             var ptr = (uint*)buffer.Address;
                             ptr += (uint)(((y + yy) * bitmapWidth) + (x + xx));

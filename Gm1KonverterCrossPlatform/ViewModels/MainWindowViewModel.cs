@@ -21,16 +21,6 @@ namespace Gm1KonverterCrossPlatform.ViewModels
 
         private UserConfig userConfig;
 
-        private string colorAsText = "";
-        public string ColorAsText
-        {
-            get => colorAsText;
-            set
-            {
-                this.RaiseAndSetIfChanged(ref colorAsText, value);
-            }
-        }
-
         private Languages.Language actualLanguage;
         public Languages.Language ActualLanguage
         {
@@ -87,62 +77,6 @@ namespace Gm1KonverterCrossPlatform.ViewModels
         {
             get => delay;
             set => this.RaiseAndSetIfChanged(ref delay, value);
-        }
-
-        private int red = 0;
-        public int Red
-        {
-            get => red;
-            set {
-                if (value > 255)
-                {
-                    value = 255;
-                }
-                else if (value < 0)
-                {
-                    value = 0;
-                }
-                this.RaiseAndSetIfChanged(ref red, value);
-                ColorAsText = "#" + 255.ToString("X2") + red.ToString("X2") + green.ToString("X2") + blue.ToString("X2");
-            }
-        }
-
-        private int blue = 0;
-        public int Blue
-        {
-            get => blue;
-            set
-            {
-                if (value>255)
-                {
-                    value = 255;
-                }
-                else if (value < 0)
-                {
-                    value = 0;
-                }
-                this.RaiseAndSetIfChanged(ref blue, value);
-                ColorAsText = "#" + 255.ToString("X2") + red.ToString("X2") + green.ToString("X2") + blue.ToString("X2");
-            }
-        }
-
-        private int green = 0;
-        public int Green
-        {
-            get => green;
-            set
-            {
-                if (value > 255)
-                {
-                    value = 255;
-                }
-                else if (value < 0)
-                {
-                    value = 0;
-                }
-                this.RaiseAndSetIfChanged(ref green, value);
-                ColorAsText = "#" + 255.ToString("X2") + red.ToString("X2") + green.ToString("X2") + blue.ToString("X2");
-            }
         }
         
         private int actualPalette = 1;
@@ -330,13 +264,6 @@ namespace Gm1KonverterCrossPlatform.ViewModels
         {
             get => decodeButtonEnabled;
             set => this.RaiseAndSetIfChanged(ref decodeButtonEnabled, value);
-        }
-
-        internal WriteableBitmap actuellColorTableChangeColorWindow;
-        internal WriteableBitmap ActuellColorTableChangeColorWindow
-        {
-            get => actuellColorTableChangeColorWindow;
-            set => this.RaiseAndSetIfChanged(ref actuellColorTableChangeColorWindow, value);
         }
 
         internal WriteableBitmap actuellColorTable;
