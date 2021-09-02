@@ -20,6 +20,7 @@ namespace Gm1KonverterCrossPlatform.ViewModels
         #region Variables
 
         private UserConfig userConfig;
+        public UserConfig UserConfig { get => userConfig; set => userConfig = value; }
 
         private Languages.Language actualLanguage;
         public Languages.Language ActualLanguage
@@ -126,10 +127,11 @@ namespace Gm1KonverterCrossPlatform.ViewModels
         {
             get => xOffset;
             set {
-                if (value> sbyte.MaxValue)
+                if (value > sbyte.MaxValue)
                 {
                     value = sbyte.MaxValue;
-                }else if (value< sbyte.MinValue)
+                }
+                else if (value < sbyte.MinValue)
                 {
                     value = sbyte.MinValue;
                 }
@@ -295,8 +297,6 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             }
         }
 
-        public UserConfig UserConfig { get => userConfig; set => userConfig = value; }
-
         internal TGXImage _actualTGXImageSelection;
         internal TGXImage ActualTGXImageSelection
         {
@@ -422,7 +422,7 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             TgxImage.TgxHeight = BitConverter.ToUInt32(array, 4);
             TgxImage.ImgFileAsBytearray = new byte[array.Length - 8];
             Array.Copy(array, 8, TgxImage.ImgFileAsBytearray, 0, TgxImage.ImgFileAsBytearray.Length);
-            TgxImage.CreateImageFromByteArray(null,true);
+            TgxImage.CreateImageFromByteArray(null, true);
             TGXImages = new ObservableCollection<Image>();
             var bitmap = TgxImage.Bitmap;
             Image image = new Image();
@@ -442,7 +442,7 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             for (int j = 0; j < File.TilesImages.Count; j++)
             {
                 var bitmap = File.TilesImages[j].TileImage;
-         
+
                 Image image = new Image();
                 image.MaxHeight = File.TilesImages[j].Height;
                 image.MaxWidth = File.TilesImages[j].Width;
@@ -479,7 +479,7 @@ namespace Gm1KonverterCrossPlatform.ViewModels
         /// <param name="number"></param>
         internal void ChangePalette(int number)
         {
-            if (number>0)
+            if (number > 0)
             {
                 if (File.Palette.ActualPalette + number > 9)
                 {
