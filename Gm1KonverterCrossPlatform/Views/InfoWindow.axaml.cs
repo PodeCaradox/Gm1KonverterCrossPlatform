@@ -6,14 +6,11 @@ namespace Gm1KonverterCrossPlatform.Views
 {
     public class InfoWindow : Window
     {
-        public InfoWindow()
-        {
-
-        }
+        public InfoWindow() { }
 
         public InfoWindow(GM1FileHeader.DataType dataType)
         {
-            this.InitializeComponent();
+            AvaloniaXamlLoader.Load(this);
 
             StackPanel animation = this.Get<StackPanel>("Animation");
             animation.IsVisible = false;
@@ -50,11 +47,6 @@ namespace Gm1KonverterCrossPlatform.Views
                 default:
                     break;
             }
-        }
-
-        private void InitializeComponent()
-        {
-            AvaloniaXamlLoader.Load(this);
         }
     }
 }
