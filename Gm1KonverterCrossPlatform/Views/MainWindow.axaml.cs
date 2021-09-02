@@ -862,9 +862,9 @@ namespace Gm1KonverterCrossPlatform.Views
 
         private void Button_ClickChangeColorTable(object sender, RoutedEventArgs e)
         {
-            ushort[] colorList = new ushort[256];
+            ushort[] colorList = new ushort[ColorTable.ColorCount];
 
-            for (int i = 0; i < 256; i++) {
+            for (int i = 0; i < ColorTable.ColorCount; i++) {
                 colorList[i] = vm.File.Palette.ArrayPaletten[vm.File.Palette.ActualPalette, i];
             }
 
@@ -921,7 +921,7 @@ namespace Gm1KonverterCrossPlatform.Views
 
         private void OnWindowClosed(ColorTable colorTable)
         {
-            for (int i = 0; i < 256; i++)
+            for (int i = 0; i < ColorTable.ColorCount; i++)
             {
                 vm.File.Palette.ArrayPaletten[vm.File.Palette.ActualPalette, i] = colorTable.ColorList[i];
             }
