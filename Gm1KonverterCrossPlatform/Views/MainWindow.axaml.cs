@@ -243,7 +243,7 @@ namespace Gm1KonverterCrossPlatform.Views
         {
             if (vm.File == null) return;
 
-            InfoWindow infoWindow = new InfoWindow((GM1FileHeader.DataType)vm.File.FileHeader.IDataType);
+            GM1FileInfoWindow infoWindow = new GM1FileInfoWindow((GM1FileHeader.DataType)vm.File.FileHeader.IDataType);
             infoWindow.Show(this);
         }
 
