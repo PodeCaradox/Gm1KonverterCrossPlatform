@@ -21,12 +21,6 @@ namespace Files.Gm1Converter
         /// </summary>
         public const int ColorTableCount = 10;
 
-        /// <summary>
-        /// A colortable always contains 256 colors.
-        /// </summary>
-        public const int ColorTableColorCount = 256;
-
-
         public readonly static int pixelSize = 10;
         public readonly static ushort width = 32;
         public readonly static ushort height = 8;
@@ -36,7 +30,7 @@ namespace Files.Gm1Converter
         #region Variables
 
         private int actualPalette = 0;
-        private ushort[,] arrayPaletten = new ushort[ColorTableCount, ColorTableColorCount];
+        private ushort[,] arrayPaletten = new ushort[ColorTableCount, ColorTable.ColorCount];
         private WriteableBitmap[] bitmaps = new WriteableBitmap[10];
 
         #endregion
@@ -50,9 +44,9 @@ namespace Files.Gm1Converter
         {
             for (int i = 0; i < ColorTableCount; i++)
             {
-                for (int j = 0; j < ColorTableColorCount; j++)
+                for (int j = 0; j < ColorTable.ColorCount; j++)
                 {
-                    this.arrayPaletten[i, j] = BitConverter.ToUInt16(byteArray, (i * ColorTableColorCount + j) * 2);
+                    this.arrayPaletten[i, j] = BitConverter.ToUInt16(byteArray, (i * ColorTable.ColorCount + j) * 2);
                 }
                 bitmaps[i] = PalleteToImG(i, pixelSize);
             }
