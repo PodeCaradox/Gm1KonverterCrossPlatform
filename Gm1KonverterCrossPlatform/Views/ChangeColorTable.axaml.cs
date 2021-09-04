@@ -36,8 +36,6 @@ namespace Gm1KonverterCrossPlatform.Views
             Closing += WindowClosed;
 
             image = this.Get<Image>("PaletteImage");
-            image.PointerPressed += MousePressed;
-
             highlight = this.Get<Rectangle>("PaletteImageHighlight");
 
             viewModel.Bitmap = viewModel.ColorTable.GetBitmap(pixelSize);
