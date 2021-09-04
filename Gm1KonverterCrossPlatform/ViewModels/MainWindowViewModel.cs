@@ -590,6 +590,5 @@ namespace Gm1KonverterCrossPlatform.ViewModels
         }
 
         #endregion
-
     }
 }
