@@ -13,7 +13,7 @@ using Files.Gm1Converter;
 
 namespace Gm1KonverterCrossPlatform.Views
 {
-    public class ChangeColorTable : Window
+    public class ChangeColorTableWindow : Window
     {
         private const int pixelSize = 20;
 
@@ -22,9 +22,9 @@ namespace Gm1KonverterCrossPlatform.Views
         private readonly Image image;
         private readonly Rectangle highlight;
 
-        public ChangeColorTable() { }
+        public ChangeColorTableWindow() { }
 
-        public ChangeColorTable(ColorTable colorTable, Action<ColorTable> callback)
+        public ChangeColorTableWindow(ColorTable colorTable, Action<ColorTable> callback)
         {
             AvaloniaXamlLoader.Load(this);
 
@@ -88,8 +88,8 @@ namespace Gm1KonverterCrossPlatform.Views
             {
                 e.Cancel = true;
 
-                var dialog = new ChangeColorTableDialogBox(this);
-                dialog.ShowDialog(this);
+                var dialogBox = new ChangeColorTableWindowDialogBox(this);
+                dialogBox.ShowDialog(this);
             }
         }
 

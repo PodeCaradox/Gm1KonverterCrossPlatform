@@ -865,12 +865,12 @@ namespace Gm1KonverterCrossPlatform.Views
                 colorList[i] = vm.File.Palette.ArrayPaletten[vm.File.Palette.ActualPalette, i];
             }
 
-            ChangeColorTable changeColorTable = new ChangeColorTable(
+            ChangeColorTableWindow changeColorTableWindow = new ChangeColorTableWindow(
                 new ColorTable(colorList),
                 OnWindowClosed
             );
 
-            changeColorTable.ShowDialog(this);
+            changeColorTableWindow.ShowDialog(this);
         }
 
         private void Button_ChangeOffset(object sender, RoutedEventArgs e)
