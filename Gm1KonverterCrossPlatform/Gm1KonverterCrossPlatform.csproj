@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-  <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <OutputType>WinExe</OutputType>
     <TargetFrameworks>net461</TargetFrameworks>
-	<RuntimeIdentifiers>win10-x64;osx;linux-x64;win7-x32</RuntimeIdentifiers>
+    <RuntimeIdentifiers>win10-x64;osx;linux-x64;win7-x32</RuntimeIdentifiers>
     <LangVersion>7.2</LangVersion>
     <ApplicationIcon>Assets\avalonia-logo.ico</ApplicationIcon>
     <ApplicationManifest>Properties\PublishProfiles\app.manifest</ApplicationManifest>
@@ -20,14 +20,6 @@
       <SubType>Designer</SubType>
     </AvaloniaResource>
     <AvaloniaResource Include="Assets\*" />
-    <AvaloniaResource Remove="Images\**" />
-    <AvaloniaResource Remove="Models\**" />
-    <Compile Remove="Images\**" />
-    <Compile Remove="Models\**" />
-    <EmbeddedResource Remove="Images\**" />
-    <EmbeddedResource Remove="Models\**" />
-    <None Remove="Images\**" />
-    <None Remove="Models\**" />
     <AvaloniaResource Remove="HelperClasses\Views\MessageBoxWindow.xaml" />
     <None Remove="HelperClasses\Views\MessageBoxWindow.xaml" />
   </ItemGroup>
@@ -50,11 +42,6 @@
     <EmbeddedResource Include="HelperClasses\Views\MessageBoxWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="System.Drawing">
-      <HintPath>System.Drawing</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Update="HelperClasses\Views\MessageBoxWindow.xaml.cs">
