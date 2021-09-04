@@ -127,8 +127,8 @@ namespace Files.Gm1Converter
                     byte tokentype = (byte)(token >> 5);
                     byte length = (byte)((token & 31) + 1);
 
-					//transparent
-					uint colorByte = Utility.TransparentColorByte;
+                    //transparent
+                    uint colorByte = Utility.TransparentColorByte;
 
                     bytePos++;
                     byte index;
