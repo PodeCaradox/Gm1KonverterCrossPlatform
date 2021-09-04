@@ -15,7 +15,7 @@ namespace Gm1KonverterCrossPlatform.Views
 {
     public class ChangeColorTable : Window
     {
-        private const int pixelsize = 20;
+        private const int pixelSize = 20;
 
         private readonly ChangeColorTableViewModel viewModel;
         private readonly Action<ColorTable> callback;
@@ -40,18 +40,18 @@ namespace Gm1KonverterCrossPlatform.Views
 
             highlight = this.Get<Rectangle>("PaletteImageHighlight");
 
-            viewModel.Bitmap = viewModel.ColorTable.GetBitmap(pixelsize);
+            viewModel.Bitmap = viewModel.ColorTable.GetBitmap(pixelSize);
         }
 
         private void MousePressed(object sender, PointerPressedEventArgs e)
         {
             var pos = e.GetPosition(image);
-            var newPos = new Point(((int)pos.X) / pixelsize * pixelsize, ((int)pos.Y) / pixelsize * pixelsize);
+            var newPos = new Point(((int)pos.X) / pixelSize * pixelSize, ((int)pos.Y) / pixelSize * pixelSize);
 
             Canvas.SetLeft(highlight, newPos.X);
             Canvas.SetTop(highlight, newPos.Y);
 
-            viewModel.ColorPositionInColorTable = (int)newPos.X / pixelsize + (int)(newPos.Y) / pixelsize * 32;
+            viewModel.ColorPositionInColorTable = (int)newPos.X / pixelSize + (int)(newPos.Y) / pixelSize * 32;
             var color = viewModel.ColorTable.ColorList[viewModel.ColorPositionInColorTable];
             byte r, g, b, a;
             Utility.ReadColor(color, out r, out g, out b, out a);
@@ -69,7 +69,7 @@ namespace Gm1KonverterCrossPlatform.Views
             ushort newColor = Utility.EncodeColorTo2Byte(color);
 
             viewModel.ColorTable.ColorList[viewModel.ColorPositionInColorTable] = newColor;
-            viewModel.Bitmap = viewModel.ColorTable.GetBitmap(pixelsize);
+            viewModel.Bitmap = viewModel.ColorTable.GetBitmap(pixelSize);
 
             viewModel.ColorTableChanged = true;
         }
