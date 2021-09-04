@@ -99,21 +99,21 @@ namespace Files.Gm1Converter
         /// Convert img byte array to IMG, use Pallete if not null
         /// </summary>
         /// <param name="palette">actual Pallete, Pallete is null if normal IMG</param>
-        public unsafe void CreateImageFromByteArray(Palette palette,bool isTgxFile=false)
+        public unsafe void CreateImageFromByteArray(Palette palette, bool isTgxFile = false)
         {
             int width, height;
             if (!isTgxFile)
             {
                 width = this.width;
                 height = this.height;
-                bmp = new WriteableBitmap(new Avalonia.PixelSize(width, height), new Avalonia.Vector(96, 96), Avalonia.Platform.PixelFormat.Bgra8888);// Bgra8888 is device-native and much faster.
             }
             else
             {
                 width = (int)tgxwidth;
                 height = (int)tgxheight;
-                bmp = new WriteableBitmap(new Avalonia.PixelSize(width, height), new Avalonia.Vector(96, 96), Avalonia.Platform.PixelFormat.Bgra8888);// Bgra8888 is device-native and much faster.
             }
+
+            bmp = new WriteableBitmap(new Avalonia.PixelSize(width, height), new Avalonia.Vector(96, 96), Avalonia.Platform.PixelFormat.Bgra8888);// Bgra8888 is device-native and much faster.
 
             using (var buf = bmp.Lock())
             {
@@ -127,8 +127,8 @@ namespace Files.Gm1Converter
                     byte tokentype = (byte)(token >> 5);
                     byte length = (byte)((token & 31) + 1);
 
-                    //transparent
-                    UInt32 colorByte = Utility.TransparentColorByte;
+					//transparent
+					uint colorByte = Utility.TransparentColorByte;
 
                     bytePos++;
                     byte index;
@@ -149,8 +149,8 @@ namespace Files.Gm1Converter
                                 }
                                 else
                                 {
-                                    pixelColor = BitConverter.ToUInt16(imgFileAsBytearray,(int) bytePos);
-                                    bytePos+=2;
+                                    pixelColor = BitConverter.ToUInt16(imgFileAsBytearray, (int)bytePos);
+                                    bytePos += 2;
                                 }
                            
                                 Utility.ReadColor(pixelColor, out r, out g, out b, out a);
@@ -298,7 +298,7 @@ namespace Files.Gm1Converter
             {
                 for (int x = 0; x < width; x++)
                 {
-                    newArray.AddRange(BitConverter.GetBytes(list[y*width+x]));
+                    newArray.AddRange(BitConverter.GetBytes(list[y * width + x]));
                 }
             }
             imgFileAsBytearray = newArray.ToArray();
