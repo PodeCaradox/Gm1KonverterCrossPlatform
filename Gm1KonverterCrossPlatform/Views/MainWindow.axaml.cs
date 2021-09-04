@@ -5,18 +5,15 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Media.Imaging;
 using Files.Gm1Converter;
 using Gm1KonverterCrossPlatform.HelperClasses;
-using Gm1KonverterCrossPlatform.HelperClasses.Views;
 using Gm1KonverterCrossPlatform.ViewModels;
 using HelperClasses.Gm1Converter;
 using Newtonsoft.Json;
-using SixLabors.ImageSharp.PixelFormats;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Palette = Files.Gm1Converter.Palette;
 
 namespace Gm1KonverterCrossPlatform.Views
 {

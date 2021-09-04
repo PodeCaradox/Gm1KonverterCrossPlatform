@@ -20,8 +20,6 @@
       <SubType>Designer</SubType>
     </AvaloniaResource>
     <AvaloniaResource Include="Assets\*" />
-    <AvaloniaResource Remove="HelperClasses\Views\MessageBoxWindow.xaml" />
-    <None Remove="HelperClasses\Views\MessageBoxWindow.xaml" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="0.10.0-rc1" />
@@ -39,14 +37,6 @@
     <PackageReference Include="Veldrid.ImageSharp" Version="4.8.0" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="HelperClasses\Views\MessageBoxWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Update="HelperClasses\Views\MessageBoxWindow.xaml.cs">
-      <DependentUpon>MessageBoxWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Update="Properties\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>

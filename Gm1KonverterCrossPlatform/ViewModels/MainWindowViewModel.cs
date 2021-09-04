@@ -1,16 +1,15 @@
-﻿using ReactiveUI;
-using Avalonia.Controls;
+﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using Files.Gm1Converter;
-using Avalonia.Media.Imaging;
-using HelperClasses.Gm1Converter;
-using Gm1KonverterCrossPlatform.HelperClasses.Views;
-using System.IO;
-using System;
-using Gm1KonverterCrossPlatform.HelperClasses;
+using ReactiveUI;
 using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Media.Imaging;
+using Files.Gm1Converter;
+using HelperClasses.Gm1Converter;
 using Gm1KonverterCrossPlatform.Views;
+using Gm1KonverterCrossPlatform.HelperClasses;
 using Newtonsoft.Json;
 
 namespace Gm1KonverterCrossPlatform.ViewModels
