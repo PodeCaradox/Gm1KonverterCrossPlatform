@@ -461,8 +461,8 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             {
                 var bitmap = File.ImagesTGX[j].Bitmap;
                 Image image = new Image();
-                image.MaxHeight = File.ImagesTGX[j].Height;
-                image.MaxWidth = File.ImagesTGX[j].Width;
+                image.MaxHeight = File.ImagesTGX[j].Header.Height;
+                image.MaxWidth = File.ImagesTGX[j].Header.Width;
                 image.Source = bitmap;
                 image.Tag = File.ImagesTGX[j];
                 TGXImages.Add(image);

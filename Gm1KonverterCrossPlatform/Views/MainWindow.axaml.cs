@@ -206,22 +206,22 @@ namespace Gm1KonverterCrossPlatform.Views
                 if (filename.Equals("OrginalAnimationImg" + counter + ".png"))
                 {
                     int width = 0, height = 0;
-                    var list = Utility.LoadImage(file, ref width, ref height, vm.File.ImagesTGX[counter - 1].AnimatedColor, 1, vm.File.FileHeader.IDataType);
+                    var list = Utility.LoadImage(file, ref width, ref height, vm.File.ImagesTGX[counter - 1].Header.AnimatedColor, 1, vm.File.FileHeader.IDataType);
                     if (list.Count == 0) return;
                     List<ushort>[] colorsImages = new List<ushort>[9];
 
-                    colorsImages[0] = Utility.LoadImage(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\OrginalAnimationPalette" + 2 + "\\OrginalAnimationImg" + counter + ".png", ref width, ref height, vm.File.ImagesTGX[counter - 1].AnimatedColor, 1, vm.File.FileHeader.IDataType);
-                    colorsImages[1] = Utility.LoadImage(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\OrginalAnimationPalette" + 3 + "\\OrginalAnimationImg" + counter + ".png", ref width, ref height, vm.File.ImagesTGX[counter - 1].AnimatedColor, 1, vm.File.FileHeader.IDataType);
-                    colorsImages[2] = Utility.LoadImage(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\OrginalAnimationPalette" + 4 + "\\OrginalAnimationImg" + counter + ".png", ref width, ref height, vm.File.ImagesTGX[counter - 1].AnimatedColor, 1, vm.File.FileHeader.IDataType);
-                    colorsImages[3] = Utility.LoadImage(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\OrginalAnimationPalette" + 5 + "\\OrginalAnimationImg" + counter + ".png", ref width, ref height, vm.File.ImagesTGX[counter - 1].AnimatedColor, 1, vm.File.FileHeader.IDataType);
-                    colorsImages[4] = Utility.LoadImage(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\OrginalAnimationPalette" + 6 + "\\OrginalAnimationImg" + counter + ".png", ref width, ref height, vm.File.ImagesTGX[counter - 1].AnimatedColor, 1, vm.File.FileHeader.IDataType);
-                    colorsImages[5] = Utility.LoadImage(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\OrginalAnimationPalette" + 7 + "\\OrginalAnimationImg" + counter + ".png", ref width, ref height, vm.File.ImagesTGX[counter - 1].AnimatedColor, 1, vm.File.FileHeader.IDataType);
-                    colorsImages[6] = Utility.LoadImage(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\OrginalAnimationPalette" + 8 + "\\OrginalAnimationImg" + counter + ".png", ref width, ref height, vm.File.ImagesTGX[counter - 1].AnimatedColor, 1, vm.File.FileHeader.IDataType);
-                    colorsImages[7] = Utility.LoadImage(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\OrginalAnimationPalette" + 9 + "\\OrginalAnimationImg" + counter + ".png", ref width, ref height, vm.File.ImagesTGX[counter - 1].AnimatedColor, 1, vm.File.FileHeader.IDataType);
-                    colorsImages[8] = Utility.LoadImage(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\OrginalAnimationPalette" + 10 + "\\OrginalAnimationImg" + counter + ".png", ref width, ref height, vm.File.ImagesTGX[counter - 1].AnimatedColor, 1, vm.File.FileHeader.IDataType);
+                    colorsImages[0] = Utility.LoadImage(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\OrginalAnimationPalette" + 2 + "\\OrginalAnimationImg" + counter + ".png", ref width, ref height, vm.File.ImagesTGX[counter - 1].Header.AnimatedColor, 1, vm.File.FileHeader.IDataType);
+                    colorsImages[1] = Utility.LoadImage(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\OrginalAnimationPalette" + 3 + "\\OrginalAnimationImg" + counter + ".png", ref width, ref height, vm.File.ImagesTGX[counter - 1].Header.AnimatedColor, 1, vm.File.FileHeader.IDataType);
+                    colorsImages[2] = Utility.LoadImage(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\OrginalAnimationPalette" + 4 + "\\OrginalAnimationImg" + counter + ".png", ref width, ref height, vm.File.ImagesTGX[counter - 1].Header.AnimatedColor, 1, vm.File.FileHeader.IDataType);
+                    colorsImages[3] = Utility.LoadImage(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\OrginalAnimationPalette" + 5 + "\\OrginalAnimationImg" + counter + ".png", ref width, ref height, vm.File.ImagesTGX[counter - 1].Header.AnimatedColor, 1, vm.File.FileHeader.IDataType);
+                    colorsImages[4] = Utility.LoadImage(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\OrginalAnimationPalette" + 6 + "\\OrginalAnimationImg" + counter + ".png", ref width, ref height, vm.File.ImagesTGX[counter - 1].Header.AnimatedColor, 1, vm.File.FileHeader.IDataType);
+                    colorsImages[5] = Utility.LoadImage(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\OrginalAnimationPalette" + 7 + "\\OrginalAnimationImg" + counter + ".png", ref width, ref height, vm.File.ImagesTGX[counter - 1].Header.AnimatedColor, 1, vm.File.FileHeader.IDataType);
+                    colorsImages[6] = Utility.LoadImage(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\OrginalAnimationPalette" + 8 + "\\OrginalAnimationImg" + counter + ".png", ref width, ref height, vm.File.ImagesTGX[counter - 1].Header.AnimatedColor, 1, vm.File.FileHeader.IDataType);
+                    colorsImages[7] = Utility.LoadImage(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\OrginalAnimationPalette" + 9 + "\\OrginalAnimationImg" + counter + ".png", ref width, ref height, vm.File.ImagesTGX[counter - 1].Header.AnimatedColor, 1, vm.File.FileHeader.IDataType);
+                    colorsImages[8] = Utility.LoadImage(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\OrginalAnimationPalette" + 10 + "\\OrginalAnimationImg" + counter + ".png", ref width, ref height, vm.File.ImagesTGX[counter - 1].Header.AnimatedColor, 1, vm.File.FileHeader.IDataType);
                     vm.File.ImagesTGX[counter - 1].ConvertImageWithPaletteToByteArray(list, width, height, vm.File.Palette, colorsImages);
-                    vm.File.ImagesTGX[counter - 1].Width = (ushort)width;
-                    vm.File.ImagesTGX[counter - 1].Height = (ushort)height;
+                    vm.File.ImagesTGX[counter - 1].Header.Width = (ushort)width;
+                    vm.File.ImagesTGX[counter - 1].Header.Height = (ushort)height;
 
                     counter++;
                 }
@@ -301,7 +301,7 @@ namespace Gm1KonverterCrossPlatform.Views
                         counter++;
                         var fileindex = int.Parse(filename.Replace("Image", "").Replace(".png", "")) - 1;
                         int width = 0, height = 0;
-                        var list = Utility.LoadImage(file, ref width, ref height, vm.File.ImagesTGX[fileindex].AnimatedColor, 1, vm.File.FileHeader.IDataType);
+                        var list = Utility.LoadImage(file, ref width, ref height, vm.File.ImagesTGX[fileindex].Header.AnimatedColor, 1, vm.File.FileHeader.IDataType);
                         if (list.Count == 0) return;
 
                         LoadNewDataForGm1File(fileindex, list, width, height);
@@ -345,7 +345,7 @@ namespace Gm1KonverterCrossPlatform.Views
                             maxheight = height;
                         }
 
-                        var colorList = Utility.LoadImage(imageData, ref width, ref height, vm.File.ImagesTGX[fileindex].AnimatedColor, 1, vm.File.FileHeader.IDataType, offsetx, offsety);
+                        var colorList = Utility.LoadImage(imageData, ref width, ref height, vm.File.ImagesTGX[fileindex].Header.AnimatedColor, 1, vm.File.FileHeader.IDataType, offsetx, offsety);
                         if (colorList.Count == 0) continue;
                         width = image.Width;
                         height = image.Height;
@@ -367,8 +367,8 @@ namespace Gm1KonverterCrossPlatform.Views
                 {
                     foreach (var image in vm.File.ImagesTGX)
                     {
-                        int width = image.Width;
-                        int height = image.Height - ((GM1FileHeader.DataType)vm.File.FileHeader.IDataType == GM1FileHeader.DataType.NOCompression ? 7 : 0);
+                        int width = image.Header.Width;
+                        int height = image.Header.Height - ((GM1FileHeader.DataType)vm.File.FileHeader.IDataType == GM1FileHeader.DataType.NOCompression ? 7 : 0);
 
                         actualwidth += width;
                         if (maxwidth <= actualwidth)
@@ -385,10 +385,10 @@ namespace Gm1KonverterCrossPlatform.Views
                         }
                         int oldOffsetx = offsetx;
                         int oldOffsety = offsety;
-                        var colorList = Utility.LoadImage(imageData, ref width, ref height, vm.File.ImagesTGX[fileindex].AnimatedColor, 1, vm.File.FileHeader.IDataType, offsetx, offsety);
+                        var colorList = Utility.LoadImage(imageData, ref width, ref height, vm.File.ImagesTGX[fileindex].Header.AnimatedColor, 1, vm.File.FileHeader.IDataType, offsetx, offsety);
                         if (colorList.Count == 0) continue;
-                        width = image.Width;
-                        height = image.Height - ((GM1FileHeader.DataType)vm.File.FileHeader.IDataType == GM1FileHeader.DataType.NOCompression ? 7 : 0);
+                        width = image.Header.Width;
+                        height = image.Header.Height - ((GM1FileHeader.DataType)vm.File.FileHeader.IDataType == GM1FileHeader.DataType.NOCompression ? 7 : 0);
 
                         LoadNewDataForGm1File(fileindex, colorList, width, height);
                         fileindex++;
@@ -426,15 +426,15 @@ namespace Gm1KonverterCrossPlatform.Views
             if ((GM1FileHeader.DataType)vm.File.FileHeader.IDataType == GM1FileHeader.DataType.Animations)
             {
                 vm.File.ImagesTGX[fileindex].ConvertImageWithPaletteToByteArray(list, width, height, vm.File.Palette);
-                vm.File.ImagesTGX[fileindex].Width = (ushort)width;
-                vm.File.ImagesTGX[fileindex].Height = (ushort)height;
+                vm.File.ImagesTGX[fileindex].Header.Width = (ushort)width;
+                vm.File.ImagesTGX[fileindex].Header.Height = (ushort)height;
             }
             else if ((GM1FileHeader.DataType)vm.File.FileHeader.IDataType == GM1FileHeader.DataType.NOCompression
                     || (GM1FileHeader.DataType)vm.File.FileHeader.IDataType == GM1FileHeader.DataType.NOCompression1)
             {
                 vm.File.ImagesTGX[fileindex].ConvertNoCommpressionImageToByteArray(list, width, height);
-                vm.File.ImagesTGX[fileindex].Width = (ushort)width;
-                vm.File.ImagesTGX[fileindex].Height = (ushort)(height + ((GM1FileHeader.DataType)vm.File.FileHeader.IDataType == GM1FileHeader.DataType.NOCompression1 ? 0 : 7));//7 because stronghold want it so
+                vm.File.ImagesTGX[fileindex].Header.Width = (ushort)width;
+                vm.File.ImagesTGX[fileindex].Header.Height = (ushort)(height + ((GM1FileHeader.DataType)vm.File.FileHeader.IDataType == GM1FileHeader.DataType.NOCompression1 ? 0 : 7));//7 because stronghold want it so
             }
             else if ((GM1FileHeader.DataType)vm.File.FileHeader.IDataType == GM1FileHeader.DataType.TilesObject)
             {
@@ -443,8 +443,8 @@ namespace Gm1KonverterCrossPlatform.Views
             else
             {
                 vm.File.ImagesTGX[fileindex].ConvertImageWithoutPaletteToByteArray(list, width, height);
-                vm.File.ImagesTGX[fileindex].Width = (ushort)width;
-                vm.File.ImagesTGX[fileindex].Height = (ushort)height;
+                vm.File.ImagesTGX[fileindex].Header.Width = (ushort)width;
+                vm.File.ImagesTGX[fileindex].Header.Height = (ushort)height;
             }
         }
 

@@ -11,12 +11,9 @@ namespace Files.Gm1Converter
     {
         #region Variables
 
-        private Palette palette;
-
         private GM1FileHeader fileHeader;
-
+        private Palette palette;
         private List<TGXImage> _TGXImage;
-
         private List<TilesImage> tilesImage;
 
         private int actualPositionInByteArray = 0;
@@ -140,7 +137,7 @@ namespace Files.Gm1Converter
 
             for (int i = 0; i < fileHeader.INumberOfPictureinFile; i++)
             {
-                newFile.AddRange(_TGXImage[i].GetImageHeaderAsByteArray());
+                newFile.AddRange(_TGXImage[i].Header.GetBytes());
             }
 
             for (int i = 0; i < fileHeader.INumberOfPictureinFile; i++)
@@ -208,22 +205,15 @@ namespace Files.Gm1Converter
         private void CreateImgHeader(byte[] array)
         {
             if (Logger.Loggeractiv) Logger.Log("CreateImgHeader");
-            //Image Header has a length of 16 bytes 
+            
             for (int i = 0; i < this.fileHeader.INumberOfPictureinFile; i++)
             {
-                _TGXImage[i].Width = BitConverter.ToUInt16(array, actualPositionInByteArray + i * TGXImage.iImageHeaderSize + 0);
-                _TGXImage[i].Height = BitConverter.ToUInt16(array, actualPositionInByteArray + i * TGXImage.iImageHeaderSize + 2);
-                _TGXImage[i].OffsetX = BitConverter.ToUInt16(array, actualPositionInByteArray + i * TGXImage.iImageHeaderSize + 4);
-                _TGXImage[i].OffsetY = BitConverter.ToUInt16(array, actualPositionInByteArray + i * TGXImage.iImageHeaderSize + 6);
-                _TGXImage[i].ImagePart = array[actualPositionInByteArray + i * TGXImage.iImageHeaderSize + 8];
-                _TGXImage[i].SubParts = array[actualPositionInByteArray + i * TGXImage.iImageHeaderSize + 9];
-                _TGXImage[i].TileOffset = BitConverter.ToUInt16(array, actualPositionInByteArray + i * TGXImage.iImageHeaderSize + 10);
-                _TGXImage[i].Direction = array[actualPositionInByteArray + i * TGXImage.iImageHeaderSize + 12];
-                _TGXImage[i].HorizontalOffsetOfImage = array[actualPositionInByteArray + i * TGXImage.iImageHeaderSize + 13];
-                _TGXImage[i].BuildingWidth = array[actualPositionInByteArray + i * TGXImage.iImageHeaderSize + 14];
-                _TGXImage[i].AnimatedColor = array[actualPositionInByteArray + i * TGXImage.iImageHeaderSize + 15];
+                byte[] imageHeaderByteArray = new byte[TGXImageHeader.ByteSize];
+                Array.Copy(array, actualPositionInByteArray + (i * TGXImageHeader.ByteSize), imageHeaderByteArray, 0, TGXImageHeader.ByteSize);
+                _TGXImage[i].Header = new TGXImageHeader(imageHeaderByteArray);
             }
-            actualPositionInByteArray += (int)this.fileHeader.INumberOfPictureinFile * TGXImage.iImageHeaderSize;
+
+            actualPositionInByteArray += (int)this.fileHeader.INumberOfPictureinFile * TGXImageHeader.ByteSize;
 
             foreach (var image in _TGXImage)
             {
@@ -256,13 +246,13 @@ namespace Files.Gm1Converter
             if (Logger.Loggeractiv) Logger.Log("CreateTileImage for Loop");
             for (int i = 0; i < _TGXImage.Count; i++)
             {
-                if (_TGXImage[i].ImagePart == 0)
+                if (_TGXImage[i].Header.ImagePart == 0)
                 {
-                    width = Utility.GetDiamondWidth(_TGXImage[i].SubParts);
+                    width = Utility.GetDiamondWidth(_TGXImage[i].Header.SubParts);
 
-                    partsBefore += _TGXImage[i].SubParts;
+                    partsBefore += _TGXImage[i].Header.SubParts;
 
-                    tilesImage.Add(new TilesImage(width * 30 + ((width - 1) * 2), width * 16 + _TGXImage[partsBefore - 1].TileOffset + TilesImage.Puffer));//gap 2 pixels
+                    tilesImage.Add(new TilesImage(width * 30 + ((width - 1) * 2), width * 16 + _TGXImage[partsBefore - 1].Header.TileOffset + TilesImage.Puffer));//gap 2 pixels
                     counter++;
                     itemsPerRow = 1;
                     actualItemsPerRow = 0;
@@ -276,14 +266,14 @@ namespace Files.Gm1Converter
                 if (_TGXImage[i].ImgFileAsBytearray.Length > 512)
                 {
                     int right = 0;
-                    if (_TGXImage[i].Direction == 3)
+                    if (_TGXImage[i].Header.Direction == 3)
                     {
                         right = 14;
                     }
-                    tilesImage[counter].AddImgTileOnTopToImg(_TGXImage[i].ImgFileAsBytearray, offsetX + right, offsetY - _TGXImage[i].TileOffset);
-                    if (tilesImage[counter].MinusHeight > offsetY - _TGXImage[i].TileOffset)
+                    tilesImage[counter].AddImgTileOnTopToImg(_TGXImage[i].ImgFileAsBytearray, offsetX + right, offsetY - _TGXImage[i].Header.TileOffset);
+                    if (tilesImage[counter].MinusHeight > offsetY - _TGXImage[i].Header.TileOffset)
                     {
-                        tilesImage[counter].MinusHeight = offsetY - _TGXImage[i].TileOffset;
+                        tilesImage[counter].MinusHeight = offsetY - _TGXImage[i].Header.TileOffset;
                     }
                 }
                 tilesImage[counter].AddDiamondToImg(_TGXImage[i].ImgFileAsBytearray, offsetX, offsetY);
@@ -355,7 +345,7 @@ namespace Files.Gm1Converter
             if (_TGXImage.Count <= newTileList.Count)
             for (int i = 0; i < _TGXImage.Count; i++)
             {
-                newTileList[i].AnimatedColor = _TGXImage[i].AnimatedColor;
+                newTileList[i].Header.AnimatedColor = _TGXImage[i].Header.AnimatedColor;
             }
 
             _TGXImage = newTileList;

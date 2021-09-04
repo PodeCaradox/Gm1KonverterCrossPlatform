@@ -660,13 +660,13 @@ namespace HelperClasses.Gm1Converter
                 }
 
                 var newImage = new TGXImage();
-                newImage.Direction = 0;
-                newImage.Height = 16;
-                newImage.Width = 30;
+                newImage.Header.Direction = 0;
+                newImage.Header.Height = 16;
+                newImage.Header.Width = 30;
                 //newImage.OffsetX = (ushort)(xOffset + XOffsetBefore);
                 //newImage.OffsetY = (ushort)(yOffset + YOffsetBefore);
-                newImage.SubParts = (byte)totalTiles;
-                newImage.ImagePart = (byte)part;
+                newImage.Header.SubParts = (byte)totalTiles;
+                newImage.Header.ImagePart = (byte)part;
                 if(totalTiles==1) halfreached = true;
                 if (halfreached)
                 {
@@ -675,8 +675,8 @@ namespace HelperClasses.Gm1Converter
                     {
                         if (part == totalTiles - 1)
                         {
-                            newImage.BuildingWidth = 30;
-                            newImage.Direction = 1;
+                            newImage.Header.BuildingWidth = 30;
+                            newImage.Header.Direction = 1;
                             int imageOnTopwidth = 30;
                             int imageOnTopheight = yOffset + 7;
                             int imageOnTopOffsetX = xOffset - 15;
@@ -685,15 +685,15 @@ namespace HelperClasses.Gm1Converter
                            
                                 var byteArrayImgonTop = ImgToGM1ByteArray(colorListImgOnTop, imageOnTopwidth, colorListImgOnTop.Count / imageOnTopwidth, 1);
                                 arrayByte.AddRange(byteArrayImgonTop);
-                                newImage.TileOffset = (ushort)(colorListImgOnTop.Count / imageOnTopwidth + 10 - 16 - 1);
-                                if (newImage.TileOffset == ushort.MaxValue) newImage.TileOffset = 0;
-                                newImage.Height = (ushort)(colorListImgOnTop.Count / imageOnTopwidth + 9);
+                                newImage.Header.TileOffset = (ushort)(colorListImgOnTop.Count / imageOnTopwidth + 10 - 16 - 1);
+                                if (newImage.Header.TileOffset == ushort.MaxValue) newImage.Header.TileOffset = 0;
+                                newImage.Header.Height = (ushort)(colorListImgOnTop.Count / imageOnTopwidth + 9);
                             }
                         }
                         else
                         {
-                            newImage.BuildingWidth = 16;
-                            newImage.Direction = 2;
+                            newImage.Header.BuildingWidth = 16;
+                            newImage.Header.Direction = 2;
                             int imageOnTopwidth = 16;
                             int imageOnTopheight = yOffset + 7;
                             int imageOnTopOffsetX = xOffset - 15;
@@ -704,16 +704,16 @@ namespace HelperClasses.Gm1Converter
                                 var byteArrayImgonTop = ImgToGM1ByteArray(colorListImgOnTop, imageOnTopwidth, colorListImgOnTop.Count / imageOnTopwidth, 1);
 
                                 arrayByte.AddRange(byteArrayImgonTop);
-                                newImage.TileOffset = (ushort)(colorListImgOnTop.Count / imageOnTopwidth + 10 - 16 - 1);
-                                if (newImage.TileOffset == ushort.MaxValue) newImage.TileOffset = 0;
-                                newImage.Height = (ushort)(colorListImgOnTop.Count / imageOnTopwidth + 9);
+                                newImage.Header.TileOffset = (ushort)(colorListImgOnTop.Count / imageOnTopwidth + 10 - 16 - 1);
+                                if (newImage.Header.TileOffset == ushort.MaxValue) newImage.Header.TileOffset = 0;
+                                newImage.Header.Height = (ushort)(colorListImgOnTop.Count / imageOnTopwidth + 9);
                             }
                         }
                     }
                     else if (counter == partsPerLine)//right
                     {
-                        newImage.BuildingWidth = 16;
-                        newImage.Direction = 3;
+                        newImage.Header.BuildingWidth = 16;
+                        newImage.Header.Direction = 3;
                         int imageOnTopwidth = 16;
                         int imageOnTopheight = yOffset + 7;
                         int imageOnTopOffsetX = xOffset;
@@ -722,11 +722,11 @@ namespace HelperClasses.Gm1Converter
                         {
                             var byteArrayImgonTop = ImgToGM1ByteArray(colorListImgOnTop, imageOnTopwidth, colorListImgOnTop.Count / imageOnTopwidth, 1);
                             arrayByte.AddRange(byteArrayImgonTop);
-                            newImage.Height = (ushort)(colorListImgOnTop.Count / imageOnTopwidth + 9);
-                            newImage.TileOffset = (ushort)(colorListImgOnTop.Count / imageOnTopwidth + 10 - 16 - 1);
-                            if (newImage.TileOffset == ushort.MaxValue) newImage.TileOffset = 0;
+                            newImage.Header.Height = (ushort)(colorListImgOnTop.Count / imageOnTopwidth + 9);
+                            newImage.Header.TileOffset = (ushort)(colorListImgOnTop.Count / imageOnTopwidth + 10 - 16 - 1);
+                            if (newImage.Header.TileOffset == ushort.MaxValue) newImage.Header.TileOffset = 0;
                         }
-                        newImage.HorizontalOffsetOfImage = 14;
+                        newImage.Header.HorizontalOffsetOfImage = 14;
                     }
                 }
                 newImageList.Add(newImage);
