@@ -9,6 +9,6 @@
 
   <Application.Styles>
     <StyleInclude Source="avares://Avalonia.Themes.Default/DefaultTheme.xaml"/>
-    <StyleInclude Source="avares://Gm1KonverterCrossPlatform/Styles/Core.xaml"/>
+    <StyleInclude Source="avares://Gm1KonverterCrossPlatform/Styles/Core.axaml"/>
   </Application.Styles>
 </Application>
