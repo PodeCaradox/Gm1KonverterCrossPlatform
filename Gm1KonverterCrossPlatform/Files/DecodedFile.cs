@@ -53,7 +53,7 @@ namespace Files.Gm1Converter
 
                 this.fileHeader.Name = name;
 
-                if (fileHeader.IDataType == (UInt32)GM1FileHeader.DataType.Animations)
+                if (fileHeader.IDataType == (uint)GM1FileHeader.DataType.Animations)
                 {
                     // palette is located immediately after the header
                     byte[] paletteByteArray = new byte[Palette.ByteSize];
