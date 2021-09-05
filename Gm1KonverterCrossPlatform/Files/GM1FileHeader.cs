@@ -40,51 +40,27 @@ namespace Files.Gm1Converter
         
         private uint[] size = new uint[2];
 
-		#endregion
-
-		#region Methods
-
-		internal byte[] GetBytes()
-        {
-            List<byte> byteArray = new List<byte>();
-
-            byteArray.AddRange(BitConverter.GetBytes(iUnknown1));
-            byteArray.AddRange(BitConverter.GetBytes(iUnknown2));
-            byteArray.AddRange(BitConverter.GetBytes(iUnknown3));
-            byteArray.AddRange(BitConverter.GetBytes(iNumberOfPictureinFile));
-            byteArray.AddRange(BitConverter.GetBytes(iUnknown4));
-            byteArray.AddRange(BitConverter.GetBytes(iDataType));
-            for (int i = 0; i < iUnknown5.Length; i++)
-            {
-                byteArray.AddRange(BitConverter.GetBytes(this.iUnknown5[i]));
-            }
-            byteArray.AddRange(BitConverter.GetBytes(iDataSize));
-            byteArray.AddRange(BitConverter.GetBytes(iUnknown6));
-
-            return byteArray.ToArray();
-        }
-
         #endregion
 
         #region Construtor
 
         public GM1FileHeader(byte[] byteArray)
         {
-            this.iUnknown1 = BitConverter.ToUInt32(byteArray, 0);
-            this.iUnknown2 = BitConverter.ToUInt32(byteArray, 4);
-            this.iUnknown3 = BitConverter.ToUInt32(byteArray, 8);
-            this.iNumberOfPictureinFile = BitConverter.ToUInt32(byteArray, 12);
-            this.iUnknown4 = BitConverter.ToUInt32(byteArray, 16);
-            this.iDataType = BitConverter.ToUInt32(byteArray, 20);
+            iUnknown1 = BitConverter.ToUInt32(byteArray, 0);
+            iUnknown2 = BitConverter.ToUInt32(byteArray, 4);
+            iUnknown3 = BitConverter.ToUInt32(byteArray, 8);
+            iNumberOfPictureinFile = BitConverter.ToUInt32(byteArray, 12);
+            iUnknown4 = BitConverter.ToUInt32(byteArray, 16);
+            iDataType = BitConverter.ToUInt32(byteArray, 20);
             for (int i = 0; i < iUnknown5.Length; i++)
             {
-                this.iUnknown5[i] = BitConverter.ToUInt32(byteArray, 24 + i * 4);
+                iUnknown5[i] = BitConverter.ToUInt32(byteArray, 24 + i * 4);
             }
-            this.iDataSize = BitConverter.ToUInt32(byteArray, 80);
-            this.iUnknown6 = BitConverter.ToUInt32(byteArray, 84);
+            iDataSize = BitConverter.ToUInt32(byteArray, 80);
+            iUnknown6 = BitConverter.ToUInt32(byteArray, 84);
 
-            this.size[0] = iUnknown5[6];
-            this.size[1] = iUnknown5[7];
+            size[0] = iUnknown5[6];
+            size[1] = iUnknown5[7];
         }
 
         #endregion
@@ -102,6 +78,30 @@ namespace Files.Gm1Converter
         public uint IUnknown6 { get => iUnknown6; }
         public uint[] Size { get => size; }
         public string Name { get => name; set => name = value; }
+
+        #endregion
+
+        #region Methods
+
+        internal byte[] GetBytes()
+        {
+            List<byte> byteArray = new List<byte>();
+
+            byteArray.AddRange(BitConverter.GetBytes(iUnknown1));
+            byteArray.AddRange(BitConverter.GetBytes(iUnknown2));
+            byteArray.AddRange(BitConverter.GetBytes(iUnknown3));
+            byteArray.AddRange(BitConverter.GetBytes(iNumberOfPictureinFile));
+            byteArray.AddRange(BitConverter.GetBytes(iUnknown4));
+            byteArray.AddRange(BitConverter.GetBytes(iDataType));
+            for (int i = 0; i < iUnknown5.Length; i++)
+            {
+                byteArray.AddRange(BitConverter.GetBytes(iUnknown5[i]));
+            }
+            byteArray.AddRange(BitConverter.GetBytes(iDataSize));
+            byteArray.AddRange(BitConverter.GetBytes(iUnknown6));
+
+            return byteArray.ToArray();
+        }
 
         #endregion
     }
