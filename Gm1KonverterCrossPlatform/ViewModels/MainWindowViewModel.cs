@@ -376,6 +376,8 @@ namespace Gm1KonverterCrossPlatform.ViewModels
         /// <returns></returns>
         internal bool DecodeData(string fileName, Window window)
         {
+            this.RaisePropertyChanging("File");
+
             if (Logger.Loggeractiv) Logger.Log("DecodeData:\nFile: "+ fileName);
             //Convert Selected file
             try
@@ -405,6 +407,8 @@ namespace Gm1KonverterCrossPlatform.ViewModels
                 messageBox.Show();
                 return false;
             }
+
+            this.RaisePropertyChanged("File");
 
             return true;
         }

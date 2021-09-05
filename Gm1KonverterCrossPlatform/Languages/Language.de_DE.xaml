@@ -90,7 +90,8 @@
     <x:String x:Key="ImportBigImage">Importiere Großes Bild</x:String>
     <x:String x:Key="OpenLogFile">Öffne Log Ordner</x:String>
     <x:String x:Key="ChangeOffsets">Ändere Offsets</x:String>
-    <x:String x:Key="DataGm1File">Gm1 Datafelder</x:String>
+    <x:String x:Key="Gm1FileHeaderFields">Gm1 header fields</x:String>
+    <x:String x:Key="Gm1FileImageHeaderFields">Gm1 image header fields</x:String>
     <x:String x:Key="ImportOffsetsFromFile">Import Offsets From File</x:String>
     <x:String x:Key="OpenWorkFolder">Open Work Folder</x:String>
     <x:String x:Key="OpenStrongholdFolder">Open Stronghold Folder</x:String>
