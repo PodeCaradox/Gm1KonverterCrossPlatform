@@ -7,33 +7,25 @@ namespace Files.Gm1Converter
 {
     public class TGXImage
     {
-        #region Public
-
-        public static readonly int iImageHeaderSize = 16;
-
-        #endregion
-        
         #region Variables
-        private byte[] imgFileAsBytearray;
-        private ushort width;
-        private ushort height;
+
+        // for tgx as standalone file
         private uint tgxwidth;
         private uint tgxheight;
-        private ushort offsetX;
-        private ushort offsetY;
-        private byte imagePart;
-        private byte subParts;
-        private ushort tileOffset;
-        private byte direction;
-        private byte horizontalOffsetOfImage;
-        private byte buildingWidth;
-        private byte animatedColor;//if alpha 1 
-        private UInt32 offsetinByteArray;
-        private UInt32 sizeinByteArray;
+
+        // for tgx as subimage in gm1 file
+        private TGXImageHeader header;
+
+        private uint offsetinByteArray;
+        private uint sizeinByteArray;
+        private byte[] imgFileAsBytearray;
+
         private WriteableBitmap bmp;
+
         #endregion
 
         #region Construtor
+
         public TGXImage()
         {
 
@@ -43,48 +35,11 @@ namespace Files.Gm1Converter
 
         #region GetterSetter
 
-        public UInt16 Width { get => width; set => width = value; }
-        public UInt16 Height { get => height; set => height = value; }
-
         public UInt32 TgxWidth { get => tgxwidth; set => tgxwidth = value; }
         public UInt32 TgxHeight { get => tgxheight; set => tgxheight = value; }
-        public UInt16 OffsetX { get => offsetX; set => offsetX = value; }
-        public UInt16 OffsetY { get => offsetY; set => offsetY = value; }
 
-        /// <summary>
-        /// 0 denotes the start of a new collection
-        /// </summary>
-        public byte ImagePart { get => imagePart; set => imagePart = value; }
+        public TGXImageHeader Header { get => header; set => header = value; }
 
-        /// <summary>
-        /// Number of following parts in the collection
-        /// </summary>
-        public byte SubParts { get => subParts; set => subParts = value; }
-        
-        /// <summary>
-        /// Vertical offset of the tile object on large surface
-        /// </summary>
-        public UInt16 TileOffset { get => tileOffset; set => tileOffset = value; }
-
-        /// <summary>
-        /// left,right, center... used for buildings only. 
-        /// </summary>
-        public byte Direction { get => direction; set => direction = value; }
-
-        /// <summary>
-        /// Initial horizontal offset of image. 
-        /// </summary>
-        public byte HorizontalOffsetOfImage { get => horizontalOffsetOfImage; set => horizontalOffsetOfImage = value; }
-
-        /// <summary>
-        /// Width of building part.
-        /// </summary>
-        public byte BuildingWidth { get => buildingWidth; set => buildingWidth = value; }
-
-        /// <summary>
-        /// Color, used for animated units only. 
-        /// </summary>
-        public byte AnimatedColor { get => animatedColor; set => animatedColor = value; }
         public UInt32 OffsetinByteArray { get => offsetinByteArray; set => offsetinByteArray = value; }
         public UInt32 SizeinByteArray { get => sizeinByteArray; set => sizeinByteArray = value; }
         public byte[] ImgFileAsBytearray { get => imgFileAsBytearray; set => imgFileAsBytearray = value; }
@@ -99,21 +54,21 @@ namespace Files.Gm1Converter
         /// Convert img byte array to IMG, use Pallete if not null
         /// </summary>
         /// <param name="palette">actual Pallete, Pallete is null if normal IMG</param>
-        public unsafe void CreateImageFromByteArray(Palette palette,bool isTgxFile=false)
+        public unsafe void CreateImageFromByteArray(Palette palette, bool isTgxFile = false)
         {
             int width, height;
             if (!isTgxFile)
             {
-                width = this.width;
-                height = this.height;
-                bmp = new WriteableBitmap(new Avalonia.PixelSize(width, height), new Avalonia.Vector(96, 96), Avalonia.Platform.PixelFormat.Bgra8888);// Bgra8888 is device-native and much faster.
+                width = this.Header.Width;
+                height = this.Header.Height;
             }
             else
             {
                 width = (int)tgxwidth;
                 height = (int)tgxheight;
-                bmp = new WriteableBitmap(new Avalonia.PixelSize(width, height), new Avalonia.Vector(96, 96), Avalonia.Platform.PixelFormat.Bgra8888);// Bgra8888 is device-native and much faster.
             }
+
+            bmp = new WriteableBitmap(new Avalonia.PixelSize(width, height), new Avalonia.Vector(96, 96), Avalonia.Platform.PixelFormat.Bgra8888);// Bgra8888 is device-native and much faster.
 
             using (var buf = bmp.Lock())
             {
@@ -128,7 +83,7 @@ namespace Files.Gm1Converter
                     byte length = (byte)((token & 31) + 1);
 
                     //transparent
-                    UInt32 colorByte = Utility.TransparentColorByte;
+                    uint colorByte = Utility.TransparentColorByte;
 
                     bytePos++;
                     byte index;
@@ -149,8 +104,8 @@ namespace Files.Gm1Converter
                                 }
                                 else
                                 {
-                                    pixelColor = BitConverter.ToUInt16(imgFileAsBytearray,(int) bytePos);
-                                    bytePos+=2;
+                                    pixelColor = BitConverter.ToUInt16(imgFileAsBytearray, (int)bytePos);
+                                    bytePos += 2;
                                 }
                            
                                 Utility.ReadColor(pixelColor, out r, out g, out b, out a);
@@ -226,7 +181,7 @@ namespace Files.Gm1Converter
                                 var ptr = (uint*)buf.Address;
                                 ptr += (uint)((width * y) + x);
                                 *ptr = colorByte;
-                              
+                                
                                 x++;
                             }
                             break;
@@ -239,7 +194,7 @@ namespace Files.Gm1Converter
 
         internal void ConvertImageWithPaletteToByteArray(List<ushort> colors, int width, int height, Palette palette, List<ushort>[] colorsImages = null)
         {
-            var array = Utility.ImgToGM1ByteArray(colors, width, height, animatedColor, palette, colorsImages);
+            var array = Utility.ImgToGM1ByteArray(colors, width, height, Header.AnimatedColor, palette, colorsImages);
 
             imgFileAsBytearray = array.ToArray();
         }
@@ -247,7 +202,11 @@ namespace Files.Gm1Converter
         internal unsafe void CreateNoComppressionImageFromByteArray(Palette palette,int offset)
         {
             //-7 because the images only height -7 long idk why
-            bmp = new WriteableBitmap(new Avalonia.PixelSize(width, height - offset), new Avalonia.Vector(96, 96), Avalonia.Platform.PixelFormat.Bgra8888);// Bgra8888 is device-native and much faster.
+            bmp = new WriteableBitmap(
+                new Avalonia.PixelSize(Header.Width, Header.Height - offset),
+                new Avalonia.Vector(96, 96),
+                Avalonia.Platform.PixelFormat.Bgra8888 // Bgra8888 is device-native and much faster.
+            );
 
             using (var buf = bmp.Lock())
             {
@@ -259,10 +218,10 @@ namespace Files.Gm1Converter
                     Utility.ReadColor(BitConverter.ToUInt16(imgFileAsBytearray, bytePos), out r, out g, out b, out a);
                     var colorByte = (UInt32)(b | (g << 8) | (r << 16) | (a << 24));
                     var ptr = (uint*)buf.Address;
-                    ptr += (uint)((width * y) + x);
+                    ptr += (uint)((Header.Width * y) + x);
                     *ptr = colorByte;
                     x++;
-                    if (x==width)
+                    if (x == Header.Width)
                     {
                         y++;
                         x = 0;
@@ -279,7 +238,7 @@ namespace Files.Gm1Converter
         /// <param name="height">Height of the new IMG</param>
         internal void ConvertImageWithoutPaletteToByteArray(List<ushort> colors, int width, int height)
         {
-            var array = Utility.ImgToGM1ByteArray(colors, width, height, animatedColor);
+            var array = Utility.ImgToGM1ByteArray(colors, width, height, Header.AnimatedColor);
             //for (int i = 0; i < imgFileAsBytearray.Length; i++)
             //{
             //    if (imgFileAsBytearray[i]!= array[i])
@@ -298,31 +257,10 @@ namespace Files.Gm1Converter
             {
                 for (int x = 0; x < width; x++)
                 {
-                    newArray.AddRange(BitConverter.GetBytes(list[y*width+x]));
+                    newArray.AddRange(BitConverter.GetBytes(list[y * width + x]));
                 }
             }
             imgFileAsBytearray = newArray.ToArray();
-        }
-
-        /// <summary>
-        /// Convert the Imageheader back to byte Array
-        /// </summary>
-        /// <returns></returns>
-        internal byte[] GetImageHeaderAsByteArray()
-        {
-            List<byte> array = new List<byte>();
-            array.AddRange(BitConverter.GetBytes(width));
-            array.AddRange(BitConverter.GetBytes(height));
-            array.AddRange(BitConverter.GetBytes(offsetX));
-            array.AddRange(BitConverter.GetBytes(offsetY));
-            array.Add(imagePart);
-            array.Add(subParts);
-            array.AddRange(BitConverter.GetBytes(tileOffset));
-            array.Add(direction);
-            array.Add(horizontalOffsetOfImage);
-            array.Add(buildingWidth);
-            array.Add(animatedColor);
-            return array.ToArray();
         }
 
         #endregion

@@ -1,16 +1,15 @@
-﻿using ReactiveUI;
-using Avalonia.Controls;
+﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using Files.Gm1Converter;
-using Avalonia.Media.Imaging;
-using HelperClasses.Gm1Converter;
-using Gm1KonverterCrossPlatform.HelperClasses.Views;
-using System.IO;
-using System;
-using Gm1KonverterCrossPlatform.HelperClasses;
+using ReactiveUI;
 using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Media.Imaging;
+using Files.Gm1Converter;
+using HelperClasses.Gm1Converter;
 using Gm1KonverterCrossPlatform.Views;
+using Gm1KonverterCrossPlatform.HelperClasses;
 using Newtonsoft.Json;
 
 namespace Gm1KonverterCrossPlatform.ViewModels
@@ -20,16 +19,7 @@ namespace Gm1KonverterCrossPlatform.ViewModels
         #region Variables
 
         private UserConfig userConfig;
-
-        private string colorAsText = "";
-        public string ColorAsText
-        {
-            get => colorAsText;
-            set
-            {
-                this.RaiseAndSetIfChanged(ref colorAsText, value);
-            }
-        }
+        public UserConfig UserConfig { get => userConfig; set => userConfig = value; }
 
         private Languages.Language actualLanguage;
         public Languages.Language ActualLanguage
@@ -88,62 +78,6 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             get => delay;
             set => this.RaiseAndSetIfChanged(ref delay, value);
         }
-
-        private int red = 0;
-        public int Red
-        {
-            get => red;
-            set {
-                if (value > 255)
-                {
-                    value = 255;
-                }
-                else if (value < 0)
-                {
-                    value = 0;
-                }
-                this.RaiseAndSetIfChanged(ref red, value);
-                ColorAsText = "#" + 255.ToString("X2") + red.ToString("X2") + green.ToString("X2") + blue.ToString("X2");
-            }
-        }
-
-        private int blue = 0;
-        public int Blue
-        {
-            get => blue;
-            set
-            {
-                if (value>255)
-                {
-                    value = 255;
-                }
-                else if (value < 0)
-                {
-                    value = 0;
-                }
-                this.RaiseAndSetIfChanged(ref blue, value);
-                ColorAsText = "#" + 255.ToString("X2") + red.ToString("X2") + green.ToString("X2") + blue.ToString("X2");
-            }
-        }
-
-        private int green = 0;
-        public int Green
-        {
-            get => green;
-            set
-            {
-                if (value > 255)
-                {
-                    value = 255;
-                }
-                else if (value < 0)
-                {
-                    value = 0;
-                }
-                this.RaiseAndSetIfChanged(ref green, value);
-                ColorAsText = "#" + 255.ToString("X2") + red.ToString("X2") + green.ToString("X2") + blue.ToString("X2");
-            }
-        }
         
         private int actualPalette = 1;
         public int ActualPalette
@@ -192,10 +126,11 @@ namespace Gm1KonverterCrossPlatform.ViewModels
         {
             get => xOffset;
             set {
-                if (value> sbyte.MaxValue)
+                if (value > sbyte.MaxValue)
                 {
                     value = sbyte.MaxValue;
-                }else if (value< sbyte.MinValue)
+                }
+                else if (value < sbyte.MinValue)
                 {
                     value = sbyte.MinValue;
                 }
@@ -332,13 +267,6 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             set => this.RaiseAndSetIfChanged(ref decodeButtonEnabled, value);
         }
 
-        internal WriteableBitmap actuellColorTableChangeColorWindow;
-        internal WriteableBitmap ActuellColorTableChangeColorWindow
-        {
-            get => actuellColorTableChangeColorWindow;
-            set => this.RaiseAndSetIfChanged(ref actuellColorTableChangeColorWindow, value);
-        }
-
         internal WriteableBitmap actuellColorTable;
         internal WriteableBitmap ActuellColorTable
         {
@@ -367,8 +295,6 @@ namespace Gm1KonverterCrossPlatform.ViewModels
                 FileSelected = (file != null);
             }
         }
-
-        public UserConfig UserConfig { get => userConfig; set => userConfig = value; }
 
         internal TGXImage _actualTGXImageSelection;
         internal TGXImage ActualTGXImageSelection
@@ -495,7 +421,7 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             TgxImage.TgxHeight = BitConverter.ToUInt32(array, 4);
             TgxImage.ImgFileAsBytearray = new byte[array.Length - 8];
             Array.Copy(array, 8, TgxImage.ImgFileAsBytearray, 0, TgxImage.ImgFileAsBytearray.Length);
-            TgxImage.CreateImageFromByteArray(null,true);
+            TgxImage.CreateImageFromByteArray(null, true);
             TGXImages = new ObservableCollection<Image>();
             var bitmap = TgxImage.Bitmap;
             Image image = new Image();
@@ -515,7 +441,7 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             for (int j = 0; j < File.TilesImages.Count; j++)
             {
                 var bitmap = File.TilesImages[j].TileImage;
-         
+
                 Image image = new Image();
                 image.MaxHeight = File.TilesImages[j].Height;
                 image.MaxWidth = File.TilesImages[j].Width;
@@ -534,8 +460,8 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             {
                 var bitmap = File.ImagesTGX[j].Bitmap;
                 Image image = new Image();
-                image.MaxHeight = File.ImagesTGX[j].Height;
-                image.MaxWidth = File.ImagesTGX[j].Width;
+                image.MaxHeight = File.ImagesTGX[j].Header.Height;
+                image.MaxWidth = File.ImagesTGX[j].Header.Width;
                 image.Source = bitmap;
                 image.Tag = File.ImagesTGX[j];
                 TGXImages.Add(image);
@@ -552,7 +478,7 @@ namespace Gm1KonverterCrossPlatform.ViewModels
         /// <param name="number"></param>
         internal void ChangePalette(int number)
         {
-            if (number>0)
+            if (number > 0)
             {
                 if (File.Palette.ActualPalette + number > 9)
                 {
@@ -663,6 +589,5 @@ namespace Gm1KonverterCrossPlatform.ViewModels
         }
 
         #endregion
-
     }
 }

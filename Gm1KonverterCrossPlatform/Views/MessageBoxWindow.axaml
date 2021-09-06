@@ -5,7 +5,8 @@
         mc:Ignorable="d" d:DesignWidth="200" d:DesignHeight="450"
         Width="300"
         Height="150"
-        x:Class="Gm1KonverterCrossPlatform.HelperClasses.Views.MessageBoxWindow">
+        x:Class="Gm1KonverterCrossPlatform.Views.MessageBoxWindow"
+        WindowStartupLocation="CenterOwner">
 
   <Window.Styles>
     <Style Selector="TextBlock.h1">

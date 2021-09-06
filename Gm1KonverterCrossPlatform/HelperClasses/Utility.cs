@@ -5,10 +5,10 @@ using System.Linq;
 using Avalonia;
 using Avalonia.Media.Imaging;
 using Files.Gm1Converter;
-using Gm1KonverterCrossPlatform.HelperClasses.Views;
+using Gm1KonverterCrossPlatform.Views;
 using Gm1KonverterCrossPlatform.HelperClasses;
 using Gm1KonverterCrossPlatform.Files;
-using Image = SixLabors.ImageSharp.Image;
+using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 
 namespace HelperClasses.Gm1Converter
@@ -28,23 +28,16 @@ namespace HelperClasses.Gm1Converter
         #region Methods
 
         /// <summary>
-        /// Load the File as Bytearray
+        /// Load the File as Byte array
         /// </summary>
         /// <param name="fileName">The Filepath/Filenamee to load</param>
-        /// <returns></returns>
         internal static byte[] FileToByteArray(string fileName)
         {
-            FileStream fs = new FileStream(fileName,
-                                           FileMode.Open,
-                                           FileAccess.Read);
-            BinaryReader br = new BinaryReader(fs);
-            long numBytes = new FileInfo(fileName).Length;
-            byte[] buff = br.ReadBytes((int)numBytes);
-            return buff;
+            return File.ReadAllBytes(fileName);
         }
 
         /// <summary>
-        /// Save the bytearray as File
+        /// Save the Byte array as File
         /// </summary>
         /// <param name="fileName">The Filepath/Filenamee to save</param>
         /// <param name="array">The byte array to save</param>
@@ -53,39 +46,83 @@ namespace HelperClasses.Gm1Converter
             File.WriteAllBytes(fileName, array);
         }
 
+        internal static Image<Rgba32> LoadImageData(string filePath)
+        {
+            if (Logger.Loggeractiv) Logger.Log($"LoadImageData {filePath}");
+
+            return Image.Load<Rgba32>(filePath);
+        }
+
         /// <summary>
-        /// Load the IMG as Color 2byte list
+        /// Load the IMG as Color 2-byte list
         /// </summary>
-        /// <param name="filename">The Filepath/Filenamee to load</param>
+        /// <param name="filename">The Filepath/Filename to load</param>
         /// <param name="width">The width from the IMG</param>
         /// <param name="height">The Height from the IMG</param>
         /// <param name="animatedColor">Needed if alpha is 0 or 1</param>
         /// <param name="pixelsize">Pixelsize of a pixel needed for Colortable</param>
-        /// <returns></returns>
-        internal static List<UInt16> LoadImage(String filename, ref int width, ref int height, int animatedColor = 1, int pixelsize = 1, uint type = 0,int offsetx=0,int offsety=0)
+        internal static List<UInt16> LoadImage(
+            string filename,
+            ref int width,
+            ref int height,
+            int animatedColor = 1,
+            int pixelsize = 1,
+            uint type = 0,
+            int offsetx = 0,
+            int offsety = 0)
         {
-            if (Logger.Loggeractiv) Logger.Log("LoadImage");
+            if (Logger.Loggeractiv) Logger.Log($"LoadImage {filename}");
+
+            Image<Rgba32> image = Image.Load<Rgba32>(filename);
+
+            return LoadImage(image, ref width, ref height, animatedColor, pixelsize, type, offsetx, offsety);
+        }
+
+        /// <summary>
+        /// Load the IMG as Color 2-byte list
+        /// </summary>
+        /// <param name="image">SixLabors.ImageSharp.Image data</param>
+        /// <param name="width">The width from the IMG</param>
+        /// <param name="height">The Height from the IMG</param>
+        /// <param name="animatedColor">Needed if alpha is 0 or 1</param>
+        /// <param name="pixelsize">Pixelsize of a pixel needed for Colortable</param>
+        internal static List<UInt16> LoadImage(
+            Image<Rgba32> image,
+            ref int width,
+            ref int height,
+            int animatedColor = 1,
+            int pixelsize = 1,
+            uint type = 0,
+            int offsetx = 0,
+            int offsety = 0)
+        {
+            if (Logger.Loggeractiv) Logger.Log("LoadImage from image data");
+
             List<UInt16> colors = new List<UInt16>();
+
             try
             {
-                var image = Image.Load<Rgba32>(filename);
                 if (width == 0) width = image.Width;
                 if (height == 0) height = image.Height;
+
+                GM1FileHeader.DataType dataType = (GM1FileHeader.DataType)type;
+                byte a = (animatedColor >= 1
+                    || dataType == GM1FileHeader.DataType.TilesObject
+                    || dataType == GM1FileHeader.DataType.Animations
+                    || dataType == GM1FileHeader.DataType.TGXConstSize
+                    || dataType == GM1FileHeader.DataType.NOCompression
+                    || dataType == GM1FileHeader.DataType.NOCompression1
+                    || dataType == GM1FileHeader.DataType.Interface) ? byte.MaxValue : byte.MinValue;
+
                 for (int y = offsety; y < height + offsety; y += pixelsize)
                 {
                     for (int x = offsetx; x < width + offsetx; x += pixelsize) //Bgra8888
                     {
-                        var pixel = image[x, y];
-                        byte a = (animatedColor >= 1 
-                            || ((GM1FileHeader.DataType)type) == GM1FileHeader.DataType.TilesObject
-                            || ((GM1FileHeader.DataType)type) == GM1FileHeader.DataType.Animations
-                            || ((GM1FileHeader.DataType)type) == GM1FileHeader.DataType.TGXConstSize
-                            || ((GM1FileHeader.DataType)type) == GM1FileHeader.DataType.NOCompression
-                            || ((GM1FileHeader.DataType)type) == GM1FileHeader.DataType.NOCompression1
-                            || ((GM1FileHeader.DataType)type) == GM1FileHeader.DataType.Interface) ? byte.MaxValue : byte.MinValue;
+                        Rgba32 pixel = image[x, y];
+
                         if (pixel.A == 0)
                         {
-                            colors.Add( (ushort)32767);
+                            colors.Add(32767);
                         }
                         else
                         {
@@ -100,15 +137,36 @@ namespace HelperClasses.Gm1Converter
                 MessageBoxWindow messageBox = new MessageBoxWindow(MessageBoxWindow.MessageTyp.Info, "Something went wrong: pls add a issue on the Github Page\n\nError:\n" + e.Message);
                 messageBox.Show();
             }
+
             return colors;
         }
 
-        internal unsafe static WriteableBitmap LoadImageAsBitmap(String filename, ref int width, ref int height, int offsetx = 0, int offsety = 0)
+        internal unsafe static WriteableBitmap LoadImageAsBitmap(
+            String filename,
+            ref int width,
+            ref int height,
+            int offsetx = 0,
+            int offsety = 0)
         {
-            if (Logger.Loggeractiv) Logger.Log("LoadImage");
-            var image = Image.Load<Rgba32>(filename);
+            if (Logger.Loggeractiv) Logger.Log($"LoadImageAsBitmap {filename}");
+
+            Image<Rgba32> image = Image.Load<Rgba32>(filename);
+
+            return LoadImageAsBitmap(image, ref width, ref height, offsetx, offsety);
+        }
+
+        internal unsafe static WriteableBitmap LoadImageAsBitmap(
+            Image<Rgba32> image,
+            ref int width,
+            ref int height,
+            int offsetx = 0,
+            int offsety = 0)
+        {
+            if (Logger.Loggeractiv) Logger.Log("LoadImageAsBitmap from image data");
+
             if (width == 0) width = image.Width;
             if (height == 0) height = image.Height;
+
             WriteableBitmap bitmap = new WriteableBitmap(new PixelSize(width, height),new Vector(96,96),Avalonia.Platform.PixelFormat.Rgba8888);
             using (var bit = bitmap.Lock())
             {
@@ -472,14 +530,14 @@ namespace HelperClasses.Gm1Converter
             return CreateBigImage(bitmaps, BigImageWidth);
         }
 
-        private static byte FindColorPositionInPalette(ushort color,int position, Palette palette, List<ushort>[] paletteImages)
+        private static byte FindColorPositionInPalette(ushort color, int position, Palette palette, List<ushort>[] paletteImages)
         {
             byte newPosition = 0;
             if (paletteImages == null)//not orginal Stronghold Files do not need to check all
             {
                 for (byte i = 0; i < byte.MaxValue; i++)
                 {
-                    if (color == palette.ArrayPaletten[0,i])
+                    if (color == palette.ArrayPaletten[0, i])
                     {
                         newPosition = i;
                         break;
@@ -602,13 +660,13 @@ namespace HelperClasses.Gm1Converter
                 }
 
                 var newImage = new TGXImage();
-                newImage.Direction = 0;
-                newImage.Height = 16;
-                newImage.Width = 30;
+                newImage.Header.Direction = 0;
+                newImage.Header.Height = 16;
+                newImage.Header.Width = 30;
                 //newImage.OffsetX = (ushort)(xOffset + XOffsetBefore);
                 //newImage.OffsetY = (ushort)(yOffset + YOffsetBefore);
-                newImage.SubParts = (byte)totalTiles;
-                newImage.ImagePart = (byte)part;
+                newImage.Header.SubParts = (byte)totalTiles;
+                newImage.Header.ImagePart = (byte)part;
                 if(totalTiles==1) halfreached = true;
                 if (halfreached)
                 {
@@ -617,8 +675,8 @@ namespace HelperClasses.Gm1Converter
                     {
                         if (part == totalTiles - 1)
                         {
-                            newImage.BuildingWidth = 30;
-                            newImage.Direction = 1;
+                            newImage.Header.BuildingWidth = 30;
+                            newImage.Header.Direction = 1;
                             int imageOnTopwidth = 30;
                             int imageOnTopheight = yOffset + 7;
                             int imageOnTopOffsetX = xOffset - 15;
@@ -627,15 +685,15 @@ namespace HelperClasses.Gm1Converter
                            
                                 var byteArrayImgonTop = ImgToGM1ByteArray(colorListImgOnTop, imageOnTopwidth, colorListImgOnTop.Count / imageOnTopwidth, 1);
                                 arrayByte.AddRange(byteArrayImgonTop);
-                                newImage.TileOffset = (ushort)(colorListImgOnTop.Count / imageOnTopwidth + 10 - 16 - 1);
-                                if (newImage.TileOffset == ushort.MaxValue) newImage.TileOffset = 0;
-                                newImage.Height = (ushort)(colorListImgOnTop.Count / imageOnTopwidth + 9);
+                                newImage.Header.TileOffset = (ushort)(colorListImgOnTop.Count / imageOnTopwidth + 10 - 16 - 1);
+                                if (newImage.Header.TileOffset == ushort.MaxValue) newImage.Header.TileOffset = 0;
+                                newImage.Header.Height = (ushort)(colorListImgOnTop.Count / imageOnTopwidth + 9);
                             }
                         }
                         else
                         {
-                            newImage.BuildingWidth = 16;
-                            newImage.Direction = 2;
+                            newImage.Header.BuildingWidth = 16;
+                            newImage.Header.Direction = 2;
                             int imageOnTopwidth = 16;
                             int imageOnTopheight = yOffset + 7;
                             int imageOnTopOffsetX = xOffset - 15;
@@ -646,16 +704,16 @@ namespace HelperClasses.Gm1Converter
                                 var byteArrayImgonTop = ImgToGM1ByteArray(colorListImgOnTop, imageOnTopwidth, colorListImgOnTop.Count / imageOnTopwidth, 1);
 
                                 arrayByte.AddRange(byteArrayImgonTop);
-                                newImage.TileOffset = (ushort)(colorListImgOnTop.Count / imageOnTopwidth + 10 - 16 - 1);
-                                if (newImage.TileOffset == ushort.MaxValue) newImage.TileOffset = 0;
-                                newImage.Height = (ushort)(colorListImgOnTop.Count / imageOnTopwidth + 9);
+                                newImage.Header.TileOffset = (ushort)(colorListImgOnTop.Count / imageOnTopwidth + 10 - 16 - 1);
+                                if (newImage.Header.TileOffset == ushort.MaxValue) newImage.Header.TileOffset = 0;
+                                newImage.Header.Height = (ushort)(colorListImgOnTop.Count / imageOnTopwidth + 9);
                             }
                         }
                     }
                     else if (counter == partsPerLine)//right
                     {
-                        newImage.BuildingWidth = 16;
-                        newImage.Direction = 3;
+                        newImage.Header.BuildingWidth = 16;
+                        newImage.Header.Direction = 3;
                         int imageOnTopwidth = 16;
                         int imageOnTopheight = yOffset + 7;
                         int imageOnTopOffsetX = xOffset;
@@ -664,11 +722,11 @@ namespace HelperClasses.Gm1Converter
                         {
                             var byteArrayImgonTop = ImgToGM1ByteArray(colorListImgOnTop, imageOnTopwidth, colorListImgOnTop.Count / imageOnTopwidth, 1);
                             arrayByte.AddRange(byteArrayImgonTop);
-                            newImage.Height = (ushort)(colorListImgOnTop.Count / imageOnTopwidth + 9);
-                            newImage.TileOffset = (ushort)(colorListImgOnTop.Count / imageOnTopwidth + 10 - 16 - 1);
-                            if (newImage.TileOffset == ushort.MaxValue) newImage.TileOffset = 0;
+                            newImage.Header.Height = (ushort)(colorListImgOnTop.Count / imageOnTopwidth + 9);
+                            newImage.Header.TileOffset = (ushort)(colorListImgOnTop.Count / imageOnTopwidth + 10 - 16 - 1);
+                            if (newImage.Header.TileOffset == ushort.MaxValue) newImage.Header.TileOffset = 0;
                         }
-                        newImage.HorizontalOffsetOfImage = 14;
+                        newImage.Header.HorizontalOffsetOfImage = 14;
                     }
                 }
                 newImageList.Add(newImage);
@@ -740,22 +798,20 @@ namespace HelperClasses.Gm1Converter
         }
 
         /// <summary>
-        /// Convert Color 4 byte to 2 byte Color
+        /// Convert 4 byte Color to 2 byte Color
         /// </summary>
         /// <param name="colorAsInt32">The Color to Convert</param>
         /// <returns></returns>
-        internal static UInt16 EncodeColorTo2Byte(uint colorAsInt32)
+        internal static ushort EncodeColorTo2Byte(uint colorAsInt32)
         {
-            byte[] arrray = { (byte)(204), (byte)196 };
-            var testtt = BitConverter.ToUInt16(arrray, 0);
             var colors = BitConverter.GetBytes(colorAsInt32);
 
-            UInt16 b = (UInt16)((colors[0] >> 3) & 0b0001_1111);
-            UInt16 g = (UInt16)(((colors[1] >> 3) & 0b0001_1111) << 5);
-            UInt16 r = (UInt16)(((colors[2] >> 3) & 0b0001_1111) << 10);
-            UInt16 a = (UInt16)((colors[3] & 0b1000_0000) << 8);
-            UInt16 color = (UInt16)(b | g | r | a);
-            return color;
+            ushort b = (ushort)((colors[0] >> 3) & 0b0001_1111);
+            ushort g = (ushort)(((colors[1] >> 3) & 0b0001_1111) << 5);
+            ushort r = (ushort)(((colors[2] >> 3) & 0b0001_1111) << 10);
+            ushort a = (ushort)((colors[3] & 0b1000_0000) << 8);
+
+            return (ushort)(b | g | r | a);
         }
 
         /// <summary>
@@ -780,24 +836,27 @@ namespace HelperClasses.Gm1Converter
         }
 
         /// <summary>
-        /// Get File names in an Path
+        /// Get File names in a directory
         /// </summary>
-        /// <param name="path">The Path to lookup</param>
-        /// <param name="filter">The Filer, which files only</param>
-        /// <returns></returns>
-        internal static string[] GetFileNames(string path, string filter)
+        /// <param name="directory">The Path to lookup</param>
+        /// <param name="filter">The Filer, which files to select</param>
+        internal static string[] GetFileNames(string directory, string filter)
         {
-            string[] files = Directory.GetFiles(path, filter,SearchOption.TopDirectoryOnly);
+            string[] files = Directory.GetFiles(directory, filter, SearchOption.TopDirectoryOnly);
+            
             for (int i = 0; i < files.Length; i++)
                 files[i] = Path.GetFileName(files[i]);
+
             return files;
         }
 
-        internal static string[] GetDirectoryNames(string path)
+        internal static string[] GetDirectoryNames(string directory)
         {
-            string[] files = Directory.GetDirectories(path, "*", SearchOption.TopDirectoryOnly);
+            string[] files = Directory.GetDirectories(directory, "*", SearchOption.TopDirectoryOnly);
+
             for (int i = 0; i < files.Length; i++)
                 files[i] = Path.GetFileName(files[i]);
+
             return files;
         }
 

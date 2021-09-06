@@ -7,7 +7,7 @@
         MaxWidth="820"
         Height="550"
         MaxHeight="800"
-        x:Class="Gm1KonverterCrossPlatform.Views.InfoWindow"
+        x:Class="Gm1KonverterCrossPlatform.Views.GM1FileInfoWindow"
         Title="Info"
         WindowStartupLocation="CenterOwner">
 

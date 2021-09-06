@@ -98,4 +98,9 @@
     <x:String x:Key="Language">Sprache</x:String>
 
     <x:String x:Key="ColorTheme">Theme</x:String>
+
+    <x:String x:Key="ChangeColorTableDialogBox_Text">The color table has changed.</x:String>
+    <x:String x:Key="ChangeColorTableDialogBox_Button_Cancel">Cancel</x:String>
+    <x:String x:Key="ChangeColorTableDialogBox_Button_Save">Save</x:String>
+    <x:String x:Key="ChangeColorTableDialogBox_Button_Close">Close</x:String>
 </controls:ResourceDictionary>

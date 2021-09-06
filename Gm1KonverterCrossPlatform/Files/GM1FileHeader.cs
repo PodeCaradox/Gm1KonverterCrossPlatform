@@ -5,102 +5,153 @@ namespace Files.Gm1Converter
 {
     public class GM1FileHeader
     {
-
         #region Public
 
-        public readonly static int fileHeaderSize = 88;
+        /// <summary>
+        /// The header has a length of 88-bytes, composed of 22 unsigned 32-bit integers. 
+        /// </summary>
+        public const int ByteSize = 88;
 
         /// <summary>
-        ///  Data type is and ID that represents what kind of images are stored, they are as follows:
-        ///1 – Interface items and some building animations.Images are stored similar to TGX images. 
-        ///2 – Animations.
-        ///3 – Buildings.Images are stored similar to TGX images but with a Tile object. 
-        ///4 – Font.TGX format. 
-        ///5 and 7 – Walls, grass, stones and other.No compression, stored with 2-bytes per pixel.
+        /// Data type is and ID that represents what kind of images are stored, they are as follows:
+        /// <para>1 – Interface items and some building animations. Images are stored similar to TGX images.</para>
+        /// <para>2 – Animations.</para>
+        /// <para>3 – Buildings. Images are stored similar to TGX images but with a Tile object.</para>
+        /// <para>4 – Font. TGX format.</para>
+        /// <para>5 and 7 – Walls, grass, stones and other. No compression, stored with 2-bytes per pixel.</para>
         /// </summary>
-        public enum DataType : UInt32 { Interface = 1, Animations = 2, TilesObject = 3, Font = 4, NOCompression = 5, TGXConstSize = 6, NOCompression1 = 7 };
+        public enum DataType : uint {
+            Interface = 1,
+            Animations = 2,
+            TilesObject = 3,
+            Font = 4,
+            NOCompression = 5,
+            TGXConstSize = 6,
+            NOCompression1 = 7
+        };
 
         #endregion
         
         #region Variables
 
-        private String name;
-        private UInt32 iUnknown1;
-        private UInt32 iUnknown2;
-        private UInt32 iUnknown3;
-        private UInt32 iNumberOfPictureinFile;
-        private UInt32 iUnknown4;
-        private UInt32 iDataType;
-        private UInt32[] iUnknown5 = new UInt32[14];
+        private string name;
 
-        internal byte[] GetBytes()
-        {
-            var bytearray = new List<byte>();
-            bytearray.AddRange(BitConverter.GetBytes(iUnknown1));
-            bytearray.AddRange(BitConverter.GetBytes(iUnknown2));
-            bytearray.AddRange(BitConverter.GetBytes(iUnknown3));
-            bytearray.AddRange(BitConverter.GetBytes(iNumberOfPictureinFile));
-            bytearray.AddRange(BitConverter.GetBytes(iUnknown4));
-            bytearray.AddRange(BitConverter.GetBytes(iDataType));
-            for (int i = 0; i < iUnknown5.Length; i++)
-            {
-                bytearray.AddRange(BitConverter.GetBytes(this.iUnknown5[i]));
-            }
-            bytearray.AddRange(BitConverter.GetBytes(iDataSize));
-            bytearray.AddRange(BitConverter.GetBytes(iUnknown6));
-
-            return bytearray.ToArray();
-        }
-
-        private UInt32 iDataSize;
-        private UInt32 iUnknown6;
-        private UInt32[] size;
+        private uint unknownField1;
+        private uint unknownField2;
+        private uint unknownField3;
+        private uint numberOfPicturesinFile;
+        private uint unknownField5;
+        private uint dataType;
+        private uint unknownField7;
+        private uint unknownField8;
+        private uint unknownField9;
+        private uint unknownField10;
+        private uint unknownField11;
+        private uint unknownField12;
+        private uint width;
+        private uint height;
+        private uint unknownField15;
+        private uint unknownField16;
+        private uint unknownField17;
+        private uint unknownField18;
+        private uint unknownField19;
+        private uint unknownField20;
+        private uint dataSize;
+        private uint unknownField22;
 
         #endregion
 
         #region Construtor
 
-        /// <summary>
-        /// The header has a length of 88-bytes, composed of unsigned 32-bit integers: 
-        /// </summary>
-        /// <param name="array"></param>
-        public GM1FileHeader(byte[] array)
+        public GM1FileHeader(byte[] byteArray)
         {
-            this.iUnknown1 = BitConverter.ToUInt32(array, 0);
-            this.iUnknown2 = BitConverter.ToUInt32(array, 4);
-            this.iUnknown3 = BitConverter.ToUInt32(array, 8);
-            this.iNumberOfPictureinFile = BitConverter.ToUInt32(array, 12);
-            this.iUnknown4 = BitConverter.ToUInt32(array, 16);
-            this.iDataType = BitConverter.ToUInt32(array, 20);
-            for (int i = 0; i < iUnknown5.Length; i++)
-            {
-                this.iUnknown5[i] = BitConverter.ToUInt32(array, 24 + i * 4);
-            }
-            this.size = new UInt32[2];
-            this.size[0] = iUnknown5[6];
-            this.size[1] = iUnknown5[7];
-
-            this.iDataSize = BitConverter.ToUInt32(array, 80);
-            this.iUnknown6 = BitConverter.ToUInt32(array, 84);
+            unknownField1 = BitConverter.ToUInt32(byteArray, 0);
+            unknownField2 = BitConverter.ToUInt32(byteArray, 4);
+            unknownField3 = BitConverter.ToUInt32(byteArray, 8);
+            numberOfPicturesinFile = BitConverter.ToUInt32(byteArray, 12);
+            unknownField5 = BitConverter.ToUInt32(byteArray, 16);
+            dataType = BitConverter.ToUInt32(byteArray, 20);
+            unknownField7 = BitConverter.ToUInt32(byteArray, 24);
+            unknownField8 = BitConverter.ToUInt32(byteArray, 28);
+            unknownField9 = BitConverter.ToUInt32(byteArray, 32);
+            unknownField10 = BitConverter.ToUInt32(byteArray, 36);
+            unknownField11 = BitConverter.ToUInt32(byteArray, 40);
+            unknownField12 = BitConverter.ToUInt32(byteArray, 44);
+            width = BitConverter.ToUInt32(byteArray, 48);
+            height = BitConverter.ToUInt32(byteArray, 52);
+            unknownField15 = BitConverter.ToUInt32(byteArray, 56);
+            unknownField16 = BitConverter.ToUInt32(byteArray, 60);
+            unknownField17 = BitConverter.ToUInt32(byteArray, 64);
+            unknownField18 = BitConverter.ToUInt32(byteArray, 68);
+            unknownField19 = BitConverter.ToUInt32(byteArray, 72);
+            unknownField20 = BitConverter.ToUInt32(byteArray, 76);
+            dataSize = BitConverter.ToUInt32(byteArray, 80);
+            unknownField22 = BitConverter.ToUInt32(byteArray, 84);
         }
 
         #endregion
 
         #region GetterSetter
 
-        public UInt32 IUnknown1 { get => iUnknown1; }
-        public UInt32 IUnknown2 { get => iUnknown2; }
-        public UInt32 IUnknown3 { get => iUnknown3; }
-        public UInt32 INumberOfPictureinFile { get => iNumberOfPictureinFile; set => iNumberOfPictureinFile = value; }
-        public UInt32 IUnknown4 { get => iUnknown4; }
-        public UInt32 IDataType { get => iDataType; }
-        public UInt32[] IUnknown5 { get => iUnknown5; }
-        public UInt32 IDataSize { get => iDataSize; set => iDataSize = value; }
-        public UInt32 IUnknown6 { get => iUnknown6; }
-        public UInt32[] Size { get => size; }
         public string Name { get => name; set => name = value; }
+
+        public uint UnknownField1 { get => unknownField1; set => unknownField1 = value; }
+        public uint UnknownField2 { get => unknownField2; set => unknownField2 = value; }
+        public uint UnknownField3 { get => unknownField3; set => unknownField3 = value; }
+        public uint INumberOfPictureinFile { get => numberOfPicturesinFile; set => numberOfPicturesinFile = value; }
+        public uint UnknownField5 { get => unknownField5; set => unknownField5 = value; }
+        public uint IDataType { get => dataType; set => dataType = value; }
+        public uint UnknownField7 { get => unknownField7; set => unknownField7 = value; }
+        public uint UnknownField8 { get => unknownField8; set => unknownField8 = value; }
+        public uint UnknownField9 { get => unknownField9; set => unknownField9 = value; }
+        public uint UnknownField10 { get => unknownField10; set => unknownField10 = value; }
+        public uint UnknownField11 { get => unknownField11; set => unknownField11 = value; }
+        public uint UnknownField12 { get => unknownField12; set => unknownField12 = value; }
+        public uint Width { get => width; set => width = value; }
+        public uint Height { get => height; set => height = value; }
+        public uint UnknownField15 { get => unknownField15; set => unknownField15 = value; }
+        public uint UnknownField16 { get => unknownField16; set => unknownField16 = value; }
+        public uint UnknownField17 { get => unknownField17; set => unknownField17 = value; }
+        public uint UnknownField18 { get => unknownField18; set => unknownField18 = value; }
+        public uint UnknownField19 { get => unknownField19; set => unknownField19 = value; }
+        public uint UnknownField20 { get => unknownField20; set => unknownField20 = value; }
+        public uint IDataSize { get => dataSize; set => dataSize = value; }
+        public uint UnknownField22 { get => unknownField22; set => unknownField22 = value; }
 
         #endregion
 
+        #region Methods
+
+        internal byte[] GetBytes()
+        {
+            List<byte> byteArray = new List<byte>();
+
+            byteArray.AddRange(BitConverter.GetBytes(unknownField1));
+            byteArray.AddRange(BitConverter.GetBytes(unknownField2));
+            byteArray.AddRange(BitConverter.GetBytes(unknownField3));
+            byteArray.AddRange(BitConverter.GetBytes(numberOfPicturesinFile));
+            byteArray.AddRange(BitConverter.GetBytes(unknownField5));
+            byteArray.AddRange(BitConverter.GetBytes(dataType));
+            byteArray.AddRange(BitConverter.GetBytes(unknownField7));
+            byteArray.AddRange(BitConverter.GetBytes(unknownField8));
+            byteArray.AddRange(BitConverter.GetBytes(unknownField9));
+            byteArray.AddRange(BitConverter.GetBytes(unknownField10));
+            byteArray.AddRange(BitConverter.GetBytes(unknownField11));
+            byteArray.AddRange(BitConverter.GetBytes(unknownField12));
+            byteArray.AddRange(BitConverter.GetBytes(width));
+            byteArray.AddRange(BitConverter.GetBytes(height));
+            byteArray.AddRange(BitConverter.GetBytes(unknownField15));
+            byteArray.AddRange(BitConverter.GetBytes(unknownField16));
+            byteArray.AddRange(BitConverter.GetBytes(unknownField17));
+            byteArray.AddRange(BitConverter.GetBytes(unknownField18));
+            byteArray.AddRange(BitConverter.GetBytes(unknownField19));
+            byteArray.AddRange(BitConverter.GetBytes(unknownField20));
+            byteArray.AddRange(BitConverter.GetBytes(dataSize));
+            byteArray.AddRange(BitConverter.GetBytes(unknownField22));
+
+            return byteArray.ToArray();
+        }
+
+        #endregion
     }
 }

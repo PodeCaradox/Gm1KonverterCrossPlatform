@@ -235,30 +235,31 @@
               <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Row="0" Grid.Column="0" Text="Width:"/>
-            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Width}"/>
-            <TextBlock Grid.Row="1" Grid.Column="0" Text="Height:"/>
-            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Height}"/>
             <TextBlock Grid.Row="2" Grid.Column="0" Text="TgxWidth:"/>
             <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding TgxWidth}"/>
             <TextBlock Grid.Row="3" Grid.Column="0" Text="TgxHeight:"/>
             <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding TgxHeight}"/>
+
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="Width:"/>
+            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Header.Width}"/>
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="Height:"/>
+            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Header.Height}"/>
             <TextBlock Grid.Row="4" Grid.Column="0" Text="OffsetX:"/>
-            <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding OffsetX}"/>
+            <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding Header.OffsetX}"/>
             <TextBlock Grid.Row="5" Grid.Column="0" Text="OffsetY:"/>
-            <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding OffsetY}"/>
+            <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding Header.OffsetY}"/>
             <TextBlock Grid.Row="6" Grid.Column="0" Text="ImagePart:"/>
-            <TextBlock Grid.Row="6" Grid.Column="1" Text="{Binding ImagePart}"/>
+            <TextBlock Grid.Row="6" Grid.Column="1" Text="{Binding Header.ImagePart}"/>
             <TextBlock Grid.Row="7" Grid.Column="0" Text="SubParts:"/>
-            <TextBlock Grid.Row="7" Grid.Column="1" Text="{Binding SubParts}"/>
+            <TextBlock Grid.Row="7" Grid.Column="1" Text="{Binding Header.SubParts}"/>
             <TextBlock Grid.Row="8" Grid.Column="0" Text="TileOffset:"/>
-            <TextBlock Grid.Row="8" Grid.Column="1" Text="{Binding TileOffset}"/>
+            <TextBlock Grid.Row="8" Grid.Column="1" Text="{Binding Header.TileOffset}"/>
             <TextBlock Grid.Row="9" Grid.Column="0" Text="Direction:"/>
-            <TextBlock Grid.Row="9" Grid.Column="1" Text="{Binding Direction}"/>
+            <TextBlock Grid.Row="9" Grid.Column="1" Text="{Binding Header.Direction}"/>
             <TextBlock Grid.Row="10" Grid.Column="0" Text="HorizontalOffsetOfImage:"/>
-            <TextBlock Grid.Row="10" Grid.Column="1" Text="{Binding HorizontalOffsetOfImage}"/>
+            <TextBlock Grid.Row="10" Grid.Column="1" Text="{Binding Header.HorizontalOffsetOfImage}"/>
             <TextBlock Grid.Row="11" Grid.Column="0" Text="BuildingWidth:"/>
-            <TextBlock Grid.Row="11" Grid.Column="1" Text="{Binding BuildingWidth}"/>
+            <TextBlock Grid.Row="11" Grid.Column="1" Text="{Binding Header.BuildingWidth}"/>
           </Grid>
         </Expander>
 

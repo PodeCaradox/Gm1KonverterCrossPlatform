@@ -4,16 +4,13 @@ using Files.Gm1Converter;
 
 namespace Gm1KonverterCrossPlatform.Views
 {
-    public class InfoWindow : Window
+    public class GM1FileInfoWindow : Window
     {
-        public InfoWindow()
-        {
+        public GM1FileInfoWindow() { }
 
-        }
-
-        public InfoWindow(GM1FileHeader.DataType dataType)
+        public GM1FileInfoWindow(GM1FileHeader.DataType dataType)
         {
-            this.InitializeComponent();
+            AvaloniaXamlLoader.Load(this);
 
             StackPanel animation = this.Get<StackPanel>("Animation");
             animation.IsVisible = false;
@@ -50,11 +47,6 @@ namespace Gm1KonverterCrossPlatform.Views
                 default:
                     break;
             }
-        }
-
-        private void InitializeComponent()
-        {
-            AvaloniaXamlLoader.Load(this);
         }
     }
 }
