@@ -799,6 +799,7 @@ namespace HelperClasses.Gm1Converter
 
         /// <summary>
         /// Convert 4 byte Color to 2 byte Color
+        /// Convert 4-byte Color (A8R8G8B8) to 2-byte Color (A1R5G5B5)
         /// </summary>
         /// <param name="colorAsInt32">The Color to Convert</param>
         /// <returns></returns>
@@ -816,6 +817,7 @@ namespace HelperClasses.Gm1Converter
 
         /// <summary>
         /// Convert 2byte Color to RGBA
+        /// Convert 2-byte Color (A1R5G5B5) to RGBA
         /// </summary>
         /// <param name="pixel">2 Byte Color to Convert</param>
         /// <param name="r">Red value</param>
