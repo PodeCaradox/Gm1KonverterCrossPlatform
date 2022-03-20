@@ -1,4 +1,5 @@
 ﻿using ReactiveUI;
+using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Files.Gm1Converter;
 
@@ -82,7 +83,14 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             get => colorAsText;
             set
             {
-                this.RaiseAndSetIfChanged(ref colorAsText, value);
+                value = FormatColorHexValue(value);
+                if (colorAsText == value) return;
+                try
+                {
+                    Color color = Color.Parse(value);
+                    SetColor(color.R, color.G, color.B);
+                }
+                catch(System.Exception) { }
             }
         }
 
@@ -91,9 +99,10 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             get => red;
             set
             {
-                value = TrimColorValue(value);
+                value = FormatColorValue(value);
+                if (red == value) return;
                 this.RaiseAndSetIfChanged(ref red, value);
-                SetColorAsText();
+                UpdateColorHexValue();
             }
         }
 
@@ -102,9 +111,10 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             get => green;
             set
             {
-                value = TrimColorValue(value);
+                value = FormatColorValue(value);
+                if (green == value) return;
                 this.RaiseAndSetIfChanged(ref green, value);
-                SetColorAsText();
+                UpdateColorHexValue();
             }
         }
 
@@ -113,33 +123,61 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             get => blue;
             set
             {
-                value = TrimColorValue(value);
+                value = FormatColorValue(value);
+                if (blue == value) return;
                 this.RaiseAndSetIfChanged(ref blue, value);
-                SetColorAsText();
+                UpdateColorHexValue();
             }
+        }
+
+        public void SetColor(int r, int g, int b)
+        {
+            red = FormatColorValue(r);
+            this.RaisePropertyChanged("Red");
+
+            green = FormatColorValue(g);
+            this.RaisePropertyChanged("Green");
+
+            blue = FormatColorValue(b);
+            this.RaisePropertyChanged("Blue");
+
+            UpdateColorHexValue();
         }
 
         #endregion
 
-		#region Methods
+        #region Methods
 
-		private int TrimColorValue(int value)
+        private int FormatColorValue(int value)
         {
-            if (value > 255)
+            if (value > 248)
             {
-                value = 255;
+                value = 248;
             }
             else if (value < 0)
             {
                 value = 0;
             }
 
+            value = (value / 8) * 8;
+
             return value;
         }
 
-        private void SetColorAsText()
+        private string FormatColorHexValue(string value)
         {
-            ColorAsText = "#" + 255.ToString("X2") + red.ToString("X2") + green.ToString("X2") + blue.ToString("X2");
+            if (!value.StartsWith("#"))
+            {
+                value = "#" + value;
+            }
+
+            return value;
+        }
+
+        private void UpdateColorHexValue()
+        {
+            colorAsText = "#" + red.ToString("X2") + green.ToString("X2") + blue.ToString("X2");
+            this.RaisePropertyChanged("ColorAsText");
         }
 
 		#endregion

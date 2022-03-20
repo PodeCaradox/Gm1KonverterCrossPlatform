@@ -51,19 +51,16 @@ namespace Gm1KonverterCrossPlatform.Views
 
             viewModel.ColorPositionInColorTable = (int)newPos.X / pixelSize + (int)(newPos.Y) / pixelSize * 32;
             var color = viewModel.ColorTable.ColorList[viewModel.ColorPositionInColorTable];
-            byte r, g, b, a;
-            Utility.ReadColor(color, out r, out g, out b, out a);
+            Utility.ReadColor(color, out byte r, out byte g, out byte b, out _);
 
-            viewModel.Red = r;
-            viewModel.Green = g;
-            viewModel.Blue = b;
+            viewModel.SetColor(r, g, b);
 
             viewModel.ColorSelected = true;
         }
 
         private void Button_SaveColor(object sender, RoutedEventArgs e)
         {
-            uint color = Color.Parse(viewModel.ColorAsText).ToUint32();
+            uint color = Color.FromRgb((byte)viewModel.Red, (byte)viewModel.Green, (byte)viewModel.Blue).ToUint32();
             ushort newColor = Utility.EncodeColorTo2Byte(color);
 
             viewModel.ColorTable.ColorList[viewModel.ColorPositionInColorTable] = newColor;
