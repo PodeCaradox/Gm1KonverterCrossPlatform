@@ -1,8 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <controls:ResourceDictionary
     xmlns:controls="clr-namespace:Avalonia.Controls;assembly=Avalonia.Styling"
-     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-  >
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <x:String x:Key="English">English loaded</x:String>
     <x:String x:Key="CreatenewGM1">Create new GM1</x:String>
@@ -14,6 +13,9 @@
     <x:String x:Key="ImportColortable">Import Colortable</x:String>
     <x:String x:Key="ExportImages">Export Images</x:String>
     <x:String x:Key="ImportImages">Import Images</x:String>
+    <x:String x:Key="ImportTgxImage">Import Image as Tgx</x:String>
+    <x:String x:Key="ExportTgxImage">Export Tgx Image</x:String>
+
     <x:String x:Key="Workfolder">Workfolder</x:String>
     <x:String x:Key="OpenFolderafterExport">Open Folder after Export</x:String>
     <x:String x:Key="ActivateLogger">Activate Logger</x:String>
@@ -24,16 +26,17 @@
     <x:String x:Key="Datatype">Datatype: </x:String>
     <x:String x:Key="Palette">Colortable: </x:String>
     <x:String x:Key="TilesarenotSupportedyet">Tiles are not Supported yet.</x:String>
-    <x:String x:Key="ClickontheColoryouwanttoChange">Click on the Color you want to Change.</x:String>
-    <x:String x:Key="HEXColor">HEX Color:</x:String>
-    <x:String x:Key="ChangeColor">Change Color</x:String>
     <x:String x:Key="Save">Save</x:String>
     <x:String x:Key="ChangeColorTable">Change Colortable</x:String>
     <x:String x:Key="GM1Converter">GM1 Converter</x:String>
-    <x:String x:Key="ChangeColorPalette">Colortable changer</x:String>
-
-    <x:String x:Key="ImportTgxImage">Import Image as Tgx</x:String>
-    <x:String x:Key="ExportTgxImage">Export Tgx Image</x:String>
+    
+    <x:String x:Key="ChangeColorPalette">Colortable editor</x:String>
+    <x:String x:Key="ClickontheColoryouwanttoChange">Click on the Color you want to Change.</x:String>
+    <x:String x:Key="HEXColor">HEX Color:</x:String>
+    <x:String x:Key="ChangeRedColor">Red:</x:String>
+    <x:String x:Key="ChangeGreenColor">Green:</x:String>
+    <x:String x:Key="ChangeBlueColor">Blue:</x:String>
+    <x:String x:Key="ChangeColor">Change Color</x:String>
 
     <x:String x:Key="AnimationTitel1">Datatyp Animation</x:String>
     <x:String x:Key="AnimationText1">GM1 animation files consist of a certain number of encoded images and 10 color tables.
@@ -62,7 +65,6 @@
         Unfortunately, it is not yet known how a picture is positioned in Stronghold, because the position remains fixed, they can only be extended downwards and to the right.
     </x:String>
 
-
     <x:String x:Key="TiledObjectTitel1">Datatyp TiledObject</x:String>
     <x:String x:Key="TiledObjectText1">GM1 files of type TiledObject consist of a certain number of coded pictures.
         These images consist in the GM1 file of many small Diamonds 30 x 16 pixels. The picture below shows such a Diamond enlarged by a factor of 4.
@@ -71,7 +73,6 @@
     </x:String>
 
     <x:String x:Key="TiledObjectText3">Finally, pictures with variable height are placed on the individual diamonds and the whole picture is put together.</x:String>
-
 
     <x:String x:Key="TiledObjectText4">That means GM1 files of the type TiledObject can only be changed in the height and visually transformed.
         Anything below the Grounddiamond image is ignored, because it need to be isometric.</x:String>
@@ -89,7 +90,7 @@
     <x:String x:Key="ImportOffsetsFromFile">Import Offsets From File</x:String>
     <x:String x:Key="ImportBigImage">Import Bigimage</x:String>
     <x:String x:Key="OpenLogFile">Open Log Folder</x:String>
-
+    
     <x:String x:Key="ChangeOffsets">Change Offsets</x:String>
     <x:String x:Key="Gm1FileHeaderFields">Gm1 header fields</x:String>
     <x:String x:Key="Gm1FileImageHeaderFields">Gm1 image header fields</x:String>
