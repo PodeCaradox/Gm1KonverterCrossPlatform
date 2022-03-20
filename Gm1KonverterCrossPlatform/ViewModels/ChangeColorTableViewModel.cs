@@ -15,7 +15,7 @@ namespace Gm1KonverterCrossPlatform.ViewModels
         private bool colorTableChanged = false;
         private bool colorSelected = false;
         private int colorPositionInColorTable;
-        private string colorAsText = ""; // argb hex value
+        private string colorAsText = ""; // rgb hex value
         private int red = 0;
         private int green = 0;
         private int blue = 0;
