@@ -8,14 +8,13 @@
     <x:String x:Key="ReplacewithSavedGM1File">Заменить сохраненным файлом GM1</x:String>
     <x:String x:Key="CreatenewTgx">Создать новый Tgx файл</x:String>
     <x:String x:Key="ReplacewithSavedTgxFile">Заменить сохраненным файлом Tgx</x:String>
+
     <x:String x:Key="ExportColortable">Экспорт таблицы цветов</x:String>
     <x:String x:Key="ImportColortable">Импорт таблицы цветов</x:String>
     <x:String x:Key="ExportImages">Экспорт изображений</x:String>
     <x:String x:Key="ImportImages">Импорт изображений</x:String>
-
     <x:String x:Key="ImportTgxImage">Импорт изображения как Tgx</x:String>
     <x:String x:Key="ExportTgxImage">Экспорт Tgx образ</x:String>
-
 
     <x:String x:Key="Workfolder">Рабочая папка</x:String>
     <x:String x:Key="OpenFolderafterExport">Открыть папку после експорта</x:String>
@@ -27,13 +26,17 @@
     <x:String x:Key="Datatype">Тип данных:</x:String>
     <x:String x:Key="Palette">Таблица цветов:</x:String>
     <x:String x:Key="TilesarenotSupportedyet">Плитка еще не поддерживается.</x:String>
-    <x:String x:Key="ClickontheColoryouwanttoChange">Нажмите на цвет, который вы хотите изменить.</x:String>
-    <x:String x:Key="HEXColor">HEX Цвет:</x:String>
-    <x:String x:Key="ChangeColor">Изменить цвет</x:String>
     <x:String x:Key="Save">Сохранить</x:String>
     <x:String x:Key="ChangeColorTable">Изменить таблицу цветов</x:String>
     <x:String x:Key="GM1Converter">GM1 конвертер</x:String>
+
     <x:String x:Key="ChangeColorPalette">Таблица смены цветов</x:String>
+    <x:String x:Key="ClickontheColoryouwanttoChange">Нажмите на цвет, который вы хотите изменить.</x:String>
+    <x:String x:Key="HEXColor">HEX Цвет:</x:String>
+    <x:String x:Key="ChangeRedColor">Red:</x:String>
+    <x:String x:Key="ChangeGreenColor">Green:</x:String>
+    <x:String x:Key="ChangeBlueColor">Blue:</x:String>
+    <x:String x:Key="ChangeColor">Изменить цвет</x:String>
 
     <x:String x:Key="AnimationTitel1">Тип данных анимаций</x:String>
     <x:String x:Key="AnimationText1">Файлы анимации GM1 состоят из определенного количества закодированных изображений и 10 таблиц цветов.
@@ -62,7 +65,7 @@
         К сожалению, пока неизвестно, как изображение расположено в Stronghold, потому что положение остается фиксированным, их можно только удлинить вниз и вправо.
     </x:String>
 
-<x:String x:Key="TiledObjectTitel1">Тип данных Плиточный объект</x:String>
+    <x:String x:Key="TiledObjectTitel1">Тип данных Плиточный объект</x:String>
     <x:String x:Key="TiledObjectText1">Файлы GM1 типа Плиточный объект состоят из определенного количества кодированных картинок.
         Эти изображения состоят из файла GM1 из множества маленьких бриллиантов размером 30 х 16 пикселей. На рисунке ниже показан такой бриллиант, увеличенный в 4 раза.
     </x:String>
@@ -71,13 +74,10 @@
 
     <x:String x:Key="TiledObjectText3">Наконец, изображения с переменной высотой размещаются на отдельных бриллиантах, и вся картинка складывается вместе.</x:String>
 
-
     <x:String x:Key="TiledObjectText4">Это означает, что файлы GM1 типа Плиточный объект могут быть изменены только по высоте и визуально преобразованы.
         Все, что находится под изображением Земляной Диамант, игнорируется, потому что оно должно быть изометрическим.</x:String>
 
     <x:String x:Key="NoInfoYet">Пока нет информации об этом типе файла.</x:String>
-
-
     <x:String x:Key="GifExporter">Гиф Экспорт</x:String>
     <x:String x:Key="ExportGif">Экспортировать Гиф</x:String>
     <x:String x:Key="SelectGif">Выберите изображения с помощью CTRL, затем нажмите кнопку «Экспорт».</x:String>
@@ -85,15 +85,15 @@
 
     <x:String x:Key="ImportOrginalStrongholdAnimation">Импорт оригинальной Stronghold Анимация</x:String>
     <x:String x:Key="ExportOrginalStrongholdAnimation">Экспорт оригинальной Stronghold Анимация</x:String>
-
     <x:String x:Key="ImportOffsetsFromFile">Import Offsets from File</x:String>
     <x:String x:Key="ImageSize">Bigimage Width</x:String>
     <x:String x:Key="ExportBigImage">Экспорт большого изображения</x:String>
     <x:String x:Key="ImportBigImage">Импорт большое изображение</x:String>
     <x:String x:Key="OpenLogFile">Открыть Log журнала</x:String>
+    
     <x:String x:Key="ChangeOffsets">Изменить Offsets</x:String>
-
-    <x:String x:Key="DataGm1File">Gm1 data fields</x:String>
+    <x:String x:Key="Gm1FileHeaderFields">Gm1 header fields</x:String>
+    <x:String x:Key="Gm1FileImageHeaderFields">Gm1 image header fields</x:String>
     <x:String x:Key="OpenWorkFolder">Open Work Folder</x:String>
     <x:String x:Key="OpenStrongholdFolder">Open Stronghold Folder</x:String>
 

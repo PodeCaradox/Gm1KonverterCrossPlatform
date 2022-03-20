@@ -213,9 +213,19 @@
           </StackPanel>
         </Expander>
 
-        <Expander ExpandDirection="Down" Header="{DynamicResource DataGm1File}"  Name="DataGm1File" Grid.Row="3" Grid.Column="0">
-          <Grid DataContext="{Binding ActualTGXImageSelection}">
+        <Expander ExpandDirection="Down" Header="{DynamicResource Gm1FileHeaderFields}" Grid.Row="3" Grid.Column="0">
+          <Grid DataContext="{Binding File}">
             <Grid.RowDefinitions>
+              <RowDefinition Height="*"/>
+              <RowDefinition Height="*"/>
+              <RowDefinition Height="*"/>
+              <RowDefinition Height="*"/>
+              <RowDefinition Height="*"/>
+              <RowDefinition Height="*"/>
+              <RowDefinition Height="*"/>
+              <RowDefinition Height="*"/>
+              <RowDefinition Height="*"/>
+              <RowDefinition Height="*"/>
               <RowDefinition Height="*"/>
               <RowDefinition Height="*"/>
               <RowDefinition Height="*"/>
@@ -235,35 +245,97 @@
               <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Row="2" Grid.Column="0" Text="TgxWidth:"/>
-            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding TgxWidth}"/>
-            <TextBlock Grid.Row="3" Grid.Column="0" Text="TgxHeight:"/>
-            <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding TgxHeight}"/>
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="UnknownField1:"/>
+            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding FileHeader.UnknownField1}"/>
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="UnknownField2:"/>
+            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding FileHeader.UnknownField2}"/>
+            <TextBlock Grid.Row="2" Grid.Column="0" Text="UnknownField3:"/>
+            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding FileHeader.UnknownField3}"/>
+            <TextBlock Grid.Row="3" Grid.Column="0" Text="INumberOfPictureinFile:"/>
+            <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding FileHeader.INumberOfPictureinFile}"/>
+            <TextBlock Grid.Row="4" Grid.Column="0" Text="UnknownField5:"/>
+            <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding FileHeader.UnknownField5}"/>
+            <TextBlock Grid.Row="5" Grid.Column="0" Text="IDataType:"/>
+            <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding FileHeader.IDataType}"/>
+            <TextBlock Grid.Row="6" Grid.Column="0" Text="UnknownField7:"/>
+            <TextBlock Grid.Row="6" Grid.Column="1" Text="{Binding FileHeader.UnknownField7}"/>
+            <TextBlock Grid.Row="7" Grid.Column="0" Text="UnknownField8:"/>
+            <TextBlock Grid.Row="7" Grid.Column="1" Text="{Binding FileHeader.UnknownField8}"/>
+            <TextBlock Grid.Row="8" Grid.Column="0" Text="UnknownField9:"/>
+            <TextBlock Grid.Row="8" Grid.Column="1" Text="{Binding FileHeader.UnknownField9}"/>
+            <TextBlock Grid.Row="9" Grid.Column="0" Text="UnknownField10:"/>
+            <TextBlock Grid.Row="9" Grid.Column="1" Text="{Binding FileHeader.UnknownField10}"/>
+            <TextBlock Grid.Row="10" Grid.Column="0" Text="UnknownField11:"/>
+            <TextBlock Grid.Row="10" Grid.Column="1" Text="{Binding FileHeader.UnknownField11}"/>
+            <TextBlock Grid.Row="11" Grid.Column="0" Text="UnknownField12:"/>
+            <TextBlock Grid.Row="11" Grid.Column="1" Text="{Binding FileHeader.UnknownField12}"/>
+            <TextBlock Grid.Row="12" Grid.Column="0" Text="Width:"/>
+            <TextBlock Grid.Row="12" Grid.Column="1" Text="{Binding FileHeader.Width}"/>
+            <TextBlock Grid.Row="13" Grid.Column="0" Text="Height:"/>
+            <TextBlock Grid.Row="13" Grid.Column="1" Text="{Binding FileHeader.Height}"/>
+            <TextBlock Grid.Row="14" Grid.Column="0" Text="UnknownField15:"/>
+            <TextBlock Grid.Row="14" Grid.Column="1" Text="{Binding FileHeader.UnknownField15}"/>
+            <TextBlock Grid.Row="15" Grid.Column="0" Text="UnknownField16:"/>
+            <TextBlock Grid.Row="15" Grid.Column="1" Text="{Binding FileHeader.UnknownField16}"/>
+            <TextBlock Grid.Row="16" Grid.Column="0" Text="UnknownField17:"/>
+            <TextBlock Grid.Row="16" Grid.Column="1" Text="{Binding FileHeader.UnknownField17}"/>
+            <TextBlock Grid.Row="17" Grid.Column="0" Text="UnknownField18:"/>
+            <TextBlock Grid.Row="17" Grid.Column="1" Text="{Binding FileHeader.UnknownField18}"/>
+            <TextBlock Grid.Row="18" Grid.Column="0" Text="UnknownField19:"/>
+            <TextBlock Grid.Row="18" Grid.Column="1" Text="{Binding FileHeader.UnknownField19}"/>
+            <TextBlock Grid.Row="19" Grid.Column="0" Text="UnknownField20:"/>
+            <TextBlock Grid.Row="19" Grid.Column="1" Text="{Binding FileHeader.UnknownField20}"/>
+            <TextBlock Grid.Row="20" Grid.Column="0" Text="IDataSize:"/>
+            <TextBlock Grid.Row="20" Grid.Column="1" Text="{Binding FileHeader.IDataSize}"/>
+            <TextBlock Grid.Row="21" Grid.Column="0" Text="UnknownField22:"/>
+            <TextBlock Grid.Row="21" Grid.Column="1" Text="{Binding FileHeader.UnknownField22}"/>
+          </Grid>
+        </Expander>
+
+        <Expander ExpandDirection="Down" Header="{DynamicResource Gm1FileImageHeaderFields}" Grid.Row="4" Grid.Column="0">
+          <Grid DataContext="{Binding ActualTGXImageSelection}">
+            <Grid.RowDefinitions>
+              <RowDefinition Height="*"/>
+              <RowDefinition Height="*"/>
+              <RowDefinition Height="*"/>
+              <RowDefinition Height="*"/>
+              <RowDefinition Height="*"/>
+              <RowDefinition Height="*"/>
+              <RowDefinition Height="*"/>
+              <RowDefinition Height="*"/>
+              <RowDefinition Height="*"/>
+              <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="Auto"/>
+              <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
 
             <TextBlock Grid.Row="0" Grid.Column="0" Text="Width:"/>
             <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Header.Width}"/>
             <TextBlock Grid.Row="1" Grid.Column="0" Text="Height:"/>
             <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Header.Height}"/>
-            <TextBlock Grid.Row="4" Grid.Column="0" Text="OffsetX:"/>
-            <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding Header.OffsetX}"/>
-            <TextBlock Grid.Row="5" Grid.Column="0" Text="OffsetY:"/>
-            <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding Header.OffsetY}"/>
-            <TextBlock Grid.Row="6" Grid.Column="0" Text="ImagePart:"/>
-            <TextBlock Grid.Row="6" Grid.Column="1" Text="{Binding Header.ImagePart}"/>
-            <TextBlock Grid.Row="7" Grid.Column="0" Text="SubParts:"/>
-            <TextBlock Grid.Row="7" Grid.Column="1" Text="{Binding Header.SubParts}"/>
-            <TextBlock Grid.Row="8" Grid.Column="0" Text="TileOffset:"/>
-            <TextBlock Grid.Row="8" Grid.Column="1" Text="{Binding Header.TileOffset}"/>
-            <TextBlock Grid.Row="9" Grid.Column="0" Text="Direction:"/>
-            <TextBlock Grid.Row="9" Grid.Column="1" Text="{Binding Header.Direction}"/>
-            <TextBlock Grid.Row="10" Grid.Column="0" Text="HorizontalOffsetOfImage:"/>
-            <TextBlock Grid.Row="10" Grid.Column="1" Text="{Binding Header.HorizontalOffsetOfImage}"/>
-            <TextBlock Grid.Row="11" Grid.Column="0" Text="BuildingWidth:"/>
-            <TextBlock Grid.Row="11" Grid.Column="1" Text="{Binding Header.BuildingWidth}"/>
+            <TextBlock Grid.Row="2" Grid.Column="0" Text="OffsetX:"/>
+            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Header.OffsetX}"/>
+            <TextBlock Grid.Row="3" Grid.Column="0" Text="OffsetY:"/>
+            <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding Header.OffsetY}"/>
+            <TextBlock Grid.Row="4" Grid.Column="0" Text="ImagePart:"/>
+            <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding Header.ImagePart}"/>
+            <TextBlock Grid.Row="5" Grid.Column="0" Text="SubParts:"/>
+            <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding Header.SubParts}"/>
+            <TextBlock Grid.Row="6" Grid.Column="0" Text="TileOffset:"/>
+            <TextBlock Grid.Row="6" Grid.Column="1" Text="{Binding Header.TileOffset}"/>
+            <TextBlock Grid.Row="7" Grid.Column="0" Text="Direction:"/>
+            <TextBlock Grid.Row="7" Grid.Column="1" Text="{Binding Header.Direction}"/>
+            <TextBlock Grid.Row="8" Grid.Column="0" Text="HorizontalOffsetOfImage:"/>
+            <TextBlock Grid.Row="8" Grid.Column="1" Text="{Binding Header.HorizontalOffsetOfImage}"/>
+            <TextBlock Grid.Row="9" Grid.Column="0" Text="BuildingWidth:"/>
+            <TextBlock Grid.Row="9" Grid.Column="1" Text="{Binding Header.BuildingWidth}"/>
           </Grid>
         </Expander>
 
-        <Expander Grid.Row="4" Grid.Column="0" ExpandDirection="Down" Header="{DynamicResource ChangeOffsets}" IsVisible="{Binding OffsetExpanderVisible}">
+        <Expander Grid.Row="5" Grid.Column="0" ExpandDirection="Down" Header="{DynamicResource ChangeOffsets}" IsVisible="{Binding OffsetExpanderVisible}">
           <StackPanel Orientation="Horizontal">
             <TextBlock Text="xOffset(min -128/ max 127):"/>
             <TextBox Name="xOffsetTextBox" Width="100" Text="{Binding XOffset}"/>
@@ -273,7 +345,7 @@
           </StackPanel>
         </Expander>
 
-        <ListBox Items="{Binding TGXImages}" Name="TGXImageListBox"  SelectionMode="Multiple" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Grid.Row="5" Grid.Column="0" SelectionChanged="TGXImageChanged">
+        <ListBox Items="{Binding TGXImages}" Name="TGXImageListBox"  SelectionMode="Multiple" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Grid.Row="6" Grid.Column="0" SelectionChanged="TGXImageChanged">
           <ListBox.ItemsPanel>
             <ItemsPanelTemplate>
               <WrapPanel Orientation="Horizontal"/>
