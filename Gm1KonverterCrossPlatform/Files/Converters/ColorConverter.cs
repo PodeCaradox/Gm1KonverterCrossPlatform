@@ -1,4 +1,4 @@
-﻿namespace Gm1KonverterCrossPlatform.HelperClasses
+﻿namespace Gm1KonverterCrossPlatform.Files.Converters
 {
 	internal static class ColorConverter
 	{

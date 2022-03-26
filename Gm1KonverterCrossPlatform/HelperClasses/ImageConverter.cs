@@ -13,54 +13,6 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
 	public static class ImageConverter
 	{
         /// <summary>
-        /// Convert ColorTable to image
-        /// </summary>
-        public static unsafe WriteableBitmap ColorTableToImg(ColorTable colorTable, int width, int height, int size)
-        {
-            if ((width * height) != ColorTable.ColorCount) {
-                throw new ArgumentException($"Value of (width * height) must equal the total number of colors contained in colorTable, which is {ColorTable.ColorCount}.");
-            }
-
-            int bitmapWidth = width * size;
-            int bitmapHeight = height * size;
-
-            WriteableBitmap image = new WriteableBitmap(
-                new PixelSize(bitmapWidth, bitmapHeight),
-                new Vector(96, 96),
-                PixelFormat.Bgra8888, // Bgra8888 is device-native and much faster
-                AlphaFormat.Premul);
-
-            using (ILockedFramebuffer buffer = image.Lock())
-            {
-                uint* pointer = (uint*)buffer.Address;
-
-                for (int i = 0; i < ColorTable.ColorCount; i++)
-                {
-                    // position of color in bitmap
-                    int y = i / width;
-                    int x = i - (y * width);
-
-                    y *= size;
-                    x *= size;
-
-                    // get converted color
-                    uint colorBgra8888 = ColorConverter.Argb1555ToBgra8888(colorTable.ColorList[i]);
-
-                    // write color to bitmap
-                    for (int yy = 0; yy < size; yy++)
-                    {
-                        for (int xx = 0; xx < size; xx++)
-                        {
-                            pointer[((y + yy) * bitmapWidth) + (x + xx)] = colorBgra8888;
-                        }
-                    }
-                }
-            }
-
-            return image;
-        }
-
-        /// <summary>
         /// Convert GM1 byte array to image
         /// </summary>
         public static unsafe WriteableBitmap GM1ByteArrayToImg(byte[] byteArray, int width, int height, ColorTable colorTable)

@@ -9,6 +9,7 @@ using Avalonia.Markup.Xaml;
 using Gm1KonverterCrossPlatform.ViewModels;
 using Gm1KonverterCrossPlatform.HelperClasses;
 using Gm1KonverterCrossPlatform.Files;
+using Gm1KonverterCrossPlatform.Files.Converters;
 
 namespace Gm1KonverterCrossPlatform.Views
 {
@@ -44,7 +45,7 @@ namespace Gm1KonverterCrossPlatform.Views
 
         private void LoadBitmap()
         {
-            viewModel.Bitmap = HelperClasses.ImageConverter.ColorTableToImg(viewModel.ColorTable, width, height, pixelSize);
+            viewModel.Bitmap = ColorTableConverter.GetBitmap(viewModel.ColorTable, width, height, pixelSize);
         }
 
         private void MousePressed(object sender, PointerPressedEventArgs e)
@@ -66,7 +67,7 @@ namespace Gm1KonverterCrossPlatform.Views
 
         private void Button_SaveColor(object sender, RoutedEventArgs e)
         {
-            viewModel.ColorTable.ColorList[viewModel.ColorPositionInColorTable] = HelperClasses.ColorConverter.EncodeArgb1555((byte)viewModel.Red, (byte)viewModel.Green, (byte)viewModel.Blue, 255);
+            viewModel.ColorTable.ColorList[viewModel.ColorPositionInColorTable] = ColorConverter.EncodeArgb1555((byte)viewModel.Red, (byte)viewModel.Green, (byte)viewModel.Blue, 255);
             LoadBitmap();
 
             viewModel.ColorTableChanged = true;

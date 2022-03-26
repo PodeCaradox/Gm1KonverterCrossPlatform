@@ -5,6 +5,7 @@ using System.Linq;
 using Avalonia;
 using Avalonia.Media.Imaging;
 using Gm1KonverterCrossPlatform.Files;
+using Gm1KonverterCrossPlatform.Files.Converters;
 using Gm1KonverterCrossPlatform.Views;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;

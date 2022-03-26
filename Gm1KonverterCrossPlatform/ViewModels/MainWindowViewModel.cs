@@ -7,6 +7,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media.Imaging;
 using Gm1KonverterCrossPlatform.Files;
+using Gm1KonverterCrossPlatform.Files.Converters;
 using Gm1KonverterCrossPlatform.Views;
 using Gm1KonverterCrossPlatform.HelperClasses;
 using Newtonsoft.Json;
@@ -472,7 +473,7 @@ namespace Gm1KonverterCrossPlatform.ViewModels
 
             if (File.Palette != null)
             {
-                ActuellColorTable = ImageConverter.ColorTableToImg(File.Palette.ColorTables[File.Palette.ActualPalette], Palette.width, Palette.height, Palette.pixelSize);
+                ActuellColorTable = ColorTableConverter.GetBitmap(File.Palette.ColorTables[File.Palette.ActualPalette], Palette.width, Palette.height, Palette.pixelSize);
             }
         }
 

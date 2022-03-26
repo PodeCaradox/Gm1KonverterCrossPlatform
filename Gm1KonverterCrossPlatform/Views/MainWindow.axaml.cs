@@ -10,6 +10,7 @@ using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media.Imaging;
 using Gm1KonverterCrossPlatform.Files;
+using Gm1KonverterCrossPlatform.Files.Converters;
 using Gm1KonverterCrossPlatform.HelperClasses;
 using Gm1KonverterCrossPlatform.ViewModels;
 using Newtonsoft.Json;
@@ -561,7 +562,7 @@ namespace Gm1KonverterCrossPlatform.Views
 
             for (int i = 0; i < Palette.ColorTableCount; i++)
             {
-                var bitmap = ImageConverter.ColorTableToImg(vm.File.Palette.ColorTables[i], Palette.width, Palette.height, Palette.pixelSize);
+                var bitmap = ColorTableConverter.GetBitmap(vm.File.Palette.ColorTables[i], Palette.width, Palette.height, Palette.pixelSize);
                 bitmap.Save(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\Colortables\\ColorTable" + (i + 1) + ".png");
             }
 
