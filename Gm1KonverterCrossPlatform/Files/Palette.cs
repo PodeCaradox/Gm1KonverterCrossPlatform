@@ -1,7 +1,8 @@
-﻿using Avalonia.Media.Imaging;
-using HelperClasses.Gm1Converter;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Avalonia.Media.Imaging;
+using HelperClasses.Gm1Converter;
+using Gm1KonverterCrossPlatform.HelperClasses;
 
 namespace Files.Gm1Converter
 {
@@ -45,7 +46,7 @@ namespace Files.Gm1Converter
                     _arrayPaletten[i, j] = BitConverter.ToUInt16(byteArray, (i * ColorTable.ColorCount + j) * 2);
                 }
 
-                _bitmaps[i] = PalleteToImG(i, pixelSize);
+                _bitmaps[i] = ImageConverter.ColorTableToImg(_colorTables[i], 32, 8, pixelSize);
             }
         }
 
@@ -59,10 +60,6 @@ namespace Files.Gm1Converter
             {
                 _arrayPaletten[index, i] = array[i];
             }
-        }
-        public WriteableBitmap GetBitmap(int index, int pixelsize)
-        {
-            return PalleteToImG(index, pixelsize);
         }
 
         /// <summary>
@@ -80,59 +77,6 @@ namespace Files.Gm1Converter
             }
 
             return byteArray.ToArray();
-        }
-
-        /// <summary>
-        /// Calculate new Palette IMG with the new Pixelsize
-        /// </summary>
-        /// <param name="colorTable">Selected Palette 0-9</param>
-        /// <param name="scale">Scale the palette to desired size</param>
-        /// <returns></returns>
-        private unsafe WriteableBitmap PalleteToImG(int colorTable, int scale)
-        {
-            // layout used to draw color list to an image
-            // total value of width * height must equal 256
-            int width = 32;
-            int height = 8;
-
-            int bitmapWidth = width * scale;
-            int bitmapHeight = height * scale;
-
-            WriteableBitmap bitmap = new WriteableBitmap(
-                new Avalonia.PixelSize(bitmapWidth, bitmapHeight),
-                new Avalonia.Vector(96, 96),
-                Avalonia.Platform.PixelFormat.Bgra8888 // Bgra8888 is device-native and much faster
-            );
-
-            using (var buffer = bitmap.Lock())
-            {
-                for (int i = 0; i < 256; i++)
-				{
-                    // position of color in bitmap
-                    int y = i / width;
-                    int x = i - (y * width);
-
-                    y *= scale;
-                    x *= scale;
-
-                    // get converted color
-                    Utility.ReadColor(_arrayPaletten[colorTable, i], out byte r, out byte g, out byte b, out byte a);
-                    uint colorByte = (uint)(b | (g << 8) | (r << 16) | (a << 24));
-
-                    // write color to bitmap
-                    for (int yy = 0; yy < scale; yy++)
-                    {
-                        for (int xx = 0; xx < scale; xx++)
-                        {
-                            var ptr = (uint*)buffer.Address;
-                            ptr += (uint)(((y + yy) * bitmapWidth) + (x + xx));
-                            *ptr = colorByte;
-                        }
-                    }
-                }
-            }
-
-            return bitmap;
         }
     }
 }
