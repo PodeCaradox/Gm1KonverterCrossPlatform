@@ -60,7 +60,6 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
             return image;
         }
 
-
         /// <summary>
         /// Convert GM1 byte array to image
         /// </summary>
