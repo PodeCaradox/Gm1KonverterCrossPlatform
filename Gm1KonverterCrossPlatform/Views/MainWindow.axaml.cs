@@ -805,7 +805,7 @@ namespace Gm1KonverterCrossPlatform.Views
                 File.Copy(vm.UserConfig.CrusaderPath + "\\" + vm.File.FileHeader.Name, vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\" + filewithoutgm1ending + "Save.gm1");
             }
             var array = vm.File.GetNewGM1Bytes();
-            Utility.ByteArraytoFile(vm.UserConfig.CrusaderPath + "\\" + vm.File.FileHeader.Name, array);
+            File.WriteAllBytes(vm.UserConfig.CrusaderPath + "\\" + vm.File.FileHeader.Name, array);
             File.Copy(vm.UserConfig.CrusaderPath + "\\" + vm.File.FileHeader.Name, vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\" + filewithoutgm1ending + "Modded.gm1", true);
             Cursor = new Avalonia.Input.Cursor(Avalonia.Input.StandardCursorType.Arrow);
             if (Logger.Loggeractiv) Logger.Log("\n>>CreatenewGM1 end");

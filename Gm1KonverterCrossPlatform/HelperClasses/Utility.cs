@@ -26,25 +26,6 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
 
         #region Methods
 
-        /// <summary>
-        /// Load the File as Byte array
-        /// </summary>
-        /// <param name="fileName">The Filepath/Filenamee to load</param>
-        internal static byte[] FileToByteArray(string fileName)
-        {
-            return File.ReadAllBytes(fileName);
-        }
-
-        /// <summary>
-        /// Save the Byte array as File
-        /// </summary>
-        /// <param name="fileName">The Filepath/Filenamee to save</param>
-        /// <param name="array">The byte array to save</param>
-        internal static void ByteArraytoFile(string fileName, byte[] array)
-        {
-            File.WriteAllBytes(fileName, array);
-        }
-
         internal static Image<Rgba32> LoadImageData(string filePath)
         {
             if (Logger.Loggeractiv) Logger.Log($"LoadImageData {filePath}");

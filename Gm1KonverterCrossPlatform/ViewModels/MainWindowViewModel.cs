@@ -379,7 +379,7 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             {
                 Dispose();
                 File = new DecodedFile();
-                if (!File.DecodeGm1File(Utility.FileToByteArray(userConfig.CrusaderPath + "\\" + fileName), fileName))
+                if (!File.DecodeGm1File(System.IO.File.ReadAllBytes(userConfig.CrusaderPath + "\\" + fileName), fileName))
                 {
                     MessageBoxWindow messageBox = new MessageBoxWindow(MessageBoxWindow.MessageTyp.Info, (GM1FileHeader.DataType)File.FileHeader.IDataType + Utility.GetText("TilesarenotSupportedyet"));
                     messageBox.ShowDialog(window);
@@ -413,7 +413,7 @@ namespace Gm1KonverterCrossPlatform.ViewModels
         {
             if (Logger.Loggeractiv) Logger.Log("DecodeTgxData:\nFile: " + fileName);
 
-            var array = Utility.FileToByteArray(userConfig.CrusaderPath.Replace("\\gm",String.Empty)+"\\gfx" + "\\" + fileName);
+            var array = System.IO.File.ReadAllBytes(userConfig.CrusaderPath.Replace("\\gm",String.Empty)+"\\gfx" + "\\" + fileName);
             TgxImage = new TGXImage();
 
             TgxImage.TgxWidth = BitConverter.ToUInt32(array, 0);
