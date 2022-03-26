@@ -15,13 +15,13 @@ namespace Gm1KonverterCrossPlatform.Files
         private int width, height;
         private WriteableBitmap bmp;
         private int minusHeight = 9999999;
-        private UInt32[] colors;
+        private uint[] colors;
 
         public TilesImage(int width, int height)
         {
             this.width = width;
             this.height = height;
-            colors = new UInt32[width * height];
+            colors = new uint[width * height];
         }
 
         public WriteableBitmap TileImage { get => bmp; set => bmp = value; }
@@ -54,13 +54,13 @@ namespace Gm1KonverterCrossPlatform.Files
             {
                 for (int j = 0; j < array[i]; j++)
                 {
-                    UInt16 pixelColor = BitConverter.ToUInt16(imgFileAsByteArray, (int)bytePos);
+                    ushort pixelColor = BitConverter.ToUInt16(imgFileAsByteArray, (int)bytePos);
                     bytePos += 2;
                     Utility.ReadColor(pixelColor, out r, out g, out b, out a);
                     a = byte.MaxValue;
                     int number = ((width * (y + yOffset)) + x + xOffset + 15 - array[i] / 2);
                     
-                    colors[number] = (UInt32)(b | (g << 8) | (r << 16) | (a << 24));
+                    colors[number] = (uint)(b | (g << 8) | (r << 16) | (a << 24));
                     
                     x++;
                 }
@@ -104,7 +104,7 @@ namespace Gm1KonverterCrossPlatform.Files
                             Utility.ReadColor(pixelColor, out r, out g, out b, out a);
                             a = byte.MaxValue;
                             uint number = (uint)((width * (y + offsetY)) + x + offsetX);
-                            colors[number] = (UInt32)(b | (g << 8) | (r << 16) | (a << 24));
+                            colors[number] = (uint)(b | (g << 8) | (r << 16) | (a << 24));
 
                             x++;
                         }
