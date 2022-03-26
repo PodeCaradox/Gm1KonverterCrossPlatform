@@ -7,8 +7,6 @@ namespace Gm1KonverterCrossPlatform.ViewModels
 {
 	public class ChangeColorTableViewModel : ViewModelBase
     {
-        #region Variables
-
         private WriteableBitmap bitmap;
         private ColorTable colorTable;
 
@@ -20,18 +18,10 @@ namespace Gm1KonverterCrossPlatform.ViewModels
         private int green = 0;
         private int blue = 0;
 
-        #endregion
-
-        #region Construtor
-
         public ChangeColorTableViewModel(ColorTable colorTable)
         {
             this.colorTable = colorTable;
         }
-
-        #endregion
-
-        #region GetterSetter
 
         public bool ColorTableChanged
         {
@@ -144,10 +134,6 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             UpdateColorHexValue();
         }
 
-        #endregion
-
-        #region Methods
-
         private int FormatColorValue(int value)
         {
             if (value > 248)
@@ -179,7 +165,5 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             colorAsText = "#" + red.ToString("X2") + green.ToString("X2") + blue.ToString("X2");
             this.RaisePropertyChanged("ColorAsText");
         }
-
-		#endregion
 	}
 }
