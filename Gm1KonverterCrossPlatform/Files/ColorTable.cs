@@ -7,8 +7,6 @@ namespace Files.Gm1Converter
 {
 	public class ColorTable
 	{
-        #region Public
-
         /// <summary>
         /// Color table is always 512 bytes in size, consisting of 256 2-byte colors.
         /// </summary>
@@ -19,21 +17,15 @@ namespace Files.Gm1Converter
         /// </summary>
         public const int ColorCount = 256;
 
-        #endregion
-
-        #region Variables
-
-        private ushort[] colorList = new ushort[ColorCount];
-
-        #endregion
-
-        #region Construtor
+        private ushort[] _colorList;
 
         public ColorTable(byte[] byteArray)
         {
+            _colorList = new ushort[ColorCount];
+
             for (int colorIndex = 0; colorIndex < ColorCount; colorIndex++)
             {
-                colorList[colorIndex] = BitConverter.ToUInt16(byteArray, colorIndex * 2);
+                _colorList[colorIndex] = BitConverter.ToUInt16(byteArray, colorIndex * 2);
             }
         }
 
@@ -43,29 +35,21 @@ namespace Files.Gm1Converter
                 throw new ArgumentException($"Invalid input length ({ushortArray.Length}). The length must be {ColorCount}.");
             }
 
-            colorList = ushortArray;
+            _colorList = ushortArray;
         }
 
-        #endregion
-
-        #region GetterSetter
-
-        public ushort[] ColorList { get => colorList; set => colorList = value; }
-
-        #endregion
-
-        #region Methods
+        public ushort[] ColorList { get => _colorList; set => _colorList = value; }
 
         /// <summary>
         /// Calculate the new byte array to save color table to a .gm1 file
         /// </summary>
-        internal byte[] GetBytes()
+        public byte[] GetBytes()
         {
             List<byte> byteArray = new List<byte>();
 
-            for (int i = 0; i < colorList.Length; i++)
+            for (int i = 0; i < _colorList.Length; i++)
             {
-                byteArray.AddRange(BitConverter.GetBytes(colorList[i]));
+                byteArray.AddRange(BitConverter.GetBytes(_colorList[i]));
             }
 
             return byteArray.ToArray();
@@ -76,9 +60,7 @@ namespace Files.Gm1Converter
         /// </summary>
         public ColorTable Copy()
         {
-            return new ColorTable(colorList);
+            return new ColorTable(_colorList);
         }
-
-        #endregion
     }
 }
