@@ -26,7 +26,7 @@ namespace Files.Gm1Converter
         private ColorTable[] colorTables = new ColorTable[ColorTableCount];
         private int actualPalette = 0;
         private ushort[,] arrayPaletten = new ushort[ColorTableCount, ColorTable.ColorCount];
-        private WriteableBitmap[] bitmaps = new WriteableBitmap[10];
+        private WriteableBitmap[] bitmaps = new WriteableBitmap[ColorTableCount];
 
         /// <summary>
         /// The palette consist of 10 colortables, each consisting of 256 colors, and is used in Animation files.
