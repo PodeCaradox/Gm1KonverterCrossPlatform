@@ -18,6 +18,14 @@
             b = (byte)((color & 0b11111) << 3);
         }
 
+        internal static ushort EncodeArgb1555(byte r, byte g, byte b, byte a)
+        {
+            return (ushort)((a & 0b1000_0000) << 8
+                | ((r >> 3) & 0b0001_1111) << 10
+                | ((g >> 3) & 0b0001_1111) << 5
+                | (b >> 3) & 0b0001_1111);
+        }
+
         /// <summary>
         /// Convert 2-byte Argb1555 Color to 4-byte Rgba8888 color
         /// </summary>
