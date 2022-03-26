@@ -72,56 +72,8 @@ namespace Files.Gm1Converter
         }
 
         /// <summary>
-        /// Create new image from color list.
+        /// Create a copy of this color table
         /// </summary>
-        /// <param name="pixelSize">Scale the palette to desired size pixel size</param>
-        unsafe public WriteableBitmap GetBitmap(int pixelSize)
-        {
-            // layout used to draw color list to an image
-            // total value of width * height must equal 256
-            int width = 32;
-            int height = 8;
-
-            int bitmapWidth = width * pixelSize;
-            int bitmapHeight = height * pixelSize;
-
-            WriteableBitmap bitmap = new WriteableBitmap(
-                new Avalonia.PixelSize(bitmapWidth, bitmapHeight),
-                new Avalonia.Vector(96, 96),
-                Avalonia.Platform.PixelFormat.Bgra8888 // Bgra8888 is device-native and much faster
-            );
-
-            using (var buffer = bitmap.Lock())
-            {
-                for (int i = 0; i < 256; i++)
-                {
-                    // position of color in bitmap
-                    int y = i / width;
-                    int x = i - (y * width);
-
-                    y *= pixelSize;
-                    x *= pixelSize;
-
-                    // get converted color
-                    Utility.ReadColor(colorList[i], out byte r, out byte g, out byte b, out byte a);
-                    uint colorByte = (uint)(b | (g << 8) | (r << 16) | (a << 24));
-
-                    // write color to bitmap
-                    for (int yy = 0; yy < pixelSize; yy++)
-                    {
-                        for (int xx = 0; xx < pixelSize; xx++)
-                        {
-                            var ptr = (uint*)buffer.Address;
-                            ptr += (uint)(((y + yy) * bitmapWidth) + (x + xx));
-                            *ptr = colorByte;
-                        }
-                    }
-                }
-            }
-
-            return bitmap;
-        }
-
         public ColorTable Copy()
         {
             return new ColorTable(colorList);

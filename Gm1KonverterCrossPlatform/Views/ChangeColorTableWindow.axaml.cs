@@ -38,7 +38,7 @@ namespace Gm1KonverterCrossPlatform.Views
             image = this.Get<Image>("PaletteImage");
             highlight = this.Get<Rectangle>("PaletteImageHighlight");
 
-            viewModel.Bitmap = viewModel.ColorTable.GetBitmap(pixelSize);
+            viewModel.Bitmap = HelperClasses.ImageConverter.ColorTableToImg(viewModel.ColorTable, 32, 8, pixelSize);
         }
 
         private void MousePressed(object sender, PointerPressedEventArgs e)
@@ -64,7 +64,7 @@ namespace Gm1KonverterCrossPlatform.Views
             ushort newColor = Utility.EncodeColorTo2Byte(color);
 
             viewModel.ColorTable.ColorList[viewModel.ColorPositionInColorTable] = newColor;
-            viewModel.Bitmap = viewModel.ColorTable.GetBitmap(pixelSize);
+            viewModel.Bitmap = HelperClasses.ImageConverter.ColorTableToImg(viewModel.ColorTable, 32, 8, pixelSize);
 
             viewModel.ColorTableChanged = true;
         }
