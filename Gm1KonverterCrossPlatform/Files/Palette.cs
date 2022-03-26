@@ -47,13 +47,13 @@ namespace Files.Gm1Converter
         /// <summary>
         /// Calculate the new ByteArray to save ColorTables
         /// </summary>
-        internal byte[] GetBytes()
+        public byte[] GetBytes()
         {
             byte[] byteArray = new byte[ColorTable.ByteSize * ColorTableCount];
 
             for (int i = 0; i < ColorTableCount; i++)
             {
-                Array.Copy(_colorTables[i].GetBytes(), byteArray, ColorTable.ByteSize);
+                Array.Copy(_colorTables[i].GetBytes(), 0, byteArray, i * ColorTable.ByteSize, ColorTable.ByteSize);
             }
 
             return byteArray;
