@@ -36,14 +36,20 @@ namespace Files.Gm1Converter
         {
             for (int i = 0; i < ColorTableCount; i++)
             {
+                byte[] colorTableByteArray = new byte[ColorTable.ByteSize];
+                Buffer.BlockCopy(byteArray, i * ColorTable.ByteSize, colorTableByteArray, 0, ColorTable.ByteSize);
+                colorTables[i] = new ColorTable(colorTableByteArray);
+
                 for (int j = 0; j < ColorTable.ColorCount; j++)
                 {
                     this.arrayPaletten[i, j] = BitConverter.ToUInt16(byteArray, (i * ColorTable.ColorCount + j) * 2);
                 }
+
                 bitmaps[i] = PalleteToImG(i, pixelSize);
             }
         }
 
+        public ColorTable[] ColorTables { get => colorTables; set => colorTables = value; }
         public WriteableBitmap[] Bitmaps { get => bitmaps; set => bitmaps = value; }
         public ushort[,] ArrayPaletten { get => arrayPaletten; set => arrayPaletten = value; }
         public int ActualPalette { get => actualPalette; set => actualPalette = value; }
