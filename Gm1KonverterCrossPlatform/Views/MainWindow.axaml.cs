@@ -539,7 +539,7 @@ namespace Gm1KonverterCrossPlatform.Views
                 var list = Utility.LoadImage(filePath, ref width, ref height, 1, Palette.pixelSize, vm.File.FileHeader.IDataType);
                 if (list.Count == 0) return;
                 vm.File.Palette.SetPaleteUInt(colorTableIndex, list.ToArray());
-                WriteableBitmap bitmap = ImageConverter.ColorTableToImg(vm.File.Palette.ColorTables[colorTableIndex], 32, 8, Palette.pixelSize);
+                WriteableBitmap bitmap = ImageConverter.ColorTableToImg(vm.File.Palette.ColorTables[colorTableIndex], Palette.width, Palette.height, Palette.pixelSize);
                 vm.File.Palette.Bitmaps[colorTableIndex] = bitmap;
                 vm.GeneratePaletteAndImgNew();
                 vm.File.Palette.Bitmaps[colorTableIndex] = bitmap;
@@ -927,7 +927,7 @@ namespace Gm1KonverterCrossPlatform.Views
                 vm.File.Palette.ArrayPaletten[vm.File.Palette.ActualPalette, i] = colorTable.ColorList[i];
             }
 
-            vm.File.Palette.Bitmaps[vm.File.Palette.ActualPalette] = ImageConverter.ColorTableToImg(colorTable, 32, 8, Palette.pixelSize);
+            vm.File.Palette.Bitmaps[vm.File.Palette.ActualPalette] = ImageConverter.ColorTableToImg(colorTable, Palette.width, Palette.height, Palette.pixelSize);
 
             vm.GeneratePaletteAndImgNew();
 

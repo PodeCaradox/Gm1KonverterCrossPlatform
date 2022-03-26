@@ -46,7 +46,7 @@ namespace Files.Gm1Converter
                     _arrayPaletten[i, j] = BitConverter.ToUInt16(byteArray, (i * ColorTable.ColorCount + j) * 2);
                 }
 
-                _bitmaps[i] = ImageConverter.ColorTableToImg(_colorTables[i], 32, 8, pixelSize);
+                _bitmaps[i] = ImageConverter.ColorTableToImg(_colorTables[i], width, height, pixelSize);
             }
         }
 
