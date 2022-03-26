@@ -827,11 +827,6 @@ namespace HelperClasses.Gm1Converter
             r = (byte)(((pixel >> 10) & 0b11111) << 3);
             g = (byte)(((pixel >> 5) & 0b11111) << 3);
             b = (byte)((pixel & 0b11111) << 3);
-
-            //Round Color to full RGB white than 255 not below
-            //r = (byte)(r | (r >> 5));
-            //g = (byte)(g | (g >> 5));
-            //b = (byte)(b | (b >> 5));
         }
 
         /// <summary>
