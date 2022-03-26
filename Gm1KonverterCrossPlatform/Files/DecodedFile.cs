@@ -7,8 +7,6 @@ namespace Gm1KonverterCrossPlatform.Files
 {
     class DecodedFile : IDisposable
     {
-        #region Variables
-
         private GM1FileHeader fileHeader;
         private Palette palette;
         private List<TGXImage> _TGXImage;
@@ -18,18 +16,16 @@ namespace Gm1KonverterCrossPlatform.Files
 
         private byte[] fileArray;
 
-        #endregion
-
-        #region Construtor
-
         public DecodedFile()
         {
 
         }
 
-        #endregion
-
-        #region Methods
+        internal GM1FileHeader FileHeader { get => fileHeader; }
+        internal Palette Palette { get => palette; }
+        internal List<TGXImage> ImagesTGX { get => _TGXImage; }
+        public byte[] FileArray { get => fileArray; set => fileArray = value; }
+        internal List<TilesImage> TilesImages { get => tilesImage; set => tilesImage = value; }
 
         /// <summary>
         /// Decode the actual GM1 File to Imgs and the typical headers
@@ -193,6 +189,7 @@ namespace Gm1KonverterCrossPlatform.Files
         }
 
         private List<TGXImage> newTileList = new List<TGXImage>();
+
         /// <summary>
         /// Convert Img To Tiled Diamond Images
         /// </summary>
@@ -357,17 +354,5 @@ namespace Gm1KonverterCrossPlatform.Files
             fileHeader.INumberOfPictureinFile = (uint)_TGXImage.Count;
             newTileList = new List<TGXImage>();
         }
-
-        #endregion
-
-        #region GetterSetter
-
-        internal GM1FileHeader FileHeader { get => fileHeader; }
-        internal Palette Palette { get => palette; }
-        internal List<TGXImage> ImagesTGX { get => _TGXImage; }
-        public byte[] FileArray { get => fileArray; set => fileArray = value; }
-        internal List<TilesImage> TilesImages { get => tilesImage; set => tilesImage = value; }
-
-        #endregion
     }
 }

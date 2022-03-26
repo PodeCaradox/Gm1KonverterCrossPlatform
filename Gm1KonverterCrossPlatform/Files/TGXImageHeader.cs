@@ -5,13 +5,7 @@ namespace Gm1KonverterCrossPlatform.Files
 {
     public class TGXImageHeader
     {
-        #region Public
-
         public const int ByteSize = 16;
-
-        #endregion
-
-        #region Variables
 
         private ushort width;
         private ushort height;
@@ -24,10 +18,6 @@ namespace Gm1KonverterCrossPlatform.Files
         private byte horizontalOffsetOfImage;
         private byte buildingWidth;
         private byte animatedColor; // if alpha 1
-
-        #endregion
-
-        #region Construtor
 
         public TGXImageHeader(byte[] byteArray)
         {
@@ -43,10 +33,6 @@ namespace Gm1KonverterCrossPlatform.Files
             buildingWidth = byteArray[14];
             animatedColor = byteArray[15];
         }
-
-        #endregion
-
-        #region GetterSetter
 
         public ushort Width { get => width; set => width = value; }
         public ushort Height { get => height; set => height = value; }
@@ -88,10 +74,6 @@ namespace Gm1KonverterCrossPlatform.Files
         /// Color, used for animated units only. 
         /// </summary>
         public byte AnimatedColor { get => animatedColor; set => animatedColor = value; }
-        
-        #endregion
-
-        #region Methods
 
         /// <summary>
         /// Convert the Imageheader back to byte Array
@@ -115,7 +97,5 @@ namespace Gm1KonverterCrossPlatform.Files
 
             return array.ToArray();
         }
-
-        #endregion
     }
 }

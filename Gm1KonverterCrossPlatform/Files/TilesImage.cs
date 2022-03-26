@@ -6,13 +6,7 @@ namespace Gm1KonverterCrossPlatform.Files
 {
     class TilesImage : IDisposable
     {
-        #region Public
-
         public static int Puffer = 500;
-
-        #endregion
-
-        #region Variables
 
         private static int[] array = {
             2, 6, 10, 14, 18, 22, 26, 30,
@@ -23,10 +17,6 @@ namespace Gm1KonverterCrossPlatform.Files
         private int minusHeight = 9999999;
         private UInt32[] colors;
 
-        #endregion
-        
-        #region Construtor
-
         public TilesImage(int width, int height)
         {
             this.width = width;
@@ -34,18 +24,10 @@ namespace Gm1KonverterCrossPlatform.Files
             colors = new UInt32[width * height];
         }
 
-        #endregion
-
-        #region GetterSetter
-
         public WriteableBitmap TileImage { get => bmp; set => bmp = value; }
         public int Width { get => width; set => width = value; }
         public int Height { get => height; set => height = value; }
         public int MinusHeight { get => minusHeight; set => minusHeight = value; }
-
-        #endregion
-
-        #region Methods
 
         public void Dispose()
         {
@@ -199,7 +181,5 @@ namespace Gm1KonverterCrossPlatform.Files
                 }
             }
         }
-
-        #endregion
     }
 }

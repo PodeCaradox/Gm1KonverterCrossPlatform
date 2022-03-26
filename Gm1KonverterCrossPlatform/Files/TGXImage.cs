@@ -7,8 +7,6 @@ namespace Gm1KonverterCrossPlatform.Files
 {
     public class TGXImage
     {
-        #region Variables
-
         // for tgx as standalone file
         private uint tgxwidth;
         private uint tgxheight;
@@ -22,18 +20,10 @@ namespace Gm1KonverterCrossPlatform.Files
 
         private WriteableBitmap bmp;
 
-        #endregion
-
-        #region Construtor
-
         public TGXImage()
         {
 
         }
-
-        #endregion
-
-        #region GetterSetter
 
         public UInt32 TgxWidth { get => tgxwidth; set => tgxwidth = value; }
         public UInt32 TgxHeight { get => tgxheight; set => tgxheight = value; }
@@ -45,10 +35,6 @@ namespace Gm1KonverterCrossPlatform.Files
         public byte[] ImgFileAsBytearray { get => imgFileAsBytearray; set => imgFileAsBytearray = value; }
         
         public WriteableBitmap Bitmap { get => bmp; set => bmp = value; }
-        
-        #endregion
-
-        #region Methods
 
         internal void ConvertImageWithPaletteToByteArray(List<ushort> colors, int width, int height, Palette palette, List<ushort>[] colorsImages = null)
         {
@@ -120,7 +106,5 @@ namespace Gm1KonverterCrossPlatform.Files
             }
             imgFileAsBytearray = newArray.ToArray();
         }
-
-        #endregion
     }
 }

@@ -5,8 +5,6 @@ namespace Gm1KonverterCrossPlatform.Files
 {
     public class GM1FileHeader
     {
-        #region Public
-
         /// <summary>
         /// The header has a length of 88-bytes, composed of 22 unsigned 32-bit integers. 
         /// </summary>
@@ -29,10 +27,6 @@ namespace Gm1KonverterCrossPlatform.Files
             TGXConstSize = 6,
             NOCompression1 = 7
         };
-
-        #endregion
-        
-        #region Variables
 
         private string name;
 
@@ -58,10 +52,6 @@ namespace Gm1KonverterCrossPlatform.Files
         private uint unknownField20;
         private uint dataSize;
         private uint unknownField22;
-
-        #endregion
-
-        #region Construtor
 
         public GM1FileHeader(byte[] byteArray)
         {
@@ -89,10 +79,6 @@ namespace Gm1KonverterCrossPlatform.Files
             unknownField22 = BitConverter.ToUInt32(byteArray, 84);
         }
 
-        #endregion
-
-        #region GetterSetter
-
         public string Name { get => name; set => name = value; }
 
         public uint UnknownField1 { get => unknownField1; set => unknownField1 = value; }
@@ -117,10 +103,6 @@ namespace Gm1KonverterCrossPlatform.Files
         public uint UnknownField20 { get => unknownField20; set => unknownField20 = value; }
         public uint IDataSize { get => dataSize; set => dataSize = value; }
         public uint UnknownField22 { get => unknownField22; set => unknownField22 = value; }
-
-        #endregion
-
-        #region Methods
 
         internal byte[] GetBytes()
         {
@@ -151,7 +133,5 @@ namespace Gm1KonverterCrossPlatform.Files
 
             return byteArray.ToArray();
         }
-
-        #endregion
     }
 }
