@@ -538,7 +538,7 @@ namespace Gm1KonverterCrossPlatform.Views
                 int colorTableIndex = i - 1;
                 var list = Utility.LoadImage(filePath, ref width, ref height, 1, Palette.pixelSize, vm.File.FileHeader.IDataType);
                 if (list.Count == 0) return;
-                vm.File.Palette.SetPaleteUInt(colorTableIndex, list.ToArray());
+                vm.File.Palette.ColorTables[colorTableIndex] = new ColorTable(list.ToArray());
                 WriteableBitmap bitmap = ImageConverter.ColorTableToImg(vm.File.Palette.ColorTables[colorTableIndex], Palette.width, Palette.height, Palette.pixelSize);
                 vm.File.Palette.Bitmaps[colorTableIndex] = bitmap;
                 vm.GeneratePaletteAndImgNew();
