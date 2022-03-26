@@ -464,6 +464,7 @@ namespace Gm1KonverterCrossPlatform.ViewModels
         private void ShowTGXImgToWindow()
         {
             TGXImages = new ObservableCollection<Image>();
+
             for (int j = 0; j < File.FileHeader.INumberOfPictureinFile; j++)
             {
                 var bitmap = File.ImagesTGX[j].Bitmap;
@@ -474,7 +475,8 @@ namespace Gm1KonverterCrossPlatform.ViewModels
                 image.Tag = File.ImagesTGX[j];
                 TGXImages.Add(image);
             }
-            if (File.Palette!=null)
+
+            if (File.Palette != null)
             {
                 ActuellColorTable = File.Palette.Bitmaps[File.Palette.ActualPalette];
             }
