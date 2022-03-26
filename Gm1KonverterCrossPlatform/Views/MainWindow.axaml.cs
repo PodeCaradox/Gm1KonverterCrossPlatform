@@ -136,7 +136,11 @@ namespace Gm1KonverterCrossPlatform.Views
             vm.TgxImage.ConvertImageWithoutPaletteToByteArray(colors, width, height);//todo animated color?
             vm.TgxImage.TgxWidth = (uint)width;
             vm.TgxImage.TgxHeight = (uint)height;
-            vm.TgxImage.CreateImageFromByteArray(null, true);
+            vm.TgxImage.Bitmap = ImageConverter.GM1ByteArrayToImg(
+                vm.TgxImage.ImgFileAsBytearray,
+                (int)vm.TgxImage.TgxWidth,
+                (int)vm.TgxImage.TgxHeight,
+                null);
             vm.TGXImages.Clear();
             Image image = new Image()
             {

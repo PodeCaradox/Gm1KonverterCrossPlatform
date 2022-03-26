@@ -425,7 +425,11 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             TgxImage.TgxHeight = BitConverter.ToUInt32(array, 4);
             TgxImage.ImgFileAsBytearray = new byte[array.Length - 8];
             Array.Copy(array, 8, TgxImage.ImgFileAsBytearray, 0, TgxImage.ImgFileAsBytearray.Length);
-            TgxImage.CreateImageFromByteArray(null, true);
+            TgxImage.Bitmap = ImageConverter.GM1ByteArrayToImg(
+                TgxImage.ImgFileAsBytearray,
+                (int)TgxImage.TgxWidth,
+                (int)TgxImage.TgxHeight,
+                null);
             TGXImages = new ObservableCollection<Image>();
             var bitmap = TgxImage.Bitmap;
             Image image = new Image();

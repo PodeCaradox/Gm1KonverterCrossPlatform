@@ -169,9 +169,14 @@ namespace Files.Gm1Converter
             CreateOffsetAndSizeInByteArrayList(array);
             CreateImgHeader(array);
             if (Logger.Loggeractiv) Logger.Log("CreateImageFromByteArray");
+
             for (uint i = 0; i < fileHeader.INumberOfPictureinFile; i++)
             {
-                _TGXImage[(int)i].CreateImageFromByteArray(palette);
+                _TGXImage[(int)i].Bitmap = ImageConverter.GM1ByteArrayToImg(
+                    _TGXImage[(int)i].ImgFileAsBytearray,
+                    _TGXImage[(int)i].Header.Width,
+                    _TGXImage[(int)i].Header.Height,
+                    palette?.ColorTables[palette.ActualPalette]);
             }
         }
 
