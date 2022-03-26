@@ -15,8 +15,6 @@ namespace Gm1KonverterCrossPlatform.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase, IDisposable
     {
-        #region Variables
-
         private UserConfig userConfig;
         public UserConfig UserConfig { get => userConfig; set => userConfig = value; }
 
@@ -310,9 +308,6 @@ namespace Gm1KonverterCrossPlatform.ViewModels
         private byte[] _strongholdasBytes;
         private byte[] _strongholdExtremeasBytes;
         private Point _strongholdadress;
-        #endregion
-
-        #region Methods
 
         ~MainWindowViewModel()
         {
@@ -523,11 +518,6 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             ShowTGXImgToWindow();
         }
 
-        #endregion
-
-
-        #region Offsets
-
         private Dictionary<int, Point> offsetsBuildings = new Dictionary<int, Point>() {
             { 0, new Point(939615, 939608) },
             { 1, new Point(939841, 939834) },
@@ -596,7 +586,5 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             System.IO.File.WriteAllBytes(UserConfig.CrusaderPath.Replace("\\gm", string.Empty) + "\\Stronghold_Crusader_Extreme.exe", _strongholdExtremeasBytes);
             System.IO.File.WriteAllBytes(UserConfig.CrusaderPath.Replace("\\gm", string.Empty) + "\\Stronghold Crusader.exe", _strongholdasBytes);
         }
-
-        #endregion
     }
 }
