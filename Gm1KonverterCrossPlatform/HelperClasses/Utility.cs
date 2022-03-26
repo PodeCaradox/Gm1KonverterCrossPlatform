@@ -537,7 +537,6 @@ namespace HelperClasses.Gm1Converter
             {
                 for (byte i = 0; i < byte.MaxValue; i++)
                 {
-                    if (color == palette.ArrayPaletten[0, i])
                     if (color == palette.ColorTables[0].ColorList[i])
                     {
                         newPosition = i;
