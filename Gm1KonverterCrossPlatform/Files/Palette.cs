@@ -23,10 +23,10 @@ namespace Files.Gm1Converter
         public readonly static ushort width = 32;
         public readonly static ushort height = 8;
 
-        private ColorTable[] colorTables = new ColorTable[ColorTableCount];
-        private int actualPalette = 0;
-        private ushort[,] arrayPaletten = new ushort[ColorTableCount, ColorTable.ColorCount];
-        private WriteableBitmap[] bitmaps = new WriteableBitmap[ColorTableCount];
+        private ColorTable[] _colorTables = new ColorTable[ColorTableCount];
+        private int _actualPalette = 0;
+        private ushort[,] _arrayPaletten = new ushort[ColorTableCount, ColorTable.ColorCount];
+        private WriteableBitmap[] _bitmaps = new WriteableBitmap[ColorTableCount];
 
         /// <summary>
         /// The palette consist of 10 colortables, each consisting of 256 colors, and is used in Animation files.
@@ -38,26 +38,26 @@ namespace Files.Gm1Converter
             {
                 byte[] colorTableByteArray = new byte[ColorTable.ByteSize];
                 Buffer.BlockCopy(byteArray, i * ColorTable.ByteSize, colorTableByteArray, 0, ColorTable.ByteSize);
-                colorTables[i] = new ColorTable(colorTableByteArray);
+                _colorTables[i] = new ColorTable(colorTableByteArray);
 
                 for (int j = 0; j < ColorTable.ColorCount; j++)
                 {
-                    this.arrayPaletten[i, j] = BitConverter.ToUInt16(byteArray, (i * ColorTable.ColorCount + j) * 2);
+                    _arrayPaletten[i, j] = BitConverter.ToUInt16(byteArray, (i * ColorTable.ColorCount + j) * 2);
                 }
 
-                bitmaps[i] = PalleteToImG(i, pixelSize);
+                _bitmaps[i] = PalleteToImG(i, pixelSize);
             }
         }
 
-        public ColorTable[] ColorTables { get => colorTables; set => colorTables = value; }
-        public WriteableBitmap[] Bitmaps { get => bitmaps; set => bitmaps = value; }
-        public ushort[,] ArrayPaletten { get => arrayPaletten; set => arrayPaletten = value; }
-        public int ActualPalette { get => actualPalette; set => actualPalette = value; }
+        public ColorTable[] ColorTables { get => _colorTables; set => _colorTables = value; }
+        public WriteableBitmap[] Bitmaps { get => _bitmaps; set => _bitmaps = value; }
+        public ushort[,] ArrayPaletten { get => _arrayPaletten; set => _arrayPaletten = value; }
+        public int ActualPalette { get => _actualPalette; set => _actualPalette = value; }
         public void SetPaleteUInt(int index, ushort[] array)
         {
-            for (int i = 0; i < arrayPaletten.GetLength(1); i++)
+            for (int i = 0; i < _arrayPaletten.GetLength(1); i++)
             {
-                arrayPaletten[index, i] = array[i];
+                _arrayPaletten[index, i] = array[i];
             }
         }
         public WriteableBitmap GetBitmap(int index, int pixelsize)
@@ -71,11 +71,11 @@ namespace Files.Gm1Converter
         internal byte[] GetBytes()
         {
             List<byte> byteArray = new List<byte>();
-            for (int i = 0; i < arrayPaletten.GetLength(0); i++)
+            for (int i = 0; i < _arrayPaletten.GetLength(0); i++)
             {
-                for (int j = 0; j < arrayPaletten.GetLength(1); j++)
+                for (int j = 0; j < _arrayPaletten.GetLength(1); j++)
                 {
-                    byteArray.AddRange(BitConverter.GetBytes(arrayPaletten[i, j]));
+                    byteArray.AddRange(BitConverter.GetBytes(_arrayPaletten[i, j]));
                 }
             }
 
@@ -116,7 +116,7 @@ namespace Files.Gm1Converter
                     x *= scale;
 
                     // get converted color
-                    Utility.ReadColor(arrayPaletten[colorTable, i], out byte r, out byte g, out byte b, out byte a);
+                    Utility.ReadColor(_arrayPaletten[colorTable, i], out byte r, out byte g, out byte b, out byte a);
                     uint colorByte = (uint)(b | (g << 8) | (r << 16) | (a << 24));
 
                     // write color to bitmap
