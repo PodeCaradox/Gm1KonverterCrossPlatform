@@ -1,6 +1,6 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
-using Files.Gm1Converter;
+using Gm1KonverterCrossPlatform.Files;
 
 namespace Gm1KonverterCrossPlatform.Views
 {

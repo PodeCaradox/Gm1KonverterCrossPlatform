@@ -6,7 +6,7 @@ using ReactiveUI;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media.Imaging;
-using Files.Gm1Converter;
+using Gm1KonverterCrossPlatform.Files;
 using Gm1KonverterCrossPlatform.Views;
 using Gm1KonverterCrossPlatform.HelperClasses;
 using Newtonsoft.Json;

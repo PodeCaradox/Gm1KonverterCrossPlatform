@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Files.Gm1Converter
+namespace Gm1KonverterCrossPlatform.Files
 {
     public class Palette
     {

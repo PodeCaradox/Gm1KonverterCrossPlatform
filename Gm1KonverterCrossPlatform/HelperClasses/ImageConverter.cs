@@ -2,7 +2,7 @@
 using Avalonia;
 using Avalonia.Platform;
 using Avalonia.Media.Imaging;
-using Files.Gm1Converter;
+using Gm1KonverterCrossPlatform.Files;
 
 /// <summary>
 /// Convert game file components to WriteableBitmaps for visualisation in UI and export.

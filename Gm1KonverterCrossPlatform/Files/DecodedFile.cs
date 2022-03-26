@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using Gm1KonverterCrossPlatform.Files;
 using Gm1KonverterCrossPlatform.HelperClasses;
 using Gm1KonverterCrossPlatform.Views;
 
-namespace Files.Gm1Converter
+namespace Gm1KonverterCrossPlatform.Files
 {
     class DecodedFile : IDisposable
     {

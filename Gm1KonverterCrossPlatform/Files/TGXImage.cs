@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Avalonia.Media.Imaging;
 using Gm1KonverterCrossPlatform.HelperClasses;
 
-namespace Files.Gm1Converter
+namespace Gm1KonverterCrossPlatform.Files
 {
     public class TGXImage
     {

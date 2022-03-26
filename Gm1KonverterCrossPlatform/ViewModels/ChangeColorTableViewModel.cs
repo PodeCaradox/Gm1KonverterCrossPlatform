@@ -1,7 +1,7 @@
 ﻿using ReactiveUI;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
-using Files.Gm1Converter;
+using Gm1KonverterCrossPlatform.Files;
 
 namespace Gm1KonverterCrossPlatform.ViewModels
 {

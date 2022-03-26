@@ -9,7 +9,7 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media.Imaging;
-using Files.Gm1Converter;
+using Gm1KonverterCrossPlatform.Files;
 using Gm1KonverterCrossPlatform.HelperClasses;
 using Gm1KonverterCrossPlatform.ViewModels;
 using Newtonsoft.Json;

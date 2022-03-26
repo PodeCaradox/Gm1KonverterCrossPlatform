@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Files.Gm1Converter
+namespace Gm1KonverterCrossPlatform.Files
 {
     public class TGXImageHeader
     {

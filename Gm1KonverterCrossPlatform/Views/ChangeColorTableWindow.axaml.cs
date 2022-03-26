@@ -8,7 +8,7 @@ using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Gm1KonverterCrossPlatform.ViewModels;
 using Gm1KonverterCrossPlatform.HelperClasses;
-using Files.Gm1Converter;
+using Gm1KonverterCrossPlatform.Files;
 
 namespace Gm1KonverterCrossPlatform.Views
 {
