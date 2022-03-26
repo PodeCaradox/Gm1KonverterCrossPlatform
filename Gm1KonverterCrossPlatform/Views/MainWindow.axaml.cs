@@ -551,23 +551,28 @@ namespace Gm1KonverterCrossPlatform.Views
         private void ExportColortable(object sender, RoutedEventArgs e)
         {
             if (Logger.Loggeractiv) Logger.Log("\n>>ExportColortable start");
+
             Cursor = new Avalonia.Input.Cursor(Avalonia.Input.StandardCursorType.Wait);
-            int colorTable = 1;
+
             var filewithoutgm1ending = vm.File.FileHeader.Name.Replace(".gm1", "");
             if (!Directory.Exists(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\Colortables"))
             {
                 Directory.CreateDirectory(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\Colortables");
             }
-            foreach (var bitmap in vm.File.Palette.Bitmaps)
+
+            for (int i = 0; i < Palette.ColorTableCount; i++)
             {
-                bitmap.Save(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\Colortables\\ColorTable" + colorTable + ".png");
-                colorTable++;
+                var bitmap = ImageConverter.ColorTableToImg(vm.File.Palette.ColorTables[i], Palette.width, Palette.height, Palette.pixelSize);
+                bitmap.Save(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\Colortables\\ColorTable" + (i + 1) + ".png");
             }
+
             if (vm.UserConfig.OpenFolderAfterExport)
                 Process.Start("explorer.exe", vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\Colortables");
 
             vm.LoadWorkfolderFiles();
+
             Cursor = new Avalonia.Input.Cursor(Avalonia.Input.StandardCursorType.Arrow);
+
             if (Logger.Loggeractiv) Logger.Log("\n>>ExportColortable end");
         }
 
@@ -859,14 +864,8 @@ namespace Gm1KonverterCrossPlatform.Views
 
         private void Button_ClickChangeColorTable(object sender, RoutedEventArgs e)
         {
-            ushort[] colorList = new ushort[ColorTable.ColorCount];
-
-            for (int i = 0; i < ColorTable.ColorCount; i++) {
-                colorList[i] = vm.File.Palette.ArrayPaletten[vm.File.Palette.ActualPalette, i];
-            }
-
             ChangeColorTableWindow changeColorTableWindow = new ChangeColorTableWindow(
-                new ColorTable(colorList),
+                vm.File.Palette.ColorTables[vm.File.Palette.ActualPalette].Copy(),
                 OnWindowClosed
             );
 
@@ -918,12 +917,7 @@ namespace Gm1KonverterCrossPlatform.Views
 
         private void OnWindowClosed(ColorTable colorTable)
         {
-            for (int i = 0; i < ColorTable.ColorCount; i++)
-            {
-                vm.File.Palette.ArrayPaletten[vm.File.Palette.ActualPalette, i] = colorTable.ColorList[i];
-            }
-
-            vm.File.Palette.Bitmaps[vm.File.Palette.ActualPalette] = ImageConverter.ColorTableToImg(colorTable, Palette.width, Palette.height, Palette.pixelSize);
+            vm.File.Palette.ColorTables[vm.File.Palette.ActualPalette] = colorTable;
 
             vm.GeneratePaletteAndImgNew();
 

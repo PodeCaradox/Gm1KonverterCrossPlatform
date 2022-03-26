@@ -478,7 +478,7 @@ namespace Gm1KonverterCrossPlatform.ViewModels
 
             if (File.Palette != null)
             {
-                ActuellColorTable = File.Palette.Bitmaps[File.Palette.ActualPalette];
+                ActuellColorTable = ImageConverter.ColorTableToImg(File.Palette.ColorTables[File.Palette.ActualPalette], Palette.width, Palette.height, Palette.pixelSize);
             }
         }
 

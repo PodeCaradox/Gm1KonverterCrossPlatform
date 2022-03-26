@@ -26,8 +26,6 @@ namespace Files.Gm1Converter
 
         private ColorTable[] _colorTables = new ColorTable[ColorTableCount];
         private int _actualPalette = 0;
-        private ushort[,] _arrayPaletten = new ushort[ColorTableCount, ColorTable.ColorCount];
-        private WriteableBitmap[] _bitmaps = new WriteableBitmap[ColorTableCount];
 
         /// <summary>
         /// The palette consist of 10 colortables, each consisting of 256 colors, and is used in Animation files.
@@ -40,19 +38,10 @@ namespace Files.Gm1Converter
                 byte[] colorTableByteArray = new byte[ColorTable.ByteSize];
                 Buffer.BlockCopy(byteArray, i * ColorTable.ByteSize, colorTableByteArray, 0, ColorTable.ByteSize);
                 _colorTables[i] = new ColorTable(colorTableByteArray);
-
-                for (int j = 0; j < ColorTable.ColorCount; j++)
-                {
-                    _arrayPaletten[i, j] = BitConverter.ToUInt16(byteArray, (i * ColorTable.ColorCount + j) * 2);
-                }
-
-                _bitmaps[i] = ImageConverter.ColorTableToImg(_colorTables[i], width, height, pixelSize);
             }
         }
 
         public ColorTable[] ColorTables { get => _colorTables; set => _colorTables = value; }
-        public WriteableBitmap[] Bitmaps { get => _bitmaps; set => _bitmaps = value; }
-        public ushort[,] ArrayPaletten { get => _arrayPaletten; set => _arrayPaletten = value; }
         public int ActualPalette { get => _actualPalette; set => _actualPalette = value; }
 
         /// <summary>
@@ -60,16 +49,14 @@ namespace Files.Gm1Converter
         /// </summary>
         internal byte[] GetBytes()
         {
-            List<byte> byteArray = new List<byte>();
-            for (int i = 0; i < _arrayPaletten.GetLength(0); i++)
+            byte[] byteArray = new byte[ColorTable.ByteSize * ColorTableCount];
+
+            for (int i = 0; i < ColorTableCount; i++)
             {
-                for (int j = 0; j < _arrayPaletten.GetLength(1); j++)
-                {
-                    byteArray.AddRange(BitConverter.GetBytes(_arrayPaletten[i, j]));
-                }
+                Array.Copy(_colorTables[i].GetBytes(), byteArray, ColorTable.ByteSize);
             }
 
-            return byteArray.ToArray();
+            return byteArray;
         }
     }
 }

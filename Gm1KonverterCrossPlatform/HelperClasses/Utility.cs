@@ -538,6 +538,7 @@ namespace HelperClasses.Gm1Converter
                 for (byte i = 0; i < byte.MaxValue; i++)
                 {
                     if (color == palette.ArrayPaletten[0, i])
+                    if (color == palette.ColorTables[0].ColorList[i])
                     {
                         newPosition = i;
                         break;
@@ -549,7 +550,7 @@ namespace HelperClasses.Gm1Converter
                 List<byte> positions = new List<byte>();
                 for (byte i = 0; i < byte.MaxValue; i++)
                 {
-                    if (color == palette.ArrayPaletten[0, i])
+                    if (color == palette.ColorTables[0].ColorList[i])
                     {
                         positions.Add(i);
                     }
@@ -561,7 +562,7 @@ namespace HelperClasses.Gm1Converter
                         List<byte> otherPositions = new List<byte>();
                         for (byte i = 0; i < byte.MaxValue; i++)
                         {
-                            if (paletteImages[j][position] == palette.ArrayPaletten[j+1, i])
+                            if (paletteImages[j][position] == palette.ColorTables[j+1].ColorList[i])
                             {
                                 otherPositions.Add(i);
                             }

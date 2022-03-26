@@ -44,28 +44,30 @@ namespace Files.Gm1Converter
             if (Logger.Loggeractiv) Logger.Log($"DecodeGm1File: {name}");
             
             fileArray = array;
-            if (this.fileHeader == null)
+            if (fileHeader == null)
             {
                 // header is located at start of the file
                 byte[] headerByteArray = new byte[GM1FileHeader.ByteSize];
                 Array.Copy(array, 0, headerByteArray, 0, GM1FileHeader.ByteSize);
-                this.fileHeader = new GM1FileHeader(headerByteArray);
+                fileHeader = new GM1FileHeader(headerByteArray);
 
-                this.fileHeader.Name = name;
+                fileHeader.Name = name;
 
                 if (fileHeader.IDataType == (uint)GM1FileHeader.DataType.Animations)
                 {
                     // palette is located immediately after the header
                     byte[] paletteByteArray = new byte[Palette.ByteSize];
                     Array.Copy(array, GM1FileHeader.ByteSize, paletteByteArray, 0, Palette.ByteSize);
-                    this.palette = new Palette(paletteByteArray);
+                    palette = new Palette(paletteByteArray);
                 }
                 if (Logger.Loggeractiv) Logger.Log($"DataType {(GM1FileHeader.DataType)fileHeader.IDataType}");
             }
 
             actualPositionInByteArray = (GM1FileHeader.ByteSize + Palette.ByteSize);
-            this._TGXImage = new List<TGXImage>();
-            this.tilesImage = new List<TilesImage>();
+
+            _TGXImage = new List<TGXImage>();
+            tilesImage = new List<TilesImage>();
+
             //Supported Types
             try
             {
