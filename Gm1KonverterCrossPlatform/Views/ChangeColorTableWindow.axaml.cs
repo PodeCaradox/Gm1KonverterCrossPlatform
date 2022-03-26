@@ -6,7 +6,6 @@ using Avalonia.Controls.Shapes;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
-using Avalonia.Media;
 using Gm1KonverterCrossPlatform.ViewModels;
 using HelperClasses.Gm1Converter;
 using Files.Gm1Converter;
@@ -40,6 +39,11 @@ namespace Gm1KonverterCrossPlatform.Views
             image = this.Get<Image>("PaletteImage");
             highlight = this.Get<Rectangle>("PaletteImageHighlight");
 
+            LoadBitmap();
+        }
+
+        private void LoadBitmap()
+        {
             viewModel.Bitmap = HelperClasses.ImageConverter.ColorTableToImg(viewModel.ColorTable, width, height, pixelSize);
         }
 
@@ -62,11 +66,8 @@ namespace Gm1KonverterCrossPlatform.Views
 
         private void Button_SaveColor(object sender, RoutedEventArgs e)
         {
-            uint color = Color.FromRgb((byte)viewModel.Red, (byte)viewModel.Green, (byte)viewModel.Blue).ToUint32();
-            ushort newColor = Utility.EncodeColorTo2Byte(color);
-
-            viewModel.ColorTable.ColorList[viewModel.ColorPositionInColorTable] = newColor;
-            viewModel.Bitmap = HelperClasses.ImageConverter.ColorTableToImg(viewModel.ColorTable, width, height, pixelSize);
+            viewModel.ColorTable.ColorList[viewModel.ColorPositionInColorTable] = HelperClasses.ColorConverter.EncodeArgb1555((byte)viewModel.Red, (byte)viewModel.Green, (byte)viewModel.Blue, 255);
+            LoadBitmap();
 
             viewModel.ColorTableChanged = true;
         }

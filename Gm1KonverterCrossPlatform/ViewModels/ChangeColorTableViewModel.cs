@@ -14,9 +14,9 @@ namespace Gm1KonverterCrossPlatform.ViewModels
         private bool colorSelected = false;
         private int colorPositionInColorTable;
         private string colorAsText = ""; // rgb hex value
-        private int red = 0;
-        private int green = 0;
-        private int blue = 0;
+        private uint red = 0;
+        private uint green = 0;
+        private uint blue = 0;
 
         public ChangeColorTableViewModel(ColorTable colorTable)
         {
@@ -84,7 +84,7 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             }
         }
 
-        public int Red
+        public uint Red
         {
             get => red;
             set
@@ -96,7 +96,7 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             }
         }
 
-        public int Green
+        public uint Green
         {
             get => green;
             set
@@ -108,7 +108,7 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             }
         }
 
-        public int Blue
+        public uint Blue
         {
             get => blue;
             set
@@ -120,7 +120,7 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             }
         }
 
-        public void SetColor(int r, int g, int b)
+        public void SetColor(uint r, uint g, uint b)
         {
             red = FormatColorValue(r);
             this.RaisePropertyChanged("Red");
@@ -134,7 +134,7 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             UpdateColorHexValue();
         }
 
-        private int FormatColorValue(int value)
+        private uint FormatColorValue(uint value)
         {
             if (value > 248)
             {

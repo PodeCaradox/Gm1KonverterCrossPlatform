@@ -126,7 +126,7 @@ namespace HelperClasses.Gm1Converter
                         }
                         else
                         {
-                            colors.Add(EncodeColorTo2Byte((uint)(pixel.B | pixel.G << 8 | pixel.R << 16 | a << 24)));
+                            colors.Add(ColorConverter.EncodeArgb1555(pixel.R, pixel.G, pixel.B, a));
                         }
                     }
                 }
@@ -590,8 +590,6 @@ namespace HelperClasses.Gm1Converter
             return newPosition;
         }
 
-  
-
         private static bool CheckIfAllLinesUnderTransparent(List<ushort> colors, int transparent, int offset)
         {
             for (int i = offset; i < colors.Count; i++)
@@ -795,23 +793,6 @@ namespace HelperClasses.Gm1Converter
             }
 
             return colorList;
-        }
-
-        /// <summary>
-        /// Convert 4-byte Color (A8R8G8B8) to 2-byte Color (A1R5G5B5)
-        /// </summary>
-        /// <param name="colorAsInt32">The Color to Convert</param>
-        /// <returns></returns>
-        internal static ushort EncodeColorTo2Byte(uint colorAsInt32)
-        {
-            var colors = BitConverter.GetBytes(colorAsInt32);
-
-            ushort b = (ushort)((colors[0] >> 3) & 0b0001_1111);
-            ushort g = (ushort)(((colors[1] >> 3) & 0b0001_1111) << 5);
-            ushort r = (ushort)(((colors[2] >> 3) & 0b0001_1111) << 10);
-            ushort a = (ushort)((colors[3] & 0b1000_0000) << 8);
-
-            return (ushort)(b | g | r | a);
         }
 
         /// <summary>
