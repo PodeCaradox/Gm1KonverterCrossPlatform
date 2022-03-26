@@ -86,7 +86,7 @@ namespace HelperClasses.Gm1Converter
         /// <param name="height">The Height from the IMG</param>
         /// <param name="animatedColor">Needed if alpha is 0 or 1</param>
         /// <param name="pixelsize">Pixelsize of a pixel needed for Colortable</param>
-        internal static List<UInt16> LoadImage(
+        internal static List<ushort> LoadImage(
             Image<Rgba32> image,
             ref int width,
             ref int height,
@@ -98,7 +98,7 @@ namespace HelperClasses.Gm1Converter
         {
             if (Logger.Loggeractiv) Logger.Log("LoadImage from image data");
 
-            List<UInt16> colors = new List<UInt16>();
+            List<ushort> colors = new List<ushort>();
 
             try
             {
