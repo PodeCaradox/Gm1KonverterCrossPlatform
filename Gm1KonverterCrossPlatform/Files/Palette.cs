@@ -54,13 +54,6 @@ namespace Files.Gm1Converter
         public WriteableBitmap[] Bitmaps { get => _bitmaps; set => _bitmaps = value; }
         public ushort[,] ArrayPaletten { get => _arrayPaletten; set => _arrayPaletten = value; }
         public int ActualPalette { get => _actualPalette; set => _actualPalette = value; }
-        public void SetPaleteUInt(int index, ushort[] array)
-        {
-            for (int i = 0; i < _arrayPaletten.GetLength(1); i++)
-            {
-                _arrayPaletten[index, i] = array[i];
-            }
-        }
 
         /// <summary>
         /// Calculate the new ByteArray to save ColorTables
