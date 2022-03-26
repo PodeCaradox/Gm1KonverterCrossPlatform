@@ -7,8 +7,6 @@ namespace Files.Gm1Converter
 {
     public class Palette
     {
-        #region Public
-
         /// <summary>
         /// The palette is always 5120 bytes in size.
         /// The palette consist of 10 colortables, each being 512 bytes in size
@@ -25,17 +23,11 @@ namespace Files.Gm1Converter
         public readonly static ushort width = 32;
         public readonly static ushort height = 8;
 
-        #endregion
-        
-        #region Variables
-
+        private ColorTable[] colorTables = new ColorTable[ColorTableCount];
         private int actualPalette = 0;
         private ushort[,] arrayPaletten = new ushort[ColorTableCount, ColorTable.ColorCount];
         private WriteableBitmap[] bitmaps = new WriteableBitmap[10];
 
-        #endregion
-
-        #region Construtor
         /// <summary>
         /// The palette consist of 10 colortables, each consisting of 256 colors, and is used in Animation files.
         /// </summary>
@@ -52,10 +44,6 @@ namespace Files.Gm1Converter
             }
         }
 
-        #endregion
-
-        #region GetterSetter
-        
         public WriteableBitmap[] Bitmaps { get => bitmaps; set => bitmaps = value; }
         public ushort[,] ArrayPaletten { get => arrayPaletten; set => arrayPaletten = value; }
         public int ActualPalette { get => actualPalette; set => actualPalette = value; }
@@ -70,10 +58,6 @@ namespace Files.Gm1Converter
         {
             return PalleteToImG(index, pixelsize);
         }
-
-        #endregion
-
-        #region Methods
 
         /// <summary>
         /// Calculate the new ByteArray to save ColorTables
@@ -144,13 +128,5 @@ namespace Files.Gm1Converter
 
             return bitmap;
         }
-
-        //todo
-        private void BitmapToColorTable(int index, List<uint> colors)
-        {
-
-        }
-
-        #endregion
     }
 }
