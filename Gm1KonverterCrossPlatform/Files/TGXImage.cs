@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Avalonia.Media.Imaging;
-using HelperClasses.Gm1Converter;
+using Gm1KonverterCrossPlatform.HelperClasses;
 
 namespace Files.Gm1Converter
 {

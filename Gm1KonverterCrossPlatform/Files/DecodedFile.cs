@@ -1,9 +1,8 @@
-﻿using Gm1KonverterCrossPlatform.Files;
+﻿using System;
+using System.Collections.Generic;
+using Gm1KonverterCrossPlatform.Files;
 using Gm1KonverterCrossPlatform.HelperClasses;
 using Gm1KonverterCrossPlatform.Views;
-using HelperClasses.Gm1Converter;
-using System;
-using System.Collections.Generic;
 
 namespace Files.Gm1Converter
 {

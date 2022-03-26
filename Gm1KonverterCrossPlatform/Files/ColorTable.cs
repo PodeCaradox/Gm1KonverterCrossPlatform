@@ -1,6 +1,4 @@
-﻿using Avalonia.Media.Imaging;
-using HelperClasses.Gm1Converter;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace Files.Gm1Converter

@@ -6,12 +6,11 @@ using Avalonia;
 using Avalonia.Media.Imaging;
 using Files.Gm1Converter;
 using Gm1KonverterCrossPlatform.Views;
-using Gm1KonverterCrossPlatform.HelperClasses;
 using Gm1KonverterCrossPlatform.Files;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 
-namespace HelperClasses.Gm1Converter
+namespace Gm1KonverterCrossPlatform.HelperClasses
 {
     /// <summary>
     /// Reusable functions for many uses.

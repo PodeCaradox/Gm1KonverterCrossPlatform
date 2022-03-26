@@ -1,6 +1,6 @@
-﻿using Avalonia.Media.Imaging;
-using HelperClasses.Gm1Converter;
-using System;
+﻿using System;
+using Avalonia.Media.Imaging;
+using Gm1KonverterCrossPlatform.HelperClasses;
 
 namespace Gm1KonverterCrossPlatform.Files
 {
