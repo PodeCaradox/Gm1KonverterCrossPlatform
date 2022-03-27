@@ -71,7 +71,7 @@ namespace Gm1KonverterCrossPlatform.Files
             uint y = 0;
             byte r, g, b, a;
 
-            for (uint bytePos = 512; bytePos < imgFileAsBytearray.Length;)
+            for (int bytePos = 512; bytePos < imgFileAsBytearray.Length;)
             {
                 byte token = imgFileAsBytearray[bytePos];
                 byte tokentype = (byte)(token >> 5);
@@ -88,7 +88,7 @@ namespace Gm1KonverterCrossPlatform.Files
 
                         for (byte i = 0; i < length; i++)
                         {
-                            pixelColor = BitConverter.ToUInt16(imgFileAsBytearray, (int)bytePos);
+                            pixelColor = BitConverter.ToUInt16(imgFileAsBytearray, bytePos);
                             bytePos += 2;
 
                             Utility.ReadColor(pixelColor, out r, out g, out b, out a);
@@ -109,7 +109,7 @@ namespace Gm1KonverterCrossPlatform.Files
 
                     case 2: //Repeating pixels
 
-                        pixelColor = BitConverter.ToUInt16(imgFileAsBytearray, (int)bytePos);
+                        pixelColor = BitConverter.ToUInt16(imgFileAsBytearray, bytePos);
                         bytePos += 2;
 
                         Utility.ReadColor(pixelColor, out r, out g, out b, out a);
