@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Avalonia.Media.Imaging;
 using Gm1KonverterCrossPlatform.HelperClasses;
 
@@ -25,13 +24,13 @@ namespace Gm1KonverterCrossPlatform.Files
 
         }
 
-        public UInt32 TgxWidth { get => tgxwidth; set => tgxwidth = value; }
-        public UInt32 TgxHeight { get => tgxheight; set => tgxheight = value; }
+        public uint TgxWidth { get => tgxwidth; set => tgxwidth = value; }
+        public uint TgxHeight { get => tgxheight; set => tgxheight = value; }
 
         public TGXImageHeader Header { get => header; set => header = value; }
 
-        public UInt32 OffsetinByteArray { get => offsetinByteArray; set => offsetinByteArray = value; }
-        public UInt32 SizeinByteArray { get => sizeinByteArray; set => sizeinByteArray = value; }
+        public uint OffsetinByteArray { get => offsetinByteArray; set => offsetinByteArray = value; }
+        public uint SizeinByteArray { get => sizeinByteArray; set => sizeinByteArray = value; }
         public byte[] ImgFileAsBytearray { get => imgFileAsBytearray; set => imgFileAsBytearray = value; }
         
         public WriteableBitmap Bitmap { get => bmp; set => bmp = value; }
