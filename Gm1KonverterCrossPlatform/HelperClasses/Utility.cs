@@ -632,10 +632,6 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
                     y++;
                     x = 0;
                 }
-                if (part == 3 || part == 5)
-                {
-
-                }
 
                 var newImage = new TGXImage();
                 newImage.Header.Direction = 0;
