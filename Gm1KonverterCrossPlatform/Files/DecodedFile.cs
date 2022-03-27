@@ -76,13 +76,11 @@ namespace Gm1KonverterCrossPlatform.Files
                         return true;
                     case GM1FileHeader.DataType.NOCompression:
                     case GM1FileHeader.DataType.NOCompression1:
-                        CreateNoCompressionImages(array, ((GM1FileHeader.DataType)fileHeader.IDataType == GM1FileHeader.DataType.NOCompression1) ? 0 : 7);
+                        CreateNoCompressionImages(array);
                         return true;
                     case GM1FileHeader.DataType.TilesObject:
                         CreateTileImage(array);
                         return true;
-                    default:
-                        break;
                 }
             }
             catch (Exception e)
@@ -179,7 +177,7 @@ namespace Gm1KonverterCrossPlatform.Files
             }
         }
 
-        private void CreateNoCompressionImages(byte[] array, int offset)
+        private void CreateNoCompressionImages(byte[] array)
         {
             if (Logger.Loggeractiv) Logger.Log("CreateNoCompressionImages");
 
@@ -255,6 +253,7 @@ namespace Gm1KonverterCrossPlatform.Files
             int partsBefore = 0;
 
             if (Logger.Loggeractiv) Logger.Log("CreateTileImage for Loop");
+
             for (int i = 0; i < _TGXImage.Count; i++)
             {
                 if (_TGXImage[i].Header.ImagePart == 0)
