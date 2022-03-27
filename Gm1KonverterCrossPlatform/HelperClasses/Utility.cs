@@ -19,7 +19,6 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
     {
         #region Public
 
-        internal static readonly UInt32 TransparentColorByte = (UInt32)(0 | (0 << 8) | (0 << 16) | (0 << 24));
         public static GM1FileHeader.DataType datatype;
 
         #endregion

@@ -125,7 +125,7 @@ namespace Gm1KonverterCrossPlatform.Files
 
                     case 1: //Transparent-Pixel-String
 
-                        colorByte = Utility.TransparentColorByte;
+                        colorByte = (uint)(0 | (0 << 8) | (0 << 16) | (0 << 24));
                         for (byte i = 0; i < length; i++)
                         {
                             colors[(uint)((width * (y + offsetY)) + x + offsetX)] = colorByte;
