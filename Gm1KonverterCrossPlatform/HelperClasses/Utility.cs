@@ -610,7 +610,7 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
             int yOffset = height - 16;
             int partsPerLine = 1;
             int counter = 0;
-            List<Byte> arrayByte;
+            List<byte> arrayByte;
             bool halfreached = false;
             datatype = GM1FileHeader.DataType.TilesObject;
             for (int part = 0; part < totalTiles; part++)
