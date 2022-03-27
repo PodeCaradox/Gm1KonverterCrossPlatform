@@ -229,6 +229,7 @@ namespace Gm1KonverterCrossPlatform.Views
             }
 
             if (vm.File.ImagesTGX.Count > 0) vm.File.ImagesTGX[0].SizeinByteArray = (uint)vm.File.ImagesTGX[0].ImgFileAsBytearray.Length;
+            
             uint zaehler = 0;
             for (int i = 1; i < vm.File.ImagesTGX.Count; i++)
             {
@@ -431,9 +432,9 @@ namespace Gm1KonverterCrossPlatform.Views
                 vm.File.ImagesTGX[fileindex].Header.Height = (ushort)height;
             }
             else if ((GM1FileHeader.DataType)vm.File.FileHeader.IDataType == GM1FileHeader.DataType.NOCompression
-                    || (GM1FileHeader.DataType)vm.File.FileHeader.IDataType == GM1FileHeader.DataType.NOCompression1)
+                || (GM1FileHeader.DataType)vm.File.FileHeader.IDataType == GM1FileHeader.DataType.NOCompression1)
             {
-                vm.File.ImagesTGX[fileindex].ConvertNoCommpressionImageToByteArray(list, width, height);
+                vm.File.ImagesTGX[fileindex].ImgFileAsBytearray = Gm1NoCompressionConverter.GetByteArray(list, width, height);
                 vm.File.ImagesTGX[fileindex].Header.Width = (ushort)width;
                 vm.File.ImagesTGX[fileindex].Header.Height = (ushort)(height + ((GM1FileHeader.DataType)vm.File.FileHeader.IDataType == GM1FileHeader.DataType.NOCompression1 ? 0 : 7));//7 because stronghold want it so
             }
