@@ -77,8 +77,7 @@ namespace Gm1KonverterCrossPlatform.Files
                 byte tokentype = (byte)(token >> 5);
                 byte length = (byte)((token & 31) + 1);
 
-                //transparent
-                UInt32 colorByte = Utility.TransparentColorByte;
+                uint colorByte;
 
                 bytePos++;
                 ushort pixelColor;
