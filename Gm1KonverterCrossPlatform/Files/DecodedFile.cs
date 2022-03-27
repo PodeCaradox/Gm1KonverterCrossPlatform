@@ -266,6 +266,7 @@ namespace Gm1KonverterCrossPlatform.Files
                     itemsPerRow = 1;
                     actualItemsPerRow = 0;
                     offsetY = tilesImage[counter].Height - 16;
+                    offsetX = (width / 2) * 30 + (width - 1) - ((width % 2 == 0) ? 15 : 0);
                     safeoffset = offsetX;
                     halfReached = false;
                 }
