@@ -782,7 +782,7 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
         /// <param name="g">Green value</param>
         /// <param name="b">Blue value</param>
         /// <param name="a">Alpha value</param>
-        internal static void ReadColor(UInt16 pixel, out byte r, out byte g, out byte b, out byte a)
+        internal static void ReadColor(ushort pixel, out byte r, out byte g, out byte b, out byte a)
         {
             a = (byte)((((pixel >> 15) & 0b0000_0001) == 1) ? 255 : 0);
             r = (byte)(((pixel >> 10) & 0b11111) << 3);
