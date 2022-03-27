@@ -581,11 +581,6 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
             return true;
         }
 
-        private static int[] array = {
-                2, 6, 10, 14, 18, 22, 26, 30,
-                30, 26, 22, 18, 14, 10, 6, 2
-            };
-
         public static int YOffsetBefore { get; internal set; }
         public static int XOffsetBefore { get; internal set; }
 
@@ -613,12 +608,19 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
             List<byte> arrayByte;
             bool halfreached = false;
             datatype = GM1FileHeader.DataType.TilesObject;
+
+            int[] array = {
+                2, 6, 10, 14, 18, 22, 26, 30,
+                30, 26, 22, 18, 14, 10, 6, 2
+            };
+
             for (int part = 0; part < totalTiles; part++)
             {
                 counter++;
                 int x = 0;
                 int y = 0;
                 arrayByte = new List<byte>();
+
                 for (int i = 0; i < 16; i++)
                 {
                     for (int j = 0; j < array[i]; j++)
