@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Gm1KonverterCrossPlatform.Files.Converters;
 using Gm1KonverterCrossPlatform.HelperClasses;
 using Gm1KonverterCrossPlatform.Views;
 
@@ -162,8 +163,10 @@ namespace Gm1KonverterCrossPlatform.Files
         private void CreateImages(byte[] array)
         {
             if (Logger.Loggeractiv) Logger.Log("Create Images");
+
             CreateOffsetAndSizeInByteArrayList(array);
             CreateImgHeader(array);
+
             if (Logger.Loggeractiv) Logger.Log("CreateImageFromByteArray");
 
             for (uint i = 0; i < fileHeader.INumberOfPictureinFile; i++)
@@ -179,12 +182,18 @@ namespace Gm1KonverterCrossPlatform.Files
         private void CreateNoCompressionImages(byte[] array, int offset)
         {
             if (Logger.Loggeractiv) Logger.Log("CreateNoCompressionImages");
+
             CreateOffsetAndSizeInByteArrayList(array);
             CreateImgHeader(array);
+
             if (Logger.Loggeractiv) Logger.Log("CreateNoComppressionImageFromByteArray");
-            for (uint i = 0; i < fileHeader.INumberOfPictureinFile; i++)
+
+            for (int i = 0; i < fileHeader.INumberOfPictureinFile; i++)
             {
-                _TGXImage[(int)i].CreateNoComppressionImageFromByteArray(palette, offset);
+                _TGXImage[i].Bitmap = Gm1NoCompressionConverter.GetBitmap(
+                    _TGXImage[i].ImgFileAsBytearray,
+                    _TGXImage[i].Header.Width,
+                    _TGXImage[i].Header.Height);
             }
         }
 
@@ -325,18 +334,21 @@ namespace Gm1KonverterCrossPlatform.Files
         private void CreateOffsetAndSizeInByteArrayList(byte[] byteArray)
         {
             if (Logger.Loggeractiv) Logger.Log("CreateOffsetAndSizeInByteArrayList");
+
             for (int i = 0; i < this.fileHeader.INumberOfPictureinFile; i++)
             {
                 var image = new TGXImage();
                 image.OffsetinByteArray = BitConverter.ToUInt32(byteArray, actualPositionInByteArray + i * 4);
                 _TGXImage.Add(image);
             }
-            actualPositionInByteArray += (int)this.fileHeader.INumberOfPictureinFile * 4;
+
+            actualPositionInByteArray += (int)fileHeader.INumberOfPictureinFile * 4;
 
             for (int i = 0; i < this.fileHeader.INumberOfPictureinFile; i++)
             {
                 _TGXImage[i].SizeinByteArray = BitConverter.ToUInt32(byteArray, actualPositionInByteArray + i * 4);
             }
+
             actualPositionInByteArray += (int)this.fileHeader.INumberOfPictureinFile * 4;
         }
 
