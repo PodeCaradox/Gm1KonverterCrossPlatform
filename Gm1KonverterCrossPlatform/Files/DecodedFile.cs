@@ -215,14 +215,14 @@ namespace Gm1KonverterCrossPlatform.Files
         {
             if (Logger.Loggeractiv) Logger.Log("CreateImgHeader");
             
-            for (int i = 0; i < this.fileHeader.INumberOfPictureinFile; i++)
+            for (int i = 0; i < fileHeader.INumberOfPictureinFile; i++)
             {
                 byte[] imageHeaderByteArray = new byte[TGXImageHeader.ByteSize];
                 Array.Copy(array, actualPositionInByteArray + (i * TGXImageHeader.ByteSize), imageHeaderByteArray, 0, TGXImageHeader.ByteSize);
                 _TGXImage[i].Header = new TGXImageHeader(imageHeaderByteArray);
             }
 
-            actualPositionInByteArray += (int)this.fileHeader.INumberOfPictureinFile * TGXImageHeader.ByteSize;
+            actualPositionInByteArray += (int)fileHeader.INumberOfPictureinFile * TGXImageHeader.ByteSize;
 
             foreach (var image in _TGXImage)
             {
@@ -243,7 +243,6 @@ namespace Gm1KonverterCrossPlatform.Files
             CreateImgHeader(byteArray);
 
             int offsetX = 0, offsetY = 0;
-            int midx = 0;
             int width = 0;
             int counter = -1;
             int itemsPerRow = 1;
@@ -266,9 +265,7 @@ namespace Gm1KonverterCrossPlatform.Files
                     counter++;
                     itemsPerRow = 1;
                     actualItemsPerRow = 0;
-                    midx = (width / 2) * 30 + (width - 1) - ((width % 2 == 0) ? 15 : 0);
                     offsetY = tilesImage[counter].Height - 16;
-                    offsetX = midx;
                     safeoffset = offsetX;
                     halfReached = false;
                 }
@@ -286,6 +283,7 @@ namespace Gm1KonverterCrossPlatform.Files
                         tilesImage[counter].MinusHeight = offsetY - _TGXImage[i].Header.TileOffset;
                     }
                 }
+
                 tilesImage[counter].AddDiamondToImg(_TGXImage[i].ImgFileAsBytearray, offsetX, offsetY);
 
                 offsetX += 32;
