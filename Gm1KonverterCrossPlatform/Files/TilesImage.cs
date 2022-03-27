@@ -49,24 +49,15 @@ namespace Gm1KonverterCrossPlatform.Files
             };
 
             int bytePos = 0;
-            byte r, g, b, a;
 
-            for (int i = 0; i < 16; i++)
+            for (int y = 0; y < 16; y++)
             {
-                for (int j = 0; j < array[i]; j++)
+                for (int x = 0; x < array[y]; x++)
                 {
-                    ushort pixelColor = BitConverter.ToUInt16(imgFileAsByteArray, (int)bytePos);
+                    int pos = ((width * (y + yOffset)) + x + xOffset + 15 - array[y] / 2);
+                    colors[pos] = Converters.ColorConverter.Argb1555ToBgra8888(BitConverter.ToUInt16(imgFileAsByteArray, bytePos));
                     bytePos += 2;
-                    Utility.ReadColor(pixelColor, out r, out g, out b, out a);
-                    a = byte.MaxValue;
-                    int number = ((width * (y + yOffset)) + x + xOffset + 15 - array[i] / 2);
-                    
-                    colors[number] = (uint)(b | (g << 8) | (r << 16) | (a << 24));
-                    
-                    x++;
                 }
-                x = 0;
-                y++;
             }
         }
 
