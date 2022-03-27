@@ -32,7 +32,6 @@ namespace Gm1KonverterCrossPlatform.Files.Converters
 
         internal static byte[] GetByteArray(List<ushort> list, int width, int height)
         {
-            System.Diagnostics.Debug.WriteLine("no compression bytearray");
             int length = (width * height);
 
             byte[] byteArray = new byte[length * 2];
