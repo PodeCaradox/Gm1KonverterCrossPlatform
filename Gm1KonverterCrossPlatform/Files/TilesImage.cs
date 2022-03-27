@@ -8,10 +8,6 @@ namespace Gm1KonverterCrossPlatform.Files
     {
         public static int Puffer = 500;
 
-        private static int[] array = {
-            2, 6, 10, 14, 18, 22, 26, 30,
-            30, 26, 22, 18, 14, 10, 6, 2
-        };
         private int width, height;
         private WriteableBitmap bmp;
         private int minusHeight = 9999999;
@@ -47,6 +43,11 @@ namespace Gm1KonverterCrossPlatform.Files
         {
             int x = 0;
             int y = 0;
+            int[] array = {
+                2, 6, 10, 14, 18, 22, 26, 30,
+                30, 26, 22, 18, 14, 10, 6, 2
+            };
+
             int bytePos = 0;
             byte r, g, b, a;
 
