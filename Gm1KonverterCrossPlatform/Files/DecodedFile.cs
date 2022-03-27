@@ -278,7 +278,9 @@ namespace Gm1KonverterCrossPlatform.Files
                     {
                         right = 14;
                     }
+
                     tilesImage[counter].AddImgTileOnTopToImg(_TGXImage[i].ImgFileAsBytearray, offsetX + right, offsetY - _TGXImage[i].Header.TileOffset);
+
                     if (tilesImage[counter].MinusHeight > offsetY - _TGXImage[i].Header.TileOffset)
                     {
                         tilesImage[counter].MinusHeight = offsetY - _TGXImage[i].Header.TileOffset;
