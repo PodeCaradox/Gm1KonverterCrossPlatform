@@ -261,7 +261,7 @@ namespace Gm1KonverterCrossPlatform.Files
 
                     partsBefore += _TGXImage[i].Header.SubParts;
 
-                    tilesImage.Add(new TilesImage(width * 30 + ((width - 1) * 2), width * 16 + _TGXImage[partsBefore - 1].Header.TileOffset + TilesImage.Puffer));//gap 2 pixels
+                    tilesImage.Add(new TilesImage(width * 30 + ((width - 1) * 2), width * 16 + _TGXImage[partsBefore - 1].Header.TileOffset + TilesImage.Puffer)); // gap 2 pixels
                     counter++;
                     itemsPerRow = 1;
                     actualItemsPerRow = 0;
