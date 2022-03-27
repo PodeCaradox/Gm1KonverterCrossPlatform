@@ -152,21 +152,23 @@ namespace Gm1KonverterCrossPlatform.Files
                 minusHeight = Puffer;
             }
             height = height - minusHeight;
-            bmp = new WriteableBitmap(new Avalonia.PixelSize(width, height), new Avalonia.Vector(96, 96), Avalonia.Platform.PixelFormat.Bgra8888);// Bgra8888 is device-native and much faster.
 
-            using (var buf = bmp.Lock())
+            bmp = new WriteableBitmap(
+                new Avalonia.PixelSize(width, height),
+                new Avalonia.Vector(96, 96),
+                Avalonia.Platform.PixelFormat.Bgra8888, // Bgra8888 is device-native and much faster.
+                Avalonia.Platform.AlphaFormat.Premul);
+
+            using (var buffer = bmp.Lock())
             {
-                uint zaehler = 0;
+                uint* pointer = (uint*)buffer.Address;
+
+                uint pos = 0;
+
                 for (int i = width * minusHeight; i < colors.Length; i++)
                 {
-                    if (i == 345734)
-                    {
-                        var color = colors[i];
-                    }
-                    var ptr = (uint*)buf.Address;
-                    ptr += (uint)(zaehler);
-                    *ptr = colors[i];
-                    zaehler++;
+                    pointer[pos] = colors[i];
+                    pos++;
                 }
             }
         }
