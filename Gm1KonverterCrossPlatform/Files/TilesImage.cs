@@ -41,8 +41,6 @@ namespace Gm1KonverterCrossPlatform.Files
         /// <param name="yOffset">The yOffset in the bigger IMG</param>
         internal void AddDiamondToImg(byte[] imgFileAsByteArray, int xOffset, int yOffset)
         {
-            int x = 0;
-            int y = 0;
             int[] array = {
                 2, 6, 10, 14, 18, 22, 26, 30,
                 30, 26, 22, 18, 14, 10, 6, 2
