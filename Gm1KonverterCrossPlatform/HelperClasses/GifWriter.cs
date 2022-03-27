@@ -10,14 +10,12 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
     /// </summary>
     public class GifWriter : IDisposable
     {
-        #region Fields
         const long SourceGlobalColorInfoPosition = 10,
             SourceImageBlockPosition = 789;
 
         readonly BinaryWriter _writer;
         bool _firstFrame = true;
         readonly object _syncLock = new object();
-        #endregion
 
         /// <summary>
         /// Creates a new instance of GifWriter.
@@ -50,7 +48,6 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
         public GifWriter(string FileName, int DefaultFrameDelay = 500, int Repeat = -1)
             : this(new FileStream(FileName, FileMode.OpenOrCreate, FileAccess.Write, FileShare.Read), DefaultFrameDelay, Repeat) { }
 
-        #region Properties
         /// <summary>
         /// Gets or Sets the Default Width of a Frame. Used when unspecified.
         /// </summary>
@@ -71,7 +68,6 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
         /// -1 indicates no repeat. 0 indicates repeat indefinitely
         /// </summary>
         public int Repeat { get; }
-        #endregion
 
         /// <summary>
         /// Adds a frame to this animation.
@@ -97,7 +93,6 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
                 _firstFrame = false;
         }
 
-        #region Write
         void InitHeader(Stream SourceGif, BinaryWriter Writer, int Width, int Height)
         {
             // File Header
@@ -185,7 +180,6 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
 
             Writer.Write((byte)0); // Terminator
         }
-        #endregion
 
         /// <summary>
         /// Frees all resources used by this object.

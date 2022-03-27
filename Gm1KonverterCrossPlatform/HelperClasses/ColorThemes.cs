@@ -1,7 +1,7 @@
-﻿using Avalonia;
+﻿using System.Collections.Generic;
+using Avalonia;
 using Avalonia.Markup.Xaml.Styling;
 using Avalonia.Styling;
-using System.Collections.Generic;
 
 namespace Gm1KonverterCrossPlatform.HelperClasses
 {

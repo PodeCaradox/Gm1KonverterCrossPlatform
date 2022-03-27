@@ -4,14 +4,13 @@ using System.IO;
 using System.Linq;
 using Avalonia;
 using Avalonia.Media.Imaging;
-using Files.Gm1Converter;
-using Gm1KonverterCrossPlatform.Views;
-using Gm1KonverterCrossPlatform.HelperClasses;
 using Gm1KonverterCrossPlatform.Files;
+using Gm1KonverterCrossPlatform.Files.Converters;
+using Gm1KonverterCrossPlatform.Views;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 
-namespace HelperClasses.Gm1Converter
+namespace Gm1KonverterCrossPlatform.HelperClasses
 {
     /// <summary>
     /// Reusable functions for many uses.
@@ -20,31 +19,11 @@ namespace HelperClasses.Gm1Converter
     {
         #region Public
 
-        internal static readonly UInt32 TransparentColorByte = (UInt32)(0 | (0 << 8) | (0 << 16) | (0 << 24));
         public static GM1FileHeader.DataType datatype;
 
         #endregion
 
         #region Methods
-
-        /// <summary>
-        /// Load the File as Byte array
-        /// </summary>
-        /// <param name="fileName">The Filepath/Filenamee to load</param>
-        internal static byte[] FileToByteArray(string fileName)
-        {
-            return File.ReadAllBytes(fileName);
-        }
-
-        /// <summary>
-        /// Save the Byte array as File
-        /// </summary>
-        /// <param name="fileName">The Filepath/Filenamee to save</param>
-        /// <param name="array">The byte array to save</param>
-        internal static void ByteArraytoFile(string fileName, byte[] array)
-        {
-            File.WriteAllBytes(fileName, array);
-        }
 
         internal static Image<Rgba32> LoadImageData(string filePath)
         {
@@ -86,7 +65,7 @@ namespace HelperClasses.Gm1Converter
         /// <param name="height">The Height from the IMG</param>
         /// <param name="animatedColor">Needed if alpha is 0 or 1</param>
         /// <param name="pixelsize">Pixelsize of a pixel needed for Colortable</param>
-        internal static List<UInt16> LoadImage(
+        internal static List<ushort> LoadImage(
             Image<Rgba32> image,
             ref int width,
             ref int height,
@@ -98,7 +77,7 @@ namespace HelperClasses.Gm1Converter
         {
             if (Logger.Loggeractiv) Logger.Log("LoadImage from image data");
 
-            List<UInt16> colors = new List<UInt16>();
+            List<ushort> colors = new List<ushort>();
 
             try
             {
@@ -126,7 +105,7 @@ namespace HelperClasses.Gm1Converter
                         }
                         else
                         {
-                            colors.Add(EncodeColorTo2Byte((uint)(pixel.B | pixel.G << 8 | pixel.R << 16 | a << 24)));
+                            colors.Add(ColorConverter.EncodeArgb1555(pixel.R, pixel.G, pixel.B, a));
                         }
                     }
                 }
@@ -537,7 +516,7 @@ namespace HelperClasses.Gm1Converter
             {
                 for (byte i = 0; i < byte.MaxValue; i++)
                 {
-                    if (color == palette.ArrayPaletten[0, i])
+                    if (color == palette.ColorTables[0].ColorList[i])
                     {
                         newPosition = i;
                         break;
@@ -549,7 +528,7 @@ namespace HelperClasses.Gm1Converter
                 List<byte> positions = new List<byte>();
                 for (byte i = 0; i < byte.MaxValue; i++)
                 {
-                    if (color == palette.ArrayPaletten[0, i])
+                    if (color == palette.ColorTables[0].ColorList[i])
                     {
                         positions.Add(i);
                     }
@@ -561,7 +540,7 @@ namespace HelperClasses.Gm1Converter
                         List<byte> otherPositions = new List<byte>();
                         for (byte i = 0; i < byte.MaxValue; i++)
                         {
-                            if (paletteImages[j][position] == palette.ArrayPaletten[j+1, i])
+                            if (paletteImages[j][position] == palette.ColorTables[j+1].ColorList[i])
                             {
                                 otherPositions.Add(i);
                             }
@@ -589,8 +568,6 @@ namespace HelperClasses.Gm1Converter
             return newPosition;
         }
 
-  
-
         private static bool CheckIfAllLinesUnderTransparent(List<ushort> colors, int transparent, int offset)
         {
             for (int i = offset; i < colors.Count; i++)
@@ -602,11 +579,6 @@ namespace HelperClasses.Gm1Converter
             }
             return true;
         }
-
-        private static int[] array = {
-                2, 6, 10, 14, 18, 22, 26, 30,
-                30, 26, 22, 18, 14, 10, 6, 2
-            };
 
         public static int YOffsetBefore { get; internal set; }
         public static int XOffsetBefore { get; internal set; }
@@ -632,15 +604,22 @@ namespace HelperClasses.Gm1Converter
             int yOffset = height - 16;
             int partsPerLine = 1;
             int counter = 0;
-            List<Byte> arrayByte;
+            List<byte> arrayByte;
             bool halfreached = false;
             datatype = GM1FileHeader.DataType.TilesObject;
+
+            int[] array = {
+                2, 6, 10, 14, 18, 22, 26, 30,
+                30, 26, 22, 18, 14, 10, 6, 2
+            };
+
             for (int part = 0; part < totalTiles; part++)
             {
                 counter++;
                 int x = 0;
                 int y = 0;
                 arrayByte = new List<byte>();
+
                 for (int i = 0; i < 16; i++)
                 {
                     for (int j = 0; j < array[i]; j++)
@@ -653,10 +632,6 @@ namespace HelperClasses.Gm1Converter
                     }
                     y++;
                     x = 0;
-                }
-                if (part == 3 || part == 5)
-                {
-
                 }
 
                 var newImage = new TGXImage();
@@ -797,23 +772,6 @@ namespace HelperClasses.Gm1Converter
         }
 
         /// <summary>
-        /// Convert 4-byte Color (A8R8G8B8) to 2-byte Color (A1R5G5B5)
-        /// </summary>
-        /// <param name="colorAsInt32">The Color to Convert</param>
-        /// <returns></returns>
-        internal static ushort EncodeColorTo2Byte(uint colorAsInt32)
-        {
-            var colors = BitConverter.GetBytes(colorAsInt32);
-
-            ushort b = (ushort)((colors[0] >> 3) & 0b0001_1111);
-            ushort g = (ushort)(((colors[1] >> 3) & 0b0001_1111) << 5);
-            ushort r = (ushort)(((colors[2] >> 3) & 0b0001_1111) << 10);
-            ushort a = (ushort)((colors[3] & 0b1000_0000) << 8);
-
-            return (ushort)(b | g | r | a);
-        }
-
-        /// <summary>
         /// Convert 2-byte Color (A1R5G5B5) to RGBA
         /// </summary>
         /// <param name="pixel">2 Byte Color to Convert</param>
@@ -821,17 +779,12 @@ namespace HelperClasses.Gm1Converter
         /// <param name="g">Green value</param>
         /// <param name="b">Blue value</param>
         /// <param name="a">Alpha value</param>
-        internal static void ReadColor(UInt16 pixel, out byte r, out byte g, out byte b, out byte a)
+        internal static void ReadColor(ushort pixel, out byte r, out byte g, out byte b, out byte a)
         {
             a = (byte)((((pixel >> 15) & 0b0000_0001) == 1) ? 255 : 0);
             r = (byte)(((pixel >> 10) & 0b11111) << 3);
             g = (byte)(((pixel >> 5) & 0b11111) << 3);
             b = (byte)((pixel & 0b11111) << 3);
-
-            //Round Color to full RGB white than 255 not below
-            //r = (byte)(r | (r >> 5));
-            //g = (byte)(g | (g >> 5));
-            //b = (byte)(b | (b >> 5));
         }
 
         /// <summary>

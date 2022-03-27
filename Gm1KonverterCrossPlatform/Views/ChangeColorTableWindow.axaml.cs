@@ -6,15 +6,17 @@ using Avalonia.Controls.Shapes;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
-using Avalonia.Media;
 using Gm1KonverterCrossPlatform.ViewModels;
-using HelperClasses.Gm1Converter;
-using Files.Gm1Converter;
+using Gm1KonverterCrossPlatform.HelperClasses;
+using Gm1KonverterCrossPlatform.Files;
+using Gm1KonverterCrossPlatform.Files.Converters;
 
 namespace Gm1KonverterCrossPlatform.Views
 {
     public class ChangeColorTableWindow : Window
     {
+        private const int width = 32;
+        private const int height = 8;
         private const int pixelSize = 20;
 
         private readonly ChangeColorTableViewModel viewModel;
@@ -38,7 +40,12 @@ namespace Gm1KonverterCrossPlatform.Views
             image = this.Get<Image>("PaletteImage");
             highlight = this.Get<Rectangle>("PaletteImageHighlight");
 
-            viewModel.Bitmap = viewModel.ColorTable.GetBitmap(pixelSize);
+            LoadBitmap();
+        }
+
+        private void LoadBitmap()
+        {
+            viewModel.Bitmap = ColorTableConverter.GetBitmap(viewModel.ColorTable, width, height, pixelSize);
         }
 
         private void MousePressed(object sender, PointerPressedEventArgs e)
@@ -49,7 +56,7 @@ namespace Gm1KonverterCrossPlatform.Views
             Canvas.SetLeft(highlight, newPos.X);
             Canvas.SetTop(highlight, newPos.Y);
 
-            viewModel.ColorPositionInColorTable = (int)newPos.X / pixelSize + (int)(newPos.Y) / pixelSize * 32;
+            viewModel.ColorPositionInColorTable = (int)newPos.X / pixelSize + (int)(newPos.Y) / pixelSize * width;
             var color = viewModel.ColorTable.ColorList[viewModel.ColorPositionInColorTable];
             Utility.ReadColor(color, out byte r, out byte g, out byte b, out _);
 
@@ -60,11 +67,8 @@ namespace Gm1KonverterCrossPlatform.Views
 
         private void Button_SaveColor(object sender, RoutedEventArgs e)
         {
-            uint color = Color.FromRgb((byte)viewModel.Red, (byte)viewModel.Green, (byte)viewModel.Blue).ToUint32();
-            ushort newColor = Utility.EncodeColorTo2Byte(color);
-
-            viewModel.ColorTable.ColorList[viewModel.ColorPositionInColorTable] = newColor;
-            viewModel.Bitmap = viewModel.ColorTable.GetBitmap(pixelSize);
+            viewModel.ColorTable.ColorList[viewModel.ColorPositionInColorTable] = ColorConverter.EncodeArgb1555((byte)viewModel.Red, (byte)viewModel.Green, (byte)viewModel.Blue, 255);
+            LoadBitmap();
 
             viewModel.ColorTableChanged = true;
         }

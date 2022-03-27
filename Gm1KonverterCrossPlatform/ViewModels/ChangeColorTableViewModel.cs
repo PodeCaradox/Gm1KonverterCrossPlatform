@@ -1,37 +1,27 @@
 ﻿using ReactiveUI;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
-using Files.Gm1Converter;
+using Gm1KonverterCrossPlatform.Files;
 
 namespace Gm1KonverterCrossPlatform.ViewModels
 {
 	public class ChangeColorTableViewModel : ViewModelBase
     {
-        #region Variables
-
         private WriteableBitmap bitmap;
         private ColorTable colorTable;
 
         private bool colorTableChanged = false;
         private bool colorSelected = false;
         private int colorPositionInColorTable;
-        private string colorAsText = ""; // argb hex value
-        private int red = 0;
-        private int green = 0;
-        private int blue = 0;
-
-        #endregion
-
-        #region Construtor
+        private string colorAsText = ""; // rgb hex value
+        private uint red = 0;
+        private uint green = 0;
+        private uint blue = 0;
 
         public ChangeColorTableViewModel(ColorTable colorTable)
         {
             this.colorTable = colorTable;
         }
-
-        #endregion
-
-        #region GetterSetter
 
         public bool ColorTableChanged
         {
@@ -94,7 +84,7 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             }
         }
 
-        public int Red
+        public uint Red
         {
             get => red;
             set
@@ -106,7 +96,7 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             }
         }
 
-        public int Green
+        public uint Green
         {
             get => green;
             set
@@ -118,7 +108,7 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             }
         }
 
-        public int Blue
+        public uint Blue
         {
             get => blue;
             set
@@ -130,7 +120,7 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             }
         }
 
-        public void SetColor(int r, int g, int b)
+        public void SetColor(uint r, uint g, uint b)
         {
             red = FormatColorValue(r);
             this.RaisePropertyChanged("Red");
@@ -144,11 +134,7 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             UpdateColorHexValue();
         }
 
-        #endregion
-
-        #region Methods
-
-        private int FormatColorValue(int value)
+        private uint FormatColorValue(uint value)
         {
             if (value > 248)
             {
@@ -179,7 +165,5 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             colorAsText = "#" + red.ToString("X2") + green.ToString("X2") + blue.ToString("X2");
             this.RaisePropertyChanged("ColorAsText");
         }
-
-		#endregion
 	}
 }

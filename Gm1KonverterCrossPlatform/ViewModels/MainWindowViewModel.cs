@@ -6,8 +6,8 @@ using ReactiveUI;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media.Imaging;
-using Files.Gm1Converter;
-using HelperClasses.Gm1Converter;
+using Gm1KonverterCrossPlatform.Files;
+using Gm1KonverterCrossPlatform.Files.Converters;
 using Gm1KonverterCrossPlatform.Views;
 using Gm1KonverterCrossPlatform.HelperClasses;
 using Newtonsoft.Json;
@@ -16,8 +16,6 @@ namespace Gm1KonverterCrossPlatform.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase, IDisposable
     {
-        #region Variables
-
         private UserConfig userConfig;
         public UserConfig UserConfig { get => userConfig; set => userConfig = value; }
 
@@ -311,9 +309,6 @@ namespace Gm1KonverterCrossPlatform.ViewModels
         private byte[] _strongholdasBytes;
         private byte[] _strongholdExtremeasBytes;
         private Point _strongholdadress;
-        #endregion
-
-        #region Methods
 
         ~MainWindowViewModel()
         {
@@ -384,7 +379,7 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             {
                 Dispose();
                 File = new DecodedFile();
-                if (!File.DecodeGm1File(Utility.FileToByteArray(userConfig.CrusaderPath + "\\" + fileName), fileName))
+                if (!File.DecodeGm1File(System.IO.File.ReadAllBytes(userConfig.CrusaderPath + "\\" + fileName), fileName))
                 {
                     MessageBoxWindow messageBox = new MessageBoxWindow(MessageBoxWindow.MessageTyp.Info, (GM1FileHeader.DataType)File.FileHeader.IDataType + Utility.GetText("TilesarenotSupportedyet"));
                     messageBox.ShowDialog(window);
@@ -418,14 +413,18 @@ namespace Gm1KonverterCrossPlatform.ViewModels
         {
             if (Logger.Loggeractiv) Logger.Log("DecodeTgxData:\nFile: " + fileName);
 
-            var array = Utility.FileToByteArray(userConfig.CrusaderPath.Replace("\\gm",String.Empty)+"\\gfx" + "\\" + fileName);
+            var array = System.IO.File.ReadAllBytes(userConfig.CrusaderPath.Replace("\\gm",String.Empty)+"\\gfx" + "\\" + fileName);
             TgxImage = new TGXImage();
 
             TgxImage.TgxWidth = BitConverter.ToUInt32(array, 0);
             TgxImage.TgxHeight = BitConverter.ToUInt32(array, 4);
             TgxImage.ImgFileAsBytearray = new byte[array.Length - 8];
             Array.Copy(array, 8, TgxImage.ImgFileAsBytearray, 0, TgxImage.ImgFileAsBytearray.Length);
-            TgxImage.CreateImageFromByteArray(null, true);
+            TgxImage.Bitmap = ImageConverter.GM1ByteArrayToImg(
+                TgxImage.ImgFileAsBytearray,
+                (int)TgxImage.TgxWidth,
+                (int)TgxImage.TgxHeight,
+                null);
             TGXImages = new ObservableCollection<Image>();
             var bitmap = TgxImage.Bitmap;
             Image image = new Image();
@@ -460,6 +459,7 @@ namespace Gm1KonverterCrossPlatform.ViewModels
         private void ShowTGXImgToWindow()
         {
             TGXImages = new ObservableCollection<Image>();
+
             for (int j = 0; j < File.FileHeader.INumberOfPictureinFile; j++)
             {
                 var bitmap = File.ImagesTGX[j].Bitmap;
@@ -470,9 +470,10 @@ namespace Gm1KonverterCrossPlatform.ViewModels
                 image.Tag = File.ImagesTGX[j];
                 TGXImages.Add(image);
             }
-            if (File.Palette!=null)
+
+            if (File.Palette != null)
             {
-                ActuellColorTable = File.Palette.Bitmaps[File.Palette.ActualPalette];
+                ActuellColorTable = ColorTableConverter.GetBitmap(File.Palette.ColorTables[File.Palette.ActualPalette], Palette.width, Palette.height, Palette.pixelSize);
             }
         }
 
@@ -517,11 +518,6 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             File.DecodeGm1File(File.FileArray, File.FileHeader.Name);
             ShowTGXImgToWindow();
         }
-
-        #endregion
-
-
-        #region Offsets
 
         private Dictionary<int, Point> offsetsBuildings = new Dictionary<int, Point>() {
             { 0, new Point(939615, 939608) },
@@ -591,7 +587,5 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             System.IO.File.WriteAllBytes(UserConfig.CrusaderPath.Replace("\\gm", string.Empty) + "\\Stronghold_Crusader_Extreme.exe", _strongholdExtremeasBytes);
             System.IO.File.WriteAllBytes(UserConfig.CrusaderPath.Replace("\\gm", string.Empty) + "\\Stronghold Crusader.exe", _strongholdasBytes);
         }
-
-        #endregion
     }
 }

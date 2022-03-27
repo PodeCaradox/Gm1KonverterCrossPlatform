@@ -1,12 +1,10 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.IO;
+﻿using System.IO;
+using Newtonsoft.Json;
 
 namespace Gm1KonverterCrossPlatform.HelperClasses
 {
     public class UserConfig
     {
-        #region Variables
         private readonly string path = Config.AppDataPath;
         private readonly string fileName = "UserConfig.txt";
 
@@ -16,9 +14,6 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
         private string workFolderPath;
         private bool openFolderAfterExport;
         private bool activateLogger;
-        #endregion
-        
-        #region GetterSetter
 
         public Languages.Language Language
         {
@@ -81,10 +76,6 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
             }
         }
 
-        #endregion
-
-        #region Methods
-
         /// <summary>
         /// Load the UserConfig from a file.
         /// </summary>
@@ -118,7 +109,5 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
             string json = JsonConvert.SerializeObject(this, Formatting.Indented);
             File.WriteAllText(filePath, json);
         }
-
-        #endregion
     }
 }

@@ -1,7 +1,7 @@
 ﻿using Avalonia;
 using Avalonia.Markup.Xaml;
 
-namespace Gm1KonverterCrossPlatform
+namespace Gm1KonverterCrossPlatform.Views
 {
     public class App : Application
     {
