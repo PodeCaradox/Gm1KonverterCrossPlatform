@@ -605,24 +605,19 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
             for (int part = 0; part < totalTiles; part++)
             {
                 counter++;
-                int x = 0;
-                int y = 0;
+
                 arrayByte = new List<byte>();
 
-                for (int i = 0; i < 16; i++)
+                for (int y = 0; y < 16; y++)
                 {
-                    for (int j = 0; j < array[i]; j++)
+                    for (int x = 0; x < array[y]; x++)
                     {
-                        int number = ((width * (y + yOffset)) + x + xOffset - array[i] / 2);
+                        int number = ((width * (y + yOffset)) + x + xOffset - array[y] / 2);
                         var color = list[number];
                         arrayByte.AddRange(BitConverter.GetBytes(color));
-                        x++;
 
                         list[number] = 32767;
                     }
-
-                    y++;
-                    x = 0;
                 }
 
                 var newImage = new TGXImage();
