@@ -34,6 +34,8 @@ namespace Gm1KonverterCrossPlatform.Files
             animatedColor = byteArray[15];
         }
 
+        public TGXImageHeader() { }
+
         public ushort Width { get => width; set => width = value; }
         public ushort Height { get => height; set => height = value; }
 
