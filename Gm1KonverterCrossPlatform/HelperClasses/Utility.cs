@@ -591,14 +591,8 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
 
             //calculate Parts one part 16 x 30
             int partwidth = width / 30;//todo not exactly 30 width because 2 pixels between(can ignored because Church bigest tiledImage and work)
-            int totalTiles = partwidth;
-            int dummy = 0;
-            for (int i = 0; 0 != totalTiles; i++)
-            {
-                totalTiles--;
-                dummy += totalTiles;
-            }
-            totalTiles = dummy * 2 + partwidth;
+            int totalTiles = partwidth * partwidth;
+
             int savedOffsetX = width / 2;
             int xOffset = savedOffsetX;
             int yOffset = height - 16;
