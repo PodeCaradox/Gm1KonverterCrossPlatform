@@ -48,8 +48,8 @@ namespace Gm1KonverterCrossPlatform.Files
         private uint unknownField16;
         private uint unknownField17;
         private uint unknownField18;
-        private uint unknownField19;
-        private uint unknownField20;
+        private uint originX;
+        private uint originY;
         private uint dataSize;
         private uint unknownField22;
 
@@ -73,8 +73,8 @@ namespace Gm1KonverterCrossPlatform.Files
             unknownField16 = BitConverter.ToUInt32(byteArray, 60);
             unknownField17 = BitConverter.ToUInt32(byteArray, 64);
             unknownField18 = BitConverter.ToUInt32(byteArray, 68);
-            unknownField19 = BitConverter.ToUInt32(byteArray, 72);
-            unknownField20 = BitConverter.ToUInt32(byteArray, 76);
+            originX = BitConverter.ToUInt32(byteArray, 72);
+            originY = BitConverter.ToUInt32(byteArray, 76);
             dataSize = BitConverter.ToUInt32(byteArray, 80);
             unknownField22 = BitConverter.ToUInt32(byteArray, 84);
         }
@@ -99,8 +99,8 @@ namespace Gm1KonverterCrossPlatform.Files
         public uint UnknownField16 { get => unknownField16; set => unknownField16 = value; }
         public uint UnknownField17 { get => unknownField17; set => unknownField17 = value; }
         public uint UnknownField18 { get => unknownField18; set => unknownField18 = value; }
-        public uint UnknownField19 { get => unknownField19; set => unknownField19 = value; }
-        public uint UnknownField20 { get => unknownField20; set => unknownField20 = value; }
+        public uint OriginX { get => originX; set => originX = value; }
+        public uint OriginY { get => originY; set => originY = value; }
         public uint IDataSize { get => dataSize; set => dataSize = value; }
         public uint UnknownField22 { get => unknownField22; set => unknownField22 = value; }
 
@@ -126,8 +126,8 @@ namespace Gm1KonverterCrossPlatform.Files
             byteArray.AddRange(BitConverter.GetBytes(unknownField16));
             byteArray.AddRange(BitConverter.GetBytes(unknownField17));
             byteArray.AddRange(BitConverter.GetBytes(unknownField18));
-            byteArray.AddRange(BitConverter.GetBytes(unknownField19));
-            byteArray.AddRange(BitConverter.GetBytes(unknownField20));
+            byteArray.AddRange(BitConverter.GetBytes(OriginX));
+            byteArray.AddRange(BitConverter.GetBytes(OriginY));
             byteArray.AddRange(BitConverter.GetBytes(dataSize));
             byteArray.AddRange(BitConverter.GetBytes(unknownField22));
 
