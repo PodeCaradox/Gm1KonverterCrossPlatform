@@ -17,13 +17,7 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
     /// </summary>
     internal static class Utility
     {
-        #region Public
-
         public static GM1FileHeader.DataType datatype;
-
-        #endregion
-
-        #region Methods
 
         internal static Image<Rgba32> LoadImageData(string filePath)
         {
@@ -835,8 +829,6 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
 
             return width;
         }
-
-        #endregion
 
         public static String GetText(String key)
         {
