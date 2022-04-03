@@ -635,6 +635,7 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
                 }
 
                 var newImage = new TGXImage();
+                newImage.Header = new TGXImageHeader();
                 newImage.Header.Direction = 0;
                 newImage.Header.Height = 16;
                 newImage.Header.Width = 30;
