@@ -70,16 +70,17 @@ namespace Gm1KonverterCrossPlatform.Files
             uint x = 0;
             uint y = 0;
 
+            ushort pixelColor;
+            uint colorByte;
+
             for (int bytePos = 512; bytePos < imgFileAsBytearray.Length;)
             {
                 byte token = imgFileAsBytearray[bytePos];
                 byte tokentype = (byte)(token >> 5);
                 byte length = (byte)((token & 31) + 1);
 
-                uint colorByte;
-
                 bytePos++;
-                ushort pixelColor;
+
                 switch (tokentype)
                 {
                     case 0: //Stream-of-pixels 
@@ -89,7 +90,9 @@ namespace Gm1KonverterCrossPlatform.Files
                             pixelColor = BitConverter.ToUInt16(imgFileAsBytearray, bytePos);
                             bytePos += 2;
 
-                            colors[(uint)((width * (y + offsetY)) + x + offsetX)] = Converters.ColorConverter.Argb1555ToBgra8888(pixelColor);
+                            colorByte = Converters.ColorConverter.Argb1555ToBgra8888(pixelColor);
+
+                            colors[(uint)((width * (y + offsetY)) + x + offsetX)] = colorByte;
 
                             x++;
                         }
@@ -98,7 +101,6 @@ namespace Gm1KonverterCrossPlatform.Files
                     case 4: //Newline
 
                         y++;
-                        if (y > this.height) break;
                         x = 0;
                         break;
 
@@ -107,7 +109,7 @@ namespace Gm1KonverterCrossPlatform.Files
                         pixelColor = BitConverter.ToUInt16(imgFileAsBytearray, bytePos);
                         bytePos += 2;
 
-                        colorByte = Converters.ColorConverter.Argb1555ToBgra8888(pixelColor); ;
+                        colorByte = Converters.ColorConverter.Argb1555ToBgra8888(pixelColor);
 
                         for (byte i = 0; i < length; i++)
                         {
@@ -118,12 +120,8 @@ namespace Gm1KonverterCrossPlatform.Files
 
                     case 1: //Transparent-Pixel-String
 
-                        colorByte = (uint)(0 | (0 << 8) | (0 << 16) | (0 << 24));
-                        for (byte i = 0; i < length; i++)
-                        {
-                            colors[(uint)((width * (y + offsetY)) + x + offsetX)] = colorByte;
-                            x++;
-                        }
+                        x += length;
+
                         break;
 
                     default:
