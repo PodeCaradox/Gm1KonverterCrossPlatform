@@ -281,10 +281,10 @@
             <TextBlock Grid.Row="16" Grid.Column="1" Text="{Binding FileHeader.UnknownField17}"/>
             <TextBlock Grid.Row="17" Grid.Column="0" Text="UnknownField18:"/>
             <TextBlock Grid.Row="17" Grid.Column="1" Text="{Binding FileHeader.UnknownField18}"/>
-            <TextBlock Grid.Row="18" Grid.Column="0" Text="UnknownField19:"/>
-            <TextBlock Grid.Row="18" Grid.Column="1" Text="{Binding FileHeader.UnknownField19}"/>
-            <TextBlock Grid.Row="19" Grid.Column="0" Text="UnknownField20:"/>
-            <TextBlock Grid.Row="19" Grid.Column="1" Text="{Binding FileHeader.UnknownField20}"/>
+            <TextBlock Grid.Row="18" Grid.Column="0" Text="OriginX:"/>
+            <TextBlock Grid.Row="18" Grid.Column="1" Text="{Binding FileHeader.OriginX}"/>
+            <TextBlock Grid.Row="19" Grid.Column="0" Text="OriginY:"/>
+            <TextBlock Grid.Row="19" Grid.Column="1" Text="{Binding FileHeader.OriginY}"/>
             <TextBlock Grid.Row="20" Grid.Column="0" Text="IDataSize:"/>
             <TextBlock Grid.Row="20" Grid.Column="1" Text="{Binding FileHeader.IDataSize}"/>
             <TextBlock Grid.Row="21" Grid.Column="0" Text="UnknownField22:"/>
