@@ -115,20 +115,6 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
         }
 
         internal unsafe static WriteableBitmap LoadImageAsBitmap(
-            String filename,
-            ref int width,
-            ref int height,
-            int offsetx = 0,
-            int offsety = 0)
-        {
-            if (Logger.Loggeractiv) Logger.Log($"LoadImageAsBitmap {filename}");
-
-            Image<Rgba32> image = Image.Load<Rgba32>(filename);
-
-            return LoadImageAsBitmap(image, ref width, ref height, offsetx, offsety);
-        }
-
-        internal unsafe static WriteableBitmap LoadImageAsBitmap(
             Image<Rgba32> image,
             ref int width,
             ref int height,
