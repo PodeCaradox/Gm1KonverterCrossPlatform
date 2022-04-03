@@ -437,7 +437,13 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
                 maxheight += height;
             }
 
-            WriteableBitmap bigImage = new WriteableBitmap(new Avalonia.PixelSize(maxwidth, maxheight), new Avalonia.Vector(96, 96), Avalonia.Platform.PixelFormat.Bgra8888);// Bgra8888 is device-native and much faster.
+            WriteableBitmap bigImage = new WriteableBitmap(
+                new PixelSize(maxwidth, maxheight),
+                new Vector(96, 96),
+                Avalonia.Platform.PixelFormat.Bgra8888,
+                Avalonia.Platform.AlphaFormat.Premul
+            );
+
             using (var buf = bigImage.Lock())
             {
                 int xoffset = 0;
