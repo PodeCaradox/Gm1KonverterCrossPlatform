@@ -69,7 +69,6 @@ namespace Gm1KonverterCrossPlatform.Files
         {
             uint x = 0;
             uint y = 0;
-            byte r, g, b, a;
 
             for (int bytePos = 512; bytePos < imgFileAsBytearray.Length;)
             {
@@ -90,10 +89,7 @@ namespace Gm1KonverterCrossPlatform.Files
                             pixelColor = BitConverter.ToUInt16(imgFileAsBytearray, bytePos);
                             bytePos += 2;
 
-                            Utility.ReadColor(pixelColor, out r, out g, out b, out a);
-                            a = byte.MaxValue;
-                            uint number = (uint)((width * (y + offsetY)) + x + offsetX);
-                            colors[number] = (uint)(b | (g << 8) | (r << 16) | (a << 24));
+                            colors[(uint)((width * (y + offsetY)) + x + offsetX)] = Converters.ColorConverter.Argb1555ToBgra8888(pixelColor);
 
                             x++;
                         }
@@ -111,10 +107,7 @@ namespace Gm1KonverterCrossPlatform.Files
                         pixelColor = BitConverter.ToUInt16(imgFileAsBytearray, bytePos);
                         bytePos += 2;
 
-                        Utility.ReadColor(pixelColor, out r, out g, out b, out a);
-
-                        a = byte.MaxValue;
-                        colorByte = (uint)(b | (g << 8) | (r << 16) | (a << 24));
+                        colorByte = Converters.ColorConverter.Argb1555ToBgra8888(pixelColor); ;
 
                         for (byte i = 0; i < length; i++)
                         {

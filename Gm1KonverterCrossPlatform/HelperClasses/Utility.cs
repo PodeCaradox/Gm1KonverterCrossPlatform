@@ -770,22 +770,6 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
         }
 
         /// <summary>
-        /// Convert 2-byte Color (A1R5G5B5) to RGBA
-        /// </summary>
-        /// <param name="pixel">2 Byte Color to Convert</param>
-        /// <param name="r">Red value</param>
-        /// <param name="g">Green value</param>
-        /// <param name="b">Blue value</param>
-        /// <param name="a">Alpha value</param>
-        internal static void ReadColor(ushort pixel, out byte r, out byte g, out byte b, out byte a)
-        {
-            a = (byte)((((pixel >> 15) & 0b0000_0001) == 1) ? 255 : 0);
-            r = (byte)(((pixel >> 10) & 0b11111) << 3);
-            g = (byte)(((pixel >> 5) & 0b11111) << 3);
-            b = (byte)((pixel & 0b11111) << 3);
-        }
-
-        /// <summary>
         /// Get File names in a directory
         /// </summary>
         /// <param name="directory">The Path to lookup</param>

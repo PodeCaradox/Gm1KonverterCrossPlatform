@@ -58,7 +58,7 @@ namespace Gm1KonverterCrossPlatform.Views
 
             viewModel.ColorPositionInColorTable = (int)newPos.X / pixelSize + (int)(newPos.Y) / pixelSize * width;
             var color = viewModel.ColorTable.ColorList[viewModel.ColorPositionInColorTable];
-            Utility.ReadColor(color, out byte r, out byte g, out byte b, out _);
+            ColorConverter.DecodeArgb1555(color, out byte r, out byte g, out byte b, out _);
 
             viewModel.SetColor(r, g, b);
 
