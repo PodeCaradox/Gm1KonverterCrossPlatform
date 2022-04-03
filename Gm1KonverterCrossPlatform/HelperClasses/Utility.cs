@@ -396,27 +396,41 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
             return array;
         }
 
-        internal static WriteableBitmap CreateBigImage(List<TilesImage> tilesImages, int BigImageSize)
+        internal static WriteableBitmap CreateBigImage(List<TilesImage> tilesImages, int BigImageWidth)
         {
-            if (Logger.Loggeractiv) Logger.Log("CreateBigImage");
             List<WriteableBitmap> bitmaps = new List<WriteableBitmap>();
-            foreach (var item in tilesImages)
+
+            foreach (TilesImage item in tilesImages)
             {
                 bitmaps.Add(item.TileImage);
             }
-            return CreateBigImage(bitmaps, BigImageSize);
+
+            return CreateBigImage(bitmaps, BigImageWidth);
         }
 
-        private static unsafe WriteableBitmap CreateBigImage(List<WriteableBitmap> bitmaps, int BigImageSize)
+        internal static WriteableBitmap CreateBigImage(List<TGXImage> imagesTGX, int BigImageWidth)
         {
-            int maxwidth = BigImageSize;
+            List<WriteableBitmap> bitmaps = new List<WriteableBitmap>();
+
+            foreach (TGXImage item in imagesTGX)
+            {
+                bitmaps.Add(item.Bitmap);
+            }
+
+            return CreateBigImage(bitmaps, BigImageWidth);
+        }
+
+        private static unsafe WriteableBitmap CreateBigImage(List<WriteableBitmap> bitmaps, int BigImageWidth)
+        {
+            int maxwidth = BigImageWidth;
             int maxheight = 0;
             int actualwidth = 0;
             int row = 0;
 
             List<int> heighrows = new List<int>();
             heighrows.Add(bitmaps[0].PixelSize.Height);
-            foreach (var bitmap in bitmaps)
+
+            foreach (WriteableBitmap bitmap in bitmaps)
             {
                 actualwidth += bitmap.PixelSize.Width;
                 if (maxwidth <= actualwidth)
@@ -444,13 +458,16 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
                 Avalonia.Platform.AlphaFormat.Premul
             );
 
-            using (var buf = bigImage.Lock())
+            using (var bigImageBuffer = bigImage.Lock())
             {
+                uint* bigImagePointer = (uint*)bigImageBuffer.Address;
+
                 int xoffset = 0;
                 int yoffset = 0;
                 row = 0;
                 actualwidth = 0;
-                foreach (var bitmap in bitmaps)
+
+                foreach (WriteableBitmap bitmap in bitmaps)
                 {
                     actualwidth += bitmap.PixelSize.Width;
                     if (maxwidth <= actualwidth)
@@ -460,39 +477,25 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
                         yoffset += heighrows[row];
                         row++;
                     }
-
-                    using (var bit = bitmap.Lock())
+                    
+                    using (var imageBuffer = bitmap.Lock())
                     {
+                        uint* imagePointer = (uint*)imageBuffer.Address;
+
                         for (int y = 0; y < bitmap.PixelSize.Height; y++)
                         {
                             for (int x = 0; x < bitmap.PixelSize.Width; x++)
                             {
-                                UInt32 colorByte;
-                                var ptr = (uint*)bit.Address;
-                                ptr += (uint)((bitmap.PixelSize.Width * y) + x);
-                                colorByte = *ptr;
-
-                                ptr = (uint*)buf.Address;
-                                ptr += (uint)((maxwidth * (y+yoffset)) + x + xoffset);
-                                *ptr = colorByte;
+                                bigImagePointer[((maxwidth * (y + yoffset)) + x + xoffset)] = imagePointer[((bitmap.PixelSize.Width * y) + x)];
                             }
                         }
                     }
-
+                    
                     xoffset += bitmap.PixelSize.Width;
                 }
             }
-            return bigImage;
-        }
 
-        internal static WriteableBitmap CreateBigImage(List<TGXImage> imagesTGX, int BigImageWidth)
-        {
-            List<WriteableBitmap> bitmaps = new List<WriteableBitmap>();
-            foreach (var item in imagesTGX)
-            {
-                bitmaps.Add(item.Bitmap);
-            }
-            return CreateBigImage(bitmaps, BigImageWidth);
+            return bigImage;
         }
 
         private static byte FindColorPositionInPalette(ushort color, int position, Palette palette, List<ushort>[] paletteImages)
