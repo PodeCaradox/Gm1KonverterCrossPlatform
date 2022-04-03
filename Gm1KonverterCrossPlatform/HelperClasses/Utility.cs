@@ -592,6 +592,7 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
             int yOffset = height - 16;
             int partsPerLine = 1;
             int counter = 0;
+
             List<byte> arrayByte;
             bool halfreached = false;
             datatype = GM1FileHeader.DataType.TilesObject;
@@ -616,8 +617,10 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
                         var color = list[number];
                         arrayByte.AddRange(BitConverter.GetBytes(color));
                         x++;
+
                         list[number] = 32767;
                     }
+
                     y++;
                     x = 0;
                 }
@@ -631,7 +634,9 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
                 //newImage.OffsetY = (ushort)(yOffset + YOffsetBefore);
                 newImage.Header.SubParts = (byte)totalTiles;
                 newImage.Header.ImagePart = (byte)part;
-                if(totalTiles==1) halfreached = true;
+
+                if (totalTiles == 1) halfreached = true;
+
                 if (halfreached)
                 {
                     //tileoffset=1st pixel from tile and than height
@@ -645,8 +650,9 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
                             int imageOnTopheight = yOffset + 7;
                             int imageOnTopOffsetX = xOffset - 15;
                             List<ushort> colorListImgOnTop = GetColorList(list, imageOnTopwidth, imageOnTopheight, imageOnTopOffsetX, width);
-                            if (colorListImgOnTop.Count != 0) {
                            
+                            if (colorListImgOnTop.Count != 0)
+                            {
                                 var byteArrayImgonTop = ImgToGM1ByteArray(colorListImgOnTop, imageOnTopwidth, colorListImgOnTop.Count / imageOnTopwidth, 1);
                                 arrayByte.AddRange(byteArrayImgonTop);
                                 newImage.Header.TileOffset = (ushort)(colorListImgOnTop.Count / imageOnTopwidth + 10 - 16 - 1);
@@ -666,7 +672,6 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
                             if (colorListImgOnTop.Count != 0)
                             {
                                 var byteArrayImgonTop = ImgToGM1ByteArray(colorListImgOnTop, imageOnTopwidth, colorListImgOnTop.Count / imageOnTopwidth, 1);
-
                                 arrayByte.AddRange(byteArrayImgonTop);
                                 newImage.Header.TileOffset = (ushort)(colorListImgOnTop.Count / imageOnTopwidth + 10 - 16 - 1);
                                 if (newImage.Header.TileOffset == ushort.MaxValue) newImage.Header.TileOffset = 0;
@@ -682,6 +687,7 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
                         int imageOnTopheight = yOffset + 7;
                         int imageOnTopOffsetX = xOffset;
                         List<ushort> colorListImgOnTop = GetColorList(list, imageOnTopwidth, imageOnTopheight, imageOnTopOffsetX - 1, width);
+                        
                         if (colorListImgOnTop.Count != 0)
                         {
                             var byteArrayImgonTop = ImgToGM1ByteArray(colorListImgOnTop, imageOnTopwidth, colorListImgOnTop.Count / imageOnTopwidth, 1);
@@ -690,9 +696,11 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
                             newImage.Header.TileOffset = (ushort)(colorListImgOnTop.Count / imageOnTopwidth + 10 - 16 - 1);
                             if (newImage.Header.TileOffset == ushort.MaxValue) newImage.Header.TileOffset = 0;
                         }
+
                         newImage.Header.HorizontalOffsetOfImage = 14;
                     }
                 }
+
                 newImageList.Add(newImage);
                 newImage.ImgFileAsBytearray = arrayByte.ToArray();
                 xOffset += 32;
@@ -701,6 +709,7 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
                 {
                     yOffset -= 8;
                     counter = 0;
+
                     xOffset = savedOffsetX;
                     if (partsPerLine == partwidth - 1 && !halfreached)
                     {
@@ -725,8 +734,8 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
             }
 
             XOffsetBefore += width;
-            if(height> biggestHeight) biggestHeight = height;
-            if (XOffsetBefore>4000)
+            if (height > biggestHeight) biggestHeight = height;
+            if (XOffsetBefore > 4000)
             {
                 XOffsetBefore = 0;
                 YOffsetBefore += biggestHeight;
