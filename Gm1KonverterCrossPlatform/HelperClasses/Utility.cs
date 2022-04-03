@@ -126,25 +126,25 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
             if (width == 0) width = image.Width;
             if (height == 0) height = image.Height;
 
-            WriteableBitmap bitmap = new WriteableBitmap(new PixelSize(width, height),new Vector(96,96),Avalonia.Platform.PixelFormat.Rgba8888);
-            using (var bit = bitmap.Lock())
+            WriteableBitmap bitmap = new WriteableBitmap(
+                new PixelSize(width, height),
+                new Vector(96,96),
+                Avalonia.Platform.PixelFormat.Rgba8888,
+                Avalonia.Platform.AlphaFormat.Premul
+            );
+
+            using (var buffer = bitmap.Lock())
             {
                 try
                 {
-                    int xBit = 0, yBit = 0;
-                    for (int y = offsety; y < height + offsety; y++)
-                    {
-                        for (int x = offsetx; x < width + offsetx; x++) //Bgra8888
-                        {
-                            var pixel = image[x, y];
+                    uint* pointer = (uint*)buffer.Address;
 
-                            var ptr = (uint*)bit.Address;
-                            ptr += (uint)((bitmap.PixelSize.Width * yBit) + xBit);
-                            *ptr = pixel.PackedValue;
-                            xBit++;
+                    for (int y = 0; y < height; y++)
+                    {
+                        for (int x = 0; x < width; x++)
+                        {
+                            pointer[((width * y) + x)] = image[x + offsetx, y + offsety].PackedValue;
                         }
-                        xBit = 0;
-                        yBit++;
                     }
                 }
                 catch (Exception e)

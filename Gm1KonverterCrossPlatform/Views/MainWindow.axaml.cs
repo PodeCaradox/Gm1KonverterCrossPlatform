@@ -352,6 +352,8 @@ namespace Gm1KonverterCrossPlatform.Views
                         LoadNewDataForGm1File(fileindex, colorList, width, height);
                         fileindex++;
 
+                        System.Diagnostics.Debug.WriteLine("pass xxx");
+
                         Bitmap newimage = Utility.LoadImageAsBitmap(imageData, ref width, ref height, offsetx, offsety);
                         offsetx += width;
                         vm.TGXImages[counter].Source = newimage;
