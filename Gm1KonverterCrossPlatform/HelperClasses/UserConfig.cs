@@ -89,7 +89,7 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
 
                 language = obj.Language;
                 colorTheme = obj.colorTheme;
-                crusaderPath = obj.CrusaderPath;
+                crusaderPath = obj.CrusaderPath.Replace("\\gm",string.Empty);
                 workFolderPath = obj.WorkFolderPath;
                 openFolderAfterExport = obj.OpenFolderAfterExport;
                 activateLogger = obj.ActivateLogger;

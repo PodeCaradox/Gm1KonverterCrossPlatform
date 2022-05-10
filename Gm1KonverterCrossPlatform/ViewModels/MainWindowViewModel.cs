@@ -335,12 +335,13 @@ namespace Gm1KonverterCrossPlatform.ViewModels
         internal void LoadStrongholdFiles()
         {
             Logger.Log("LoadStrongholdFiles start");
-            if (!String.IsNullOrEmpty(userConfig.CrusaderPath))
+            if (!string.IsNullOrEmpty(userConfig.CrusaderPath))
             {
-                StrongholdFiles = Utility.GetFileNames(userConfig.CrusaderPath, "*.gm1");
+               
                 try
                 {
-                    GfxFiles = Utility.GetFileNames(userConfig.CrusaderPath.Replace("\\gm", String.Empty) + "\\gfx", "*.tgx");
+                    StrongholdFiles = Utility.GetFileNames(userConfig.CrusaderPath + "\\gm", "*.gm1");
+                    GfxFiles = Utility.GetFileNames(userConfig.CrusaderPath + "\\gfx", "*.tgx");
                 }
                 catch (Exception e)
                 {
@@ -379,7 +380,7 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             {
                 Dispose();
                 File = new DecodedFile();
-                if (!File.DecodeGm1File(System.IO.File.ReadAllBytes(userConfig.CrusaderPath + "\\" + fileName), fileName))
+                if (!File.DecodeGm1File(System.IO.File.ReadAllBytes(userConfig.CrusaderPath + "\\gm\\" + fileName), fileName))
                 {
                     MessageBoxWindow messageBox = new MessageBoxWindow(MessageBoxWindow.MessageTyp.Info, (GM1FileHeader.DataType)File.FileHeader.IDataType + Utility.GetText("TilesarenotSupportedyet"));
                     messageBox.ShowDialog(window);
@@ -413,7 +414,7 @@ namespace Gm1KonverterCrossPlatform.ViewModels
         {
             if (Logger.Loggeractiv) Logger.Log("DecodeTgxData:\nFile: " + fileName);
 
-            var array = System.IO.File.ReadAllBytes(userConfig.CrusaderPath.Replace("\\gm",String.Empty)+"\\gfx" + "\\" + fileName);
+            var array = System.IO.File.ReadAllBytes(userConfig.CrusaderPath +"\\gfx\\" + fileName);
             TgxImage = new TGXImage();
 
             TgxImage.TgxWidth = BitConverter.ToUInt32(array, 0);
@@ -584,8 +585,8 @@ namespace Gm1KonverterCrossPlatform.ViewModels
                 }
             }
 
-            System.IO.File.WriteAllBytes(UserConfig.CrusaderPath.Replace("\\gm", string.Empty) + "\\Stronghold_Crusader_Extreme.exe", _strongholdExtremeasBytes);
-            System.IO.File.WriteAllBytes(UserConfig.CrusaderPath.Replace("\\gm", string.Empty) + "\\Stronghold Crusader.exe", _strongholdasBytes);
+            System.IO.File.WriteAllBytes(UserConfig.CrusaderPath + "\\Stronghold_Crusader_Extreme.exe", _strongholdExtremeasBytes);
+            System.IO.File.WriteAllBytes(UserConfig.CrusaderPath + "\\Stronghold Crusader.exe", _strongholdasBytes);
         }
     }
 }

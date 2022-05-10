@@ -44,11 +44,11 @@ namespace Gm1KonverterCrossPlatform.Views
             var offsetData = File.ReadAllText(path);
             var dict = JsonConvert.DeserializeObject<Dictionary<int, Point>>(offsetData);
 
-            if (vm.StrongholdasBytes == null && File.Exists(vm.UserConfig.CrusaderPath.Replace("\\gm", String.Empty) + "\\Stronghold Crusader.exe"))
-                vm.StrongholdasBytes = File.ReadAllBytes(vm.UserConfig.CrusaderPath.Replace("\\gm", String.Empty) + "\\Stronghold Crusader.exe");
+            if (vm.StrongholdasBytes == null && File.Exists(vm.UserConfig.CrusaderPath + "\\Stronghold Crusader.exe"))
+                vm.StrongholdasBytes = File.ReadAllBytes(vm.UserConfig.CrusaderPath + "\\Stronghold Crusader.exe");
 
-            if (vm.StrongholdExtremeasBytes == null && File.Exists(vm.UserConfig.CrusaderPath.Replace("\\gm", String.Empty) + "\\Stronghold_Crusader_Extreme.exe"))
-                vm.StrongholdExtremeasBytes = File.ReadAllBytes(vm.UserConfig.CrusaderPath.Replace("\\gm", String.Empty) + "\\Stronghold_Crusader_Extreme.exe");
+            if (vm.StrongholdExtremeasBytes == null && File.Exists(vm.UserConfig.CrusaderPath + "\\Stronghold_Crusader_Extreme.exe"))
+                vm.StrongholdExtremeasBytes = File.ReadAllBytes(vm.UserConfig.CrusaderPath + "\\Stronghold_Crusader_Extreme.exe");
 
             foreach (var key in dict.Keys)
             {
@@ -62,7 +62,7 @@ namespace Gm1KonverterCrossPlatform.Views
             var menueItem = sender as MenuItem;
             if (menueItem.Name == "OpenStrongholdFolderMenueItem")
             {
-                Process.Start("explorer.exe", vm.UserConfig.CrusaderPath.Replace(Path.DirectorySeparatorChar + "gm",""));
+                Process.Start("explorer.exe", vm.UserConfig.CrusaderPath);
             }
             else
             {
@@ -74,7 +74,13 @@ namespace Gm1KonverterCrossPlatform.Views
         {
             if (Logger.Loggeractiv) Logger.Log("\n>>ReplacewithSavedTgxFile start");
             var filewithoutgm1ending = actualName.Replace(".tgx", "");
-            File.Copy(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\" + filewithoutgm1ending + "Save.tgx", vm.UserConfig.CrusaderPath.Replace("\\gm", String.Empty) + "\\" + actualName, true);
+            if(!File.Exists(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\" + filewithoutgm1ending + "Save.tgx"))
+            {
+                MessageBoxWindow messageBox = new MessageBoxWindow(MessageBoxWindow.MessageTyp.Info, "Pls export the Tgx Images first");
+                messageBox.Show();
+                return;
+            }
+            File.Copy(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\" + filewithoutgm1ending + "Save.tgx", vm.UserConfig.CrusaderPath + "\\" + actualName, true);
             if (Logger.Loggeractiv) Logger.Log("\n>>ReplacewithSavedTgxFile end");
         }
 
@@ -82,14 +88,19 @@ namespace Gm1KonverterCrossPlatform.Views
         {
             var filewithoutgm1ending = actualName.Replace(".tgx", "");
             if (!File.Exists(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\" + filewithoutgm1ending + "Save.tgx"))
-                File.Copy(vm.UserConfig.CrusaderPath.Replace("\\gm", String.Empty) + "\\gfx\\" + actualName, vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\" + filewithoutgm1ending + "Save.tgx", true);
+            {
+                MessageBoxWindow messageBox = new MessageBoxWindow(MessageBoxWindow.MessageTyp.Info, "Pls export the Tgx Images first");
+                messageBox.Show();
+                return;
+            }
+            File.Copy(vm.UserConfig.CrusaderPath + "\\gfx\\" + actualName, vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\" + filewithoutgm1ending + "Save.tgx", true);
 
             var array = new List<byte>();
 
             array.AddRange(BitConverter.GetBytes(vm.TgxImage.TgxWidth));
             array.AddRange(BitConverter.GetBytes(vm.TgxImage.TgxHeight));
             array.AddRange(vm.TgxImage.ImgFileAsBytearray);
-            File.WriteAllBytes(vm.UserConfig.CrusaderPath.Replace("\\gm", String.Empty) + "\\gfx\\" + actualName, array.ToArray());
+            File.WriteAllBytes(vm.UserConfig.CrusaderPath + "\\gfx\\" + actualName, array.ToArray());
             vm.ReplaceWithSaveFileTgx = true;
         }
 
@@ -578,7 +589,7 @@ namespace Gm1KonverterCrossPlatform.Views
         {
             if (Logger.Loggeractiv) Logger.Log("\n>>ReplacewithSavedGM1FileM start");
             var filewithoutgm1ending = vm.File.FileHeader.Name.Replace(".gm1", "");
-            File.Copy(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\" + filewithoutgm1ending + "Save.gm1", vm.UserConfig.CrusaderPath + "\\" + vm.File.FileHeader.Name, true);
+            File.Copy(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\" + filewithoutgm1ending + "Save.gm1", vm.UserConfig.CrusaderPath + "\\gm\\" + vm.File.FileHeader.Name, true);
             LoadGm1File(vm.File.FileHeader.Name);
             if (Logger.Loggeractiv) Logger.Log("\n>>ReplacewithSavedGM1FileM end");
         }
@@ -596,12 +607,12 @@ namespace Gm1KonverterCrossPlatform.Views
             {
                 try
                 {
-                    if (File.Exists(vm.UserConfig.CrusaderPath.Replace("\\gm", String.Empty) + "\\Stronghold Crusader.exe"))
+                    if (File.Exists(vm.UserConfig.CrusaderPath + "\\Stronghold Crusader.exe"))
 
-                        vm.StrongholdasBytes = File.ReadAllBytes(vm.UserConfig.CrusaderPath.Replace("\\gm", String.Empty) + "\\Stronghold Crusader.exe");
+                        vm.StrongholdasBytes = File.ReadAllBytes(vm.UserConfig.CrusaderPath + "\\Stronghold Crusader.exe");
 
-                    if (File.Exists(vm.UserConfig.CrusaderPath.Replace("\\gm", String.Empty) + "\\Stronghold_Crusader_Extreme.exe"))
-                        vm.StrongholdExtremeasBytes = File.ReadAllBytes(vm.UserConfig.CrusaderPath.Replace("\\gm", String.Empty) + "\\Stronghold_Crusader_Extreme.exe");
+                    if (File.Exists(vm.UserConfig.CrusaderPath + "\\Stronghold_Crusader_Extreme.exe"))
+                        vm.StrongholdExtremeasBytes = File.ReadAllBytes(vm.UserConfig.CrusaderPath + "\\Stronghold_Crusader_Extreme.exe");
                 }
                 catch (Exception em)
                 {
@@ -800,11 +811,11 @@ namespace Gm1KonverterCrossPlatform.Views
 
             if (!File.Exists(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\" + filewithoutgm1ending + "Save.gm1"))
             {
-                File.Copy(vm.UserConfig.CrusaderPath + "\\" + vm.File.FileHeader.Name, vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\" + filewithoutgm1ending + "Save.gm1");
+                File.Copy(vm.UserConfig.CrusaderPath + "\\gm\\" + vm.File.FileHeader.Name, vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\" + filewithoutgm1ending + "Save.gm1");
             }
             var array = vm.File.GetNewGM1Bytes();
-            File.WriteAllBytes(vm.UserConfig.CrusaderPath + "\\" + vm.File.FileHeader.Name, array);
-            File.Copy(vm.UserConfig.CrusaderPath + "\\" + vm.File.FileHeader.Name, vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\" + filewithoutgm1ending + "Modded.gm1", true);
+            File.WriteAllBytes(vm.UserConfig.CrusaderPath + "\\gm\\" + vm.File.FileHeader.Name, array);
+            File.Copy(vm.UserConfig.CrusaderPath + "\\gm\\" + vm.File.FileHeader.Name, vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\" + filewithoutgm1ending + "Modded.gm1", true);
             Cursor = new Avalonia.Input.Cursor(Avalonia.Input.StandardCursorType.Arrow);
             if (Logger.Loggeractiv) Logger.Log("\n>>CreatenewGM1 end");
         }
