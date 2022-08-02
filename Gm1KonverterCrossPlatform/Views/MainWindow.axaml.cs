@@ -87,11 +87,15 @@ namespace Gm1KonverterCrossPlatform.Views
         private void CreatenewTgx(object sender, RoutedEventArgs e)
         {
             var filewithoutgm1ending = actualName.Replace(".tgx", "");
-            if (!File.Exists(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\" + filewithoutgm1ending + "Save.tgx"))
+            if (!Directory.Exists(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending))
             {
                 MessageBoxWindow messageBox = new MessageBoxWindow(MessageBoxWindow.MessageTyp.Info, "Pls export the Tgx Images first");
                 messageBox.Show();
                 return;
+            }
+            if (!File.Exists(vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\" + filewithoutgm1ending + "Save.tgx"))
+            {
+               File.Copy(vm.UserConfig.CrusaderPath.Replace("\\gm", String.Empty) + "\\gfx\\" + actualName, vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\" + filewithoutgm1ending + "Save.tgx", false);
             }
             File.Copy(vm.UserConfig.CrusaderPath + "\\gfx\\" + actualName, vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\" + filewithoutgm1ending + "Save.tgx", true);
 

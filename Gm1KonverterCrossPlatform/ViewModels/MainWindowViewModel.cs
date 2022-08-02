@@ -420,6 +420,8 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             TgxImage.TgxWidth = BitConverter.ToUInt32(array, 0);
             TgxImage.TgxHeight = BitConverter.ToUInt32(array, 4);
             TgxImage.ImgFileAsBytearray = new byte[array.Length - 8];
+            TgxImage.Header = new TGXImageHeader();
+            TgxImage.Header.AnimatedColor = 1;
             Array.Copy(array, 8, TgxImage.ImgFileAsBytearray, 0, TgxImage.ImgFileAsBytearray.Length);
             TgxImage.Bitmap = ImageConverter.GM1ByteArrayToImg(
                 TgxImage.ImgFileAsBytearray,
