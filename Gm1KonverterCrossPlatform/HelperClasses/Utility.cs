@@ -81,6 +81,7 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
                 GM1FileHeader.DataType dataType = (GM1FileHeader.DataType)type;
                 byte a = (animatedColor >= 1
                     || dataType == GM1FileHeader.DataType.TilesObject
+                    || dataType == GM1FileHeader.DataType.Font
                     || dataType == GM1FileHeader.DataType.Animations
                     || dataType == GM1FileHeader.DataType.TGXConstSize
                     || dataType == GM1FileHeader.DataType.NOCompression
@@ -172,9 +173,9 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
             int transparent =  32767;
             ushort alpha = (animatedColor == 0) ? (ushort)0b1000_0000_0000_0000 : (ushort)0b0;
             List<byte> array = new List<byte>();
-            byte length = 0; // value 1-32  | 0 will be 1
-            byte header = 0; // 3 bytes
-            int countSamePixel = 0;
+            byte length; // value 1-32  | 0 will be 1
+            byte header; // 3 bytes
+            int countSamePixel;
             bool newline = false;
             for (int i = 0; i < height; i++)
             {

@@ -321,6 +321,9 @@ namespace Gm1KonverterCrossPlatform.Views
                         LoadNewDataForGm1File(fileindex, list, width, height);
                     }
                 }
+
+                if ((GM1FileHeader.DataType)vm.File.FileHeader.IDataType == GM1FileHeader.DataType.TilesObject)
+                    vm.File.SetNewTileList();
             }
             else
             {
@@ -337,7 +340,7 @@ namespace Gm1KonverterCrossPlatform.Views
                 int actualwidth = 0;
                 int counter = 0;
 
-                if (((GM1FileHeader.DataType)vm.File.FileHeader.IDataType == GM1FileHeader.DataType.TilesObject))
+                if ((GM1FileHeader.DataType)vm.File.FileHeader.IDataType == GM1FileHeader.DataType.TilesObject)
                 {
                     foreach (var image in vm.File.TilesImages)
                     {
@@ -637,8 +640,7 @@ namespace Gm1KonverterCrossPlatform.Views
             if (dummy is TGXImage) vm.ActualTGXImageSelection = (TGXImage)dummy;
             else vm.ActualTGXImageSelection = null;
             if (vm.File == null || vm.File.FileHeader == null || !vm.File.FileHeader.Name.Contains("anim_castle")) return;
-            Point offset = default;
-            int strongholdValue = 912;
+            Point offset;
             //Point offset = new Point(2496, 2496);
             if (vm.OffsetsBuildings.TryGetValue(index, out offset))
             {
@@ -820,6 +822,7 @@ namespace Gm1KonverterCrossPlatform.Views
             var array = vm.File.GetNewGM1Bytes();
             File.WriteAllBytes(vm.UserConfig.CrusaderPath + "\\gm\\" + vm.File.FileHeader.Name, array);
             File.Copy(vm.UserConfig.CrusaderPath + "\\gm\\" + vm.File.FileHeader.Name, vm.UserConfig.WorkFolderPath + "\\" + filewithoutgm1ending + "\\" + filewithoutgm1ending + "Modded.gm1", true);
+            LoadGm1File(vm.File.FileHeader.Name);
             Cursor = new Avalonia.Input.Cursor(Avalonia.Input.StandardCursorType.Arrow);
             if (Logger.Loggeractiv) Logger.Log("\n>>CreatenewGM1 end");
         }
@@ -916,7 +919,7 @@ namespace Gm1KonverterCrossPlatform.Views
             foreach (var img in listBox.SelectedItems)
             {
                 Stream imgStream = new MemoryStream();
-                ((Image)img).Source = new Bitmap(imgStream);
+                ((WriteableBitmap)((Image)img).Source).Save(imgStream);
                 System.Drawing.Image imageGif = System.Drawing.Image.FromStream(imgStream);
                 gif.WriteFrame(imageGif);
             }

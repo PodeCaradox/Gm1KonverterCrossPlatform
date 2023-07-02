@@ -293,7 +293,7 @@
         </Expander>
 
         <Expander ExpandDirection="Down" Header="{DynamicResource Gm1FileImageHeaderFields}" Grid.Row="4" Grid.Column="0">
-          <Grid DataContext="{Binding ActualTGXImageSelection}">
+          <Grid DataContext="{Binding ActualTGXImageSelection, Mode=TwoWay}">
             <Grid.RowDefinitions>
               <RowDefinition Height="*"/>
               <RowDefinition Height="*"/>

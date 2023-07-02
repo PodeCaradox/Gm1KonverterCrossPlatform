@@ -374,7 +374,7 @@ namespace Gm1KonverterCrossPlatform.ViewModels
         {
             this.RaisePropertyChanging("File");
 
-            if (Logger.Loggeractiv) Logger.Log("DecodeData:\nFile: "+ fileName);
+            Logger.Log("DecodeData:\nFile: "+ fileName);
             //Convert Selected file
             try
             {
@@ -398,7 +398,7 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             }
             catch (Exception e)
             {
-                if (Logger.Loggeractiv) Logger.Log("Exception:\n" + e.Message);
+                Logger.Log("Exception:\n" + e.Message);
                 MessageBoxWindow messageBox = new MessageBoxWindow(MessageBoxWindow.MessageTyp.Info, "Something went wrong: pls add a issue on the Github Page\n\nError:\n" + e.Message);
                 messageBox.Show();
                 return false;
