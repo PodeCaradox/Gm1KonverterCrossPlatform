@@ -35,7 +35,7 @@ namespace Gm1KonverterCrossPlatform.Core.Files
 
             uint width = BinaryPrimitives.ReadUInt32LittleEndian(bytes);
             uint height = BinaryPrimitives.ReadUInt32LittleEndian(bytes.AsSpan(sizeof(uint)));
-            if ((ulong)width * height > int.MaxValue)
+            if (width > int.MaxValue || height > int.MaxValue || (ulong)width * height > int.MaxValue)
             {
                 throw new InvalidDataException($"Invalid TGX image size {width} x {height}.");
             }
