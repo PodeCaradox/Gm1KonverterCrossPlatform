@@ -33,13 +33,17 @@ namespace Gm1KonverterCrossPlatform.Core.IO
             }
 
             var result = new Argb1555Image(width, height);
-            for (int row = 0; row < height; row++)
+            image.ProcessPixelRows(accessor =>
             {
-                for (int column = 0; column < width; column++)
+                for (int row = 0; row < height; row++)
                 {
-                    result[column, row] = ToArgb1555(image[x + column, y + row]);
+                    var sourceRow = accessor.GetRowSpan(y + row).Slice(x, width);
+                    for (int column = 0; column < width; column++)
+                    {
+                        result.Pixels[row * width + column] = ToArgb1555(sourceRow[column]);
+                    }
                 }
-            }
+            });
 
             return result;
         }
@@ -62,13 +66,17 @@ namespace Gm1KonverterCrossPlatform.Core.IO
             if (image == null) throw new ArgumentNullException(nameof(image));
 
             var result = new Image<Rgba32>(Math.Max(1, image.Width), Math.Max(1, image.Height));
-            for (int y = 0; y < image.Height; y++)
+            result.ProcessPixelRows(accessor =>
             {
-                for (int x = 0; x < image.Width; x++)
+                for (int y = 0; y < image.Height; y++)
                 {
-                    result[x, y] = ToRgba32(image[x, y]);
+                    var targetRow = accessor.GetRowSpan(y);
+                    for (int x = 0; x < image.Width; x++)
+                    {
+                        targetRow[x] = ToRgba32(image.Pixels[y * image.Width + x]);
+                    }
                 }
-            }
+            });
 
             return result;
         }
