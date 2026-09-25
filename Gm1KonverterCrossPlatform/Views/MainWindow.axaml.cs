@@ -34,11 +34,11 @@ namespace Gm1KonverterCrossPlatform.Views
 
         private MainWindowViewModel RequiredViewModel => ViewModel ?? throw new InvalidOperationException("The view model is not set.");
 
-        private void CreatenewGM1(object? sender, RoutedEventArgs e) => Run(() => RequiredViewModel.InstallGm1File());
+        private void CreatenewGM1(object? sender, RoutedEventArgs e) => _ = RunAsync(() => ShowInfoAsync(RequiredViewModel.InstallGm1File()));
 
         private void ReplacewithSavedGM1File(object? sender, RoutedEventArgs e) => Run(() => RequiredViewModel.RestoreGm1File());
 
-        private void CreatenewTgx(object? sender, RoutedEventArgs e) => Run(() => RequiredViewModel.InstallTgxFile());
+        private void CreatenewTgx(object? sender, RoutedEventArgs e) => _ = RunAsync(() => ShowInfoAsync(RequiredViewModel.InstallTgxFile()));
 
         private void ReplacewithSavedTgxFile(object? sender, RoutedEventArgs e) => Run(() => RequiredViewModel.RestoreTgxFile());
 
@@ -67,6 +67,10 @@ namespace Gm1KonverterCrossPlatform.Views
         private void OpenWorkFolder(object? sender, RoutedEventArgs e) => Run(() => RequiredViewModel.OpenWorkFolder());
 
         private void OpenStrongholdFolder(object? sender, RoutedEventArgs e) => Run(() => RequiredViewModel.OpenStrongholdFolder());
+
+        private void OpenUcpModFolder(object? sender, RoutedEventArgs e) => Run(() => RequiredViewModel.OpenUcpModFolder());
+
+        private void EditUcpMod(object? sender, RoutedEventArgs e) => _ = RunAsync(() => new UcpModWindow(RequiredViewModel).ShowDialog(this));
 
         private void Button_ClickPalleteminus(object? sender, RoutedEventArgs e) => Run(() => RequiredViewModel.ChangeColorTable(-1));
 
@@ -244,6 +248,8 @@ namespace Gm1KonverterCrossPlatform.Views
                 await ShowErrorAsync(error);
             }
         }
+
+        private Task ShowInfoAsync(string message) => new MessageBoxWindow(MessageBoxWindow.MessageTyp.Info, message).ShowDialog(this);
 
         private async Task ShowErrorAsync(Exception error)
         {

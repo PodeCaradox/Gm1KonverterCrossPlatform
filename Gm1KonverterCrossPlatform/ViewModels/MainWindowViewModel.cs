@@ -12,6 +12,7 @@ using Gm1KonverterCrossPlatform.Core.Imaging;
 using Gm1KonverterCrossPlatform.Core.IO;
 using Gm1KonverterCrossPlatform.Core.Services;
 using Gm1KonverterCrossPlatform.Core.Settings;
+using Gm1KonverterCrossPlatform.Core.Ucp;
 using Gm1KonverterCrossPlatform.HelperClasses;
 using ReactiveUI;
 
@@ -129,6 +130,12 @@ namespace Gm1KonverterCrossPlatform.ViewModels
         }
 
         public string? CrusaderPath => userConfig.CrusaderPath;
+
+        /// <summary>The UCP3 plugin that receives modified files instead of the Stronghold folder.</summary>
+        public UcpExtensionInfo UcpMod => UcpExtensionInfo.FromUserInput(userConfig.UcpModName, userConfig.UcpModAuthor, userConfig.UcpModVersion);
+
+        /// <summary>True if UCP3 is installed in the Stronghold folder.</summary>
+        public bool IsUcpInstalled => TryGetStrongholdFolder() is StrongholdFolder folder && new UcpFolder(folder.Root).IsInstalled;
 
         public string? WorkFolderPath => userConfig.WorkFolderPath;
 
@@ -340,6 +347,37 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             LoadStrongholdFiles();
         }
 
+        /// <summary>
+        /// Changes name, author and version of the UCP3 plugin. An existing plugin with the same name is
+        /// updated (and moved to the new version); another name starts a new plugin.
+        /// </summary>
+        /// <exception cref="WorkflowException">The version is set but not like 1.0.0.</exception>
+        public void SetUcpMod(string? displayName, string? author, string? version)
+        {
+            if (!string.IsNullOrWhiteSpace(version) && !UcpExtensionInfo.IsValidVersion(version))
+            {
+                throw new WorkflowException(Localization.GetText("UcpModInvalidVersion"));
+            }
+
+            userConfig.UcpModName = string.IsNullOrWhiteSpace(displayName) ? null : displayName!.Trim();
+            userConfig.UcpModAuthor = string.IsNullOrWhiteSpace(author) ? null : author!.Trim();
+            userConfig.UcpModVersion = UcpExtensionInfo.IsValidVersion(version) ? version!.Trim() : null;
+            SaveUserConfig();
+            this.RaisePropertyChanged(nameof(UcpMod));
+
+            var strongholdFolder = TryGetStrongholdFolder();
+            if (strongholdFolder != null)
+            {
+                var plugin = UcpTexturePlugin.Open(new UcpFolder(strongholdFolder.Root), UcpMod);
+                if (plugin.Exists)
+                {
+                    plugin.UpdateDefinition();
+                }
+            }
+
+            UpdateRestoreState();
+        }
+
         public void SetWorkFolderPath(string path)
         {
             userConfig.WorkFolderPath = path;
@@ -379,7 +417,9 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             var folder = RequireStrongholdFolder();
 
             CloseFiles();
-            var document = Gm1Document.Load(folder.Gm1File(fileName));
+            var modInstaller = CreateModInstaller(folder);
+            var gameFile = new GameFile(GameFolder.Gm, fileName);
+            var document = Gm1Document.Load(modInstaller.GetCurrentFile(gameFile));
             gm1Document = document;
             this.RaisePropertyChanged(nameof(Gm1Document));
 
@@ -396,7 +436,7 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             ImportButtonEnabled = true;
             ColorButtonsEnabled = document.HasColorTables;
             OrginalStrongholdAnimationButtonEnabled = document.HasColorTables;
-            ReplaceWithSaveFile = BackupExists(fileName);
+            ReplaceWithSaveFile = modInstaller.CanRestore(gameFile);
             ActualPalette = document.ColorTableIndex + 1;
 
             offsetTarget = CastleOffsetAddresses.AppliesTo(fileName) ? LoadOffsetTarget() : null;
@@ -459,27 +499,24 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             RefreshPreview();
         }
 
-        /// <summary>Writes the modified file into the Stronghold folder, keeping a backup of the original.</summary>
-        public void InstallGm1File()
+        /// <summary>Saves the modified file in the UCP3 plugin; the game file stays unchanged.</summary>
+        /// <returns>A message for the user.</returns>
+        public string InstallGm1File()
         {
             var document = RequireGm1();
-            var workFolder = RequireWorkFolder();
-            var strongholdFolder = RequireStrongholdFolder();
-
-            GameFileInstaller.Install(
-                strongholdFolder.Gm1File(document.FileName),
-                document.ToBytes(),
-                workFolder.BackupFile(document.FileName),
-                workFolder.ModdedFile(document.FileName));
+            var modInstaller = CreateModInstaller(RequireStrongholdFolder());
+            modInstaller.Install(new GameFile(GameFolder.Gm, document.FileName), document.ToBytes());
 
             ReopenGm1File(document);
             LoadWorkfolderFiles();
+            return ModSavedMessage(modInstaller);
         }
 
+        /// <summary>Removes the file from the UCP3 plugin, so the game uses the original again.</summary>
         public void RestoreGm1File()
         {
             var document = RequireGm1();
-            GameFileInstaller.Restore(RequireWorkFolder().BackupFile(document.FileName), RequireStrongholdFolder().Gm1File(document.FileName));
+            CreateModInstaller(RequireStrongholdFolder()).Restore(new GameFile(GameFolder.Gm, document.FileName));
             ReopenGm1File(document);
         }
 
@@ -504,13 +541,15 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             var folder = RequireStrongholdFolder();
 
             CloseFiles();
-            tgxDocument = TgxDocument.Load(folder.TgxFile(fileName));
+            var modInstaller = CreateModInstaller(folder);
+            var gameFile = new GameFile(GameFolder.Gfx, fileName);
+            tgxDocument = TgxDocument.Load(modInstaller.GetCurrentFile(gameFile));
             this.RaisePropertyChanged(nameof(TgxDocument));
 
             TgxButtonExportEnabled = true;
             var workFolder = TryGetWorkFolder();
             TgxButtonImportEnabled = workFolder != null && File.Exists(workFolder.TgxImageFile(fileName));
-            ReplaceWithSaveFileTgx = BackupExists(fileName);
+            ReplaceWithSaveFileTgx = modInstaller.CanRestore(gameFile);
 
             RefreshPreview();
         }
@@ -527,23 +566,34 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             RunAndRefreshPreview(() => new TgxImageTransfer(RequireWorkFolder()).Import(RequireTgx()));
         }
 
-        public void InstallTgxFile()
+        /// <summary>Saves the modified file in the UCP3 plugin; the game file stays unchanged.</summary>
+        /// <returns>A message for the user.</returns>
+        public string InstallTgxFile()
         {
             var document = RequireTgx();
-            GameFileInstaller.Install(
-                RequireStrongholdFolder().TgxFile(document.FileName),
-                document.ToBytes(),
-                RequireWorkFolder().BackupFile(document.FileName));
+            var modInstaller = CreateModInstaller(RequireStrongholdFolder());
+            modInstaller.Install(new GameFile(GameFolder.Gfx, document.FileName), document.ToBytes());
 
             ReplaceWithSaveFileTgx = true;
             LoadWorkfolderFiles();
+            return ModSavedMessage(modInstaller);
         }
 
+        /// <summary>Removes the file from the UCP3 plugin, so the game uses the original again.</summary>
         public void RestoreTgxFile()
         {
             var document = RequireTgx();
-            GameFileInstaller.Restore(RequireWorkFolder().BackupFile(document.FileName), RequireStrongholdFolder().TgxFile(document.FileName));
+            CreateModInstaller(RequireStrongholdFolder()).Restore(new GameFile(GameFolder.Gfx, document.FileName));
             OpenTgxFile(document.FileName);
+        }
+
+        /// <summary>Opens the folder of the UCP3 plugin (or the plugins folder if nothing was saved yet).</summary>
+        public void OpenUcpModFolder()
+        {
+            var plugin = CreateModInstaller(RequireStrongholdFolder()).Plugin;
+            string folder = plugin.Exists ? plugin.Folder : Path.GetDirectoryName(plugin.Folder)!;
+            Directory.CreateDirectory(folder);
+            FolderLauncher.Open(folder);
         }
 
         public void SelectImage(ImagePreviewItem? item)
@@ -730,10 +780,40 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             return folder;
         }
 
-        private bool BackupExists(string fileName)
+        private TextureModInstaller CreateModInstaller(StrongholdFolder strongholdFolder)
         {
-            var workFolder = TryGetWorkFolder();
-            return workFolder != null && File.Exists(workFolder.BackupFile(fileName));
+            return new TextureModInstaller(strongholdFolder, UcpMod, TryGetWorkFolder());
+        }
+
+        private static string ModSavedMessage(TextureModInstaller modInstaller)
+        {
+            string paragraph = Environment.NewLine + Environment.NewLine;
+            string folder = Path.GetRelativePath(Path.GetDirectoryName(modInstaller.Ucp.Root)!, modInstaller.Plugin.Folder);
+            string message = string.Format(Localization.GetText("UcpModSaved"), modInstaller.Plugin.Info.DisplayName)
+                + Environment.NewLine + folder
+                + paragraph + Localization.GetText("UcpModActivate");
+            return modInstaller.Ucp.IsInstalled ? message : message + paragraph + Localization.GetText("UcpNotInstalled");
+        }
+
+        /// <summary>Enables "restore" for the open file if the current UCP3 plugin contains it.</summary>
+        private void UpdateRestoreState()
+        {
+            var strongholdFolder = TryGetStrongholdFolder();
+            if (strongholdFolder == null)
+            {
+                return;
+            }
+
+            var modInstaller = CreateModInstaller(strongholdFolder);
+            if (gm1Document != null)
+            {
+                ReplaceWithSaveFile = modInstaller.CanRestore(new GameFile(GameFolder.Gm, gm1Document.FileName));
+            }
+
+            if (tgxDocument != null)
+            {
+                ReplaceWithSaveFileTgx = modInstaller.CanRestore(new GameFile(GameFolder.Gfx, tgxDocument.FileName));
+            }
         }
 
         private IBuildingOffsetTarget? LoadOffsetTarget()

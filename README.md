@@ -94,6 +94,32 @@ im Bildprogramm vergrößern und die Bilder wieder importieren. Beim großen Bil
 Originalgrößen erhalten. Gebäude müssen `32 × n − 2` Pixel breit sein (n = 1 bis 15 Rauten pro Reihe);
 die Boden-Rauten bleiben unten.
 
+UCP3 mod / UCP3-Mod
+---------
+
+"File → Save GM1/Tgx in UCP Mod" no longer overwrites the game files. The modified file is saved in a
+[UCP3](https://github.com/UnofficialCrusaderPatch/UnofficialCrusaderPatch3) plugin in the Stronghold folder:
+
+```
+ucp/plugins/<Name>-<Version>/
+  definition.yml          name, author, version, dependencies (framework, frontend, files)
+  init.lua                modules.files:overrideFileWith("gm\\anim_castle.gm1", ...) for every file
+  locale/description-en.md
+  resources/gm/*.gm1
+  resources/gfx/*.tgx
+```
+
+Activate the plugin in the UCP3 GUI. "Remove … from UCP Mod (Original)" deletes the file from the plugin so
+the game loads the original again (and restores a backup `<name>Save.gm1` from the work folder if an older
+version of this program overwrote the game file). Name, author and version are set under "File → UCP Mod…";
+a new version moves the existing plugin, a new name starts a new plugin. Files already in the plugin are
+opened from there, so you keep editing your modded version.
+
+„Datei → GM1/Tgx im UCP-Mod speichern“ überschreibt die Spieldateien nicht mehr, sondern speichert die
+geänderte Datei in einem UCP3-Plugin unter `ucp/plugins/<Name>-<Version>` im Stronghold-Ordner. Das Plugin
+wird in der UCP3-Oberfläche aktiviert. „… aus UCP-Mod entfernen (Original)“ nimmt die Datei wieder heraus,
+dann lädt das Spiel das Original. Name, Autor und Version stehen unter „Datei → UCP-Mod…“.
+
 Development / Entwicklung
 ---------
 

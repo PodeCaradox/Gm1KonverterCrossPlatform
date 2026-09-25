@@ -60,6 +60,18 @@ namespace Gm1KonverterCrossPlatform.Tests.Settings
             Assert.Equal("D:\\Work", config.WorkFolderPath);
             Assert.True(config.OpenFolderAfterExport);
             Assert.True(config.ActivateLogger);
+            Assert.Null(config.UcpModName);
+            Assert.Null(config.UcpModVersion);
+        }
+
+        [Fact]
+        public void SaveThenLoad_KeepsUcpMod()
+        {
+            store.Save(new UserConfig { UcpModName = "My Castle", UcpModAuthor = "Pode", UcpModVersion = "1.2.3" });
+
+            var config = store.Load();
+
+            Assert.Equal(("My Castle", "Pode", "1.2.3"), (config.UcpModName, config.UcpModAuthor, config.UcpModVersion));
         }
 
         [Theory]
@@ -154,7 +166,11 @@ namespace Gm1KonverterCrossPlatform.Tests.Settings
             var json = JObject.Parse(File.ReadAllText(store.FilePath));
 
             Assert.Equal(
-                new[] { "Language", "ColorTheme", "CrusaderPath", "WorkFolderPath", "OpenFolderAfterExport", "ActivateLogger" },
+                new[]
+                {
+                    "Language", "ColorTheme", "CrusaderPath", "WorkFolderPath", "OpenFolderAfterExport", "ActivateLogger",
+                    "UcpModName", "UcpModAuthor", "UcpModVersion",
+                },
                 json.Properties().Select(p => p.Name));
             Assert.Equal(JTokenType.Integer, json["Language"]!.Type);
             Assert.Equal(2, (int)json["Language"]!);

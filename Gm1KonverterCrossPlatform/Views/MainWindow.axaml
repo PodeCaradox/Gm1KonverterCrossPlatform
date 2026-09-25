@@ -24,6 +24,9 @@
           <Separator/>
           <MenuItem Header="{DynamicResource CreatenewTgx}" Name="CreatenewTgxMenueItem" IsEnabled="{Binding TgxButtonExportEnabled}" Click="CreatenewTgx"/>
           <MenuItem Header="{DynamicResource ReplacewithSavedTgxFile}" Name="ReplacewithSavedTgxFileMenueItem" IsEnabled="{Binding ReplaceWithSaveFileTgx}" Click="ReplacewithSavedTgxFile"/>
+          <Separator/>
+          <MenuItem Header="{DynamicResource UcpMod}" Name="UcpModMenueItem" Click="EditUcpMod"/>
+          <MenuItem Header="{DynamicResource OpenUcpModFolder}" Name="OpenUcpModFolderMenueItem" Click="OpenUcpModFolder"/>
         </MenuItem>
 
         <MenuItem Header="{DynamicResource Edit}">

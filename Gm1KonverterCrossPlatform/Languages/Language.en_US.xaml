@@ -4,10 +4,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <x:String x:Key="English">English loaded</x:String>
-    <x:String x:Key="CreatenewGM1">Create new GM1</x:String>
-    <x:String x:Key="ReplacewithSavedGM1File">Replace with Saved GM1 File</x:String>
-    <x:String x:Key="CreatenewTgx">Create new Tgx</x:String>
-    <x:String x:Key="ReplacewithSavedTgxFile">Replace with Saved Tgx File</x:String>
+    <x:String x:Key="CreatenewGM1">Save GM1 in UCP Mod</x:String>
+    <x:String x:Key="ReplacewithSavedGM1File">Remove GM1 from UCP Mod (Original)</x:String>
+    <x:String x:Key="CreatenewTgx">Save Tgx in UCP Mod</x:String>
+    <x:String x:Key="ReplacewithSavedTgxFile">Remove Tgx from UCP Mod (Original)</x:String>
 
     <x:String x:Key="ExportColortable">Export Colortable</x:String>
     <x:String x:Key="ImportColortable">Import Colortable</x:String>
@@ -110,4 +110,16 @@
     <x:String x:Key="NoStrongholdFolderSelected">Please select the Stronghold folder under Options first.</x:String>
     <x:String x:Key="SomethingWentWrong">Something went wrong: please add an issue on the GitHub page.</x:String>
     <x:String x:Key="LargerImagesHint">Tip: images can be larger than the original. Export the images, enlarge the canvas of Images/ImageN.png in your image editor and import the images again. The big image (BigImage) keeps the original sizes. Buildings: the width must be 32 × n − 2 pixels (n = 1 to 15 diamonds per row), the ground diamonds stay at the bottom.</x:String>
+    <x:String x:Key="UcpMod">UCP Mod…</x:String>
+    <x:String x:Key="OpenUcpModFolder">Open UCP Mod Folder</x:String>
+    <x:String x:Key="UcpModHint">Modified GM1 and Tgx files are saved as a UCP3 mod (plugin) in the Stronghold folder under ucp/plugins. The original game files stay unchanged. Activate the mod in the UCP3 GUI. A new name starts a new mod, a new version moves the existing one.</x:String>
+    <x:String x:Key="UcpModName">Name</x:String>
+    <x:String x:Key="UcpModAuthor">Author</x:String>
+    <x:String x:Key="UcpModVersion">Version</x:String>
+    <x:String x:Key="UcpModFolder">Folder</x:String>
+    <x:String x:Key="UcpModInvalidVersion">The version must look like 1.0.0.</x:String>
+    <x:String x:Key="UcpModSaved">Saved in the UCP3 mod "{0}":</x:String>
+    <x:String x:Key="UcpModActivate">Activate the mod in the UCP3 GUI to use it in the game. The original game file stays unchanged.</x:String>
+    <x:String x:Key="UcpNotInstalled">UCP3 is not installed in the Stronghold folder yet. The mod works as soon as UCP3 is installed.</x:String>
+    <x:String x:Key="Cancel">Cancel</x:String>
 </controls:ResourceDictionary>

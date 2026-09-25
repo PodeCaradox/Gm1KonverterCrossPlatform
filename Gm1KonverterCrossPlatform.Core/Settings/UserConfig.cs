@@ -18,5 +18,13 @@ namespace Gm1KonverterCrossPlatform.Core.Settings
         public bool OpenFolderAfterExport { get; set; }
 
         public bool ActivateLogger { get; set; }
+
+        /// <summary>Display name of the UCP3 plugin that receives the modified files.</summary>
+        public string? UcpModName { get; set; }
+
+        public string? UcpModAuthor { get; set; }
+
+        /// <summary>Version of the UCP3 plugin, e.g. "1.0.0".</summary>
+        public string? UcpModVersion { get; set; }
     }
 }

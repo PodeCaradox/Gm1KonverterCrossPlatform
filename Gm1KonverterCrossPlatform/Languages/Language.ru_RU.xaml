@@ -4,10 +4,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <x:String x:Key="Русский">Русский язык загружен</x:String>
-    <x:String x:Key="CreatenewGM1">Создать новый GM1 файл</x:String>
-    <x:String x:Key="ReplacewithSavedGM1File">Заменить сохраненным файлом GM1</x:String>
-    <x:String x:Key="CreatenewTgx">Создать новый Tgx файл</x:String>
-    <x:String x:Key="ReplacewithSavedTgxFile">Заменить сохраненным файлом Tgx</x:String>
+    <x:String x:Key="CreatenewGM1">Сохранить GM1 в мод UCP</x:String>
+    <x:String x:Key="ReplacewithSavedGM1File">Удалить GM1 из мода UCP (оригинал)</x:String>
+    <x:String x:Key="CreatenewTgx">Сохранить Tgx в мод UCP</x:String>
+    <x:String x:Key="ReplacewithSavedTgxFile">Удалить Tgx из мода UCP (оригинал)</x:String>
 
     <x:String x:Key="ExportColortable">Экспорт таблицы цветов</x:String>
     <x:String x:Key="ImportColortable">Импорт таблицы цветов</x:String>
@@ -110,4 +110,16 @@
     <x:String x:Key="NoStrongholdFolderSelected">Сначала выберите папку Stronghold в настройках.</x:String>
     <x:String x:Key="SomethingWentWrong">Что-то пошло не так: пожалуйста, создайте issue на странице GitHub.</x:String>
     <x:String x:Key="LargerImagesHint">Совет: изображения могут быть больше оригинала. Экспортируйте изображения, увеличьте холст Images/ImageN.png в графическом редакторе и снова импортируйте их. В большом изображении (BigImage) сохраняются исходные размеры. Здания: ширина должна быть 32 × n − 2 пикселя (n = от 1 до 15 ромбов в ряду), нижние ромбы остаются внизу.</x:String>
+    <x:String x:Key="UcpMod">Мод UCP…</x:String>
+    <x:String x:Key="OpenUcpModFolder">Открыть папку мода UCP</x:String>
+    <x:String x:Key="UcpModHint">Измененные файлы GM1 и Tgx сохраняются как мод UCP3 (плагин) в папке Stronghold в ucp/plugins. Оригинальные файлы игры остаются без изменений. Активируйте мод в интерфейсе UCP3. Новое название создает новый мод, новая версия переносит существующий.</x:String>
+    <x:String x:Key="UcpModName">Название</x:String>
+    <x:String x:Key="UcpModAuthor">Автор</x:String>
+    <x:String x:Key="UcpModVersion">Версия</x:String>
+    <x:String x:Key="UcpModFolder">Папка</x:String>
+    <x:String x:Key="UcpModInvalidVersion">Версия должна иметь вид 1.0.0.</x:String>
+    <x:String x:Key="UcpModSaved">Сохранено в моде UCP3 «{0}»:</x:String>
+    <x:String x:Key="UcpModActivate">Активируйте мод в интерфейсе UCP3, чтобы игра его использовала. Оригинальный файл игры остается без изменений.</x:String>
+    <x:String x:Key="UcpNotInstalled">UCP3 еще не установлен в папке Stronghold. Мод заработает сразу после установки UCP3.</x:String>
+    <x:String x:Key="Cancel">Отмена</x:String>
 </controls:ResourceDictionary>
