@@ -109,4 +109,5 @@
     <x:String x:Key="NoWorkfolderSelected">Bitte zuerst unter Optionen einen Arbeitsordner auswählen.</x:String>
     <x:String x:Key="NoStrongholdFolderSelected">Bitte zuerst unter Optionen den Stronghold Ordner auswählen.</x:String>
     <x:String x:Key="SomethingWentWrong">Etwas ist schiefgelaufen: bitte erstelle ein Issue auf der GitHub Seite.</x:String>
+    <x:String x:Key="LargerImagesHint">Tipp: Bilder können größer als das Original sein. Exportiere die Bilder, vergrößere die Leinwand von Images/ImageN.png im Bildprogramm und importiere die Bilder wieder. Beim großen Bild (BigImage) bleiben die Originalgrößen erhalten. Gebäude: Die Breite muss 32 × n − 2 Pixel sein (n = 1 bis 15 Rauten pro Reihe), die Boden-Rauten bleiben unten.</x:String>
 </controls:ResourceDictionary>

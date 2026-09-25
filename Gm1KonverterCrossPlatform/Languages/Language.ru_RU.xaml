@@ -109,4 +109,5 @@
     <x:String x:Key="NoWorkfolderSelected">Сначала выберите рабочую папку в настройках.</x:String>
     <x:String x:Key="NoStrongholdFolderSelected">Сначала выберите папку Stronghold в настройках.</x:String>
     <x:String x:Key="SomethingWentWrong">Что-то пошло не так: пожалуйста, создайте issue на странице GitHub.</x:String>
+    <x:String x:Key="LargerImagesHint">Совет: изображения могут быть больше оригинала. Экспортируйте изображения, увеличьте холст Images/ImageN.png в графическом редакторе и снова импортируйте их. В большом изображении (BigImage) сохраняются исходные размеры. Здания: ширина должна быть 32 × n − 2 пикселя (n = от 1 до 15 ромбов в ряду), нижние ромбы остаются внизу.</x:String>
 </controls:ResourceDictionary>

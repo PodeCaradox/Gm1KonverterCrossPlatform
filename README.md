@@ -82,6 +82,18 @@ Thanks to
 
 ![StrongholdOverlordsMod](https://github.com/StrongholdOverlordsMod) Contributer for future updates.
 
+Larger images / Größere Bilder
+---------
+
+Images can be larger than the original: export the images, enlarge the canvas of `Images/ImageN.png`
+in your image editor and import the images again. The big image (BigImage) keeps the original sizes.
+Buildings must be `32 × n − 2` pixels wide (n = 1 to 15 diamonds per row); the ground diamonds stay at the bottom.
+
+Bilder können größer als das Original sein: Bilder exportieren, die Leinwand von `Images/ImageN.png`
+im Bildprogramm vergrößern und die Bilder wieder importieren. Beim großen Bild (BigImage) bleiben die
+Originalgrößen erhalten. Gebäude müssen `32 × n − 2` Pixel breit sein (n = 1 bis 15 Rauten pro Reihe);
+die Boden-Rauten bleiben unten.
+
 Development / Entwicklung
 ---------
 

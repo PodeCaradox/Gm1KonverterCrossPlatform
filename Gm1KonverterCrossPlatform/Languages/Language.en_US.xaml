@@ -109,4 +109,5 @@
     <x:String x:Key="NoWorkfolderSelected">Please select a work folder under Options first.</x:String>
     <x:String x:Key="NoStrongholdFolderSelected">Please select the Stronghold folder under Options first.</x:String>
     <x:String x:Key="SomethingWentWrong">Something went wrong: please add an issue on the GitHub page.</x:String>
+    <x:String x:Key="LargerImagesHint">Tip: images can be larger than the original. Export the images, enlarge the canvas of Images/ImageN.png in your image editor and import the images again. The big image (BigImage) keeps the original sizes. Buildings: the width must be 32 × n − 2 pixels (n = 1 to 15 diamonds per row), the ground diamonds stay at the bottom.</x:String>
 </controls:ResourceDictionary>
