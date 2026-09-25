@@ -2,37 +2,44 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="460" d:DesignHeight="320"
-        Width="460"
+        mc:Ignorable="d" d:DesignWidth="480" d:DesignHeight="320"
+        Width="480"
         SizeToContent="Height"
         CanResize="False"
+        ShowInTaskbar="False"
         x:Class="Gm1KonverterCrossPlatform.Views.UcpModWindow"
         Title="{DynamicResource UcpMod}"
         WindowStartupLocation="CenterOwner">
 
-  <StackPanel Margin="12" Spacing="10">
-    <TextBlock Text="{DynamicResource UcpModHint}" TextWrapping="Wrap"/>
+  <Grid RowDefinitions="*,Auto">
+    <StackPanel Grid.Row="0" Margin="20,20,20,16" Spacing="14">
+      <TextBlock Classes="Paragraph" Text="{DynamicResource UcpModHint}"/>
 
-    <Grid ColumnDefinitions="Auto,12,*" RowDefinitions="Auto,6,Auto,6,Auto,6,Auto">
-      <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Text="{DynamicResource UcpModName}"/>
-      <TextBox Grid.Row="0" Grid.Column="2" Name="NameBox" Watermark="Gm1Konverter-Textures"/>
+      <Grid ColumnDefinitions="Auto,12,*" RowDefinitions="Auto,8,Auto,8,Auto,8,Auto">
+        <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Text="{DynamicResource UcpModName}"/>
+        <TextBox Grid.Row="0" Grid.Column="2" Name="NameBox" Watermark="Gm1Konverter-Textures"/>
 
-      <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Text="{DynamicResource UcpModAuthor}"/>
-      <TextBox Grid.Row="2" Grid.Column="2" Name="AuthorBox"/>
+        <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Text="{DynamicResource UcpModAuthor}"/>
+        <TextBox Grid.Row="2" Grid.Column="2" Name="AuthorBox"/>
 
-      <TextBlock Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" Text="{DynamicResource UcpModVersion}"/>
-      <TextBox Grid.Row="4" Grid.Column="2" Name="VersionBox" Watermark="1.0.0"/>
+        <TextBlock Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" Text="{DynamicResource UcpModVersion}"/>
+        <TextBox Grid.Row="4" Grid.Column="2" Name="VersionBox" Watermark="1.0.0" Width="120" HorizontalAlignment="Left"/>
 
-      <TextBlock Grid.Row="6" Grid.Column="0" Text="{DynamicResource UcpModFolder}"/>
-      <TextBlock Grid.Row="6" Grid.Column="2" Name="FolderPreview" TextWrapping="Wrap"/>
-    </Grid>
+        <TextBlock Grid.Row="6" Grid.Column="0" Classes="Hint" Text="{DynamicResource UcpModFolder}"/>
+        <TextBlock Grid.Row="6" Grid.Column="2" Classes="Hint" Name="FolderPreview" TextWrapping="Wrap"/>
+      </Grid>
 
-    <TextBlock Name="StatusText" TextWrapping="Wrap" IsVisible="False"/>
-
-    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
-      <Button Content="{DynamicResource OpenUcpModFolder}" Click="OpenFolder_Click"/>
-      <Button Content="{DynamicResource Save}" Click="Save_Click" IsDefault="True"/>
-      <Button Content="{DynamicResource Cancel}" Click="Cancel_Click" IsCancel="True"/>
+      <TextBlock Name="StatusText" Classes="Paragraph" IsVisible="False"/>
     </StackPanel>
-  </StackPanel>
+
+    <Border Grid.Row="1" Padding="16,10"
+            BorderBrush="{DynamicResource ThemeBorderLowBrush}"
+            BorderThickness="0,1,0,0">
+      <Grid ColumnDefinitions="Auto,*,Auto,8,Auto">
+        <Button Grid.Column="0" Classes="Dialog" Content="{DynamicResource OpenUcpModFolder}" Click="OpenFolder_Click"/>
+        <Button Grid.Column="2" Classes="Dialog Accent" Content="{DynamicResource Save}" Click="Save_Click" IsDefault="True"/>
+        <Button Grid.Column="4" Classes="Dialog" Content="{DynamicResource Cancel}" Click="Cancel_Click" IsCancel="True"/>
+      </Grid>
+    </Border>
+  </Grid>
 </Window>

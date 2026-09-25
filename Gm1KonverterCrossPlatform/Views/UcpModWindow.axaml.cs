@@ -2,7 +2,6 @@ using System;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
-using Avalonia.Media;
 using Gm1KonverterCrossPlatform.Core.Diagnostics;
 using Gm1KonverterCrossPlatform.Core.Services;
 using Gm1KonverterCrossPlatform.Core.Ucp;
@@ -111,7 +110,7 @@ namespace Gm1KonverterCrossPlatform.Views
         private void ShowStatus(string message, bool isError)
         {
             statusText.Text = message;
-            statusText.Foreground = isError ? Brushes.Firebrick : folderPreview.Foreground;
+            statusText.Classes.Set("Warning", isError);
             statusText.IsVisible = true;
         }
     }
