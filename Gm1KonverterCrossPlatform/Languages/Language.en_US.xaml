@@ -142,10 +142,10 @@
     <x:String x:Key="UcpModFolder">Folder</x:String>
     <x:String x:Key="UcpModInvalidVersion">The version must look like 1.0.0.</x:String>
     <x:String x:Key="UcpModSaved">Saved in the UCP3 mod "{0}":</x:String>
-    <x:String x:Key="UcpModActivate">Activate the mod in the UCP3 GUI to use it in the game. The original game file stays unchanged.</x:String>
+    <x:String x:Key="UcpModActivate">Activate the mod in the UCP3 GUI on the "Content" tab: select it under "Available extensions" and click "Activate". The original game file stays unchanged.</x:String>
     <x:String x:Key="UcpNotInstalled">UCP3 is not installed in the Stronghold folder yet. The mod works as soon as UCP3 is installed.</x:String>
     <x:String x:Key="Cancel">Cancel</x:String>
     <x:String x:Key="UcpOffsetsSaved">Saved in the UCP3 module "{0}":</x:String>
-    <x:String x:Key="UcpOffsetsActivate">Activate the module in the UCP3 GUI. There, in the options of the module, you can also change the offset of every castle building. The module is not signed: start the game from the UCP3 GUI with the launch option "Disable Security". It works for Crusader and Extreme; the executables stay unchanged.</x:String>
+    <x:String x:Key="UcpOffsetsActivate">Activate the module in the UCP3 GUI on the "Content" tab (select it under "Available extensions", "Activate"). On the "Customisations" tab you can then change the offset of every castle building. The module is not signed: start the game on the "Launch" tab with the option "Disable Security". It works for Crusader and Extreme; the executables stay unchanged.</x:String>
     <x:String x:Key="UcpOffsetsWithCastle">The offsets of the castle buildings can be changed in the UCP3 GUI in the options of the module "{0}" (activate it and start the game with "Disable Security").</x:String>
 </controls:ResourceDictionary>
