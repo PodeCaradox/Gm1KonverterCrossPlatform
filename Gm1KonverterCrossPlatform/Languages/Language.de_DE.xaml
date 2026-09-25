@@ -146,6 +146,6 @@
     <x:String x:Key="UcpNotInstalled">UCP3 ist im Stronghold-Ordner noch nicht installiert. Die Mod funktioniert, sobald UCP3 installiert ist.</x:String>
     <x:String x:Key="Cancel">Abbrechen</x:String>
     <x:String x:Key="UcpOffsetsSaved">Im UCP3-Modul „{0}“ gespeichert:</x:String>
-    <x:String x:Key="UcpOffsetsActivate">Aktiviere das Modul in der UCP3-Oberfläche im Tab „Inhalt“ (unter „Verfügbare Erweiterungen“ auswählen, „Aktivieren“). Im Tab „Anpassungen“ kannst du dann den Offset jedes Burggebäudes ändern. Das Modul ist nicht signiert: Starte das Spiel im Tab „Starten“ mit der Option „Sicherheit deaktivieren“. Es funktioniert für Crusader und Extreme, die Exe-Dateien bleiben unverändert.</x:String>
+    <x:String x:Key="UcpOffsetsActivate">Aktiviere das Modul in der UCP3-Oberfläche im Tab „Inhalt“ (unter „Verfügbare Erweiterungen“ auswählen, „Aktivieren“). Im Tab „Anpassungen“ kannst du dann den Offset jedes Burggebäudes ändern. Das Modul ist nicht signiert: Starte das Spiel im Tab „Starten“ mit der Option „Sicherheit deaktivieren“. Ohne diese Option (auch beim Start über Steam oder die Exe) bricht UCP3 mit „Missing security signature“ ab; dann das Modul wieder deaktivieren. Es funktioniert für Crusader und Extreme, die Exe-Dateien bleiben unverändert.</x:String>
     <x:String x:Key="UcpOffsetsWithCastle">Die Offsets der Burggebäude lassen sich in der UCP3-Oberfläche in den Optionen des Moduls „{0}“ ändern (Modul aktivieren und das Spiel mit „Sicherheit deaktivieren“ starten).</x:String>
 </controls:ResourceDictionary>

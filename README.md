@@ -132,7 +132,10 @@ and whenever "Change Offsets" / "Import Offsets From File" is used:
   different version, an extra pattern is created from them.
 - The `init.lua` finds each offset with `core.scanForAOB` and writes it with `core.writeCodeBytes` when the game
   starts. Modules can change the game's memory, therefore UCP3 only loads this unsigned module when the game is
-  started from the "Launch" tab of the UCP3 GUI with the option "Disable Security".
+  started from the "Launch" tab of the UCP3 GUI with the option "Disable Security". Without it (also when the game
+  is started through Steam or the exe, which always use secure mode) UCP3 stops with "FATAL: … failed to verify zip
+  file … Missing security signature". Only modules of the UCP3 store are signed; a plugin cannot change the
+  game's code, so there is no unsigned way to patch the offsets.
 
 Die Gebäude-Offsets der Burg werden nicht mehr in die Exe geschrieben, sondern stehen im UCP3-Modul
 `ucp/modules/<Name>-Offsets-<Version>.zip` (als Zip, weil die UCP3-Oberfläche Modul-Ordner nur bei
@@ -142,6 +145,7 @@ lässt sich jeder Offset im Tab „Anpassungen“ ändern; das Tool liefert nur 
 Startwerte. Geschrieben werden nur Werte, die hier gesetzt oder in der UCP3-Oberfläche geändert wurden. Das Modul
 funktioniert für Crusader und Extreme (Crusader liegt 912 Bytes früher, die Muster passen auf beide Versionen).
 Da es nicht signiert ist, lädt UCP3 es nur, wenn das Spiel im Tab „Starten“ mit der Option „Sicherheit deaktivieren“ gestartet wird.
+Sonst (auch beim Start über Steam oder die Exe) bricht UCP3 mit „FATAL: … Missing security signature“ ab.
 
 „Datei → GM1/Tgx im UCP-Mod speichern“ überschreibt die Spieldateien nicht mehr, sondern speichert die
 geänderte Datei in einem UCP3-Plugin unter `ucp/plugins/<Name>-<Version>` im Stronghold-Ordner. Das Plugin
