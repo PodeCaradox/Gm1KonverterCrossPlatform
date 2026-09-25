@@ -158,7 +158,7 @@ namespace Gm1KonverterCrossPlatform.Tests.Services
             Assert.Throws<ArgumentOutOfRangeException>(() => document.ReplaceItem(0, new Argb1555Image(ushort.MaxValue + 1, 1)));
         }
 
-        [Fact(Skip = "BUG: Gm1Document.ReplaceItem assigns the new data before checking the size, a too large image leaves new data with the old header")]
+        [Fact]
         public void ReplaceItem_ImageTooLarge_KeepsItemUnchanged()
         {
             var builder = Gm1FileBuilder.Create(Gm1DataType.NoCompression1, itemCount: 2);

@@ -113,6 +113,24 @@ namespace Gm1KonverterCrossPlatform.Core.Documents
         }
 
         /// <summary>
+        /// Replaces several items. All images are checked first, so either all items are replaced or none.
+        /// </summary>
+        public void ReplaceItems(IReadOnlyList<(int ItemIndex, Argb1555Image Image)> replacements)
+        {
+            if (replacements == null) throw new ArgumentNullException(nameof(replacements));
+
+            foreach (var replacement in replacements)
+            {
+                EnsureCanStore(replacement.Image);
+            }
+
+            foreach (var replacement in replacements)
+            {
+                ReplaceItem(replacement.ItemIndex, replacement.Image);
+            }
+        }
+
+        /// <summary>
         /// Replaces an animation image using one version of the image per color table, which makes the
         /// color table indices unambiguous (see <see cref="MultiColorTableIndexer"/>).
         /// </summary>
@@ -140,22 +158,23 @@ namespace Gm1KonverterCrossPlatform.Core.Documents
             }
 
             var entry = File.Images[itemIndex];
-            if (DataType.IsUncompressed())
-            {
-                entry.Data = NoCompressionCodec.Encode(image);
-            }
-            else
-            {
-                entry.Data = TgxCodec.Encode(image, TgxEncoderOptions.ForGm1Image(DataType, entry.Header, indexer));
-            }
 
-            entry.Header.Width = CheckedDimension(image.Width);
-            entry.Header.Height = CheckedDimension(image.Height + DataType.HeightPadding());
+            // Validate and encode first, so a failure leaves the image unchanged.
+            ushort width = CheckedDimension(image.Width);
+            ushort height = CheckedDimension(image.Height + DataType.HeightPadding());
+            byte[] data = DataType.IsUncompressed()
+                ? NoCompressionCodec.Encode(image)
+                : TgxCodec.Encode(image, TgxEncoderOptions.ForGm1Image(DataType, entry.Header, indexer));
+
+            entry.Data = data;
+            entry.Header.Width = width;
+            entry.Header.Height = height;
             File.UpdateHeader();
         }
 
         private void ReplaceBuilding(int itemIndex, Argb1555Image image)
         {
+            EnsureCanStore(image);
             var group = GetGroup(itemIndex);
             var newParts = TileObjectCodec.Encode(image);
 
@@ -203,6 +222,16 @@ namespace Gm1KonverterCrossPlatform.Core.Documents
             {
                 throw new NotSupportedException($"GM1 files of data type {(uint)DataType} are not supported.");
             }
+        }
+
+        /// <summary>Checks that an image fits into this file.</summary>
+        /// <exception cref="ArgumentOutOfRangeException">The image is too large for a .gm1 file.</exception>
+        public void EnsureCanStore(Argb1555Image image)
+        {
+            if (image == null) throw new ArgumentNullException(nameof(image));
+
+            CheckedDimension(image.Width);
+            CheckedDimension(image.Height + DataType.HeightPadding());
         }
 
         private static ushort CheckedDimension(int value)

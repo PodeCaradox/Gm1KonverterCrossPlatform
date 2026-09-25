@@ -132,13 +132,23 @@ namespace Gm1KonverterCrossPlatform.Core.Codecs
 
         /// <summary>
         /// The encoder produces byte identical output to the original implementation
-        /// (Utility.ImgToGM1ByteArray), which Stronghold is known to accept.
+        /// (Utility.ImgToGM1ByteArray), which Stronghold is known to accept. The only difference: for
+        /// animation images runs are built from color table indices instead of colors, so neighbouring
+        /// pixels with the same color but different indices keep their indices.
         /// </summary>
         private sealed class Encoder
         {
             private const ushort Transparent = Argb1555.TransparentMarker;
 
             private readonly ushort[] pixels;
+
+            /// <summary>
+            /// The values that are stored per pixel: colors, or color table indices for animation images.
+            /// Runs are built from equal stored values, so pixels with the same color but different
+            /// color table indices are never merged.
+            /// </summary>
+            private readonly ushort[] storedValues;
+
             private readonly int width;
             private readonly int height;
             private readonly TgxEncoderOptions options;
@@ -152,6 +162,24 @@ namespace Gm1KonverterCrossPlatform.Core.Codecs
                 height = image.Height;
                 this.options = options;
                 alpha = options.ForceAlphaBit ? (ushort)0x8000 : (ushort)0;
+                storedValues = CalculateStoredValues();
+            }
+
+            private ushort[] CalculateStoredValues()
+            {
+                var values = new ushort[pixels.Length];
+                for (int i = 0; i < pixels.Length; i++)
+                {
+                    if (pixels[i] == Transparent)
+                    {
+                        continue;
+                    }
+
+                    ushort color = (ushort)(pixels[i] | alpha);
+                    values[i] = options.PaletteIndexer != null ? options.PaletteIndexer.GetIndex(i, color) : color;
+                }
+
+                return values;
             }
 
             public byte[] Encode()
@@ -254,7 +282,7 @@ namespace Gm1KonverterCrossPlatform.Core.Codecs
 
             /// <summary>
             /// Decides whether the colored pixels starting at <paramref name="x"/> are written as a run of one
-            /// repeated color (3 or more equal pixels) or as a stream of different colors, and how long it is.
+            /// repeated value (3 or more equal pixels) or as a stream of different values, and how long it is.
             /// Pairs of equal pixels are kept inside a stream, a stream ends right before 3 equal pixels.
             /// </summary>
             private Segment MeasureColoredSegment(int rowStart, int x)
@@ -264,10 +292,7 @@ namespace Gm1KonverterCrossPlatform.Core.Codecs
 
                 for (int z = x + 1; z < width; z++)
                 {
-                    ushort current = pixels[rowStart + z];
-                    ushort previous = pixels[rowStart + z - 1];
-
-                    if (current == Transparent)
+                    if (pixels[rowStart + z] == Transparent)
                     {
                         if (equalPixels < 3)
                         {
@@ -277,7 +302,7 @@ namespace Gm1KonverterCrossPlatform.Core.Codecs
                         break;
                     }
 
-                    if (current != previous)
+                    if (storedValues[rowStart + z] != storedValues[rowStart + z - 1])
                     {
                         if (equalPixels > 2)
                         {
@@ -353,16 +378,13 @@ namespace Gm1KonverterCrossPlatform.Core.Codecs
 
             private void WriteColor(int pixelIndex)
             {
-                ushort color = (ushort)(pixels[pixelIndex] | alpha);
+                ushort value = storedValues[pixelIndex];
+                output.Add((byte)value);
 
-                if (options.PaletteIndexer != null)
+                // Colors take 2 bytes, color table indices 1 byte.
+                if (options.PaletteIndexer == null)
                 {
-                    output.Add(options.PaletteIndexer.GetIndex(pixelIndex, color));
-                }
-                else
-                {
-                    output.Add((byte)color);
-                    output.Add((byte)(color >> 8));
+                    output.Add((byte)(value >> 8));
                 }
             }
 

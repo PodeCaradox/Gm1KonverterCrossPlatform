@@ -18,7 +18,7 @@ namespace Gm1KonverterCrossPlatform.Tests.Files
             var table = new ColorTable(Gm1FileBuilder.DistinctOpaqueColors(new Random(cellSize)));
 
             var image = ColorTableImage.Render(table, cellSize);
-            var read = ColorTableImage.Read(image, cellSize);
+            var read = ColorTableImage.Read(image, cellSize: cellSize);
 
             Assert.Equal(table.Colors, read.Colors);
         }

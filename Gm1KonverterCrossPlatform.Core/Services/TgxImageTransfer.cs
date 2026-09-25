@@ -32,7 +32,7 @@ namespace Gm1KonverterCrossPlatform.Core.Services
                 throw new WorkflowException($"\"{path}\" does not exist. Please export the TGX image first.");
             }
 
-            document.Replace(ImageFiles.LoadPng(path));
+            document.Replace(Gm1Importer.LoadPng(path));
         }
     }
 }

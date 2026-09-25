@@ -25,7 +25,7 @@ namespace Gm1KonverterCrossPlatform.Core.IO
         public static Argb1555Image ToArgb1555(Image<Rgba32> image, int x, int y, int width, int height)
         {
             if (image == null) throw new ArgumentNullException(nameof(image));
-            if (x < 0 || y < 0 || width < 0 || height < 0 || x + width > image.Width || y + height > image.Height)
+            if (x < 0 || y < 0 || width < 0 || height < 0 || (long)x + width > image.Width || (long)y + height > image.Height)
             {
                 throw new ArgumentOutOfRangeException(
                     nameof(image),

@@ -7,12 +7,15 @@ using Gm1KonverterCrossPlatform.Core.Files;
 using Gm1KonverterCrossPlatform.Core.Imaging;
 using Gm1KonverterCrossPlatform.Core.IO;
 using Gm1KonverterCrossPlatform.Core.Layout;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
 
 namespace Gm1KonverterCrossPlatform.Core.Services
 {
     /// <summary>
     /// Imports edited images from the work folder into a .gm1 file. Images that do not exist in the
-    /// work folder keep their current content.
+    /// work folder keep their current content. All files are read before the document is changed,
+    /// so a broken file leaves the document unchanged.
     /// </summary>
     public sealed class Gm1Importer
     {
@@ -27,27 +30,24 @@ namespace Gm1KonverterCrossPlatform.Core.Services
         /// <returns>The number of imported images.</returns>
         public int ImportImages(Gm1Document document)
         {
-            int imported = 0;
+            var replacements = new List<(int ItemIndex, Argb1555Image Image)>();
             int itemCount = document.ItemCount;
             for (int i = 0; i < itemCount; i++)
             {
                 string path = workFolder.ImageFile(document.FileName, i + 1);
-                if (!File.Exists(path))
+                if (File.Exists(path))
                 {
-                    continue;
+                    replacements.Add((i, RemoveLegacyPadding(document, i, LoadPng(path))));
                 }
-
-                var image = RemoveLegacyPadding(document, i, ImageFiles.LoadPng(path));
-                document.ReplaceItem(i, image);
-                imported++;
             }
 
-            if (imported == 0)
+            if (replacements.Count == 0)
             {
                 throw new WorkflowException($"No images found in \"{workFolder.ImagesFolder(document.FileName)}\". Please export the images first.");
             }
 
-            return imported;
+            ReplaceItems(document, replacements);
+            return replacements.Count;
         }
 
         /// <summary>Imports the big image, using the same layout as the export.</summary>
@@ -60,9 +60,9 @@ namespace Gm1KonverterCrossPlatform.Core.Services
             }
 
             var items = document.RenderItems();
-            var images = new List<Argb1555Image>(items.Count);
+            var replacements = new List<(int ItemIndex, Argb1555Image Image)>(items.Count);
 
-            using (var sheet = ImageFiles.LoadRgba(path))
+            using (var sheet = LoadRgba(path))
             {
                 var layout = SpriteSheetLayout.Arrange(items.Select(item => (item.Width, item.Height)).ToList(), sheet.Width);
                 if (layout.Width > sheet.Width || layout.Height > sheet.Height)
@@ -72,16 +72,14 @@ namespace Gm1KonverterCrossPlatform.Core.Services
                         "Please do not change the size of the exported image.");
                 }
 
-                foreach (var cell in layout.Cells)
+                for (int i = 0; i < layout.Cells.Count; i++)
                 {
-                    images.Add(ImageFiles.ToArgb1555(sheet, cell.X, cell.Y, cell.Width, cell.Height));
+                    var cell = layout.Cells[i];
+                    replacements.Add((i, ImageFiles.ToArgb1555(sheet, cell.X, cell.Y, cell.Width, cell.Height)));
                 }
             }
 
-            for (int i = 0; i < images.Count; i++)
-            {
-                document.ReplaceItem(i, images[i]);
-            }
+            ReplaceItems(document, replacements);
         }
 
         /// <summary>Imports <c>Colortables/ColorTable{n}.png</c>.</summary>
@@ -90,8 +88,9 @@ namespace Gm1KonverterCrossPlatform.Core.Services
         {
             if (!document.HasColorTables) throw new InvalidOperationException("Only animation files have color tables.");
 
-            int imported = 0;
-            for (int i = 0; i < Palette.ColorTableCount; i++)
+            var tables = document.File.Palette.ColorTables;
+            var imported = new Dictionary<int, ColorTable>();
+            for (int i = 0; i < tables.Length; i++)
             {
                 string path = workFolder.ColorTableFile(document.FileName, i + 1);
                 if (!File.Exists(path))
@@ -101,22 +100,25 @@ namespace Gm1KonverterCrossPlatform.Core.Services
 
                 try
                 {
-                    document.File.Palette.ColorTables[i] = ColorTableImage.Read(ImageFiles.LoadPng(path));
+                    imported[i] = ColorTableImage.Read(LoadPng(path), tables[i]);
                 }
                 catch (ArgumentException e)
                 {
                     throw new WorkflowException($"\"{path}\": {e.Message}", e);
                 }
-
-                imported++;
             }
 
-            if (imported == 0)
+            if (imported.Count == 0)
             {
                 throw new WorkflowException($"No color tables found in \"{workFolder.ColorTablesFolder(document.FileName)}\". Please export the color tables first.");
             }
 
-            return imported;
+            foreach (var table in imported)
+            {
+                tables[table.Key] = table.Value;
+            }
+
+            return imported.Count;
         }
 
         /// <summary>
@@ -128,7 +130,7 @@ namespace Gm1KonverterCrossPlatform.Core.Services
         {
             if (!document.HasColorTables) throw new InvalidOperationException("Only animation files have color tables.");
 
-            int imported = 0;
+            var replacements = new List<(int ItemIndex, Argb1555Image?[] ImagesPerColorTable)>();
             int itemCount = document.ItemCount;
             for (int i = 0; i < itemCount; i++)
             {
@@ -138,28 +140,87 @@ namespace Gm1KonverterCrossPlatform.Core.Services
                     continue;
                 }
 
+                var first = LoadPng(firstPath);
                 var images = new Argb1555Image?[Palette.ColorTableCount];
-                images[0] = ImageFiles.LoadPng(firstPath);
+                images[0] = first;
                 for (int table = 1; table < Palette.ColorTableCount; table++)
                 {
                     string path = workFolder.OriginalAnimationFile(document.FileName, table + 1, i + 1);
                     if (File.Exists(path))
                     {
-                        var image = ImageFiles.LoadPng(path);
-                        images[table] = image.Width == images[0]!.Width && image.Height == images[0]!.Height ? image : null;
+                        var image = LoadPng(path);
+                        images[table] = image.Width == first.Width && image.Height == first.Height ? image : null;
                     }
                 }
 
-                document.ReplaceItemWithColorTableImages(i, images);
-                imported++;
+                replacements.Add((i, images));
             }
 
-            if (imported == 0)
+            if (replacements.Count == 0)
             {
                 throw new WorkflowException($"No images found in \"{workFolder.OriginalAnimationFolder(document.FileName, 1)}\". Please export the original animation first.");
             }
 
-            return imported;
+            try
+            {
+                foreach (var replacement in replacements)
+                {
+                    document.EnsureCanStore(replacement.ImagesPerColorTable[0]!);
+                }
+            }
+            catch (ArgumentOutOfRangeException e)
+            {
+                throw new WorkflowException(e.Message, e);
+            }
+
+            foreach (var replacement in replacements)
+            {
+                document.ReplaceItemWithColorTableImages(replacement.ItemIndex, replacement.ImagesPerColorTable);
+            }
+
+            return replacements.Count;
+        }
+
+        /// <summary>Loads a PNG; unreadable files are reported with their path.</summary>
+        internal static Argb1555Image LoadPng(string path)
+        {
+            try
+            {
+                return ImageFiles.LoadPng(path);
+            }
+            catch (Exception e) when (IsUnreadableImage(e))
+            {
+                throw new WorkflowException($"\"{path}\" could not be read: {e.Message}", e);
+            }
+        }
+
+        private static Image<Rgba32> LoadRgba(string path)
+        {
+            try
+            {
+                return ImageFiles.LoadRgba(path);
+            }
+            catch (Exception e) when (IsUnreadableImage(e))
+            {
+                throw new WorkflowException($"\"{path}\" could not be read: {e.Message}", e);
+            }
+        }
+
+        private static bool IsUnreadableImage(Exception e)
+        {
+            return e is ImageFormatException || e is NotSupportedException || e is IOException || e is UnauthorizedAccessException;
+        }
+
+        private static void ReplaceItems(Gm1Document document, List<(int ItemIndex, Argb1555Image Image)> replacements)
+        {
+            try
+            {
+                document.ReplaceItems(replacements);
+            }
+            catch (ArgumentOutOfRangeException e)
+            {
+                throw new WorkflowException(e.Message, e);
+            }
         }
 
         /// <summary>

@@ -74,6 +74,12 @@ namespace Gm1KonverterCrossPlatform.Core.BuildingOffsets
                 throw new InvalidOperationException("No Stronghold executable was found.");
             }
 
+            // Check every executable first, so a failure never leaves them patched differently.
+            foreach (var executable in executables)
+            {
+                executable.EnsureContains(address);
+            }
+
             foreach (var executable in executables)
             {
                 executable.Write(address, offset);
@@ -123,15 +129,20 @@ namespace Gm1KonverterCrossPlatform.Core.BuildingOffsets
                 return true;
             }
 
-            public void Write(OffsetAddress address, BuildingOffset offset)
+            public void EnsureContains(OffsetAddress address)
             {
-                int x = address.X + addressShift;
-                int y = address.Y + addressShift;
                 int yLength = address.SingleByteY ? 1 : sizeof(int);
-                if (!Contains(x, 1) || !Contains(y, yLength))
+                if (!Contains(address.X + addressShift, 1) || !Contains(address.Y + addressShift, yLength))
                 {
                     throw new InvalidDataException($"\"{Path}\" is too small for the offset addresses, this version of Stronghold is not supported.");
                 }
+            }
+
+            public void Write(OffsetAddress address, BuildingOffset offset)
+            {
+                EnsureContains(address);
+                int x = address.X + addressShift;
+                int y = address.Y + addressShift;
 
                 Bytes[x] = unchecked((byte)ClampToSByte(offset.X));
                 if (address.SingleByteY)

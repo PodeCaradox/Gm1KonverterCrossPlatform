@@ -359,7 +359,7 @@ namespace Gm1KonverterCrossPlatform.Tests.Services
         /// the encoder measures runs on the color table 0 image (TgxCodec.cs MeasureColoredSegment), where 5 and 200
         /// have the same color, and writes one index for the whole run (WriteRepeatingPixels).
         /// </summary>
-        [Fact(Skip = "BUG: TgxCodec encoder builds runs from color table 0 colors, so neighbouring pixels with equal color but different indices get one index; ImportOriginalAnimation is not exact")]
+        [Fact]
         public void OriginalAnimation_ExportThenImport_KeepsFileBytes_WhenDuplicateColorsAreNeighbours()
         {
             var builder = Gm1FileBuilder.CreateEmpty(Gm1DataType.Animations, seed: 3);

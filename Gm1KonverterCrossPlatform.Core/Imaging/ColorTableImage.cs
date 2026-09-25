@@ -31,10 +31,15 @@ namespace Gm1KonverterCrossPlatform.Core.Imaging
         }
 
         /// <summary>Reads the color of every cell (its top left pixel).</summary>
+        /// <param name="current">
+        /// The color table the image was exported from. Its colors without alpha bit are exported as transparent
+        /// pixels; they are kept when the cell is still transparent, so an unchanged image imports unchanged.
+        /// </param>
         /// <exception cref="ArgumentException">The image is too small.</exception>
-        public static ColorTable Read(Argb1555Image image, int cellSize = Palette.ImageCellSize)
+        public static ColorTable Read(Argb1555Image image, ColorTable? current = null, int cellSize = Palette.ImageCellSize)
         {
             if (image == null) throw new ArgumentNullException(nameof(image));
+            if (cellSize <= 0) throw new ArgumentOutOfRangeException(nameof(cellSize));
 
             int minimumWidth = (Palette.ImageColumns - 1) * cellSize + 1;
             int minimumHeight = (Palette.ImageRows - 1) * cellSize + 1;
@@ -48,7 +53,9 @@ namespace Gm1KonverterCrossPlatform.Core.Imaging
             var colors = new ushort[ColorTable.ColorCount];
             for (int i = 0; i < ColorTable.ColorCount; i++)
             {
-                colors[i] = image[i % Palette.ImageColumns * cellSize, i / Palette.ImageColumns * cellSize];
+                ushort color = image[i % Palette.ImageColumns * cellSize, i / Palette.ImageColumns * cellSize];
+                bool keepCurrent = current != null && !Argb1555.IsOpaque(color) && !Argb1555.IsOpaque(current[i]);
+                colors[i] = keepCurrent ? current![i] : color;
             }
 
             return new ColorTable(colors);
@@ -57,7 +64,8 @@ namespace Gm1KonverterCrossPlatform.Core.Imaging
         /// <summary>Index of the color at a position in an image created by <see cref="Render"/>, -1 outside of the grid.</summary>
         public static int IndexAt(double x, double y, int cellSize)
         {
-            if (x < 0 || y < 0) return -1;
+            if (cellSize <= 0) throw new ArgumentOutOfRangeException(nameof(cellSize));
+            if (double.IsNaN(x) || double.IsNaN(y) || x < 0 || y < 0) return -1;
 
             int column = (int)x / cellSize;
             int row = (int)y / cellSize;

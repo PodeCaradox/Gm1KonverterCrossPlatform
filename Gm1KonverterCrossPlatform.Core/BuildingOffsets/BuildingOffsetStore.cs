@@ -47,7 +47,7 @@ namespace Gm1KonverterCrossPlatform.Core.BuildingOffsets
                 var result = new Dictionary<int, BuildingOffset>();
                 foreach (var entry in entries)
                 {
-                    result[entry.Key] = new BuildingOffset((int)Math.Round(entry.Value.X), (int)Math.Round(entry.Value.Y));
+                    result[entry.Key] = new BuildingOffset(ToInt(entry.Value.X), ToInt(entry.Value.Y));
                 }
 
                 return result;
@@ -56,6 +56,17 @@ namespace Gm1KonverterCrossPlatform.Core.BuildingOffsets
             {
                 throw new InvalidDataException($"The offset file is not valid: {e.Message}", e);
             }
+        }
+
+        private static int ToInt(double value)
+        {
+            double rounded = Math.Round(value);
+            if (double.IsNaN(rounded) || rounded < int.MinValue || rounded > int.MaxValue)
+            {
+                throw new InvalidDataException($"The offset {value} is out of range.");
+            }
+
+            return (int)rounded;
         }
 
         public void Set(int imageIndex, BuildingOffset offset)
