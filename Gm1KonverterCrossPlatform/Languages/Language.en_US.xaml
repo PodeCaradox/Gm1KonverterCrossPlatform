@@ -9,43 +9,38 @@
     <x:String x:Key="CreatenewTgx">Create new Tgx</x:String>
     <x:String x:Key="ReplacewithSavedTgxFile">Replace with Saved Tgx File</x:String>
 
-    <x:String x:Key="ExportColortable">Export Colortable</x:String>
-    <x:String x:Key="ImportColortable">Import Colortable</x:String>
-    <x:String x:Key="ExportImages">Export Images</x:String>
-    <x:String x:Key="ImportImages">Import Images</x:String>
-    <x:String x:Key="ImportTgxImage">Import Image as Tgx</x:String>
-    <x:String x:Key="ExportTgxImage">Export Tgx Image</x:String>
+    <x:String x:Key="ExportColortable">Export color tables</x:String>
+    <x:String x:Key="ImportColortable">Import color tables</x:String>
+    <x:String x:Key="ExportImages">Export images</x:String>
+    <x:String x:Key="ImportImages">Import images</x:String>
+    <x:String x:Key="ImportTgxImage">Import TGX image</x:String>
+    <x:String x:Key="ExportTgxImage">Export TGX image</x:String>
 
-    <x:String x:Key="Workfolder">Workfolder</x:String>
-    <x:String x:Key="OpenFolderafterExport">Open Folder after Export</x:String>
-    <x:String x:Key="ActivateLogger">Activate Logger</x:String>
-    <x:String x:Key="StrongholdFolder">Stronghold Folder</x:String>
+    <x:String x:Key="Workfolder">Work folder</x:String>
+    <x:String x:Key="OpenFolderafterExport">Open folder after export</x:String>
+    <x:String x:Key="ActivateLogger">Enable logging</x:String>
+    <x:String x:Key="StrongholdFolder">Stronghold folder</x:String>
     <x:String x:Key="File">File</x:String>
     <x:String x:Key="Edit">Edit</x:String>
     <x:String x:Key="Options">Options</x:String>
-    <x:String x:Key="Datatype">Datatype: </x:String>
-    <x:String x:Key="Palette">Colortable: </x:String>
-    <x:String x:Key="TilesarenotSupportedyet">Tiles are not Supported yet.</x:String>
-    <x:String x:Key="Save">Save</x:String>
-    <x:String x:Key="ChangeColorTable">Change Colortable</x:String>
+    <x:String x:Key="Datatype">Data type:</x:String>
+    <x:String x:Key="Palette">Color table:</x:String>
+    <x:String x:Key="TilesarenotSupportedyet">– this data type is not supported yet.</x:String>
+    <x:String x:Key="Save">Save and close</x:String>
+    <x:String x:Key="ChangeColorTable">Edit color table…</x:String>
     <x:String x:Key="GM1Converter">GM1 Converter</x:String>
     
-    <x:String x:Key="ChangeColorPalette">Colortable editor</x:String>
-    <x:String x:Key="ClickontheColoryouwanttoChange">Click on the Color you want to Change.</x:String>
-    <x:String x:Key="HEXColor">HEX Color:</x:String>
+    <x:String x:Key="ChangeColorPalette">Color table editor</x:String>
+    <x:String x:Key="ClickontheColoryouwanttoChange">Click the color you want to change.</x:String>
+    <x:String x:Key="HEXColor">Hex color:</x:String>
     <x:String x:Key="ChangeRedColor">Red:</x:String>
     <x:String x:Key="ChangeGreenColor">Green:</x:String>
     <x:String x:Key="ChangeBlueColor">Blue:</x:String>
-    <x:String x:Key="ChangeColor">Change Color</x:String>
+    <x:String x:Key="ChangeColor">Apply color</x:String>
 
-    <x:String x:Key="AnimationTitel1">Datatyp Animation</x:String>
-    <x:String x:Key="AnimationText1">GM1 animation files consist of a certain number of encoded images and 10 color tables.
-        The color tables are used to save space and display different player colors.
-        The generated images refer to the currently selected color table:
-    </x:String>
-    <x:String x:Key="AnimationText2">It is important to note that one color in the picture is taken from the same place in the Colortable, that means in the Picture is for one Pixel one Position for all Colortables.
-    The positions of the color in the image remain the same for each Colortable, but the Colortable is changed to give the different player color.
-    </x:String>
+    <x:String x:Key="AnimationTitel1">Data type: Animation</x:String>
+    <x:String x:Key="AnimationText1">GM1 animation files consist of a number of encoded images and 10 color tables. The color tables save space and provide the different player colors. The images shown use the currently selected color table:</x:String>
+    <x:String x:Key="AnimationText2">Important: every pixel of an image stores a position in the color table, not a color. This position is the same for all color tables – only the table is exchanged, which produces the different player colors.</x:String>
 
     <x:String x:Key="AnimationText3">1 = gray/neutral??</x:String>
     <x:String x:Key="AnimationText4">2 = blue</x:String>
@@ -57,54 +52,82 @@
     <x:String x:Key="AnimationText10">8 = turquoise</x:String>
     <x:String x:Key="AnimationText11">9 = green</x:String>
     <x:String x:Key="AnimationText12">10 = gray/neutral??</x:String>
-    <x:String x:Key="AnimationText13">Assignment of the color table number to the player colors / neutral colors:</x:String>
+    <x:String x:Key="AnimationText13">Assignment of the color table numbers to the player colors / neutral colors:</x:String>
 
-    <x:String x:Key="InterfaceTitel1">Datatyp Interface</x:String>
-    <x:String x:Key="InterfaceText1">GM1 Interface files consist of a certain number of encoded images.
-        These images can be completely edited after export in size and presentation.
-        Unfortunately, it is not yet known how a picture is positioned in Stronghold, because the position remains fixed, they can only be extended downwards and to the right.
-    </x:String>
+    <x:String x:Key="InterfaceTitel1">Data type: Interface</x:String>
+    <x:String x:Key="InterfaceText1">GM1 interface files consist of a number of encoded images. After the export these images can be edited completely, in size and in content. Unfortunately it is not yet known how Stronghold positions an image: the position stays fixed, so images can only be extended to the bottom and to the right.</x:String>
 
-    <x:String x:Key="TiledObjectTitel1">Datatyp TiledObject</x:String>
-    <x:String x:Key="TiledObjectText1">GM1 files of type TiledObject consist of a certain number of coded pictures.
-        These images consist in the GM1 file of many small Diamonds 30 x 16 pixels. The picture below shows such a Diamond enlarged by a factor of 4.
-    </x:String>
-    <x:String x:Key="TiledObjectText2">From the individual Diamond Tiles then the Grounddiamond of the picture is produced.
-    </x:String>
+    <x:String x:Key="TiledObjectTitel1">Data type: TiledObject</x:String>
+    <x:String x:Key="TiledObjectText1">GM1 files of the type TiledObject (buildings) consist of a number of encoded images. In the GM1 file these images are made of many small diamonds of 30 × 16 pixels. The picture below shows such a diamond enlarged by a factor of 4.</x:String>
+    <x:String x:Key="TiledObjectText2">The ground diamond of the picture is then built from these individual diamond tiles.</x:String>
 
-    <x:String x:Key="TiledObjectText3">Finally, pictures with variable height are placed on the individual diamonds and the whole picture is put together.</x:String>
+    <x:String x:Key="TiledObjectText3">Finally, image parts of variable height are placed on the individual diamonds and the whole picture is put together.</x:String>
 
-    <x:String x:Key="TiledObjectText4">That means GM1 files of the type TiledObject can only be changed in the height and visually transformed.
-        Anything below the Grounddiamond image is ignored, because it need to be isometric.</x:String>
+    <x:String x:Key="TiledObjectText4">This means that GM1 files of the type TiledObject can only be changed in height and in appearance. Everything below the ground diamond of the imported image is ignored, because this part has to be isometric.</x:String>
 
     <x:String x:Key="NoInfoYet">There is no info about this file type yet.</x:String>
-    <x:String x:Key="GifExporter">Gif Exporter</x:String>
-    <x:String x:Key="ExportGif">Export Gif</x:String>
-    <x:String x:Key="SelectGif">Select Images with CTRL than click on the Export Button</x:String>
-    <x:String x:Key="Delay">Delay:</x:String>
+    <x:String x:Key="GifExporter">GIF export</x:String>
+    <x:String x:Key="ExportGif">Export GIF</x:String>
+    <x:String x:Key="SelectGif">Select the images with Ctrl+click, then click “Export GIF”.</x:String>
+    <x:String x:Key="Delay">Delay (ms):</x:String>
 
-    <x:String x:Key="ImportOrginalStrongholdAnimation">Import Orginal Stronghold Animation</x:String>
-    <x:String x:Key="ExportOrginalStrongholdAnimation">Export Orginal Stronghold Animation</x:String>
-    <x:String x:Key="ImageSize">Bigimage Width</x:String>
-    <x:String x:Key="ExportBigImage">Export Bigimage</x:String>
-    <x:String x:Key="ImportOffsetsFromFile">Import Offsets From File</x:String>
-    <x:String x:Key="ImportBigImage">Import Bigimage</x:String>
-    <x:String x:Key="OpenLogFile">Open Log Folder</x:String>
+    <x:String x:Key="ImportOrginalStrongholdAnimation">Import original Stronghold animation</x:String>
+    <x:String x:Key="ExportOrginalStrongholdAnimation">Export original Stronghold animation</x:String>
+    <x:String x:Key="ImageSize">Big image width</x:String>
+    <x:String x:Key="ExportBigImage">Export big image</x:String>
+    <x:String x:Key="ImportOffsetsFromFile">Import offsets from file…</x:String>
+    <x:String x:Key="ImportBigImage">Import big image</x:String>
+    <x:String x:Key="OpenLogFile">Open log folder</x:String>
     
-    <x:String x:Key="ChangeOffsets">Change Offsets</x:String>
-    <x:String x:Key="Gm1FileHeaderFields">Gm1 header fields</x:String>
-    <x:String x:Key="Gm1FileImageHeaderFields">Gm1 image header fields</x:String>
-    <x:String x:Key="OpenWorkFolder">Open Work Folder</x:String>
-    <x:String x:Key="OpenStrongholdFolder">Open Stronghold Folder</x:String>
+    <x:String x:Key="ChangeOffsets">Change offsets</x:String>
+    <x:String x:Key="Gm1FileHeaderFields">GM1 file header</x:String>
+    <x:String x:Key="Gm1FileImageHeaderFields">Image header (selected image)</x:String>
+    <x:String x:Key="OpenWorkFolder">Open work folder</x:String>
+    <x:String x:Key="OpenStrongholdFolder">Open Stronghold folder</x:String>
 
     <x:String x:Key="Language">Language</x:String>
     
     <x:String x:Key="ColorTheme">Theme</x:String>
 
-    <x:String x:Key="ChangeColorTableDialogBox_Text">The color table has changed.</x:String>
+    <!-- Main window layout, empty states, tool bar groups and tool tips -->
+    <x:String x:Key="ChooseWorkfolder">Choose work folder…</x:String>
+    <x:String x:Key="ChooseStrongholdFolder">Choose Stronghold folder…</x:String>
+    <x:String x:Key="NotSet">not set</x:String>
+    <x:String x:Key="WorkfolderHint">Double-click a folder to open it.</x:String>
+    <x:String x:Key="WorkfolderEmpty">Your exported files will appear here.</x:String>
+    <x:String x:Key="Gm1FilesTip">Sprite archives (.gm1) from the “gm” folder</x:String>
+    <x:String x:Key="TgxFilesTip">Single images (.tgx) from the “gfx” folder</x:String>
+    <x:String x:Key="Preview">Preview</x:String>
+    <x:String x:Key="MultiSelectHint">Ctrl+click selects several images</x:String>
+    <x:String x:Key="EmptyStateTitle">No file open</x:String>
+    <x:String x:Key="EmptyStateChooseFolders">First choose your Stronghold folder (the game folder that contains “gm” and “gfx”) and a work folder for the exported images.</x:String>
+    <x:String x:Key="EmptyStatePickFile">Pick a .gm1 file from the list on the right – or switch to TGX for the .tgx images.</x:String>
+    <x:String x:Key="WorkflowTitle">How it works</x:String>
+    <x:String x:Key="WorkflowStep1">Export the images (one by one or as one big image) into the work folder.</x:String>
+    <x:String x:Key="WorkflowStep2">Edit the PNG files with an image editor of your choice.</x:String>
+    <x:String x:Key="WorkflowStep3">Import the edited images – the preview shows the result.</x:String>
+    <x:String x:Key="WorkflowStep4">Save the file to your UCP mod (tool bar, on the right) – the game files are not overwritten. You can remove the file from the mod again at any time.</x:String>
+    <x:String x:Key="GroupImages">Images</x:String>
+    <x:String x:Key="GroupBigImage">Big image</x:String>
+    <x:String x:Key="GroupColorTables">Color tables</x:String>
+    <x:String x:Key="GroupTgx">TGX image</x:String>
+    <x:String x:Key="GroupMod">UCP mod</x:String>
+    <x:String x:Key="SaveToModTip">Saves the edited file into your UCP mod. The game files are not overwritten.</x:String>
+    <x:String x:Key="RemoveFromModTip">Removes the file from your UCP mod again, so the game uses its original file.</x:String>
+    <x:String x:Key="WidthLabel">Width:</x:String>
+    <x:String x:Key="PreviousColorTable">Previous color table</x:String>
+    <x:String x:Key="NextColorTable">Next color table</x:String>
+    <x:String x:Key="FileTypeInfo">Information about this data type</x:String>
+    <x:String x:Key="SelectImageHint">Click an image to see its header.</x:String>
+    <x:String x:Key="XOffsetLabel">X offset (−128 to 127):</x:String>
+    <x:String x:Key="YOffsetLabel">Y offset:</x:String>
+    <x:String x:Key="ApplyOffset">Apply offset</x:String>
+    <x:String x:Key="ApplyOffsetTip">Writes the offset into the Stronghold executables and saves it in Offsets.json in the work folder.</x:String>
+
+    <x:String x:Key="ChangeColorTableDialogBox_Text">The color table has been changed. Do you want to save the changes?</x:String>
     <x:String x:Key="ChangeColorTableDialogBox_Button_Cancel">Cancel</x:String>
     <x:String x:Key="ChangeColorTableDialogBox_Button_Save">Save</x:String>
-    <x:String x:Key="ChangeColorTableDialogBox_Button_Close">Close</x:String>
+    <x:String x:Key="ChangeColorTableDialogBox_Button_Close">Discard</x:String>
     <x:String x:Key="NoFileSelected">Please select a file first.</x:String>
     <x:String x:Key="NoWorkfolderSelected">Please select a work folder under Options first.</x:String>
     <x:String x:Key="NoStrongholdFolderSelected">Please select the Stronghold folder under Options first.</x:String>

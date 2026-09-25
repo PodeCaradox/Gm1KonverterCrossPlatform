@@ -9,105 +9,128 @@
     <x:String x:Key="CreatenewTgx">_Erstelle neue Tgx Datei</x:String>
     <x:String x:Key="ReplacewithSavedTgxFile">Ersetzen mit der gesicherten Tgx Datei</x:String>
 
-    <x:String x:Key="ExportColortable">Exportiere Farbtabelle</x:String>
-    <x:String x:Key="ImportColortable">Importiere Farbtabelle</x:String>
-    <x:String x:Key="ExportImages">Exportiere Bilder</x:String>
-    <x:String x:Key="ImportImages">Importiere Bilder</x:String>
-    <x:String x:Key="ImportTgxImage">Importiere Bild als Tgx</x:String>
-    <x:String x:Key="ExportTgxImage">Exportiere Tgx Bild</x:String>
+    <x:String x:Key="ExportColortable">Farbtabellen exportieren</x:String>
+    <x:String x:Key="ImportColortable">Farbtabellen importieren</x:String>
+    <x:String x:Key="ExportImages">Bilder exportieren</x:String>
+    <x:String x:Key="ImportImages">Bilder importieren</x:String>
+    <x:String x:Key="ImportTgxImage">TGX-Bild importieren</x:String>
+    <x:String x:Key="ExportTgxImage">TGX-Bild exportieren</x:String>
 
     <x:String x:Key="Workfolder">Arbeitsordner</x:String>
-    <x:String x:Key="OpenFolderafterExport">Öffne Ordner nachdem Exportieren</x:String>
-    <x:String x:Key="ActivateLogger">Aktiviere Logger</x:String>
-    <x:String x:Key="StrongholdFolder">Stronghold Ordner</x:String>
+    <x:String x:Key="OpenFolderafterExport">Ordner nach dem Export öffnen</x:String>
+    <x:String x:Key="ActivateLogger">Protokollierung aktivieren</x:String>
+    <x:String x:Key="StrongholdFolder">Stronghold-Ordner</x:String>
     <x:String x:Key="File">Datei</x:String>
     <x:String x:Key="Edit">Bearbeiten</x:String>
     <x:String x:Key="Options">Optionen</x:String>
-    <x:String x:Key="Datatype">Dateityp: </x:String>
-    <x:String x:Key="Palette">Farbtabelle: </x:String>
-    <x:String x:Key="TilesarenotSupportedyet">Dateien werden noch nicht Unterstützt.</x:String>
-    <x:String x:Key="Save">Speichern</x:String>
-    <x:String x:Key="ChangeColorTable">Ändere Farbtabelle</x:String>
+    <x:String x:Key="Datatype">Dateityp:</x:String>
+    <x:String x:Key="Palette">Farbtabelle:</x:String>
+    <x:String x:Key="TilesarenotSupportedyet">– dieser Dateityp wird noch nicht unterstützt.</x:String>
+    <x:String x:Key="Save">Speichern und schließen</x:String>
+    <x:String x:Key="ChangeColorTable">Farbtabelle bearbeiten…</x:String>
     <x:String x:Key="GM1Converter">GM1 Konverter</x:String>
 
     <x:String x:Key="ChangeColorPalette">Farbtabelle bearbeiten</x:String>
-    <x:String x:Key="ClickontheColoryouwanttoChange">Klicke auf die Farbe die du ändern möchtest.</x:String>
-    <x:String x:Key="HEXColor">HEX Farbe:</x:String>
-    <x:String x:Key="ChangeRedColor">Red:</x:String>
-    <x:String x:Key="ChangeGreenColor">Green:</x:String>
-    <x:String x:Key="ChangeBlueColor">Blue:</x:String>
-    <x:String x:Key="ChangeColor">Ändere Farbe</x:String>
+    <x:String x:Key="ClickontheColoryouwanttoChange">Klicke auf die Farbe, die du ändern möchtest.</x:String>
+    <x:String x:Key="HEXColor">Hex-Farbe:</x:String>
+    <x:String x:Key="ChangeRedColor">Rot:</x:String>
+    <x:String x:Key="ChangeGreenColor">Grün:</x:String>
+    <x:String x:Key="ChangeBlueColor">Blau:</x:String>
+    <x:String x:Key="ChangeColor">Farbe übernehmen</x:String>
 
-    <x:String x:Key="AnimationTitel1">Datentyp Animation</x:String>
-    <x:String x:Key="AnimationText1">GM1 Dateien vom Typ Animation bestehen aus einer bestimmten Anzahl kodierten Bildern und 10 Farbtabellen. 
-        Die Farbtabellen werden dafür genutzt um Speicherplatz zu sparen und verschiedene Spielerfarben darzustellen. 
-        Die generierten Bilder beziehen ihre Farbe aus der aktuell ausgewählten Farbtabelle:
-    </x:String>
-    <x:String x:Key="AnimationText2">Wichtig zu beachten ist das eine Farbe im Bild an der jeweils gleichen Stelle in der Farbtabelle bezogen wird, das heißt im Bild ist für ein Pixel eine einzige Position für alle Farbtabellen angegeben. 
-         Die Positionen der Farbe im Bild bleibt zu der Farbtabelle immer gleich, aber die Tabelle mit Farben wird getauscht, so entstehen dann die verschiedenen Spielerfarbe.
-    </x:String>
+    <x:String x:Key="AnimationTitel1">Dateityp: Animation</x:String>
+    <x:String x:Key="AnimationText1">GM1-Dateien vom Typ Animation bestehen aus einer bestimmten Anzahl kodierter Bilder und 10 Farbtabellen. Die Farbtabellen sparen Speicherplatz und stellen die verschiedenen Spielerfarben dar. Die angezeigten Bilder beziehen ihre Farben aus der aktuell ausgewählten Farbtabelle:</x:String>
+    <x:String x:Key="AnimationText2">Wichtig: Jedes Pixel eines Bildes speichert keine Farbe, sondern eine Position in der Farbtabelle. Diese Position ist für alle Farbtabellen gleich – nur die Tabelle wird getauscht, so entstehen die verschiedenen Spielerfarben.</x:String>
 
     <x:String x:Key="AnimationText3">1 = grau/neutral??</x:String>
     <x:String x:Key="AnimationText4">2 = blau</x:String>
-    <x:String x:Key="AnimationText5">3 = Rot</x:String>
-    <x:String x:Key="AnimationText6">4 = Orange</x:String>
+    <x:String x:Key="AnimationText5">3 = rot</x:String>
+    <x:String x:Key="AnimationText6">4 = orange</x:String>
     <x:String x:Key="AnimationText7">5 = gelb</x:String>
     <x:String x:Key="AnimationText8">6 = lila</x:String>
     <x:String x:Key="AnimationText9">7 = schwarz</x:String>
-    <x:String x:Key="AnimationText10">8 = Türkis</x:String>
+    <x:String x:Key="AnimationText10">8 = türkis</x:String>
     <x:String x:Key="AnimationText11">9 = grün</x:String>
     <x:String x:Key="AnimationText12">10 = grau/neutral??</x:String>
-    <x:String x:Key="AnimationText13">Zuweisung der Farbtabellennummer zu den Spielerfarben/Neutralenfarben:</x:String>
+    <x:String x:Key="AnimationText13">Zuordnung der Farbtabellennummern zu den Spielerfarben / neutralen Farben:</x:String>
 
-    <x:String x:Key="InterfaceTitel1">Datentyp Interface</x:String>
-    <x:String x:Key="InterfaceText1">GM1 Dateien vom Typ Interface bestehen aus einer bestimmten Anzahl kodierten Bildern. 
-        Diese Bilder können nach dem Export komplett bearbeitet werden in größe und Darstellung.
-        Leider ist noch nicht bekannt wie ein Bild in Stronghold Positioniert wird, da die Position fest bleibt können diese nur nach unten und rechts erweitert werden.
-    </x:String>
+    <x:String x:Key="InterfaceTitel1">Dateityp: Interface</x:String>
+    <x:String x:Key="InterfaceText1">GM1-Dateien vom Typ Interface bestehen aus einer bestimmten Anzahl kodierter Bilder. Diese Bilder können nach dem Export in Größe und Darstellung komplett bearbeitet werden. Leider ist noch nicht bekannt, wie Stronghold ein Bild positioniert: Da die Position fest bleibt, können die Bilder nur nach unten und nach rechts erweitert werden.</x:String>
 
-    <x:String x:Key="TiledObjectTitel1">Datentyp TiledObject</x:String>
-    <x:String x:Key="TiledObjectText1">GM1 Dateien vom Typ TiledObject bestehen aus einer bestimmten Anzahl kodierten Bildern. 
-        Diese Bilder bestehen in der GM1 Datei aus vielen kleinen Rauten 30 x 16 Pixeln. Das Bild unten zeigt ein solche Raute um den Faktor 4 vergrößert.
-    </x:String>
-    <x:String x:Key="TiledObjectText2">Aus den einzelnen Rauten Tiles wird dann die Grundraute des Bildes erzeugt.
-    </x:String>
+    <x:String x:Key="TiledObjectTitel1">Dateityp: TiledObject</x:String>
+    <x:String x:Key="TiledObjectText1">GM1-Dateien vom Typ TiledObject (Gebäude) bestehen aus einer bestimmten Anzahl kodierter Bilder. In der GM1-Datei bestehen diese Bilder aus vielen kleinen Rauten mit 30 × 16 Pixeln. Das Bild unten zeigt eine solche Raute um den Faktor 4 vergrößert.</x:String>
+    <x:String x:Key="TiledObjectText2">Aus den einzelnen Rauten wird dann die Grundraute des Bildes erzeugt.</x:String>
 
-    <x:String x:Key="TiledObjectText3">Zum ende werden dann noch Bilder mit variabler höhe auf die einzelnen Rauten gesetzt und das ganze Bild zusammengefügt.</x:String>
+    <x:String x:Key="TiledObjectText3">Zum Schluss werden Bildteile mit variabler Höhe auf die einzelnen Rauten gesetzt und das ganze Bild zusammengefügt.</x:String>
 
-    <x:String x:Key="TiledObjectText4">Das heißt GM1 Dateien vom Typ TiledObject können nur in der höhe verändert und visuell umgestaltet werden. 
-        Alles unterhalb der Grundraute des impotierten Bildes wird ignoriert, da diese Isometrik sein müssen.</x:String>
+    <x:String x:Key="TiledObjectText4">Das heißt, GM1-Dateien vom Typ TiledObject können nur in der Höhe verändert und optisch umgestaltet werden. Alles unterhalb der Grundraute des importierten Bildes wird ignoriert, da dieser Teil isometrisch sein muss.</x:String>
 
-    <x:String x:Key="NoInfoYet">Zu diesem Dateityp gibt es jetzt noch keine Info.</x:String>
-    <x:String x:Key="GifExporter">Gif Exportieren</x:String>
-    <x:String x:Key="ExportGif">Exportiere Gif</x:String>
-    <x:String x:Key="SelectGif">Selektiere Bilder mit STRG danach klicke auf den Export Button</x:String>
-    <x:String x:Key="Delay">Verzögerung:</x:String>
+    <x:String x:Key="NoInfoYet">Zu diesem Dateityp gibt es noch keine Infos.</x:String>
+    <x:String x:Key="GifExporter">GIF-Export</x:String>
+    <x:String x:Key="ExportGif">GIF exportieren</x:String>
+    <x:String x:Key="SelectGif">Wähle die Bilder mit Strg+Klick aus und klicke dann auf „GIF exportieren“.</x:String>
+    <x:String x:Key="Delay">Verzögerung (ms):</x:String>
 
-    <x:String x:Key="ImportOrginalStrongholdAnimation">Importiere Orginal Stronghold Animation</x:String>
-    <x:String x:Key="ExportOrginalStrongholdAnimation">Exportiere Orginal Stronghold Animation</x:String>
-    <x:String x:Key="ImportOffsetsFromFile">Import Offsets From File</x:String>
-    <x:String x:Key="ImageSize">Bigimage Width</x:String>
-    <x:String x:Key="ExportBigImage">Exportiere als ein Großes Bild</x:String>
-    <x:String x:Key="ImportBigImage">Importiere Großes Bild</x:String>
-    <x:String x:Key="OpenLogFile">Öffne Log Ordner</x:String>
+    <x:String x:Key="ImportOrginalStrongholdAnimation">Original-Stronghold-Animation importieren</x:String>
+    <x:String x:Key="ExportOrginalStrongholdAnimation">Original-Stronghold-Animation exportieren</x:String>
+    <x:String x:Key="ImportOffsetsFromFile">Offsets aus Datei importieren…</x:String>
+    <x:String x:Key="ImageSize">Breite des großen Bildes</x:String>
+    <x:String x:Key="ExportBigImage">Großes Bild exportieren</x:String>
+    <x:String x:Key="ImportBigImage">Großes Bild importieren</x:String>
+    <x:String x:Key="OpenLogFile">Log-Ordner öffnen</x:String>
 
-    <x:String x:Key="ChangeOffsets">Ändere Offsets</x:String>
-    <x:String x:Key="Gm1FileHeaderFields">Gm1 header fields</x:String>
-    <x:String x:Key="Gm1FileImageHeaderFields">Gm1 image header fields</x:String>
-    <x:String x:Key="OpenWorkFolder">Open Work Folder</x:String>
-    <x:String x:Key="OpenStrongholdFolder">Open Stronghold Folder</x:String>
+    <x:String x:Key="ChangeOffsets">Offsets ändern</x:String>
+    <x:String x:Key="Gm1FileHeaderFields">GM1-Dateikopf</x:String>
+    <x:String x:Key="Gm1FileImageHeaderFields">Bildkopf (ausgewähltes Bild)</x:String>
+    <x:String x:Key="OpenWorkFolder">Arbeitsordner öffnen</x:String>
+    <x:String x:Key="OpenStrongholdFolder">Stronghold-Ordner öffnen</x:String>
 
     <x:String x:Key="Language">Sprache</x:String>
 
-    <x:String x:Key="ColorTheme">Theme</x:String>
+    <x:String x:Key="ColorTheme">Farbschema</x:String>
 
-    <x:String x:Key="ChangeColorTableDialogBox_Text">The color table has changed.</x:String>
-    <x:String x:Key="ChangeColorTableDialogBox_Button_Cancel">Cancel</x:String>
-    <x:String x:Key="ChangeColorTableDialogBox_Button_Save">Save</x:String>
-    <x:String x:Key="ChangeColorTableDialogBox_Button_Close">Close</x:String>
+    <!-- Main window layout, empty states, tool bar groups and tool tips -->
+    <x:String x:Key="ChooseWorkfolder">Arbeitsordner wählen…</x:String>
+    <x:String x:Key="ChooseStrongholdFolder">Stronghold-Ordner wählen…</x:String>
+    <x:String x:Key="NotSet">nicht gewählt</x:String>
+    <x:String x:Key="WorkfolderHint">Doppelklick öffnet den Ordner.</x:String>
+    <x:String x:Key="WorkfolderEmpty">Hier erscheinen deine exportierten Dateien.</x:String>
+    <x:String x:Key="Gm1FilesTip">Sprite-Archive (.gm1) aus dem Ordner „gm“</x:String>
+    <x:String x:Key="TgxFilesTip">Einzelbilder (.tgx) aus dem Ordner „gfx“</x:String>
+    <x:String x:Key="Preview">Vorschau</x:String>
+    <x:String x:Key="MultiSelectHint">Strg+Klick wählt mehrere Bilder</x:String>
+    <x:String x:Key="EmptyStateTitle">Keine Datei geöffnet</x:String>
+    <x:String x:Key="EmptyStateChooseFolders">Wähle zuerst deinen Stronghold-Ordner (den Spielordner mit „gm“ und „gfx“) und einen Arbeitsordner für die exportierten Bilder.</x:String>
+    <x:String x:Key="EmptyStatePickFile">Wähle rechts in der Liste eine .gm1-Datei aus – oder wechsle zu TGX für die .tgx-Bilder.</x:String>
+    <x:String x:Key="WorkflowTitle">So funktioniert’s</x:String>
+    <x:String x:Key="WorkflowStep1">Exportiere die Bilder (einzeln oder als ein großes Bild) in den Arbeitsordner.</x:String>
+    <x:String x:Key="WorkflowStep2">Bearbeite die PNG-Dateien mit einem Bildprogramm deiner Wahl.</x:String>
+    <x:String x:Key="WorkflowStep3">Importiere die bearbeiteten Bilder – die Vorschau zeigt das Ergebnis.</x:String>
+    <x:String x:Key="WorkflowStep4">Speichere die Datei in deiner UCP-Mod (Werkzeugleiste, rechts) – die Spieldateien werden nicht überschrieben. Du kannst die Datei jederzeit wieder aus der Mod entfernen.</x:String>
+    <x:String x:Key="GroupImages">Einzelbilder</x:String>
+    <x:String x:Key="GroupBigImage">Großes Bild</x:String>
+    <x:String x:Key="GroupColorTables">Farbtabellen</x:String>
+    <x:String x:Key="GroupTgx">TGX-Bild</x:String>
+    <x:String x:Key="GroupMod">UCP-Mod</x:String>
+    <x:String x:Key="SaveToModTip">Speichert die bearbeitete Datei in deiner UCP-Mod. Die Spieldateien werden nicht überschrieben.</x:String>
+    <x:String x:Key="RemoveFromModTip">Entfernt die Datei wieder aus deiner UCP-Mod, sodass das Spiel die Originaldatei verwendet.</x:String>
+    <x:String x:Key="WidthLabel">Breite:</x:String>
+    <x:String x:Key="PreviousColorTable">Vorherige Farbtabelle</x:String>
+    <x:String x:Key="NextColorTable">Nächste Farbtabelle</x:String>
+    <x:String x:Key="FileTypeInfo">Infos zu diesem Dateityp</x:String>
+    <x:String x:Key="SelectImageHint">Klicke auf ein Bild, um seinen Bildkopf zu sehen.</x:String>
+    <x:String x:Key="XOffsetLabel">X-Offset (−128 bis 127):</x:String>
+    <x:String x:Key="YOffsetLabel">Y-Offset:</x:String>
+    <x:String x:Key="ApplyOffset">Offset übernehmen</x:String>
+    <x:String x:Key="ApplyOffsetTip">Schreibt den Offset in die Stronghold-Programmdateien (.exe) und speichert ihn in Offsets.json im Arbeitsordner.</x:String>
+
+    <x:String x:Key="ChangeColorTableDialogBox_Text">Die Farbtabelle wurde geändert. Möchtest du die Änderungen speichern?</x:String>
+    <x:String x:Key="ChangeColorTableDialogBox_Button_Cancel">Abbrechen</x:String>
+    <x:String x:Key="ChangeColorTableDialogBox_Button_Save">Speichern</x:String>
+    <x:String x:Key="ChangeColorTableDialogBox_Button_Close">Verwerfen</x:String>
     <x:String x:Key="NoFileSelected">Bitte zuerst eine Datei auswählen.</x:String>
     <x:String x:Key="NoWorkfolderSelected">Bitte zuerst unter Optionen einen Arbeitsordner auswählen.</x:String>
-    <x:String x:Key="NoStrongholdFolderSelected">Bitte zuerst unter Optionen den Stronghold Ordner auswählen.</x:String>
+    <x:String x:Key="NoStrongholdFolderSelected">Bitte zuerst unter Optionen den Stronghold-Ordner auswählen.</x:String>
     <x:String x:Key="SomethingWentWrong">Etwas ist schiefgelaufen: bitte erstelle ein Issue auf der GitHub Seite.</x:String>
     <x:String x:Key="LargerImagesHint">Tipp: Bilder können größer als das Original sein. Exportiere die Bilder, vergrößere die Leinwand von Images/ImageN.png im Bildprogramm und importiere die Bilder wieder. Beim großen Bild (BigImage) bleiben die Originalgrößen erhalten. Gebäude: Die Breite muss 32 × n − 2 Pixel sein (n = 1 bis 15 Rauten pro Reihe), die Boden-Rauten bleiben unten.</x:String>
 </controls:ResourceDictionary>
