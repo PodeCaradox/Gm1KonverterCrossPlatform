@@ -122,7 +122,7 @@
     <x:String x:Key="XOffsetLabel">Смещение X (от −128 до 127):</x:String>
     <x:String x:Key="YOffsetLabel">Смещение Y:</x:String>
     <x:String x:Key="ApplyOffset">Применить смещение</x:String>
-    <x:String x:Key="ApplyOffsetTip">Записывает смещение в исполняемые файлы Stronghold и сохраняет его в Offsets.json в рабочей папке.</x:String>
+    <x:String x:Key="ApplyOffsetTip">Сохраняет смещение в модуле смещений UCP3 (исполняемые файлы не изменяются) и в Offsets.json в рабочей папке.</x:String>
 
     <x:String x:Key="ChangeColorTableDialogBox_Text">Таблица цветов изменена. Сохранить изменения?</x:String>
     <x:String x:Key="ChangeColorTableDialogBox_Button_Cancel">Отмена</x:String>

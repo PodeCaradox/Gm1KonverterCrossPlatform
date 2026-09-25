@@ -122,7 +122,7 @@
     <x:String x:Key="XOffsetLabel">X offset (−128 to 127):</x:String>
     <x:String x:Key="YOffsetLabel">Y offset:</x:String>
     <x:String x:Key="ApplyOffset">Apply offset</x:String>
-    <x:String x:Key="ApplyOffsetTip">Writes the offset into the Stronghold executables and saves it in Offsets.json in the work folder.</x:String>
+    <x:String x:Key="ApplyOffsetTip">Saves the offset in the UCP3 offsets module (the executables stay unchanged) and in Offsets.json in the work folder.</x:String>
 
     <x:String x:Key="ChangeColorTableDialogBox_Text">The color table has been changed. Do you want to save the changes?</x:String>
     <x:String x:Key="ChangeColorTableDialogBox_Button_Cancel">Cancel</x:String>
