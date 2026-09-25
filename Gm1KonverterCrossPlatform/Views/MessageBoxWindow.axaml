@@ -2,22 +2,35 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="200" d:DesignHeight="450"
-        Width="400"
+        mc:Ignorable="d" d:DesignWidth="440" d:DesignHeight="160"
+        Width="440"
+        MinWidth="320"
         MinHeight="150"
         SizeToContent="Height"
+        CanResize="False"
+        ShowInTaskbar="False"
         x:Class="Gm1KonverterCrossPlatform.Views.MessageBoxWindow"
         WindowStartupLocation="CenterOwner">
 
-  <Window.Styles>
-    <Style Selector="TextBlock.h1">
-      <Setter Property="FontSize" Value="14"/>
-      <Setter Property="FontWeight" Value="Bold"/>
-    </Style>
-  </Window.Styles>
+  <Grid RowDefinitions="*,Auto">
+    <!-- Icon and message -->
+    <Grid Grid.Row="0" ColumnDefinitions="Auto,*" Margin="20,20,20,16">
+      <Border Grid.Column="0" Width="32" Height="32" CornerRadius="16" Margin="0,0,14,0" VerticalAlignment="Top"
+              Background="{DynamicResource HighlightBrush}">
+        <TextBlock Text="i" FontSize="18" FontWeight="Bold" FontFamily="Serif"
+                   Foreground="{DynamicResource HighlightForegroundBrush}"
+                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+      </Border>
+      <ScrollViewer Grid.Column="1" MaxHeight="420" HorizontalScrollBarVisibility="Disabled" VerticalAlignment="Center">
+        <TextBlock Name="textBox" TextWrapping="Wrap" LineHeight="19"/>
+      </ScrollViewer>
+    </Grid>
 
-  <StackPanel>
-    <TextBlock Classes="h1" Name="textBox" TextWrapping="Wrap" Margin="10"/>
-    <Button Click="Button_Click" HorizontalAlignment="Center" Margin="10">OK</Button>
-  </StackPanel>
+    <!-- Buttons -->
+    <Border Grid.Row="1" Padding="16,10"
+            BorderBrush="{DynamicResource ThemeBorderLowBrush}"
+            BorderThickness="0,1,0,0">
+      <Button Classes="Dialog Accent" HorizontalAlignment="Right" IsDefault="True" IsCancel="True" Click="Button_Click">OK</Button>
+    </Border>
+  </Grid>
 </Window>

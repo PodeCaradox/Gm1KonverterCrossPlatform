@@ -1,33 +1,358 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-  <Style Selector="Grid.Main > Separator">
-    <Setter Property="Height" Value="1"/>
-    <Setter Property="Background" Value="{DynamicResource ThemeBorderLowColor}"/>
+  <!--
+    Shared styles of the application.
+    Colors only come from the theme resources (BaseLight / BaseDark), so every style works in both color themes.
+    Spacing follows a 4 px grid: 4 / 8 / 12 / 16.
+  -->
+
+  <!-- ===== Typography ===== -->
+
+  <Style Selector="TextBlock.Title">
+    <Setter Property="FontSize" Value="16"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
   </Style>
 
-  <Style Selector="DockPanel.TextMenu > Separator">
+  <Style Selector="TextBlock.Heading">
+    <Setter Property="FontSize" Value="18"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+    <Setter Property="Margin" Value="0,8,0,4"/>
+  </Style>
+
+  <Style Selector="TextBlock.PaneTitle">
+    <Setter Property="FontSize" Value="13"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+    <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+  </Style>
+
+  <Style Selector="TextBlock.Caption">
+    <Setter Property="FontSize" Value="11"/>
+    <Setter Property="Foreground" Value="{DynamicResource ThemeForegroundLowBrush}"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="TextBlock.Hint">
+    <Setter Property="Foreground" Value="{DynamicResource ThemeForegroundLowBrush}"/>
+    <Setter Property="TextWrapping" Value="Wrap"/>
+  </Style>
+
+  <Style Selector="TextBlock.Paragraph">
+    <Setter Property="TextWrapping" Value="Wrap"/>
+    <Setter Property="LineHeight" Value="19"/>
+  </Style>
+
+  <!-- ===== Window chrome: menu bar, tool bar, status bar ===== -->
+
+  <Style Selector="Border.MenuBar">
+    <Setter Property="BorderBrush" Value="{DynamicResource ThemeBorderLowBrush}"/>
+    <Setter Property="BorderThickness" Value="0,0,0,1"/>
+  </Style>
+
+  <Style Selector="Border.ToolBar">
+    <Setter Property="Padding" Value="8,4,8,2"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource ThemeBorderLowBrush}"/>
+    <Setter Property="BorderThickness" Value="0,0,0,1"/>
+  </Style>
+
+  <Style Selector="Border.StatusBar">
+    <Setter Property="Padding" Value="8,3"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource ThemeBorderLowBrush}"/>
+    <Setter Property="BorderThickness" Value="0,1,0,0"/>
+  </Style>
+
+  <Style Selector="Border.StatusBar TextBlock">
+    <Setter Property="FontSize" Value="11"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="TextBlock.Path">
+    <Setter Property="MaxWidth" Value="420"/>
+    <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+  </Style>
+
+  <Style Selector="TextBlock.Warning">
+    <Setter Property="Foreground" Value="{DynamicResource ErrorBrush}"/>
+  </Style>
+
+  <!-- A group of tool bar buttons with a caption below it. -->
+  <Style Selector="StackPanel.ToolGroup">
+    <Setter Property="Spacing" Value="1"/>
+    <Setter Property="VerticalAlignment" Value="Top"/>
+  </Style>
+
+  <Style Selector="StackPanel.ToolGroup > TextBlock">
+    <Setter Property="FontSize" Value="11"/>
+    <Setter Property="Foreground" Value="{DynamicResource ThemeForegroundLowBrush}"/>
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="Rectangle.ToolSeparator">
     <Setter Property="Width" Value="1"/>
-    <Setter Property="Background" Value="{DynamicResource ThemeBorderHighColor}"/>
-    <Setter Property="Margin" Value="3"/>
+    <Setter Property="Margin" Value="8,2"/>
+    <Setter Property="Fill" Value="{DynamicResource ThemeBorderLowBrush}"/>
   </Style>
 
-  <Style Selector="DockPanel.ImageMenu">
+  <!-- Hosts the tool tip of a button, so the tip is also shown while the button is disabled. -->
+  <Style Selector="Panel.TipHost">
+    <Setter Property="Background" Value="Transparent"/>
+  </Style>
+
+  <!-- Flat tool bar button. -->
+  <Style Selector="Button.Tool">
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderBrush" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="Padding" Value="3"/>
+    <Setter Property="CornerRadius" Value="4"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="Button.Tool:pointerover /template/ ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource ThemeAccentBrush4}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource ThemeAccentBrush}"/>
+  </Style>
+
+  <Style Selector="Button.Tool:pressed /template/ ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource ThemeAccentBrush3}"/>
+  </Style>
+
+  <Style Selector="Button.Tool TextBlock">
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <!--
+    The tool bar icons are black line art. A light plate behind them keeps them readable in the dark theme
+    (ThemeControlHighlightLowBrush is light in both themes).
+  -->
+  <Style Selector="Border.IconPlate">
+    <Setter Property="Background" Value="{DynamicResource ThemeControlHighlightLowBrush}"/>
+    <Setter Property="CornerRadius" Value="3"/>
+    <Setter Property="Padding" Value="1"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="Border.IconPlate > Image">
+    <Setter Property="Width" Value="32"/>
+    <Setter Property="Height" Value="32"/>
+  </Style>
+
+  <Style Selector="Border.IconPlate.Small > Image">
+    <Setter Property="Width" Value="18"/>
+    <Setter Property="Height" Value="18"/>
+  </Style>
+
+  <Style Selector="Border.IconPlate.Small">
+    <Setter Property="CornerRadius" Value="10"/>
+  </Style>
+
+  <!-- Small square button with a vector icon, used in pane headers. -->
+  <Style Selector="Button.Icon">
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderBrush" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="Padding" Value="4"/>
+    <Setter Property="CornerRadius" Value="4"/>
+  </Style>
+
+  <Style Selector="Button.Icon:pointerover /template/ ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource ThemeAccentBrush4}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource ThemeAccentBrush}"/>
+  </Style>
+
+  <Style Selector="Path.FolderIcon">
+    <Setter Property="Width" Value="16"/>
+    <Setter Property="Height" Value="16"/>
+    <Setter Property="Stroke" Value="{DynamicResource ThemeForegroundBrush}"/>
+    <Setter Property="StrokeThickness" Value="1.3"/>
+    <Setter Property="Data" Value="M1.5,3.5 L6,3.5 L7.5,5 L14.5,5 L14.5,13.5 L1.5,13.5 Z"/>
+  </Style>
+
+  <!-- ===== Buttons ===== -->
+
+  <Style Selector="Button">
+    <Setter Property="Padding" Value="10,4"/>
+    <Setter Property="CornerRadius" Value="3"/>
+  </Style>
+
+  <Style Selector="Button.Dialog">
+    <Setter Property="MinWidth" Value="90"/>
+    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+  </Style>
+
+  <!-- Main action of a view (e.g. "Create new GM1 file", "OK"). -->
+  <Style Selector="Button.Accent">
+    <Setter Property="Background" Value="{DynamicResource HighlightBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource HighlightBrush}"/>
+    <Setter Property="Foreground" Value="{DynamicResource HighlightForegroundBrush}"/>
+  </Style>
+
+  <Style Selector="Button.Accent:pointerover /template/ ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource ThemeAccentBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource ThemeAccentBrush}"/>
+  </Style>
+
+  <Style Selector="Button.Nav">
+    <Setter Property="Width" Value="30"/>
+    <Setter Property="Height" Value="30"/>
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="FontSize" Value="18"/>
+    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <!-- Two or more radio buttons that look like one segmented switch. -->
+  <Style Selector="RadioButton.Segment">
+    <Setter Property="Background" Value="{DynamicResource ThemeControlMidBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource ThemeBorderLowBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="Padding" Value="10,4"/>
+    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border Background="{TemplateBinding Background}"
+                BorderBrush="{TemplateBinding BorderBrush}"
+                BorderThickness="{TemplateBinding BorderThickness}"
+                CornerRadius="{TemplateBinding CornerRadius}">
+          <ContentPresenter Name="PART_ContentPresenter"
+                            Content="{TemplateBinding Content}"
+                            ContentTemplate="{TemplateBinding ContentTemplate}"
+                            Padding="{TemplateBinding Padding}"
+                            HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalContentAlignment="Center"/>
+        </Border>
+      </ControlTemplate>
+    </Setter>
+  </Style>
+
+  <Style Selector="RadioButton.Segment:pointerover">
+    <Setter Property="BorderBrush" Value="{DynamicResource ThemeAccentBrush}"/>
+  </Style>
+
+  <Style Selector="RadioButton.Segment:checked">
+    <Setter Property="Background" Value="{DynamicResource HighlightBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource HighlightBrush}"/>
+    <Setter Property="Foreground" Value="{DynamicResource HighlightForegroundBrush}"/>
+  </Style>
+
+  <!-- ===== Panes and cards ===== -->
+
+  <Style Selector="Border.Pane">
+    <Setter Property="Background" Value="{DynamicResource ThemeBackgroundBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource ThemeBorderLowBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="CornerRadius" Value="4"/>
+  </Style>
+
+  <Style Selector="Border.PaneHeader">
+    <Setter Property="MinHeight" Value="34"/>
+    <Setter Property="Padding" Value="10,4,6,4"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource ThemeBorderLowBrush}"/>
+    <Setter Property="BorderThickness" Value="0,0,0,1"/>
+  </Style>
+
+  <Style Selector="Border.Pane ListBox">
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="Background" Value="Transparent"/>
+  </Style>
+
+  <Style Selector="Border.Card">
+    <Setter Property="Background" Value="{DynamicResource ThemeBackgroundBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource ThemeBorderLowBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="CornerRadius" Value="4"/>
+    <Setter Property="Padding" Value="12,10"/>
+  </Style>
+
+  <!-- Small rounded label, e.g. the data type of the open file. -->
+  <Style Selector="Border.Chip">
+    <Setter Property="Background" Value="{DynamicResource ThemeAccentBrush4}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource ThemeAccentBrush2}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="CornerRadius" Value="10"/>
+    <Setter Property="Padding" Value="8,1"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <!-- Highlighted box for tips and explanations. -->
+  <Style Selector="Border.Callout">
+    <Setter Property="Background" Value="{DynamicResource ThemeAccentBrush4}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource ThemeAccentBrush}"/>
+    <Setter Property="BorderThickness" Value="3,0,0,0"/>
+    <Setter Property="CornerRadius" Value="4"/>
+    <Setter Property="Padding" Value="12,10"/>
+  </Style>
+
+  <!-- Number bubble of a workflow step. -->
+  <Style Selector="Border.Step">
+    <Setter Property="Width" Value="22"/>
+    <Setter Property="Height" Value="22"/>
+    <Setter Property="CornerRadius" Value="11"/>
+    <Setter Property="Margin" Value="0,0,10,8"/>
+    <Setter Property="VerticalAlignment" Value="Top"/>
+    <Setter Property="Background" Value="{DynamicResource HighlightBrush}"/>
+  </Style>
+
+  <Style Selector="Border.Step > TextBlock">
+    <Setter Property="Foreground" Value="{DynamicResource HighlightForegroundBrush}"/>
+    <Setter Property="FontWeight" Value="Bold"/>
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <!-- Frame around a color table image. -->
+  <Style Selector="Border.Swatch">
+    <Setter Property="BorderBrush" Value="{DynamicResource ThemeBorderMidBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <!-- Light background for explanation images with black line art (info window). -->
+  <Style Selector="Border.ImagePlate">
+    <Setter Property="Background" Value="{DynamicResource ThemeControlHighlightLowBrush}"/>
+    <Setter Property="CornerRadius" Value="4"/>
+    <Setter Property="Padding" Value="8"/>
+    <Setter Property="Margin" Value="0,8"/>
+    <Setter Property="HorizontalAlignment" Value="Center"/>
+  </Style>
+
+  <!-- ===== Header fields: label/value pairs that flow into several columns ===== -->
+
+  <Style Selector="WrapPanel.Fields > StackPanel">
+    <Setter Property="Orientation" Value="Horizontal"/>
+    <Setter Property="Width" Value="220"/>
+    <Setter Property="Margin" Value="0,1,12,1"/>
+  </Style>
+
+  <Style Selector="WrapPanel.Fields > StackPanel > TextBlock">
+    <Setter Property="Width" Value="158"/>
+    <Setter Property="Foreground" Value="{DynamicResource ThemeForegroundLowBrush}"/>
+    <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+  </Style>
+
+  <Style Selector="WrapPanel.Fields > StackPanel > TextBlock:nth-child(2)">
+    <Setter Property="Width" Value="NaN"/>
+    <Setter Property="Foreground" Value="{DynamicResource ThemeForegroundBrush}"/>
+  </Style>
+
+  <!-- ===== Expanders of the file card ===== -->
+
+  <Style Selector="Expander.Section">
+    <Setter Property="Padding" Value="22,4,4,8"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+  </Style>
+
+  <!-- ===== Image preview ===== -->
+
+  <Style Selector="ListBox.Thumbnails ListBoxItem">
+    <Setter Property="Padding" Value="4"/>
     <Setter Property="Margin" Value="2"/>
   </Style>
-  <Style Selector="DockPanel.ImageMenu Separator">
-    <Setter Property="Width" Value="1"/>
-    <Setter Property="Margin" Value="3"/>
-    <Setter Property="Background" Value="{DynamicResource ThemeBorderHighColor}"/>
-  </Style>
-  <Style Selector="DockPanel.ImageMenu MenuItem">
-    <Setter Property="Width" Value="32"/>
-    <Setter Property="Height" Value="32"/>
-  </Style>
-  <Style Selector="DockPanel.ImageMenu MenuItem > Image">
-    <Setter Property="Width" Value="32"/>
-    <Setter Property="Height" Value="32"/>
-    <Setter Property="VerticalAlignment" Value="Center"/>
-    <Setter Property="HorizontalAlignment" Value="Center"/>
+
+  <Style Selector="GridSplitter">
+    <Setter Property="Background" Value="Transparent"/>
   </Style>
 </Styles>

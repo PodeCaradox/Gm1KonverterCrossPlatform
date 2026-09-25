@@ -3,9 +3,11 @@
         xmlns:vm="clr-namespace:Gm1KonverterCrossPlatform.ViewModels;assembly=Gm1KonverterCrossPlatform"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="600"
-        Width="1200"
-        Height="600"
+        mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="760"
+        Width="1280"
+        Height="760"
+        MinWidth="960"
+        MinHeight="580"
         x:Class="Gm1KonverterCrossPlatform.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
         Title="{DynamicResource GM1Converter}"
@@ -15,8 +17,11 @@
     <vm:MainWindowViewModel/>
   </Design.DataContext>
 
-  <Grid Classes="Main" RowDefinitions="Auto,1,Auto,1,*">
-    <DockPanel Dock="Left" Grid.Row="0" Classes="TextMenu">
+  <!-- Grids instead of DockPanels: in Avalonia 0.10 a DockPanel does not always re-measure when a docked child changes its size. -->
+  <Grid RowDefinitions="Auto,Auto,*,Auto">
+
+    <!-- ===== Menu ===== -->
+    <Border Grid.Row="0" Classes="MenuBar">
       <Menu>
         <MenuItem Header="{DynamicResource File}">
           <MenuItem Header="{DynamicResource CreatenewGM1}" Name="CreatenewGM1MenueItem" IsEnabled="{Binding ButtonsEnabled}" Click="CreatenewGM1"/>
@@ -29,10 +34,8 @@
           <MenuItem Header="{DynamicResource OpenUcpModFolder}" Name="OpenUcpModFolderMenueItem" Click="OpenUcpModFolder"/>
         </MenuItem>
 
+        <!-- Ordered like the work flow: images, big image, color tables, TGX, offsets. -->
         <MenuItem Header="{DynamicResource Edit}">
-          <MenuItem Header="{DynamicResource ExportColortable}" Name="ExportColortableMenueItem" IsEnabled="{Binding ColorButtonsEnabled}" Click="ExportColortable"/>
-          <MenuItem Header="{DynamicResource ImportColortable}" Name="ImportColortableMenueItem" IsEnabled="{Binding ColorButtonsEnabled}" Click="ImportColortable"/>
-          <Separator/>
           <MenuItem Header="{DynamicResource ExportImages}" Name="ExportImagesMenueItem" IsEnabled="{Binding ButtonsEnabled}" Click="ExportImages"/>
           <MenuItem Header="{DynamicResource ImportImages}" Name="ImportImagesMenueItem" IsEnabled="{Binding ImportButtonEnabled}" Click="ImportImages"/>
           <Separator/>
@@ -42,19 +45,23 @@
           <MenuItem Header="{DynamicResource ExportBigImage}" Name="ExportBigImageMenueItem" IsEnabled="{Binding ButtonsEnabled}" Click="ExportBigImage"/>
           <MenuItem Header="{DynamicResource ImportBigImage}" Name="ImportBigImageMenueItem" IsEnabled="{Binding ImportButtonEnabled}" Click="ImportBigImage"/>
           <Separator/>
+          <MenuItem Header="{DynamicResource ExportColortable}" Name="ExportColortableMenueItem" IsEnabled="{Binding ColorButtonsEnabled}" Click="ExportColortable"/>
+          <MenuItem Header="{DynamicResource ImportColortable}" Name="ImportColortableMenueItem" IsEnabled="{Binding ColorButtonsEnabled}" Click="ImportColortable"/>
+          <MenuItem Header="{DynamicResource ExportOrginalStrongholdAnimation}" Name="ExportOrginalStrongholdAnimation" IsEnabled="{Binding OrginalStrongholdAnimationButtonEnabled}" Click="ExportOrginalStrongholdAnimation"/>
+          <MenuItem Header="{DynamicResource ImportOrginalStrongholdAnimation}" Name="ImportOrginalStrongholdAnimation" IsEnabled="{Binding OrginalStrongholdAnimationButtonEnabled}" Click="ImportOrginalStrongholdAnimation"/>
+          <Separator/>
           <MenuItem Header="{DynamicResource ExportTgxImage}" Name="ExportTgxImageMenueItem" IsEnabled="{Binding TgxButtonExportEnabled}" Click="ExportTgxImage"/>
           <MenuItem Header="{DynamicResource ImportTgxImage}" Name="ImportTgxImageMenueItem" IsEnabled="{Binding TgxButtonImportEnabled}" Click="ImportTgxImage"/>
           <Separator/>
           <MenuItem Header="{DynamicResource ImportOffsetsFromFile}" Name="ImportOffsetsFromFileMenueItem" Click="ImportOffsetsFromFile" />
-          <Separator/>
-          <MenuItem Header="{DynamicResource ExportOrginalStrongholdAnimation}" Name="ExportOrginalStrongholdAnimation" IsEnabled="{Binding OrginalStrongholdAnimationButtonEnabled}" Click="ExportOrginalStrongholdAnimation"/>
-          <MenuItem Header="{DynamicResource ImportOrginalStrongholdAnimation}" Name="ImportOrginalStrongholdAnimation" IsEnabled="{Binding OrginalStrongholdAnimationButtonEnabled}" Click="ImportOrginalStrongholdAnimation"/>
         </MenuItem>
 
         <MenuItem Header="{DynamicResource Options}">
-          <MenuItem Header="{DynamicResource Workfolder}" Name="WorkfolderMenueItem" Click="ChangeWorkfolder"/>
+          <MenuItem Header="{DynamicResource ChooseWorkfolder}" Name="WorkfolderMenueItem" Click="ChangeWorkfolder"/>
+          <MenuItem Header="{DynamicResource OpenWorkFolder}" Name="OpenWorkFolderMenueItem" Click="OpenWorkFolder"/>
           <Separator/>
-          <MenuItem Header="{DynamicResource StrongholdFolder}" Name="CrusaderfolderMenueItem" Click="ChangeCrusaderfolder"/>
+          <MenuItem Header="{DynamicResource ChooseStrongholdFolder}" Name="CrusaderfolderMenueItem" Click="ChangeCrusaderfolder"/>
+          <MenuItem Header="{DynamicResource OpenStrongholdFolder}" Name="OpenStrongholdFolderMenueItem" Click="OpenStrongholdFolder"/>
           <Separator/>
           <CheckBox Content="{DynamicResource OpenFolderafterExport}" Name="UserConfigOpenFolderafterExport" IsChecked="{Binding OpenFolderAfterExport}"/>
           <Separator/>
@@ -78,288 +85,456 @@
           </MenuItem>
         </MenuItem>
       </Menu>
-      
-      <Separator/>
-      
-      <Menu>
-        <MenuItem Header="{DynamicResource OpenWorkFolder}" Name="OpenWorkFolderMenueItem" Click="OpenWorkFolder"/>
-      </Menu>
-      
-      <Separator/>
-      
-      <Menu>
-        <MenuItem Header="{DynamicResource OpenStrongholdFolder}" Name="OpenStrongholdFolderMenueItem" Click="OpenStrongholdFolder"/>
-      </Menu>
-    </DockPanel>
+    </Border>
 
-    <Separator Grid.Row="1"/>
+    <!-- ===== Tool bar, ordered like the work flow: export -> edit -> import -> save to the UCP mod ===== -->
+    <Border Grid.Row="1" Classes="ToolBar">
+      <Grid ColumnDefinitions="*,Auto">
 
-    <DockPanel Dock="Left" Grid.Row="2" Margin="2" Classes="ImageMenu">
-      <Menu>
-        <MenuItem IsEnabled="{Binding ButtonsEnabled}" Click="CreatenewGM1" ToolTip.Tip="{DynamicResource CreatenewGM1}">
-          <MenuItem.Header>
-            <Image Source="avares://Gm1KonverterCrossPlatform/Assets/CreateGm1.png"/>
-          </MenuItem.Header>
-        </MenuItem>
-        <MenuItem IsEnabled="{Binding ReplaceWithSaveFile}" Click="ReplacewithSavedGM1File" ToolTip.Tip="{DynamicResource ReplacewithSavedGM1File}">
-          <MenuItem.Header>
-            <Image Source="avares://Gm1KonverterCrossPlatform/Assets/ReplacewithSavedGM1File.png"/>
-          </MenuItem.Header>
-        </MenuItem>
-      </Menu>
-
-      <Separator/>
-
-      <Menu>
-        <MenuItem IsEnabled="{Binding ColorButtonsEnabled}" Click="ExportColortable">
-          <MenuItem.Header>
-            <Image Source="avares://Gm1KonverterCrossPlatform/Assets/ExportColortable.png" ToolTip.Tip="{DynamicResource ExportColortable}"/>
-          </MenuItem.Header>
-        </MenuItem>
-        <MenuItem IsEnabled="{Binding ColorButtonsEnabled}" Click="ImportColortable">
-          <MenuItem.Header>
-            <Image Source="avares://Gm1KonverterCrossPlatform/Assets/ImportColortable.png" ToolTip.Tip="{DynamicResource ImportColortable}"/>
-          </MenuItem.Header>
-        </MenuItem>
-      </Menu>
-
-      <Separator/>
-
-      <Menu>
-        <MenuItem IsEnabled="{Binding ButtonsEnabled}" Click="ExportImages">
-          <MenuItem.Header>
-            <Image Source="avares://Gm1KonverterCrossPlatform/Assets/ExportImages.png" ToolTip.Tip="{DynamicResource ExportImages}"/>
-          </MenuItem.Header>
-        </MenuItem>
-        <MenuItem IsEnabled="{Binding ImportButtonEnabled}" Click="ImportImages">
-          <MenuItem.Header>
-            <Image Source="avares://Gm1KonverterCrossPlatform/Assets/ImportImages.png" ToolTip.Tip="{DynamicResource ImportImages}"/>
-          </MenuItem.Header>
-        </MenuItem>
-      </Menu>
-
-      <Separator/>
-
-      <Menu>
-        <MenuItem IsEnabled="{Binding ButtonsEnabled}" Click="ExportBigImage">
-          <MenuItem.Header>
-            <Image Source="avares://Gm1KonverterCrossPlatform/Assets/ExportBigImage.png" ToolTip.Tip="{DynamicResource ExportBigImage}"/>
-          </MenuItem.Header>
-        </MenuItem>
-        <MenuItem IsEnabled="{Binding ImportButtonEnabled}" Click="ImportBigImage">
-          <MenuItem.Header>
-            <Image Source="avares://Gm1KonverterCrossPlatform/Assets/ImportBigImage.png" ToolTip.Tip="{DynamicResource ImportBigImage}"/>
-          </MenuItem.Header>
-        </MenuItem>
-      </Menu>
-    </DockPanel>
-
-    <Separator Grid.Row="3"/>
-
-    <Grid Grid.Row="4">
-      <Grid.ColumnDefinitions>
-        <ColumnDefinition MinWidth="150" Width="250"/>
-        <ColumnDefinition Width="3"/>
-        <ColumnDefinition MinWidth="520" Width="*"/>
-        <ColumnDefinition Width="3"/>
-        <ColumnDefinition MinWidth="150" Width="250"/>
-      </Grid.ColumnDefinitions>
-
-      <GridSplitter Grid.Column="1" Width="3"/>
-      <GridSplitter Grid.Column="3" Width="3"/>
-
-      <Grid Grid.Column="0" RowDefinitions="20,*" ColumnDefinitions="*">
-        <TextBlock Text="{DynamicResource Workfolder}" HorizontalAlignment="Left" Grid.Column="0" Grid.Row="0"/>
-        <ListBox Items="{Binding WorkfolderFiles}" SelectionMode="Single" Name="WorkfolderSelector" Grid.Column="0" Grid.Row="1" ScrollViewer.HorizontalScrollBarVisibility="Disabled" DoubleTapped="OpenWorkfolderDirectory"/>
-      </Grid>
-
-      <Grid Grid.Column="4" RowDefinitions="20,auto,*" ColumnDefinitions="*">
-        <TextBlock Text="{DynamicResource StrongholdFolder}" HorizontalAlignment="Left" Grid.Column="0" Grid.Row="0"/>
-        <ToggleButton Content="{Binding ToggleButtonName}" IsChecked="{Binding Gm1PreviewTrue}" Grid.Column="0" Grid.Row="1"/>
-        <ListBox IsVisible="{Binding Gm1PreviewTrue}" Items="{Binding StrongholdFiles}" SelectionMode="Single" Name="Gm1FilesSelector" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Grid.Column="0" Grid.Row="2" SelectionChanged="SelectedGm1File"/>
-        <ListBox IsVisible="{Binding GfxPreviewTrue}" Items="{Binding GfxFiles}" SelectionMode="Single" Name="GfxFilesSelector" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Grid.Column="0" Grid.Row="2" SelectionChanged="SelectedGfxFile"/>
-      </Grid>
-
-      <Grid Grid.Column="2" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,*" ColumnDefinitions="*">
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" IsVisible="{Binding FileSelected}" Grid.Row="0" Grid.Column="0">
-          <TextBlock Text="{DynamicResource Datatype}"/>
-          <TextBlock Text=" "/>
-          <TextBlock Text="{Binding Filetype}"/>
-          <Image Name="HelpIcon" Margin="10,0,0,0" Source="avares://Gm1KonverterCrossPlatform/Assets/info.png" Tapped="OpenInfoWindow"/>
+        <!-- Last step: save the edited file to the UCP mod / remove it from the mod again. -->
+        <StackPanel Grid.Column="1" Classes="ToolGroup">
+          <StackPanel Orientation="Horizontal" Spacing="4">
+            <StackPanel Orientation="Horizontal" Spacing="4" IsVisible="{Binding TgxDocument, Converter={x:Static ObjectConverters.IsNull}}">
+              <Panel Classes="TipHost" ToolTip.Tip="{DynamicResource SaveToModTip}">
+                <Button Classes="Tool" IsEnabled="{Binding ButtonsEnabled}" Click="CreatenewGM1">
+                  <StackPanel Orientation="Horizontal" Spacing="6">
+                    <Border Classes="IconPlate"><Image Source="avares://Gm1KonverterCrossPlatform/Assets/CreateGm1.png"/></Border>
+                    <AccessText Text="{DynamicResource CreatenewGM1}" VerticalAlignment="Center"/>
+                  </StackPanel>
+                </Button>
+              </Panel>
+              <Panel Classes="TipHost" ToolTip.Tip="{DynamicResource RemoveFromModTip}">
+                <Button Classes="Tool" IsEnabled="{Binding ReplaceWithSaveFile}" Click="ReplacewithSavedGM1File">
+                  <StackPanel Orientation="Horizontal" Spacing="6">
+                    <Border Classes="IconPlate"><Image Source="avares://Gm1KonverterCrossPlatform/Assets/ReplacewithSavedGM1File.png"/></Border>
+                    <AccessText Text="{DynamicResource ReplacewithSavedGM1File}" VerticalAlignment="Center"/>
+                  </StackPanel>
+                </Button>
+              </Panel>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Spacing="4" IsVisible="{Binding TgxDocument, Converter={x:Static ObjectConverters.IsNotNull}}">
+              <Panel Classes="TipHost" ToolTip.Tip="{DynamicResource SaveToModTip}">
+                <Button Classes="Tool" IsEnabled="{Binding TgxButtonExportEnabled}" Click="CreatenewTgx">
+                  <StackPanel Orientation="Horizontal" Spacing="6">
+                    <!-- Vector version of the GM1 disk icons -->
+                    <Border Classes="IconPlate">
+                      <Canvas Width="32" Height="32">
+                        <Path Fill="#202020" Data="M4,3 L24,3 L28,7 L28,29 L4,29 Z"/>
+                        <Rectangle Canvas.Left="9" Canvas.Top="3" Width="13" Height="8" Fill="#E8E8E8"/>
+                        <Rectangle Canvas.Left="17" Canvas.Top="4" Width="3" Height="6" Fill="#202020"/>
+                        <TextBlock Canvas.Left="5" Canvas.Top="15" Text="TGX" FontSize="9" FontWeight="Bold" Foreground="#E8E8E8"/>
+                        <Path Stroke="#2E9E3A" StrokeThickness="3" Data="M26,20 L26,31 M20.5,25.5 L31.5,25.5"/>
+                      </Canvas>
+                    </Border>
+                    <AccessText Text="{DynamicResource CreatenewTgx}" VerticalAlignment="Center"/>
+                  </StackPanel>
+                </Button>
+              </Panel>
+              <Panel Classes="TipHost" ToolTip.Tip="{DynamicResource RemoveFromModTip}">
+                <Button Classes="Tool" IsEnabled="{Binding ReplaceWithSaveFileTgx}" Click="ReplacewithSavedTgxFile">
+                  <StackPanel Orientation="Horizontal" Spacing="6">
+                    <Border Classes="IconPlate">
+                      <Canvas Width="32" Height="32">
+                        <Path Fill="#202020" Data="M4,3 L24,3 L28,7 L28,29 L4,29 Z"/>
+                        <Rectangle Canvas.Left="9" Canvas.Top="3" Width="13" Height="8" Fill="#E8E8E8"/>
+                        <Rectangle Canvas.Left="17" Canvas.Top="4" Width="3" Height="6" Fill="#202020"/>
+                        <TextBlock Canvas.Left="5" Canvas.Top="15" Text="TGX" FontSize="9" FontWeight="Bold" Foreground="#E8E8E8"/>
+                        <Path Stroke="#D03030" StrokeThickness="2.2" Data="M30.5,25.5 A4.5,4.5 0 1 1 26,21"/>
+                        <Path Fill="#D03030" Data="M25,17.8 L29.2,21 L25,24.2 Z"/>
+                      </Canvas>
+                    </Border>
+                    <AccessText Text="{DynamicResource ReplacewithSavedTgxFile}" VerticalAlignment="Center"/>
+                  </StackPanel>
+                </Button>
+              </Panel>
+            </StackPanel>
+          </StackPanel>
+          <TextBlock Text="{DynamicResource GroupMod}"/>
         </StackPanel>
 
-        <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="0" IsVisible="{Binding ColorButtonsEnabled}">
-          <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-            <TextBlock Text="{DynamicResource Palette}"/>
-            <TextBlock Text=" "/>
-            <TextBlock Text="{Binding ActualPalette}"/>
-          </StackPanel>
-          <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-            <Button IsEnabled="{Binding ColorButtonsEnabled}" Content="««" Width="40" Click="Button_ClickPalleteminus" HorizontalAlignment="Center"/>
-            <Image Source="{Binding ActuellColorTable}" HorizontalAlignment="Center"/>
-            <Button IsEnabled="{Binding ColorButtonsEnabled}" Content="»»" Width="40" Click="Button_ClickPalleteplus" HorizontalAlignment="Center"/>
-            <Button IsEnabled="{Binding ColorButtonsEnabled}" Click="Button_ClickChangeColorTable" HorizontalAlignment="Right" Content="{DynamicResource ChangeColorTable}"/>
-          </StackPanel>
-        </StackPanel>
+        <StackPanel Grid.Column="0" Orientation="Horizontal">
 
-        <Expander ExpandDirection="Down" Header="{DynamicResource GifExporter}" Grid.Row="2" Grid.Column="0">
-          <StackPanel Orientation="Horizontal">
-            <StackPanel>
-              <TextBlock Text="{DynamicResource SelectGif}"/>
+          <!-- GM1 files -->
+          <StackPanel Orientation="Horizontal" IsVisible="{Binding TgxDocument, Converter={x:Static ObjectConverters.IsNull}}">
+            <StackPanel Classes="ToolGroup">
               <StackPanel Orientation="Horizontal">
-                <TextBlock Text="{DynamicResource Delay}"/>
-                <TextBox Width="100" Text="{Binding Delay}"/>
+                <Panel Classes="TipHost" ToolTip.Tip="{DynamicResource ExportImages}">
+                  <Button Classes="Tool" IsEnabled="{Binding ButtonsEnabled}" Click="ExportImages">
+                    <Border Classes="IconPlate"><Image Source="avares://Gm1KonverterCrossPlatform/Assets/ExportImages.png"/></Border>
+                  </Button>
+                </Panel>
+                <Panel Classes="TipHost" ToolTip.Tip="{DynamicResource ImportImages}">
+                  <Button Classes="Tool" IsEnabled="{Binding ImportButtonEnabled}" Click="ImportImages">
+                    <Border Classes="IconPlate"><Image Source="avares://Gm1KonverterCrossPlatform/Assets/ImportImages.png"/></Border>
+                  </Button>
+                </Panel>
               </StackPanel>
+              <TextBlock Text="{DynamicResource GroupImages}"/>
             </StackPanel>
 
-            <Button Name="GifExporter"  Content="{DynamicResource ExportGif}" Click="Button_ClickGifExporter"/>
+            <Rectangle Classes="ToolSeparator"/>
+
+            <StackPanel Classes="ToolGroup">
+              <StackPanel Orientation="Horizontal">
+                <Panel Classes="TipHost" ToolTip.Tip="{DynamicResource ExportBigImage}">
+                  <Button Classes="Tool" IsEnabled="{Binding ButtonsEnabled}" Click="ExportBigImage">
+                    <Border Classes="IconPlate"><Image Source="avares://Gm1KonverterCrossPlatform/Assets/ExportBigImage.png"/></Border>
+                  </Button>
+                </Panel>
+                <Panel Classes="TipHost" ToolTip.Tip="{DynamicResource ImportBigImage}">
+                  <Button Classes="Tool" IsEnabled="{Binding ImportButtonEnabled}" Click="ImportBigImage">
+                    <Border Classes="IconPlate"><Image Source="avares://Gm1KonverterCrossPlatform/Assets/ImportBigImage.png"/></Border>
+                  </Button>
+                </Panel>
+                <StackPanel Orientation="Horizontal" Spacing="4" Margin="6,0,0,0" VerticalAlignment="Center" ToolTip.Tip="{DynamicResource ImageSize}">
+                  <TextBlock Text="{DynamicResource WidthLabel}" VerticalAlignment="Center"/>
+                  <TextBox Width="56" Text="{Binding BigImageWidth}" IsEnabled="{Binding ButtonsEnabled}"/>
+                </StackPanel>
+              </StackPanel>
+              <TextBlock Text="{DynamicResource GroupBigImage}"/>
+            </StackPanel>
+
+            <Rectangle Classes="ToolSeparator"/>
+
+            <StackPanel Classes="ToolGroup">
+              <StackPanel Orientation="Horizontal">
+                <Panel Classes="TipHost" ToolTip.Tip="{DynamicResource ExportColortable}">
+                  <Button Classes="Tool" IsEnabled="{Binding ColorButtonsEnabled}" Click="ExportColortable">
+                    <Border Classes="IconPlate"><Image Source="avares://Gm1KonverterCrossPlatform/Assets/ExportColortable.png"/></Border>
+                  </Button>
+                </Panel>
+                <Panel Classes="TipHost" ToolTip.Tip="{DynamicResource ImportColortable}">
+                  <Button Classes="Tool" IsEnabled="{Binding ColorButtonsEnabled}" Click="ImportColortable">
+                    <Border Classes="IconPlate"><Image Source="avares://Gm1KonverterCrossPlatform/Assets/ImportColortable.png"/></Border>
+                  </Button>
+                </Panel>
+              </StackPanel>
+              <TextBlock Text="{DynamicResource GroupColorTables}"/>
+            </StackPanel>
           </StackPanel>
-        </Expander>
 
-        <Expander ExpandDirection="Down" Header="{DynamicResource Gm1FileHeaderFields}" Grid.Row="3" Grid.Column="0">
-          <Grid DataContext="{Binding FileHeader}">
-            <Grid.RowDefinitions>
-              <RowDefinition Height="*"/>
-              <RowDefinition Height="*"/>
-              <RowDefinition Height="*"/>
-              <RowDefinition Height="*"/>
-              <RowDefinition Height="*"/>
-              <RowDefinition Height="*"/>
-              <RowDefinition Height="*"/>
-              <RowDefinition Height="*"/>
-              <RowDefinition Height="*"/>
-              <RowDefinition Height="*"/>
-              <RowDefinition Height="*"/>
-              <RowDefinition Height="*"/>
-              <RowDefinition Height="*"/>
-              <RowDefinition Height="*"/>
-              <RowDefinition Height="*"/>
-              <RowDefinition Height="*"/>
-              <RowDefinition Height="*"/>
-              <RowDefinition Height="*"/>
-              <RowDefinition Height="*"/>
-              <RowDefinition Height="*"/>
-              <RowDefinition Height="*"/>
-              <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
+          <!-- TGX images -->
+          <StackPanel Classes="ToolGroup" IsVisible="{Binding TgxDocument, Converter={x:Static ObjectConverters.IsNotNull}}">
+            <StackPanel Orientation="Horizontal">
+              <Panel Classes="TipHost" ToolTip.Tip="{DynamicResource ExportTgxImage}">
+                <Button Classes="Tool" IsEnabled="{Binding TgxButtonExportEnabled}" Click="ExportTgxImage">
+                  <Border Classes="IconPlate"><Image Source="avares://Gm1KonverterCrossPlatform/Assets/ExportImages.png"/></Border>
+                </Button>
+              </Panel>
+              <Panel Classes="TipHost" ToolTip.Tip="{DynamicResource ImportTgxImage}">
+                <Button Classes="Tool" IsEnabled="{Binding TgxButtonImportEnabled}" Click="ImportTgxImage">
+                  <Border Classes="IconPlate"><Image Source="avares://Gm1KonverterCrossPlatform/Assets/ImportImages.png"/></Border>
+                </Button>
+              </Panel>
+            </StackPanel>
+            <TextBlock Text="{DynamicResource GroupTgx}"/>
+          </StackPanel>
+        </StackPanel>
+      </Grid>
+    </Border>
 
-            <Grid.ColumnDefinitions>
-              <ColumnDefinition Width="Auto"/>
-              <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
-
-            <TextBlock Grid.Row="0" Grid.Column="0" Text="UnknownField1:"/>
-            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding UnknownField1}"/>
-            <TextBlock Grid.Row="1" Grid.Column="0" Text="UnknownField2:"/>
-            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding UnknownField2}"/>
-            <TextBlock Grid.Row="2" Grid.Column="0" Text="UnknownField3:"/>
-            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding UnknownField3}"/>
-            <TextBlock Grid.Row="3" Grid.Column="0" Text="ImageCount:"/>
-            <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding ImageCount}"/>
-            <TextBlock Grid.Row="4" Grid.Column="0" Text="UnknownField5:"/>
-            <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding UnknownField5}"/>
-            <TextBlock Grid.Row="5" Grid.Column="0" Text="DataType:"/>
-            <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding DataType}"/>
-            <TextBlock Grid.Row="6" Grid.Column="0" Text="UnknownField7:"/>
-            <TextBlock Grid.Row="6" Grid.Column="1" Text="{Binding UnknownField7}"/>
-            <TextBlock Grid.Row="7" Grid.Column="0" Text="UnknownField8:"/>
-            <TextBlock Grid.Row="7" Grid.Column="1" Text="{Binding UnknownField8}"/>
-            <TextBlock Grid.Row="8" Grid.Column="0" Text="UnknownField9:"/>
-            <TextBlock Grid.Row="8" Grid.Column="1" Text="{Binding UnknownField9}"/>
-            <TextBlock Grid.Row="9" Grid.Column="0" Text="UnknownField10:"/>
-            <TextBlock Grid.Row="9" Grid.Column="1" Text="{Binding UnknownField10}"/>
-            <TextBlock Grid.Row="10" Grid.Column="0" Text="UnknownField11:"/>
-            <TextBlock Grid.Row="10" Grid.Column="1" Text="{Binding UnknownField11}"/>
-            <TextBlock Grid.Row="11" Grid.Column="0" Text="UnknownField12:"/>
-            <TextBlock Grid.Row="11" Grid.Column="1" Text="{Binding UnknownField12}"/>
-            <TextBlock Grid.Row="12" Grid.Column="0" Text="Width:"/>
-            <TextBlock Grid.Row="12" Grid.Column="1" Text="{Binding Width}"/>
-            <TextBlock Grid.Row="13" Grid.Column="0" Text="Height:"/>
-            <TextBlock Grid.Row="13" Grid.Column="1" Text="{Binding Height}"/>
-            <TextBlock Grid.Row="14" Grid.Column="0" Text="UnknownField15:"/>
-            <TextBlock Grid.Row="14" Grid.Column="1" Text="{Binding UnknownField15}"/>
-            <TextBlock Grid.Row="15" Grid.Column="0" Text="UnknownField16:"/>
-            <TextBlock Grid.Row="15" Grid.Column="1" Text="{Binding UnknownField16}"/>
-            <TextBlock Grid.Row="16" Grid.Column="0" Text="UnknownField17:"/>
-            <TextBlock Grid.Row="16" Grid.Column="1" Text="{Binding UnknownField17}"/>
-            <TextBlock Grid.Row="17" Grid.Column="0" Text="UnknownField18:"/>
-            <TextBlock Grid.Row="17" Grid.Column="1" Text="{Binding UnknownField18}"/>
-            <TextBlock Grid.Row="18" Grid.Column="0" Text="OriginX:"/>
-            <TextBlock Grid.Row="18" Grid.Column="1" Text="{Binding OriginX}"/>
-            <TextBlock Grid.Row="19" Grid.Column="0" Text="OriginY:"/>
-            <TextBlock Grid.Row="19" Grid.Column="1" Text="{Binding OriginY}"/>
-            <TextBlock Grid.Row="20" Grid.Column="0" Text="DataSize:"/>
-            <TextBlock Grid.Row="20" Grid.Column="1" Text="{Binding DataSize}"/>
-            <TextBlock Grid.Row="21" Grid.Column="0" Text="UnknownField22:"/>
-            <TextBlock Grid.Row="21" Grid.Column="1" Text="{Binding UnknownField22}"/>
-          </Grid>
-        </Expander>
-
-        <Expander ExpandDirection="Down" Header="{DynamicResource Gm1FileImageHeaderFields}" Grid.Row="4" Grid.Column="0">
-          <Grid DataContext="{Binding SelectedImageHeader}">
-            <Grid.RowDefinitions>
-              <RowDefinition Height="*"/>
-              <RowDefinition Height="*"/>
-              <RowDefinition Height="*"/>
-              <RowDefinition Height="*"/>
-              <RowDefinition Height="*"/>
-              <RowDefinition Height="*"/>
-              <RowDefinition Height="*"/>
-              <RowDefinition Height="*"/>
-              <RowDefinition Height="*"/>
-              <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-
-            <Grid.ColumnDefinitions>
-              <ColumnDefinition Width="Auto"/>
-              <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
-
-            <TextBlock Grid.Row="0" Grid.Column="0" Text="Width:"/>
-            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Width}"/>
-            <TextBlock Grid.Row="1" Grid.Column="0" Text="Height:"/>
-            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Height}"/>
-            <TextBlock Grid.Row="2" Grid.Column="0" Text="OffsetX:"/>
-            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding OffsetX}"/>
-            <TextBlock Grid.Row="3" Grid.Column="0" Text="OffsetY:"/>
-            <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding OffsetY}"/>
-            <TextBlock Grid.Row="4" Grid.Column="0" Text="ImagePart:"/>
-            <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding ImagePart}"/>
-            <TextBlock Grid.Row="5" Grid.Column="0" Text="SubParts:"/>
-            <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding SubParts}"/>
-            <TextBlock Grid.Row="6" Grid.Column="0" Text="TileOffset:"/>
-            <TextBlock Grid.Row="6" Grid.Column="1" Text="{Binding TileOffset}"/>
-            <TextBlock Grid.Row="7" Grid.Column="0" Text="Direction:"/>
-            <TextBlock Grid.Row="7" Grid.Column="1" Text="{Binding Direction}"/>
-            <TextBlock Grid.Row="8" Grid.Column="0" Text="HorizontalOffsetOfImage:"/>
-            <TextBlock Grid.Row="8" Grid.Column="1" Text="{Binding HorizontalOffsetOfImage}"/>
-            <TextBlock Grid.Row="9" Grid.Column="0" Text="BuildingWidth:"/>
-            <TextBlock Grid.Row="9" Grid.Column="1" Text="{Binding BuildingWidth}"/>
-          </Grid>
-        </Expander>
-
-        <Expander Grid.Row="5" Grid.Column="0" ExpandDirection="Down" Header="{DynamicResource ChangeOffsets}" IsVisible="{Binding OffsetExpanderVisible}">
+    <!-- ===== Status bar ===== -->
+    <Border Grid.Row="3" Classes="StatusBar">
+      <StackPanel Orientation="Horizontal" Spacing="24">
+        <StackPanel Orientation="Horizontal" Spacing="4">
           <StackPanel Orientation="Horizontal">
-            <TextBlock Text="xOffset(min -128/ max 127):"/>
-            <TextBox Name="xOffsetTextBox" Width="100" Text="{Binding XOffset}"/>
-            <TextBlock Text="yOffset:"/>
-            <TextBox Name="yOffsetTextBox" Width="100" Text="{Binding YOffset}"/>
-            <Button Click="Button_ChangeOffset" Content="Change Offset"/>
+            <TextBlock Text="{DynamicResource StrongholdFolder}"/>
+            <TextBlock Text=":"/>
           </StackPanel>
-        </Expander>
+          <TextBlock Classes="Path" Text="{Binding CrusaderPath}" ToolTip.Tip="{Binding CrusaderPath}"/>
+          <TextBlock Classes="Warning" Text="{DynamicResource NotSet}" IsVisible="{Binding CrusaderPath, Converter={x:Static StringConverters.IsNullOrEmpty}}"/>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Spacing="4">
+          <StackPanel Orientation="Horizontal">
+            <TextBlock Text="{DynamicResource Workfolder}"/>
+            <TextBlock Text=":"/>
+          </StackPanel>
+          <TextBlock Classes="Path" Text="{Binding WorkFolderPath}" ToolTip.Tip="{Binding WorkFolderPath}"/>
+          <TextBlock Classes="Warning" Text="{DynamicResource NotSet}" IsVisible="{Binding WorkFolderPath, Converter={x:Static StringConverters.IsNullOrEmpty}}"/>
+        </StackPanel>
+      </StackPanel>
+    </Border>
 
-        <ListBox Items="{Binding TGXImages}" Name="TGXImageListBox"  SelectionMode="Multiple" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Grid.Row="6" Grid.Column="0" SelectionChanged="TGXImageChanged">
-          <ListBox.ItemsPanel>
-            <ItemsPanelTemplate>
-              <WrapPanel Orientation="Horizontal"/>
-            </ItemsPanelTemplate>
-          </ListBox.ItemsPanel>
-          <ListBox.ItemTemplate>
-            <DataTemplate>
-              <Image Source="{Binding Bitmap}" MaxWidth="{Binding Width}" MaxHeight="{Binding Height}"/>
-            </DataTemplate>
-          </ListBox.ItemTemplate>
-        </ListBox>
+    <!-- ===== Content: work folder | file | Stronghold files ===== -->
+    <Grid Grid.Row="2" Margin="8">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition MinWidth="160" Width="220"/>
+        <ColumnDefinition Width="8"/>
+        <ColumnDefinition MinWidth="480" Width="*"/>
+        <ColumnDefinition Width="8"/>
+        <ColumnDefinition MinWidth="180" Width="260"/>
+      </Grid.ColumnDefinitions>
+
+      <GridSplitter Grid.Column="1" Width="8"/>
+      <GridSplitter Grid.Column="3" Width="8"/>
+
+      <!-- Work folder -->
+      <Border Grid.Column="0" Classes="Pane">
+        <Grid RowDefinitions="Auto,*,Auto">
+          <Border Grid.Row="0" Classes="PaneHeader">
+            <Grid ColumnDefinitions="*,Auto">
+              <Panel Grid.Column="1" Classes="TipHost" ToolTip.Tip="{DynamicResource OpenWorkFolder}">
+                <Button Classes="Icon" Click="OpenWorkFolder" IsEnabled="{Binding WorkFolderPath, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                  <Path Classes="FolderIcon"/>
+                </Button>
+              </Panel>
+              <TextBlock Grid.Column="0" Classes="PaneTitle" Text="{DynamicResource Workfolder}"/>
+            </Grid>
+          </Border>
+          <TextBlock Grid.Row="2" Classes="Caption" Margin="10,4,10,6" TextWrapping="Wrap" Text="{DynamicResource WorkfolderHint}"
+                     IsVisible="{Binding !!WorkfolderFiles.Count, FallbackValue=False}"/>
+          <Panel Grid.Row="1">
+            <ListBox Items="{Binding WorkfolderFiles}" SelectionMode="Single" Name="WorkfolderSelector" ScrollViewer.HorizontalScrollBarVisibility="Disabled" DoubleTapped="OpenWorkfolderDirectory"/>
+            <StackPanel Margin="12" Spacing="8" IsVisible="{Binding !WorkfolderFiles.Count, FallbackValue=True}">
+              <TextBlock Classes="Hint" Text="{DynamicResource WorkfolderEmpty}"/>
+              <Button HorizontalAlignment="Left" Content="{DynamicResource ChooseWorkfolder}" Click="ChangeWorkfolder"
+                      IsVisible="{Binding WorkFolderPath, Converter={x:Static StringConverters.IsNullOrEmpty}}"/>
+            </StackPanel>
+          </Panel>
+        </Grid>
+      </Border>
+
+      <!-- Stronghold folder -->
+      <Border Grid.Column="4" Classes="Pane">
+        <Grid RowDefinitions="Auto,Auto,*">
+          <Border Grid.Row="0" Classes="PaneHeader">
+            <Grid ColumnDefinitions="*,Auto">
+              <Panel Grid.Column="1" Classes="TipHost" ToolTip.Tip="{DynamicResource OpenStrongholdFolder}">
+                <Button Classes="Icon" Click="OpenStrongholdFolder" IsEnabled="{Binding CrusaderPath, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                  <Path Classes="FolderIcon"/>
+                </Button>
+              </Panel>
+              <TextBlock Grid.Column="0" Classes="PaneTitle" Text="{DynamicResource StrongholdFolder}"/>
+            </Grid>
+          </Border>
+          <!-- Switches between the .gm1 files (gm folder) and the .tgx files (gfx folder). -->
+          <Grid Grid.Row="1" ColumnDefinitions="*,*" Margin="8,8,8,4">
+            <RadioButton Grid.Column="0" Classes="Segment" GroupName="FileKind" CornerRadius="4,0,0,4"
+                         IsChecked="{Binding Gm1PreviewTrue}" ToolTip.Tip="{DynamicResource Gm1FilesTip}" Content="GM1"/>
+            <RadioButton Grid.Column="1" Classes="Segment" GroupName="FileKind" CornerRadius="0,4,4,0"
+                         IsChecked="{Binding GfxPreviewTrue}" ToolTip.Tip="{DynamicResource TgxFilesTip}" Content="TGX"/>
+          </Grid>
+          <Panel Grid.Row="2">
+            <ListBox IsVisible="{Binding Gm1PreviewTrue}" Items="{Binding StrongholdFiles}" SelectionMode="Single" Name="Gm1FilesSelector" ScrollViewer.HorizontalScrollBarVisibility="Disabled" SelectionChanged="SelectedGm1File"/>
+            <ListBox IsVisible="{Binding GfxPreviewTrue}" Items="{Binding GfxFiles}" SelectionMode="Single" Name="GfxFilesSelector" ScrollViewer.HorizontalScrollBarVisibility="Disabled" SelectionChanged="SelectedGfxFile"/>
+            <StackPanel Margin="12" Spacing="8" IsVisible="{Binding CrusaderPath, Converter={x:Static StringConverters.IsNullOrEmpty}}">
+              <TextBlock Classes="Hint" Text="{DynamicResource NoStrongholdFolderSelected}"/>
+              <Button Classes="Accent" HorizontalAlignment="Left" Content="{DynamicResource ChooseStrongholdFolder}" Click="ChangeCrusaderfolder"/>
+            </StackPanel>
+          </Panel>
+        </Grid>
+      </Border>
+
+      <!-- Open file -->
+      <Grid Grid.Column="2" RowDefinitions="Auto,*">
+
+        <!-- File card: name, type, color table and details -->
+        <Border Grid.Row="0" Classes="Card" Margin="0,0,0,8">
+          <Border.IsVisible>
+            <MultiBinding Converter="{x:Static BoolConverters.Or}">
+              <Binding Path="FileSelected"/>
+              <Binding Path="TgxDocument" Converter="{x:Static ObjectConverters.IsNotNull}"/>
+            </MultiBinding>
+          </Border.IsVisible>
+          <StackPanel Spacing="8">
+
+            <WrapPanel>
+              <TextBlock Classes="Title" Margin="0,0,12,0" Text="{Binding Gm1Document.FileName}" IsVisible="{Binding FileSelected}"/>
+              <TextBlock Classes="Title" Margin="0,0,12,0" Text="{Binding TgxDocument.FileName}" IsVisible="{Binding TgxDocument, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+
+              <StackPanel Orientation="Horizontal" Spacing="6" IsVisible="{Binding FileSelected}">
+                <TextBlock Text="{DynamicResource Datatype}" VerticalAlignment="Center"/>
+                <Border Classes="Chip">
+                  <TextBlock Text="{Binding Filetype}"/>
+                </Border>
+                <Border Classes="IconPlate Small" Cursor="Hand" ToolTip.Tip="{DynamicResource FileTypeInfo}">
+                  <Image Name="HelpIcon" Source="avares://Gm1KonverterCrossPlatform/Assets/info.png" Tapped="OpenInfoWindow"/>
+                </Border>
+              </StackPanel>
+
+              <StackPanel Orientation="Horizontal" Spacing="6" IsVisible="{Binding TgxDocument, Converter={x:Static ObjectConverters.IsNotNull}}">
+                <Border Classes="Chip">
+                  <TextBlock Text="TGX"/>
+                </Border>
+                <TextBlock VerticalAlignment="Center" Text="{Binding TgxDocument.File.Width}"/>
+                <TextBlock VerticalAlignment="Center" Text="×"/>
+                <TextBlock VerticalAlignment="Center" Text="{Binding TgxDocument.File.Height}"/>
+                <TextBlock VerticalAlignment="Center" Text="px"/>
+              </StackPanel>
+            </WrapPanel>
+
+            <!-- Color tables (animations only) -->
+            <WrapPanel IsVisible="{Binding ColorButtonsEnabled}">
+              <TextBlock Text="{DynamicResource Palette}" VerticalAlignment="Center" Margin="0,0,8,0"/>
+              <Button Classes="Nav" Content="‹" Margin="0,0,6,0" IsEnabled="{Binding ColorButtonsEnabled}" Click="Button_ClickPalleteminus" ToolTip.Tip="{DynamicResource PreviousColorTable}"/>
+              <Border Classes="Swatch">
+                <Image Source="{Binding ActuellColorTable}" Width="320" Height="80"/>
+              </Border>
+              <Button Classes="Nav" Content="›" Margin="6,0,8,0" IsEnabled="{Binding ColorButtonsEnabled}" Click="Button_ClickPalleteplus" ToolTip.Tip="{DynamicResource NextColorTable}"/>
+              <TextBlock VerticalAlignment="Center" MinWidth="44" Margin="0,0,12,0" Text="{Binding ActualPalette, StringFormat='{}{0} / 10'}"/>
+              <Button VerticalAlignment="Center" IsEnabled="{Binding ColorButtonsEnabled}" Click="Button_ClickChangeColorTable" Content="{DynamicResource ChangeColorTable}"/>
+            </WrapPanel>
+
+            <!-- Details -->
+            <Rectangle Height="1" Fill="{DynamicResource ThemeBorderLowBrush}"/>
+            <ScrollViewer MaxHeight="240" HorizontalScrollBarVisibility="Disabled">
+              <StackPanel>
+                <Expander Classes="Section" ExpandDirection="Down" Header="{DynamicResource GifExporter}">
+                  <WrapPanel>
+                    <TextBlock Classes="Hint" MaxWidth="340" Margin="0,0,16,6" VerticalAlignment="Center" Text="{DynamicResource SelectGif}"/>
+                    <StackPanel Orientation="Horizontal" Spacing="6" Margin="0,0,16,6">
+                      <TextBlock Text="{DynamicResource Delay}" VerticalAlignment="Center"/>
+                      <TextBox Width="70" Text="{Binding Delay}"/>
+                    </StackPanel>
+                    <Button Name="GifExporter" Margin="0,0,0,6" Content="{DynamicResource ExportGif}" Click="Button_ClickGifExporter"/>
+                  </WrapPanel>
+                </Expander>
+
+                <Expander Classes="Section" ExpandDirection="Down" Header="{DynamicResource Gm1FileHeaderFields}" IsVisible="{Binding FileSelected}">
+                  <WrapPanel Classes="Fields" DataContext="{Binding FileHeader}">
+                    <StackPanel><TextBlock Text="UnknownField1"/><TextBlock Text="{Binding UnknownField1}"/></StackPanel>
+                    <StackPanel><TextBlock Text="UnknownField2"/><TextBlock Text="{Binding UnknownField2}"/></StackPanel>
+                    <StackPanel><TextBlock Text="UnknownField3"/><TextBlock Text="{Binding UnknownField3}"/></StackPanel>
+                    <StackPanel><TextBlock Text="ImageCount"/><TextBlock Text="{Binding ImageCount}"/></StackPanel>
+                    <StackPanel><TextBlock Text="UnknownField5"/><TextBlock Text="{Binding UnknownField5}"/></StackPanel>
+                    <StackPanel><TextBlock Text="DataType"/><TextBlock Text="{Binding DataType}"/></StackPanel>
+                    <StackPanel><TextBlock Text="UnknownField7"/><TextBlock Text="{Binding UnknownField7}"/></StackPanel>
+                    <StackPanel><TextBlock Text="UnknownField8"/><TextBlock Text="{Binding UnknownField8}"/></StackPanel>
+                    <StackPanel><TextBlock Text="UnknownField9"/><TextBlock Text="{Binding UnknownField9}"/></StackPanel>
+                    <StackPanel><TextBlock Text="UnknownField10"/><TextBlock Text="{Binding UnknownField10}"/></StackPanel>
+                    <StackPanel><TextBlock Text="UnknownField11"/><TextBlock Text="{Binding UnknownField11}"/></StackPanel>
+                    <StackPanel><TextBlock Text="UnknownField12"/><TextBlock Text="{Binding UnknownField12}"/></StackPanel>
+                    <StackPanel><TextBlock Text="Width"/><TextBlock Text="{Binding Width}"/></StackPanel>
+                    <StackPanel><TextBlock Text="Height"/><TextBlock Text="{Binding Height}"/></StackPanel>
+                    <StackPanel><TextBlock Text="UnknownField15"/><TextBlock Text="{Binding UnknownField15}"/></StackPanel>
+                    <StackPanel><TextBlock Text="UnknownField16"/><TextBlock Text="{Binding UnknownField16}"/></StackPanel>
+                    <StackPanel><TextBlock Text="UnknownField17"/><TextBlock Text="{Binding UnknownField17}"/></StackPanel>
+                    <StackPanel><TextBlock Text="UnknownField18"/><TextBlock Text="{Binding UnknownField18}"/></StackPanel>
+                    <StackPanel><TextBlock Text="OriginX"/><TextBlock Text="{Binding OriginX}"/></StackPanel>
+                    <StackPanel><TextBlock Text="OriginY"/><TextBlock Text="{Binding OriginY}"/></StackPanel>
+                    <StackPanel><TextBlock Text="DataSize"/><TextBlock Text="{Binding DataSize}"/></StackPanel>
+                    <StackPanel><TextBlock Text="UnknownField22"/><TextBlock Text="{Binding UnknownField22}"/></StackPanel>
+                  </WrapPanel>
+                </Expander>
+
+                <Expander Classes="Section" ExpandDirection="Down" Header="{DynamicResource Gm1FileImageHeaderFields}" IsVisible="{Binding FileSelected}">
+                  <Panel>
+                    <TextBlock Classes="Hint" Text="{DynamicResource SelectImageHint}" IsVisible="{Binding SelectedImageHeader, Converter={x:Static ObjectConverters.IsNull}}"/>
+                    <Panel IsVisible="{Binding SelectedImageHeader, Converter={x:Static ObjectConverters.IsNotNull}}">
+                      <WrapPanel Classes="Fields" DataContext="{Binding SelectedImageHeader}">
+                        <StackPanel><TextBlock Text="Width"/><TextBlock Text="{Binding Width}"/></StackPanel>
+                        <StackPanel><TextBlock Text="Height"/><TextBlock Text="{Binding Height}"/></StackPanel>
+                        <StackPanel><TextBlock Text="OffsetX"/><TextBlock Text="{Binding OffsetX}"/></StackPanel>
+                        <StackPanel><TextBlock Text="OffsetY"/><TextBlock Text="{Binding OffsetY}"/></StackPanel>
+                        <StackPanel><TextBlock Text="ImagePart"/><TextBlock Text="{Binding ImagePart}"/></StackPanel>
+                        <StackPanel><TextBlock Text="SubParts"/><TextBlock Text="{Binding SubParts}"/></StackPanel>
+                        <StackPanel><TextBlock Text="TileOffset"/><TextBlock Text="{Binding TileOffset}"/></StackPanel>
+                        <StackPanel><TextBlock Text="Direction"/><TextBlock Text="{Binding Direction}"/></StackPanel>
+                        <StackPanel><TextBlock Text="HorizontalOffsetOfImage"/><TextBlock Text="{Binding HorizontalOffsetOfImage}"/></StackPanel>
+                        <StackPanel><TextBlock Text="BuildingWidth"/><TextBlock Text="{Binding BuildingWidth}"/></StackPanel>
+                      </WrapPanel>
+                    </Panel>
+                  </Panel>
+                </Expander>
+
+                <!-- Building offsets in the executables (anim_castle.gm1 only) -->
+                <Expander Classes="Section" ExpandDirection="Down" IsExpanded="True" Header="{DynamicResource ChangeOffsets}" IsVisible="{Binding OffsetExpanderVisible}">
+                  <WrapPanel>
+                    <StackPanel Orientation="Horizontal" Spacing="6" Margin="0,0,16,6">
+                      <TextBlock Text="{DynamicResource XOffsetLabel}" VerticalAlignment="Center"/>
+                      <TextBox Name="xOffsetTextBox" Width="70" Text="{Binding XOffset}"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Spacing="6" Margin="0,0,16,6">
+                      <TextBlock Text="{DynamicResource YOffsetLabel}" VerticalAlignment="Center"/>
+                      <TextBox Name="yOffsetTextBox" Width="90" Text="{Binding YOffset}"/>
+                    </StackPanel>
+                    <Button Margin="0,0,0,6" Click="Button_ChangeOffset" Content="{DynamicResource ApplyOffset}" ToolTip.Tip="{DynamicResource ApplyOffsetTip}"/>
+                  </WrapPanel>
+                </Expander>
+              </StackPanel>
+            </ScrollViewer>
+          </StackPanel>
+        </Border>
+
+        <!-- Images of the file -->
+        <Border Grid.Row="1" Classes="Pane">
+          <Grid RowDefinitions="Auto,*">
+            <Border Grid.Row="0" Classes="PaneHeader">
+              <Grid ColumnDefinitions="*,Auto">
+                <TextBlock Grid.Column="1" Classes="Caption" Margin="8,0,4,0" Text="{DynamicResource MultiSelectHint}" IsVisible="{Binding !!TGXImages.Count}"/>
+                <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="8">
+                  <TextBlock Classes="PaneTitle" Text="{DynamicResource Preview}"/>
+                  <Border Classes="Chip" IsVisible="{Binding !!TGXImages.Count}">
+                    <TextBlock Text="{Binding TGXImages.Count}"/>
+                  </Border>
+                </StackPanel>
+              </Grid>
+            </Border>
+
+            <Panel Grid.Row="1">
+              <ListBox Items="{Binding TGXImages}" Name="TGXImageListBox" Classes="Thumbnails" SelectionMode="Multiple" ScrollViewer.HorizontalScrollBarVisibility="Disabled" SelectionChanged="TGXImageChanged">
+                <ListBox.ItemsPanel>
+                  <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Horizontal"/>
+                  </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+                <ListBox.ItemTemplate>
+                  <DataTemplate>
+                    <Image Source="{Binding Bitmap}" MaxWidth="{Binding Width}" MaxHeight="{Binding Height}"/>
+                  </DataTemplate>
+                </ListBox.ItemTemplate>
+              </ListBox>
+
+              <!-- Empty state: nothing opened yet -->
+              <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+                <ScrollViewer.IsVisible>
+                  <MultiBinding Converter="{x:Static BoolConverters.And}">
+                    <Binding Path="!FileSelected"/>
+                    <Binding Path="TgxDocument" Converter="{x:Static ObjectConverters.IsNull}"/>
+                  </MultiBinding>
+                </ScrollViewer.IsVisible>
+                <StackPanel MaxWidth="560" Margin="24" Spacing="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                  <TextBlock Classes="Title" HorizontalAlignment="Center" Text="{DynamicResource EmptyStateTitle}"/>
+
+                  <StackPanel Spacing="10">
+                    <StackPanel.IsVisible>
+                      <MultiBinding Converter="{x:Static BoolConverters.Or}">
+                        <Binding Path="CrusaderPath" Converter="{x:Static StringConverters.IsNullOrEmpty}"/>
+                        <Binding Path="WorkFolderPath" Converter="{x:Static StringConverters.IsNullOrEmpty}"/>
+                      </MultiBinding>
+                    </StackPanel.IsVisible>
+                    <TextBlock Classes="Paragraph" TextAlignment="Center" Text="{DynamicResource EmptyStateChooseFolders}"/>
+                    <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
+                      <Button Classes="Accent" Content="{DynamicResource ChooseStrongholdFolder}" Click="ChangeCrusaderfolder"
+                              IsVisible="{Binding CrusaderPath, Converter={x:Static StringConverters.IsNullOrEmpty}}"/>
+                      <Button Content="{DynamicResource ChooseWorkfolder}" Click="ChangeWorkfolder"
+                              IsVisible="{Binding WorkFolderPath, Converter={x:Static StringConverters.IsNullOrEmpty}}"/>
+                    </StackPanel>
+                  </StackPanel>
+
+                  <TextBlock Classes="Paragraph" TextAlignment="Center" Text="{DynamicResource EmptyStatePickFile}"
+                             IsVisible="{Binding CrusaderPath, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+
+                  <Border Classes="Callout">
+                    <StackPanel Spacing="8">
+                      <TextBlock FontWeight="SemiBold" Text="{DynamicResource WorkflowTitle}"/>
+                      <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto,Auto">
+                        <Border Grid.Row="0" Classes="Step"><TextBlock Text="1"/></Border>
+                        <TextBlock Grid.Row="0" Grid.Column="1" Classes="Paragraph" Margin="0,2,0,8" Text="{DynamicResource WorkflowStep1}"/>
+                        <Border Grid.Row="1" Classes="Step"><TextBlock Text="2"/></Border>
+                        <TextBlock Grid.Row="1" Grid.Column="1" Classes="Paragraph" Margin="0,2,0,8" Text="{DynamicResource WorkflowStep2}"/>
+                        <Border Grid.Row="2" Classes="Step"><TextBlock Text="3"/></Border>
+                        <TextBlock Grid.Row="2" Grid.Column="1" Classes="Paragraph" Margin="0,2,0,8" Text="{DynamicResource WorkflowStep3}"/>
+                        <Border Grid.Row="3" Classes="Step"><TextBlock Text="4"/></Border>
+                        <TextBlock Grid.Row="3" Grid.Column="1" Classes="Paragraph" Margin="0,2,0,8" Text="{DynamicResource WorkflowStep4}"/>
+                      </Grid>
+                    </StackPanel>
+                  </Border>
+                </StackPanel>
+              </ScrollViewer>
+            </Panel>
+          </Grid>
+        </Border>
       </Grid>
     </Grid>
   </Grid>

@@ -2,63 +2,97 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-        Width="820"
-        MaxWidth="820"
-        Height="550"
-        MaxHeight="800"
+        mc:Ignorable="d" d:DesignWidth="840" d:DesignHeight="600"
+        Width="840"
+        Height="600"
+        MinWidth="560"
+        MinHeight="400"
+        MaxHeight="900"
         x:Class="Gm1KonverterCrossPlatform.Views.GM1FileInfoWindow"
-        Title="Info"
+        Title="{DynamicResource FileTypeInfo}"
         WindowStartupLocation="CenterOwner">
 
-  <ScrollViewer>
-    <StackPanel>
-      <TextBlock TextWrapping="Wrap" Text="{DynamicResource LargerImagesHint}" MaxWidth="800" Margin="0,0,0,20"/>
+  <Window.Styles>
+    <Style Selector="Image">
+      <Setter Property="Stretch" Value="Uniform"/>
+      <Setter Property="StretchDirection" Value="DownOnly"/>
+    </Style>
+  </Window.Styles>
 
-      <StackPanel  MaxWidth="800"  Name="Animation">
-        <TextBlock Text="{DynamicResource AnimationTitel1}"  HorizontalAlignment="Center" MaxWidth="800"/>
-        <TextBlock TextWrapping="Wrap" Text="{DynamicResource AnimationText1}" MaxWidth="800" Margin="0,20,0,0"/>
-        <Image Name="Palette1" Source="avares://Gm1KonverterCrossPlatform/Assets/Palette1.png"/>
-        <Image Name="Palette2" Source="avares://Gm1KonverterCrossPlatform/Assets/Palette2.png"/>
-        <TextBlock TextWrapping="Wrap" Text="{DynamicResource AnimationText2}" MaxWidth="800" Margin="0,20,0,0"/>
-        <Image Name="Palette3" Source="avares://Gm1KonverterCrossPlatform/Assets/Palette3.png"/>
+  <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+    <StackPanel MaxWidth="780" Margin="24,16,24,24" Spacing="10">
 
-        <TextBlock TextWrapping="Wrap" Text="{DynamicResource AnimationText13}" HorizontalAlignment="Left" Margin="0,20,0,0"/>
-        <TextBlock TextWrapping="Wrap" Text="{DynamicResource AnimationText3}" HorizontalAlignment="Left"/>
-        <TextBlock TextWrapping="Wrap" Text="{DynamicResource AnimationText4}" HorizontalAlignment="Left"/>
-        <TextBlock TextWrapping="Wrap" Text="{DynamicResource AnimationText5}" HorizontalAlignment="Left"/>
-        <TextBlock TextWrapping="Wrap" Text="{DynamicResource AnimationText6}" HorizontalAlignment="Left"/>
-        <TextBlock TextWrapping="Wrap" Text="{DynamicResource AnimationText7}" HorizontalAlignment="Left"/>
-        <TextBlock TextWrapping="Wrap" Text="{DynamicResource AnimationText8}" HorizontalAlignment="Left"/>
-        <TextBlock TextWrapping="Wrap" Text="{DynamicResource AnimationText9}" HorizontalAlignment="Left"/>
-        <TextBlock TextWrapping="Wrap" Text="{DynamicResource AnimationText10}" HorizontalAlignment="Left"/>
-        <TextBlock TextWrapping="Wrap" Text="{DynamicResource AnimationText11}" HorizontalAlignment="Left"/>
-        <TextBlock TextWrapping="Wrap" Text="{DynamicResource AnimationText12}" HorizontalAlignment="Left"/>
+      <StackPanel Name="Animation" Spacing="10">
+        <TextBlock Classes="Heading" Text="{DynamicResource AnimationTitel1}"/>
+        <TextBlock Classes="Paragraph" Text="{DynamicResource AnimationText1}"/>
+        <Border Classes="ImagePlate">
+          <StackPanel Spacing="8">
+            <Image Name="Palette1" Source="avares://Gm1KonverterCrossPlatform/Assets/Palette1.png"/>
+            <Image Name="Palette2" Source="avares://Gm1KonverterCrossPlatform/Assets/Palette2.png"/>
+          </StackPanel>
+        </Border>
+        <TextBlock Classes="Paragraph" Text="{DynamicResource AnimationText2}"/>
+        <Border Classes="ImagePlate">
+          <Image Name="Palette3" Source="avares://Gm1KonverterCrossPlatform/Assets/Palette3.png"/>
+        </Border>
+
+        <TextBlock Classes="Paragraph" FontWeight="SemiBold" Margin="0,6,0,0" Text="{DynamicResource AnimationText13}"/>
+        <UniformGrid Columns="2" Width="380" HorizontalAlignment="Left" Margin="12,0,0,0">
+          <TextBlock Text="{DynamicResource AnimationText3}"/>
+          <TextBlock Text="{DynamicResource AnimationText8}"/>
+          <TextBlock Text="{DynamicResource AnimationText4}"/>
+          <TextBlock Text="{DynamicResource AnimationText9}"/>
+          <TextBlock Text="{DynamicResource AnimationText5}"/>
+          <TextBlock Text="{DynamicResource AnimationText10}"/>
+          <TextBlock Text="{DynamicResource AnimationText6}"/>
+          <TextBlock Text="{DynamicResource AnimationText11}"/>
+          <TextBlock Text="{DynamicResource AnimationText7}"/>
+          <TextBlock Text="{DynamicResource AnimationText12}"/>
+        </UniformGrid>
       </StackPanel>
 
-      <StackPanel Name="Interface" MaxWidth="800">
-        <TextBlock Text="{DynamicResource InterfaceTitel1}"  HorizontalAlignment="Center" MaxWidth="800"/>
-        <TextBlock TextWrapping="Wrap" Text="{DynamicResource InterfaceText1}" MaxWidth="800" Margin="0,20,0,0"/>
-        <Image Name="Interface1"  Source="avares://Gm1KonverterCrossPlatform/Assets/Interface1.JPG"/>
-        <Image Name="Interface2"  Source="avares://Gm1KonverterCrossPlatform/Assets/Interface2.JPG"/>
+      <StackPanel Name="Interface" Spacing="10">
+        <TextBlock Classes="Heading" Text="{DynamicResource InterfaceTitel1}"/>
+        <TextBlock Classes="Paragraph" Text="{DynamicResource InterfaceText1}"/>
+        <Border Classes="ImagePlate">
+          <StackPanel Spacing="8">
+            <Image Name="Interface1" Source="avares://Gm1KonverterCrossPlatform/Assets/Interface1.JPG"/>
+            <Image Name="Interface2" Source="avares://Gm1KonverterCrossPlatform/Assets/Interface2.JPG"/>
+          </StackPanel>
+        </Border>
       </StackPanel>
 
-      <StackPanel Name="TiledObject" MaxWidth="800">
-        <TextBlock Text="{DynamicResource TiledObjectTitel1}"  HorizontalAlignment="Center" MaxWidth="800"/>
-        <TextBlock TextWrapping="Wrap" Text="{DynamicResource TiledObjectText1}" MaxWidth="800" Margin="0,20,0,0"/>
-        <Image Name="TiledObject1" Source="avares://Gm1KonverterCrossPlatform/Assets/TiledObject1.png"/>
-        <TextBlock TextWrapping="Wrap" Text="{DynamicResource TiledObjectText2}" MaxWidth="800" Margin="0,20,0,0"/>
-        <Image Name="TiledObject2" Source="avares://Gm1KonverterCrossPlatform/Assets/TiledObject2.png"/>
-        <TextBlock TextWrapping="Wrap" Text="{DynamicResource TiledObjectText3}" MaxWidth="800" Margin="0,20,0,0"/>
-        <Image Name="TiledObject3" Source="avares://Gm1KonverterCrossPlatform/Assets/TiledObject3.png"/>
-        <Image Name="TiledObject4" Source="avares://Gm1KonverterCrossPlatform/Assets/TiledObject4.png"/>
-        <TextBlock TextWrapping="Wrap" Text="{DynamicResource TiledObjectText4}" MaxWidth="800" Margin="0,20,0,0"/>
-        <Image Name="TiledObject5" Source="avares://Gm1KonverterCrossPlatform/Assets/TiledObject5.png"/>
+      <StackPanel Name="TiledObject" Spacing="10">
+        <TextBlock Classes="Heading" Text="{DynamicResource TiledObjectTitel1}"/>
+        <TextBlock Classes="Paragraph" Text="{DynamicResource TiledObjectText1}"/>
+        <Border Classes="ImagePlate">
+          <Image Name="TiledObject1" Source="avares://Gm1KonverterCrossPlatform/Assets/TiledObject1.png"/>
+        </Border>
+        <TextBlock Classes="Paragraph" Text="{DynamicResource TiledObjectText2}"/>
+        <Border Classes="ImagePlate">
+          <Image Name="TiledObject2" Source="avares://Gm1KonverterCrossPlatform/Assets/TiledObject2.png"/>
+        </Border>
+        <TextBlock Classes="Paragraph" Text="{DynamicResource TiledObjectText3}"/>
+        <Border Classes="ImagePlate">
+          <StackPanel Spacing="8">
+            <Image Name="TiledObject3" Source="avares://Gm1KonverterCrossPlatform/Assets/TiledObject3.png"/>
+            <Image Name="TiledObject4" Source="avares://Gm1KonverterCrossPlatform/Assets/TiledObject4.png"/>
+          </StackPanel>
+        </Border>
+        <TextBlock Classes="Paragraph" Text="{DynamicResource TiledObjectText4}"/>
+        <Border Classes="ImagePlate">
+          <Image Name="TiledObject5" Source="avares://Gm1KonverterCrossPlatform/Assets/TiledObject5.png"/>
+        </Border>
       </StackPanel>
 
-      <StackPanel Name="NoInfo" MaxWidth="800">
-        <TextBlock Text="{DynamicResource NoInfoYet}"  HorizontalAlignment="Center" MaxWidth="800"/>
+      <StackPanel Name="NoInfo">
+        <TextBlock Classes="Paragraph" Margin="0,12,0,0" HorizontalAlignment="Center" Text="{DynamicResource NoInfoYet}"/>
       </StackPanel>
+
+      <!-- General tip for all data types -->
+      <Border Classes="Callout" Margin="0,12,0,0">
+        <TextBlock Classes="Paragraph" Text="{DynamicResource LargerImagesHint}"/>
+      </Border>
     </StackPanel>
   </ScrollViewer>
 </Window>

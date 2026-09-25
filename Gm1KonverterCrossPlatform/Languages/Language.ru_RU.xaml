@@ -9,43 +9,38 @@
     <x:String x:Key="CreatenewTgx">Сохранить Tgx в мод UCP</x:String>
     <x:String x:Key="ReplacewithSavedTgxFile">Удалить Tgx из мода UCP (оригинал)</x:String>
 
-    <x:String x:Key="ExportColortable">Экспорт таблицы цветов</x:String>
-    <x:String x:Key="ImportColortable">Импорт таблицы цветов</x:String>
+    <x:String x:Key="ExportColortable">Экспорт таблиц цветов</x:String>
+    <x:String x:Key="ImportColortable">Импорт таблиц цветов</x:String>
     <x:String x:Key="ExportImages">Экспорт изображений</x:String>
     <x:String x:Key="ImportImages">Импорт изображений</x:String>
-    <x:String x:Key="ImportTgxImage">Импорт изображения как Tgx</x:String>
-    <x:String x:Key="ExportTgxImage">Экспорт Tgx образ</x:String>
+    <x:String x:Key="ImportTgxImage">Импорт изображения TGX</x:String>
+    <x:String x:Key="ExportTgxImage">Экспорт изображения TGX</x:String>
 
     <x:String x:Key="Workfolder">Рабочая папка</x:String>
-    <x:String x:Key="OpenFolderafterExport">Открыть папку после експорта</x:String>
-    <x:String x:Key="ActivateLogger">Активировать лог файл</x:String>
+    <x:String x:Key="OpenFolderafterExport">Открывать папку после экспорта</x:String>
+    <x:String x:Key="ActivateLogger">Включить журнал</x:String>
     <x:String x:Key="StrongholdFolder">Папка Stronghold</x:String>
     <x:String x:Key="File">Файл</x:String>
-    <x:String x:Key="Edit">Редактировать</x:String>
-    <x:String x:Key="Options">Опции</x:String>
+    <x:String x:Key="Edit">Правка</x:String>
+    <x:String x:Key="Options">Параметры</x:String>
     <x:String x:Key="Datatype">Тип данных:</x:String>
     <x:String x:Key="Palette">Таблица цветов:</x:String>
-    <x:String x:Key="TilesarenotSupportedyet">Плитка еще не поддерживается.</x:String>
-    <x:String x:Key="Save">Сохранить</x:String>
-    <x:String x:Key="ChangeColorTable">Изменить таблицу цветов</x:String>
+    <x:String x:Key="TilesarenotSupportedyet">– этот тип данных пока не поддерживается.</x:String>
+    <x:String x:Key="Save">Сохранить и закрыть</x:String>
+    <x:String x:Key="ChangeColorTable">Изменить таблицу цветов…</x:String>
     <x:String x:Key="GM1Converter">GM1 конвертер</x:String>
 
-    <x:String x:Key="ChangeColorPalette">Таблица смены цветов</x:String>
+    <x:String x:Key="ChangeColorPalette">Редактор таблицы цветов</x:String>
     <x:String x:Key="ClickontheColoryouwanttoChange">Нажмите на цвет, который вы хотите изменить.</x:String>
-    <x:String x:Key="HEXColor">HEX Цвет:</x:String>
-    <x:String x:Key="ChangeRedColor">Red:</x:String>
-    <x:String x:Key="ChangeGreenColor">Green:</x:String>
-    <x:String x:Key="ChangeBlueColor">Blue:</x:String>
-    <x:String x:Key="ChangeColor">Изменить цвет</x:String>
+    <x:String x:Key="HEXColor">HEX-цвет:</x:String>
+    <x:String x:Key="ChangeRedColor">Красный:</x:String>
+    <x:String x:Key="ChangeGreenColor">Зелёный:</x:String>
+    <x:String x:Key="ChangeBlueColor">Синий:</x:String>
+    <x:String x:Key="ChangeColor">Применить цвет</x:String>
 
-    <x:String x:Key="AnimationTitel1">Тип данных анимаций</x:String>
-    <x:String x:Key="AnimationText1">Файлы анимации GM1 состоят из определенного количества закодированных изображений и 10 таблиц цветов.
-        Таблицы цветов используются для экономии места и отображения разных цветов игроков.
-        Сгенерированные изображения ссылаются на текущую выбранную таблицу цветов:
-    </x:String>
-    <x:String x:Key="AnimationText2">Важно отметить, что один цвет на изображении взят из одного и того же места в Таблице цветов, что означает, то что на Рисунке для одного Пикселя одна Позиция для всех Таблиц Цветов.
-    Позиции цвета на изображении остаются одинаковыми для каждой таблицы цветов, но таблица цветов изменяется, чтобы дать другой цвет игрока.
-    </x:String>
+    <x:String x:Key="AnimationTitel1">Тип данных: анимация</x:String>
+    <x:String x:Key="AnimationText1">Файлы анимации GM1 состоят из определённого количества закодированных изображений и 10 таблиц цветов. Таблицы цветов экономят место и задают разные цвета игроков. Показанные изображения используют текущую выбранную таблицу цветов:</x:String>
+    <x:String x:Key="AnimationText2">Важно: каждый пиксель изображения хранит не цвет, а позицию в таблице цветов. Эта позиция одинакова для всех таблиц – меняется только сама таблица, так получаются разные цвета игроков.</x:String>
 
     <x:String x:Key="AnimationText3">1 = серый/нейтральный??</x:String>
     <x:String x:Key="AnimationText4">2 = синий</x:String>
@@ -57,54 +52,82 @@
     <x:String x:Key="AnimationText10">8 = бирюзовый</x:String>
     <x:String x:Key="AnimationText11">9 = зеленый</x:String>
     <x:String x:Key="AnimationText12">10 = серый/нейтральный??</x:String>
-    <x:String x:Key="AnimationText13">Присвоение номера таблицы цветов цветам игрока / нейтральные цвета:</x:String>
+    <x:String x:Key="AnimationText13">Соответствие номеров таблиц цветов цветам игроков / нейтральным цветам:</x:String>
 
-    <x:String x:Key="InterfaceTitel1">Тип данных интерфейс</x:String>
-    <x:String x:Key="InterfaceText1">Файлы интерфейса GM1 состоят из определенного количества закодированных изображений.
-        Эти изображения могут быть полностью отредактированы после экспорта в размере и презентации.
-        К сожалению, пока неизвестно, как изображение расположено в Stronghold, потому что положение остается фиксированным, их можно только удлинить вниз и вправо.
-    </x:String>
+    <x:String x:Key="InterfaceTitel1">Тип данных: интерфейс</x:String>
+    <x:String x:Key="InterfaceText1">Файлы интерфейса GM1 состоят из определённого количества закодированных изображений. После экспорта эти изображения можно полностью изменить – и размер, и содержание. К сожалению, пока неизвестно, как Stronghold позиционирует изображение: позиция остаётся фиксированной, поэтому изображения можно расширять только вниз и вправо.</x:String>
 
-    <x:String x:Key="TiledObjectTitel1">Тип данных Плиточный объект</x:String>
-    <x:String x:Key="TiledObjectText1">Файлы GM1 типа Плиточный объект состоят из определенного количества кодированных картинок.
-        Эти изображения состоят из файла GM1 из множества маленьких бриллиантов размером 30 х 16 пикселей. На рисунке ниже показан такой бриллиант, увеличенный в 4 раза.
-    </x:String>
-    <x:String x:Key="TiledObjectText2">Из отдельных алмазных плиток получается наземный алмаз картины.
-    </x:String>
+    <x:String x:Key="TiledObjectTitel1">Тип данных: TiledObject (плиточный объект)</x:String>
+    <x:String x:Key="TiledObjectText1">Файлы GM1 типа TiledObject (здания) состоят из определённого количества закодированных изображений. В файле GM1 эти изображения состоят из множества маленьких ромбов размером 30 × 16 пикселей. На рисунке ниже такой ромб увеличен в 4 раза.</x:String>
+    <x:String x:Key="TiledObjectText2">Из отдельных ромбов затем составляется основной (нижний) ромб изображения.</x:String>
 
-    <x:String x:Key="TiledObjectText3">Наконец, изображения с переменной высотой размещаются на отдельных бриллиантах, и вся картинка складывается вместе.</x:String>
+    <x:String x:Key="TiledObjectText3">Наконец, на отдельные ромбы накладываются части изображения переменной высоты, и всё изображение собирается вместе.</x:String>
 
-    <x:String x:Key="TiledObjectText4">Это означает, что файлы GM1 типа Плиточный объект могут быть изменены только по высоте и визуально преобразованы.
-        Все, что находится под изображением Земляной Диамант, игнорируется, потому что оно должно быть изометрическим.</x:String>
+    <x:String x:Key="TiledObjectText4">Это значит, что файлы GM1 типа TiledObject можно изменять только по высоте и внешнему виду. Всё, что находится ниже основного ромба импортированного изображения, игнорируется, потому что эта часть должна быть изометрической.</x:String>
 
     <x:String x:Key="NoInfoYet">Пока нет информации об этом типе файла.</x:String>
-    <x:String x:Key="GifExporter">Гиф Экспорт</x:String>
-    <x:String x:Key="ExportGif">Экспортировать Гиф</x:String>
-    <x:String x:Key="SelectGif">Выберите изображения с помощью CTRL, затем нажмите кнопку «Экспорт».</x:String>
-    <x:String x:Key="Delay">Задержка:</x:String>
+    <x:String x:Key="GifExporter">Экспорт GIF</x:String>
+    <x:String x:Key="ExportGif">Экспортировать GIF</x:String>
+    <x:String x:Key="SelectGif">Выберите изображения с помощью Ctrl+щелчок, затем нажмите «Экспортировать GIF».</x:String>
+    <x:String x:Key="Delay">Задержка (мс):</x:String>
 
-    <x:String x:Key="ImportOrginalStrongholdAnimation">Импорт оригинальной Stronghold Анимация</x:String>
-    <x:String x:Key="ExportOrginalStrongholdAnimation">Экспорт оригинальной Stronghold Анимация</x:String>
-    <x:String x:Key="ImportOffsetsFromFile">Import Offsets from File</x:String>
-    <x:String x:Key="ImageSize">Bigimage Width</x:String>
+    <x:String x:Key="ImportOrginalStrongholdAnimation">Импорт оригинальной анимации Stronghold</x:String>
+    <x:String x:Key="ExportOrginalStrongholdAnimation">Экспорт оригинальной анимации Stronghold</x:String>
+    <x:String x:Key="ImportOffsetsFromFile">Импорт смещений из файла…</x:String>
+    <x:String x:Key="ImageSize">Ширина большого изображения</x:String>
     <x:String x:Key="ExportBigImage">Экспорт большого изображения</x:String>
-    <x:String x:Key="ImportBigImage">Импорт большое изображение</x:String>
-    <x:String x:Key="OpenLogFile">Открыть Log журнала</x:String>
+    <x:String x:Key="ImportBigImage">Импорт большого изображения</x:String>
+    <x:String x:Key="OpenLogFile">Открыть папку журнала</x:String>
     
-    <x:String x:Key="ChangeOffsets">Изменить Offsets</x:String>
-    <x:String x:Key="Gm1FileHeaderFields">Gm1 header fields</x:String>
-    <x:String x:Key="Gm1FileImageHeaderFields">Gm1 image header fields</x:String>
-    <x:String x:Key="OpenWorkFolder">Open Work Folder</x:String>
-    <x:String x:Key="OpenStrongholdFolder">Open Stronghold Folder</x:String>
+    <x:String x:Key="ChangeOffsets">Изменить смещения</x:String>
+    <x:String x:Key="Gm1FileHeaderFields">Заголовок файла GM1</x:String>
+    <x:String x:Key="Gm1FileImageHeaderFields">Заголовок изображения (выбранного)</x:String>
+    <x:String x:Key="OpenWorkFolder">Открыть рабочую папку</x:String>
+    <x:String x:Key="OpenStrongholdFolder">Открыть папку Stronghold</x:String>
 
     <x:String x:Key="Language">Язык</x:String>
 
-    <x:String x:Key="ColorTheme">Theme</x:String>
+    <x:String x:Key="ColorTheme">Тема</x:String>
 
-    <x:String x:Key="ChangeColorTableDialogBox_Text">The color table has changed.</x:String>
-    <x:String x:Key="ChangeColorTableDialogBox_Button_Cancel">Cancel</x:String>
-    <x:String x:Key="ChangeColorTableDialogBox_Button_Save">Save</x:String>
-    <x:String x:Key="ChangeColorTableDialogBox_Button_Close">Close</x:String>
+    <!-- Main window layout, empty states, tool bar groups and tool tips -->
+    <x:String x:Key="ChooseWorkfolder">Выбрать рабочую папку…</x:String>
+    <x:String x:Key="ChooseStrongholdFolder">Выбрать папку Stronghold…</x:String>
+    <x:String x:Key="NotSet">не выбрано</x:String>
+    <x:String x:Key="WorkfolderHint">Двойной щелчок открывает папку.</x:String>
+    <x:String x:Key="WorkfolderEmpty">Здесь появятся экспортированные файлы.</x:String>
+    <x:String x:Key="Gm1FilesTip">Архивы спрайтов (.gm1) из папки «gm»</x:String>
+    <x:String x:Key="TgxFilesTip">Отдельные изображения (.tgx) из папки «gfx»</x:String>
+    <x:String x:Key="Preview">Предпросмотр</x:String>
+    <x:String x:Key="MultiSelectHint">Ctrl+щелчок — выбрать несколько</x:String>
+    <x:String x:Key="EmptyStateTitle">Файл не открыт</x:String>
+    <x:String x:Key="EmptyStateChooseFolders">Сначала выберите папку Stronghold (папку игры с «gm» и «gfx») и рабочую папку для экспортированных изображений.</x:String>
+    <x:String x:Key="EmptyStatePickFile">Выберите файл .gm1 в списке справа – или переключитесь на TGX для изображений .tgx.</x:String>
+    <x:String x:Key="WorkflowTitle">Как это работает</x:String>
+    <x:String x:Key="WorkflowStep1">Экспортируйте изображения (по отдельности или одним большим изображением) в рабочую папку.</x:String>
+    <x:String x:Key="WorkflowStep2">Отредактируйте PNG-файлы в любом графическом редакторе.</x:String>
+    <x:String x:Key="WorkflowStep3">Импортируйте изменённые изображения – в предпросмотре виден результат.</x:String>
+    <x:String x:Key="WorkflowStep4">Сохраните файл в свой мод UCP (панель инструментов, справа) – файлы игры не перезаписываются. Файл можно в любой момент снова удалить из мода.</x:String>
+    <x:String x:Key="GroupImages">Изображения</x:String>
+    <x:String x:Key="GroupBigImage">Большое изображение</x:String>
+    <x:String x:Key="GroupColorTables">Таблицы цветов</x:String>
+    <x:String x:Key="GroupTgx">Изображение TGX</x:String>
+    <x:String x:Key="GroupMod">Мод UCP</x:String>
+    <x:String x:Key="SaveToModTip">Сохраняет изменённый файл в ваш мод UCP. Файлы игры не перезаписываются.</x:String>
+    <x:String x:Key="RemoveFromModTip">Удаляет файл из вашего мода UCP, и игра снова использует исходный файл.</x:String>
+    <x:String x:Key="WidthLabel">Ширина:</x:String>
+    <x:String x:Key="PreviousColorTable">Предыдущая таблица цветов</x:String>
+    <x:String x:Key="NextColorTable">Следующая таблица цветов</x:String>
+    <x:String x:Key="FileTypeInfo">Сведения об этом типе данных</x:String>
+    <x:String x:Key="SelectImageHint">Щёлкните изображение, чтобы увидеть его заголовок.</x:String>
+    <x:String x:Key="XOffsetLabel">Смещение X (от −128 до 127):</x:String>
+    <x:String x:Key="YOffsetLabel">Смещение Y:</x:String>
+    <x:String x:Key="ApplyOffset">Применить смещение</x:String>
+    <x:String x:Key="ApplyOffsetTip">Записывает смещение в исполняемые файлы Stronghold и сохраняет его в Offsets.json в рабочей папке.</x:String>
+
+    <x:String x:Key="ChangeColorTableDialogBox_Text">Таблица цветов изменена. Сохранить изменения?</x:String>
+    <x:String x:Key="ChangeColorTableDialogBox_Button_Cancel">Отмена</x:String>
+    <x:String x:Key="ChangeColorTableDialogBox_Button_Save">Сохранить</x:String>
+    <x:String x:Key="ChangeColorTableDialogBox_Button_Close">Не сохранять</x:String>
     <x:String x:Key="NoFileSelected">Сначала выберите файл.</x:String>
     <x:String x:Key="NoWorkfolderSelected">Сначала выберите рабочую папку в настройках.</x:String>
     <x:String x:Key="NoStrongholdFolderSelected">Сначала выберите папку Stronghold в настройках.</x:String>
