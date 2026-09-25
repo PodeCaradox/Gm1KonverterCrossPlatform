@@ -81,3 +81,24 @@ Thanks to
 ![metalvoidzz](https://github.com/metalvoidzz) for his Tutorial how to decode GM1 Files
 
 ![StrongholdOverlordsMod](https://github.com/StrongholdOverlordsMod) Contributer for future updates.
+
+Development / Entwicklung
+---------
+
+The solution consists of three projects:
+
+| Project | Content |
+|---------|---------|
+| `Gm1KonverterCrossPlatform` | Avalonia user interface (views, view models) |
+| `Gm1KonverterCrossPlatform.Core` | File formats (.gm1, .tgx), codecs, import/export, settings – no UI dependencies |
+| `Gm1KonverterCrossPlatform.Tests` | xUnit tests, including differential tests against the previous encoder/decoder (`Legacy` folder) |
+
+Build and run the tests with the .NET 8 SDK:
+
+```
+dotnet build Gm1KonverterCrossPlatform.sln
+dotnet test Gm1KonverterCrossPlatform.Tests
+```
+
+The file format must stay byte compatible with Stronghold. Changes to the codecs in
+`Gm1KonverterCrossPlatform.Core/Codecs` have to keep the differential tests green.
