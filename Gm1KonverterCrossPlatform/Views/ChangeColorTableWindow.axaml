@@ -2,55 +2,66 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:controls="clr-namespace:ThemeEditor.Controls.ColorPicker;assembly=ThemeEditor.Controls.ColorPicker"
-        mc:Ignorable="d" d:DesignWidth="680" d:DesignHeight="380"
-        Width="680" Height="380" MinWidth="680" MinHeight="380"
+        mc:Ignorable="d" d:DesignWidth="680" d:DesignHeight="420"
+        Width="680" MinWidth="680" MinHeight="380"
+        SizeToContent="Height"
+        CanResize="False"
         x:Class="Gm1KonverterCrossPlatform.Views.ChangeColorTableWindow"
         Title="{DynamicResource ChangeColorPalette}"
         WindowStartupLocation="CenterOwner">
 
-  <StackPanel Orientation="Vertical">
-    <TextBlock HorizontalAlignment="Center" Text="{DynamicResource ClickontheColoryouwanttoChange}" Margin="10"/>
+  <Grid RowDefinitions="*,Auto">
+    <StackPanel Grid.Row="0" Margin="16,14,16,16" Spacing="12">
+      <TextBlock Classes="Hint" Text="{DynamicResource ClickontheColoryouwanttoChange}"/>
 
-    <Canvas x:Name="Cnv" Width="640" Height="160" Margin="10">
-      <Image Name="PaletteImage" Width="640" Height="160" Margin="0" Source="{Binding Bitmap}" PointerPressed="MousePressed"/>
-      <Rectangle Name="PaletteImageHighlight" Width="20" Height="20" Stroke="Red" StrokeThickness="2" IsVisible="{Binding ColorSelected}"/>
-    </Canvas>
+      <!-- The color table: 32 x 8 cells of 20 px. The code behind positions the highlight on the canvas. -->
+      <Border Classes="Swatch" HorizontalAlignment="Center">
+        <Canvas x:Name="Cnv" Width="640" Height="160">
+          <Image Name="PaletteImage" Width="640" Height="160" Margin="0" Cursor="Hand" Source="{Binding Bitmap}" PointerPressed="MousePressed"/>
+          <!-- Black and white stripes stay visible on every color. -->
+          <Rectangle Name="PaletteImageHighlight" Width="20" Height="20" StrokeThickness="3" IsVisible="{Binding ColorSelected}">
+            <Rectangle.Stroke>
+              <LinearGradientBrush StartPoint="0,0" EndPoint="6,6" SpreadMethod="Repeat">
+                <GradientStop Color="Black" Offset="0"/>
+                <GradientStop Color="Black" Offset="0.5"/>
+                <GradientStop Color="White" Offset="0.5"/>
+                <GradientStop Color="White" Offset="1"/>
+              </LinearGradientBrush>
+            </Rectangle.Stroke>
+          </Rectangle>
+        </Canvas>
+      </Border>
 
-    <StackPanel Orientation="Horizontal" IsVisible="{Binding ColorSelected}" Margin="10, 0">
-      <Grid RowDefinitions="*,*,*,*" ColumnDefinitions="*,*" Margin="10">
-        <TextBlock Text="{DynamicResource HEXColor}" VerticalAlignment="Center" Margin="3"/>
-        <TextBox Name="TextBoxColor" Text="{Binding ColorAsText}" Width="80" VerticalAlignment="Center" HorizontalAlignment="Right" Grid.Row="0" Grid.Column="1" Margin="3"/>
-        <TextBlock Text="{DynamicResource ChangeRedColor}" VerticalAlignment="Center" Grid.Row="1" Grid.Column="0" Margin="3"/>
-        <TextBox Text="{Binding Red}" Width="40" VerticalAlignment="Center" HorizontalAlignment="Right" Grid.Row="1" Grid.Column="1" Margin="3"/>
-        <TextBlock Text="{DynamicResource ChangeGreenColor}" VerticalAlignment="Center" Grid.Row="2" Grid.Column="0" Margin="3"/>
-        <TextBox Text="{Binding Green}" Width="40" VerticalAlignment="Center" HorizontalAlignment="Right" Grid.Row="2" Grid.Column="1" Margin="3"/>
-        <TextBlock Text="{DynamicResource ChangeBlueColor}" VerticalAlignment="Center" Grid.Row="3" Grid.Column="0" Margin="3"/>
-        <TextBox Text="{Binding Blue}" Width="40" VerticalAlignment="Center" HorizontalAlignment="Right" Grid.Row="3" Grid.Column="1" Margin="3"/>
+      <!-- Editor of the selected color -->
+      <Grid ColumnDefinitions="Auto,*,Auto" IsEnabled="{Binding ColorSelected}">
+        <!-- No live color swatch: binding a brush to ColorAsText throws (Brush.Parse) while the text is still empty. -->
+        <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="6" Margin="0,2,20,0" VerticalAlignment="Top">
+          <TextBlock Text="{DynamicResource HEXColor}" VerticalAlignment="Center"/>
+          <TextBox Name="TextBoxColor" Text="{Binding ColorAsText}" Width="80"/>
+        </StackPanel>
+
+        <Grid Grid.Column="1" ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto,Auto" VerticalAlignment="Top">
+          <TextBlock Grid.Row="0" Grid.Column="0" Text="{DynamicResource ChangeRedColor}" VerticalAlignment="Center" Margin="0,0,8,0"/>
+          <Slider Grid.Row="0" Grid.Column="1" Minimum="0" Maximum="248" TickFrequency="1" Value="{Binding Red}" VerticalAlignment="Center"/>
+          <TextBox Grid.Row="0" Grid.Column="2" Width="56" Margin="8,2,0,2" Text="{Binding Red}"/>
+
+          <TextBlock Grid.Row="1" Grid.Column="0" Text="{DynamicResource ChangeGreenColor}" VerticalAlignment="Center" Margin="0,0,8,0"/>
+          <Slider Grid.Row="1" Grid.Column="1" Minimum="0" Maximum="248" TickFrequency="1" Value="{Binding Green}" VerticalAlignment="Center"/>
+          <TextBox Grid.Row="1" Grid.Column="2" Width="56" Margin="8,2,0,2" Text="{Binding Green}"/>
+
+          <TextBlock Grid.Row="2" Grid.Column="0" Text="{DynamicResource ChangeBlueColor}" VerticalAlignment="Center" Margin="0,0,8,0"/>
+          <Slider Grid.Row="2" Grid.Column="1" Minimum="0" Maximum="248" TickFrequency="1" Value="{Binding Blue}" VerticalAlignment="Center"/>
+          <TextBox Grid.Row="2" Grid.Column="2" Width="56" Margin="8,2,0,2" Text="{Binding Blue}"/>
+        </Grid>
+
+        <Button Grid.Column="2" Margin="20,2,0,0" VerticalAlignment="Top" Click="Button_SaveColor" Content="{DynamicResource ChangeColor}"/>
       </Grid>
-
-      <StackPanel Orientation="Vertical" Margin="10">
-        <StackPanel Orientation="Horizontal" Margin="3">
-          <TextBlock Text="R" Width="10"/>
-          <Slider Minimum="0" Maximum="248" TickFrequency="1" Width="200" Value="{Binding Red}"/>
-          <TextBlock Text="{Binding Red}" Width="20"/>
-        </StackPanel>
-        <StackPanel Orientation="Horizontal" Margin="3">
-          <TextBlock Text="G" Width="10"/>
-          <Slider Minimum="0" Maximum="248" TickFrequency="1" Width="200" Value="{Binding Green}"/>
-          <TextBlock Text="{Binding Green}" Width="20"/>
-        </StackPanel>
-        <StackPanel Orientation="Horizontal" Margin="3">
-          <TextBlock Text="B" Width="10"/>
-          <Slider Minimum="0" Maximum="248" TickFrequency="1" Width="200" Value="{Binding Blue}"/>
-          <TextBlock Text="{Binding Blue}" Width="20"/>
-        </StackPanel>
-      </StackPanel>
-
-      <StackPanel Orientation="Vertical" Margin="10">
-        <Button Click="Button_SaveColor" Height="30" Width="100" VerticalAlignment="Center" Content="{DynamicResource ChangeColor}" Margin="3"/>
-        <Button Click="Button_SaveColorTable" Height="30" VerticalAlignment="Center" Width="100" Content="{DynamicResource Save}" Margin="3"/>
-      </StackPanel>
     </StackPanel>
-  </StackPanel>
+
+    <Border Grid.Row="1" Padding="16,10"
+            BorderBrush="{DynamicResource ThemeBorderLowBrush}"
+            BorderThickness="0,1,0,0">
+      <Button Classes="Dialog Accent" HorizontalAlignment="Right" Click="Button_SaveColorTable" Content="{DynamicResource Save}"/>
+    </Border>
+  </Grid>
 </Window>
