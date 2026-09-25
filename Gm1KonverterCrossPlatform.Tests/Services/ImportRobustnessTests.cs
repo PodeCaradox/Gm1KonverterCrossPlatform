@@ -118,6 +118,38 @@ namespace Gm1KonverterCrossPlatform.Tests.Services
             Assert.Throws<InvalidDataException>(() => BuildingOffsetStore.Parse("{\"0\":{\"X\":1e20,\"Y\":0}}"));
         }
 
+        [Theory]
+        [InlineData(20)]
+        [InlineData(510)]
+        public void ImportImages_BuildingImageWithInvalidWidth_ThrowsWorkflowExceptionAndKeepsDocument(int width)
+        {
+            var original = Gm1FileBuilder.Create(Gm1DataType.TilesObject, itemCount: 3).ToBytes();
+            var document = Open(original);
+            new Gm1Exporter(workFolder).ExportImages(document);
+            ImageFiles.SavePng(TestImages.Random(new Random(2), width, 40), workFolder.ImageFile(FileName, 1));
+
+            Assert.Throws<WorkflowException>(() => new Gm1Importer(workFolder).ImportImages(document));
+
+            Assert.Equal(original, document.ToBytes());
+            Assert.Equal(3, document.ItemCount);
+        }
+
+        [Fact]
+        public void ExportThenImport_EmptyImage_StaysEmpty()
+        {
+            var builder = Gm1FileBuilder.Create(Gm1DataType.Font, itemCount: 2);
+            builder.Images.Add(new Gm1Image(new TgxImageHeader(), Array.Empty<byte>()));
+            var original = builder.ToBytes();
+            var document = Open(original);
+
+            new Gm1Exporter(workFolder).ExportImages(document);
+            new Gm1Importer(workFolder).ImportImages(document);
+            new Gm1Exporter(workFolder).ExportBigImage(document, 100);
+            new Gm1Importer(workFolder).ImportBigImage(document);
+
+            Assert.Equal(original, document.ToBytes());
+        }
+
         private Gm1Document Open(byte[] bytes) => Gm1Document.Load(temp.WriteFile(Path.Combine("gm", FileName), bytes));
 
         private static void ChangeFirstPixel(string pngPath)

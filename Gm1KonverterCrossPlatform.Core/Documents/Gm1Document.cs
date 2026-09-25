@@ -232,6 +232,10 @@ namespace Gm1KonverterCrossPlatform.Core.Documents
 
             CheckedDimension(image.Width);
             CheckedDimension(image.Height + DataType.HeightPadding());
+            if (IsBuildingFile)
+            {
+                TileObjectCodec.EnsureValidBuildingSize(image);
+            }
         }
 
         private static ushort CheckedDimension(int value)

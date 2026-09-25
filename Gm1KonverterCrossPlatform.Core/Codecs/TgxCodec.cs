@@ -58,8 +58,8 @@ namespace Gm1KonverterCrossPlatform.Core.Codecs
                         position += length;
                         break;
 
-                    case TokenType.StreamOfPixels:
-                    case TokenType.RepeatingPixels:
+                    default:
+                        // Stream or repeating pixels. Unknown token types are read as one pixel like the original decoder did.
                         int colorCount = tokenType == TokenType.StreamOfPixels ? length : 1;
                         int repetitions = tokenType == TokenType.RepeatingPixels ? length : 1;
 
@@ -81,10 +81,6 @@ namespace Gm1KonverterCrossPlatform.Core.Codecs
                             }
                         }
 
-                        break;
-
-                    default:
-                        // Unknown token types carry no data.
                         break;
                 }
             }

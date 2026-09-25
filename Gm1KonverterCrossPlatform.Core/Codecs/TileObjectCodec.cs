@@ -101,6 +101,11 @@ namespace Gm1KonverterCrossPlatform.Core.Codecs
             }
         }
 
+        /// <summary>
+        /// Largest building that can be stored: the number of parts is stored in one byte (15 * 15 = 225).
+        /// </summary>
+        public const int MaxDiamondsPerRow = 15;
+
         /// <summary>Width of the rendered image of a building with <paramref name="diamondsPerRow"/> diamonds per row.</summary>
         public static int GetImageWidth(int diamondsPerRow) => diamondsPerRow * DiamondSpacing - 2;
 
@@ -164,11 +169,26 @@ namespace Gm1KonverterCrossPlatform.Core.Codecs
         /// Splits a building image into parts, the way Stronghold stores them.
         /// Produces the same parts as the original implementation (Utility.ConvertImgToTiles).
         /// </summary>
+        /// <exception cref="ArgumentOutOfRangeException">The image is too narrow or too wide for a building.</exception>
         public static List<Gm1Image> Encode(Argb1555Image building)
+        {
+            EnsureValidBuildingSize(building);
+            return new BuildingEncoder(building).Encode();
+        }
+
+        /// <exception cref="ArgumentOutOfRangeException">The image is too narrow or too wide for a building.</exception>
+        public static void EnsureValidBuildingSize(Argb1555Image building)
         {
             if (building == null) throw new ArgumentNullException(nameof(building));
 
-            return new BuildingEncoder(building).Encode();
+            int diamondsPerRow = GetDiamondCountPerRowFromImageWidth(building.Width);
+            if (diamondsPerRow < 1 || diamondsPerRow > MaxDiamondsPerRow)
+            {
+                throw new ArgumentOutOfRangeException(
+                    nameof(building),
+                    building.Width,
+                    $"A building image must be between {GetImageWidth(1)} and {GetImageWidth(MaxDiamondsPerRow)} pixels wide, but it is {building.Width} pixels wide.");
+            }
         }
 
         /// <summary>

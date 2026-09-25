@@ -105,6 +105,25 @@ namespace Gm1KonverterCrossPlatform.Tests.Codecs
             Assert.Equal(encodedAgain.Select(p => p.Data), TileObjectCodec.Encode(renderedAgain).Select(p => p.Data));
         }
 
+        [Theory]
+        [InlineData(29)]
+        [InlineData(510)]
+        public void Encode_InvalidBuildingWidth_Throws(int width)
+        {
+            Assert.Throws<ArgumentOutOfRangeException>(() => TileObjectCodec.Encode(new Argb1555Image(width, 40)));
+        }
+
+        [Fact]
+        public void Encode_LargestBuilding_HasPartCountThatFitsIntoOneByte()
+        {
+            var building = new Argb1555Image(TileObjectCodec.GetImageWidth(TileObjectCodec.MaxDiamondsPerRow), 300);
+
+            var parts = TileObjectCodec.Encode(building);
+
+            Assert.Equal(225, parts.Count);
+            Assert.All(parts, part => Assert.Equal(225, part.Header.SubParts));
+        }
+
         [Fact]
         public void GetGroups_SplitsAtFirstPart()
         {

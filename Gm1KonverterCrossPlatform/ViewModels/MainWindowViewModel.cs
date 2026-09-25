@@ -61,6 +61,7 @@ namespace Gm1KonverterCrossPlatform.ViewModels
         private string toggleButtonName = "GM1";
 
         private IBuildingOffsetTarget? offsetTarget;
+        private ImagePreviewItem? selectedItem;
         private int selectedOffsetImageIndex = -1;
         private bool offsetExpanderVisible;
         private sbyte xOffset;
@@ -421,26 +422,22 @@ namespace Gm1KonverterCrossPlatform.ViewModels
 
         public void ImportImages()
         {
-            new Gm1Importer(RequireWorkFolder()).ImportImages(RequireGm1());
-            RefreshPreview();
+            RunAndRefreshPreview(() => new Gm1Importer(RequireWorkFolder()).ImportImages(RequireGm1()));
         }
 
         public void ImportBigImage()
         {
-            new Gm1Importer(RequireWorkFolder()).ImportBigImage(RequireGm1());
-            RefreshPreview();
+            RunAndRefreshPreview(() => new Gm1Importer(RequireWorkFolder()).ImportBigImage(RequireGm1()));
         }
 
         public void ImportColorTables()
         {
-            new Gm1Importer(RequireWorkFolder()).ImportColorTables(RequireGm1());
-            RefreshPreview();
+            RunAndRefreshPreview(() => new Gm1Importer(RequireWorkFolder()).ImportColorTables(RequireGm1()));
         }
 
         public void ImportOriginalAnimation()
         {
-            new Gm1Importer(RequireWorkFolder()).ImportOriginalAnimation(RequireGm1());
-            RefreshPreview();
+            RunAndRefreshPreview(() => new Gm1Importer(RequireWorkFolder()).ImportOriginalAnimation(RequireGm1()));
         }
 
         /// <summary>Shows the next (+1) or previous (-1) color table. Imported images are kept.</summary>
@@ -527,8 +524,7 @@ namespace Gm1KonverterCrossPlatform.ViewModels
 
         public void ImportTgxImage()
         {
-            new TgxImageTransfer(RequireWorkFolder()).Import(RequireTgx());
-            RefreshPreview();
+            RunAndRefreshPreview(() => new TgxImageTransfer(RequireWorkFolder()).Import(RequireTgx()));
         }
 
         public void InstallTgxFile()
@@ -552,6 +548,7 @@ namespace Gm1KonverterCrossPlatform.ViewModels
 
         public void SelectImage(ImagePreviewItem? item)
         {
+            selectedItem = item;
             SelectedImageHeader = item?.Header;
 
             selectedOffsetImageIndex = -1;
@@ -583,7 +580,7 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             var patcher = RequireOffsetPatcher();
             patcher.Write(selectedOffsetImageIndex, offset);
             patcher.Save();
-            offsetTarget = patcher;
+            offsetTarget = IsCastleFileOpen ? patcher : null;
 
             var workFolder = TryGetWorkFolder();
             if (workFolder != null)
@@ -607,7 +604,12 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             }
 
             patcher.Save();
-            offsetTarget = patcher;
+            if (IsCastleFileOpen)
+            {
+                // Show the applied values instead of the ones read before.
+                offsetTarget = patcher;
+                SelectImage(selectedItem);
+            }
 
             var workFolder = TryGetWorkFolder();
             if (workFolder != null && !PathsEqual(path, workFolder.OffsetsFile))
@@ -629,6 +631,8 @@ namespace Gm1KonverterCrossPlatform.ViewModels
         public void OpenWorkFolderEntry(string name) => FolderLauncher.Open(Path.Combine(RequireWorkFolder().Root, name));
 
         public void OpenLogFolder() => FolderLauncher.Open(Logger.Directory);
+
+        private bool IsCastleFileOpen => gm1Document != null && CastleOffsetAddresses.AppliesTo(gm1Document.FileName);
 
         private void RefreshPreview()
         {
@@ -657,6 +661,19 @@ namespace Gm1KonverterCrossPlatform.ViewModels
 
             TGXImages = items;
             SelectImage(null);
+        }
+
+        /// <summary>The preview always shows what would be written, even if an import fails.</summary>
+        private void RunAndRefreshPreview(Action change)
+        {
+            try
+            {
+                change();
+            }
+            finally
+            {
+                RefreshPreview();
+            }
         }
 
         private void CloseFiles()

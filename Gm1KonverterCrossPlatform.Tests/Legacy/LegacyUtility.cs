@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 
 #pragma warning disable
+#nullable disable
 namespace Gm1KonverterCrossPlatform.Tests.Legacy
 {
     internal static class GM1FileHeader

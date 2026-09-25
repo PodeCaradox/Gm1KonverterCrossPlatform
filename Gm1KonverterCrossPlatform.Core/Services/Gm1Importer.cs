@@ -35,9 +35,15 @@ namespace Gm1KonverterCrossPlatform.Core.Services
             for (int i = 0; i < itemCount; i++)
             {
                 string path = workFolder.ImageFile(document.FileName, i + 1);
-                if (File.Exists(path))
+                if (!File.Exists(path))
                 {
-                    replacements.Add((i, RemoveLegacyPadding(document, i, LoadPng(path))));
+                    continue;
+                }
+
+                var image = LoadPng(path);
+                if (!IsExportOfEmptyImage(document, i, image))
+                {
+                    replacements.Add((i, RemoveLegacyPadding(document, i, image)));
                 }
             }
 
@@ -74,8 +80,12 @@ namespace Gm1KonverterCrossPlatform.Core.Services
 
                 for (int i = 0; i < layout.Cells.Count; i++)
                 {
+                    // Empty images have no area in the big image, there is nothing to import.
                     var cell = layout.Cells[i];
-                    replacements.Add((i, ImageFiles.ToArgb1555(sheet, cell.X, cell.Y, cell.Width, cell.Height)));
+                    if (cell.Width > 0 && cell.Height > 0)
+                    {
+                        replacements.Add((i, ImageFiles.ToArgb1555(sheet, cell.X, cell.Y, cell.Width, cell.Height)));
+                    }
                 }
             }
 
@@ -221,6 +231,20 @@ namespace Gm1KonverterCrossPlatform.Core.Services
             {
                 throw new WorkflowException(e.Message, e);
             }
+        }
+
+        /// <summary>
+        /// PNG files cannot be empty, so images without pixels are exported as one transparent pixel.
+        /// </summary>
+        private static bool IsExportOfEmptyImage(Gm1Document document, int itemIndex, Argb1555Image image)
+        {
+            if (document.IsBuildingFile || image.Width != 1 || image.Height != 1 || image.Pixels[0] != Argb1555.TransparentMarker)
+            {
+                return false;
+            }
+
+            var header = document.GetFirstImageOfItem(itemIndex).Header;
+            return header.Width == 0 || header.Height <= document.DataType.HeightPadding();
         }
 
         /// <summary>

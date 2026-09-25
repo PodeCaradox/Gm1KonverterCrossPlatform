@@ -130,6 +130,17 @@ namespace Gm1KonverterCrossPlatform.Tests.Codecs
         }
 
         [Fact]
+        public void Decode_UnknownTokenType_ReadsOnePixelLikeOriginalDecoder()
+        {
+            byte[] data = { 0b011_00101, 0x1F, 0x80, 0b000_00000, 0xE0, 0x83 };
+
+            var expected = LegacyDecoders.GM1ByteArrayToImg(data, 3, 1, null);
+            var actual = TgxCodec.Decode(data, 3, 1).Pixels.Select(Argb1555.ToBgra8888).ToArray();
+
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
         public void Decode_StopsAtTruncatedColor()
         {
             byte[] data = { 0b000_00011, 0x1F, 0x80, 0xE0 };
