@@ -129,7 +129,7 @@ namespace Gm1KonverterCrossPlatform.Core.Ucp
         }
 
         /// <summary>The generated definition.yml.</summary>
-        public string CreateDefinition() => ExtensionFiles.CreateDefinition(Info, Dependencies);
+        public string CreateDefinition() => ExtensionFiles.CreateDefinition(Info, "plugin", "Textures created with the Gm1 Konverter", Dependencies);
 
         /// <summary>The generated init.lua, which registers every replacement with the "files" module.</summary>
         public string CreateInitScript()

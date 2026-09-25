@@ -14,13 +14,16 @@ namespace Gm1KonverterCrossPlatform.Core.Ucp
         private static readonly UTF8Encoding Utf8WithoutBom = new UTF8Encoding(false);
 
         /// <summary>The definition.yml read by UCP3 and its GUI.</summary>
-        public static string CreateDefinition(UcpExtensionInfo info, IEnumerable<KeyValuePair<string, string>> dependencies)
+        /// <param name="type">"plugin" or "module", must match the folder the extension is in.</param>
+        public static string CreateDefinition(UcpExtensionInfo info, string type, string description, IEnumerable<KeyValuePair<string, string>> dependencies)
         {
             var yaml = new StringBuilder();
             yaml.Append("name: ").Append(info.Name).Append('\n');
             yaml.Append("display-name: ").Append(ScriptText.YamlString(info.DisplayName)).Append('\n');
             yaml.Append("author: ").Append(ScriptText.YamlString(info.Author)).Append('\n');
             yaml.Append("version: ").Append(info.Version).Append('\n');
+            yaml.Append("type: ").Append(type).Append('\n');
+            yaml.Append("description: ").Append(ScriptText.YamlString(description)).Append('\n');
             yaml.Append("dependencies:\n");
             foreach (var dependency in dependencies)
             {

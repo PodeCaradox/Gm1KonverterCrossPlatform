@@ -72,6 +72,8 @@ namespace Gm1KonverterCrossPlatform.Tests.Ucp
                 "display-name: \"My Castle\"\n" +
                 "author: \"Pode\"\n" +
                 "version: 1.0.0\n" +
+                "type: plugin\n" +
+                "description: \"Textures created with the Gm1 Konverter\"\n" +
                 "dependencies:\n" +
                 "  framework: ^3.0.0\n" +
                 "  frontend: ^1.0.0\n" +

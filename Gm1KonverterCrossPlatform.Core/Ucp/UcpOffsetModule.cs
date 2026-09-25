@@ -142,7 +142,7 @@ namespace Gm1KonverterCrossPlatform.Core.Ucp
             ExtensionFiles.Write(Folder, CreateDefinition(), CreateInitScript(offsets), CreateDescription(offsets));
         }
 
-        public string CreateDefinition() => ExtensionFiles.CreateDefinition(Info, Dependencies);
+        public string CreateDefinition() => ExtensionFiles.CreateDefinition(Info, "module", "Castle building offsets set with the Gm1 Konverter", Dependencies);
 
         /// <summary>The generated init.lua that writes <paramref name="offsets"/> into the running game.</summary>
         public string CreateInitScript(IReadOnlyDictionary<int, BuildingOffset> offsets)

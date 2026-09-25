@@ -194,6 +194,8 @@ namespace Gm1KonverterCrossPlatform.Tests.Ucp
                 "display-name: \"My Castle (Offsets)\"\n" +
                 "author: \"Pode\"\n" +
                 "version: 1.0.0\n" +
+                "type: module\n" +
+                "description: \"Castle building offsets set with the Gm1 Konverter\"\n" +
                 "dependencies:\n" +
                 "  framework: ^3.0.0\n" +
                 "meta:\n" +
