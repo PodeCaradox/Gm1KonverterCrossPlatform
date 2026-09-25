@@ -1,16 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFrameworks>net6.0</TargetFrameworks>
-    <RuntimeIdentifiers>win10-x64;osx;linux-x64</RuntimeIdentifiers>
+    <TargetFramework>net8.0</TargetFramework>
+    <RuntimeIdentifiers>win10-x64;linux-x64;osx-x64</RuntimeIdentifiers>
+    <!-- Avalonia.Angle.Windows.Natives ships its GPU library for win7-x64 only. Publish for win10-x64
+         (not win-x64) and keep the RID graph, otherwise .NET 8 leaves av_libglesv2.dll out. -->
+    <UseRidGraph>true</UseRidGraph>
     <Nullable>enable</Nullable>
-    <NoWarn>$(NoWarn);NETSDK1138</NoWarn>
     <ApplicationIcon>Assets\avalonia-logo.ico</ApplicationIcon>
     <ApplicationManifest>Properties\PublishProfiles\app.manifest</ApplicationManifest>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net461|AnyCPU'">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Compile Update="**\*.xaml.cs">
@@ -25,10 +23,7 @@
     <PackageReference Include="Avalonia" Version="0.10.14" />
     <PackageReference Include="Avalonia.Desktop" Version="0.10.14" />
     <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.14" />
-    <PackageReference Include="Costura.Fody" Version="5.8.0-alpha0098">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
+    <PackageReference Include="Costura.Fody" Version="5.8.0-alpha0098" PrivateAssets="all" />
     <PackageReference Include="Fody" Version="6.6.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

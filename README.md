@@ -112,5 +112,8 @@ dotnet build Gm1KonverterCrossPlatform.sln
 dotnet test Gm1KonverterCrossPlatform.Tests
 ```
 
+All projects target .NET 8. Publish the Windows build for `win10-x64` (as the publish profile does);
+with `win-x64` the ANGLE library `av_libglesv2.dll` is missing and Avalonia falls back to software rendering.
+
 The file format must stay byte compatible with Stronghold. Changes to the codecs in
 `Gm1KonverterCrossPlatform.Core/Codecs` have to keep the differential tests green.
