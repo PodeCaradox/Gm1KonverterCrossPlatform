@@ -65,7 +65,7 @@ namespace Gm1KonverterCrossPlatform.Tests.Files
             var file = Gm1File.Read(original);
 
             Assert.Empty(file.Images);
-            Assert.Equal(original.Length, Gm1FileBuilder.TablesStart);
+            Assert.Equal(Gm1FileBuilder.TablesStart, original.Length);
             Assert.Equal(original, file.ToBytes());
         }
 
@@ -245,7 +245,7 @@ namespace Gm1KonverterCrossPlatform.Tests.Files
         [InlineData(uint.MaxValue)]
         public void Read_ImageCountTooBigForFile_ThrowsInvalidDataException(uint imageCount)
         {
-            // 5 images: the tables of a 6th image would overlap the data, but not reach beyond the end of the file
+            // the file ends 10 bytes after the tables of 5 images, so the tables of 6 or more images do not fit
             var bytes = Gm1FileBuilder.Create(Gm1DataType.Interface, itemCount: 5).ToBytes().Take(Gm1FileBuilder.DataStart(5) + 10).ToArray();
             Gm1FileBuilder.WriteUInt32(bytes, Gm1FileBuilder.ImageCountField * sizeof(uint), imageCount);
 
