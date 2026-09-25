@@ -115,17 +115,28 @@ version of this program overwrote the game file). Name, author and version are s
 a new version moves the existing plugin, a new name starts a new plugin. Files already in the plugin are
 opened from there, so you keep editing your modded version.
 
-Building offsets ("Change Offsets" for `anim_castle.gm1`, "Import Offsets From File") are no longer patched
-into the executables either. They are written to the UCP3 module `ucp/modules/<Name>-Offsets-<Version>`:
-its `init.lua` finds every offset with a byte pattern (AOB) taken from your `Stronghold Crusader.exe` /
-`Stronghold_Crusader_Extreme.exe` and writes the new value when the game starts (`core.scanForAOB`,
-`core.writeCodeBytes`). The offset bytes are wildcards in the pattern, so executables patched by older
-versions are found as well. Modules can change the game's memory, therefore UCP3 only loads this unsigned
-module when the game is started from the UCP3 GUI with the launch option "Disable Security".
+Building offsets of the castle (`anim_castle.gm1`) are no longer patched into the executables either. They
+live in the UCP3 module `ucp/modules/<Name>-Offsets-<Version>`, which is written when `anim_castle.gm1` is
+saved into the UCP mod and whenever "Change Offsets" / "Import Offsets From File" is used:
 
-Die Gebäude-Offsets werden ebenfalls nicht mehr in die Exe geschrieben, sondern in das UCP3-Modul
-`ucp/modules/<Name>-Offsets-<Version>`. Da das Modul nicht signiert ist, lädt UCP3 es nur, wenn das Spiel
-aus der UCP3-Oberfläche mit der Startoption „Sicherheit deaktivieren“ gestartet wird.
+- Every offset can be changed in the UCP3 GUI (options of the module, `options.yml`). The values set in this
+  program are the start values. An offset is only written if it was set here or changed in the UCP3 GUI; all
+  other offsets keep the value of the game.
+- It works for Stronghold Crusader and Crusader Extreme. The offsets of Crusader are 912 bytes before those of
+  Extreme and the surrounding code contains different memory addresses, so the module uses byte patterns
+  (AOB) that fit both games (`KnownCastleOffsets`, created from both executables with the offset values and the
+  version-specific bytes as wildcards). The executables in your Stronghold folder are optional; if they are a
+  different version, an extra pattern is created from them.
+- The `init.lua` finds each offset with `core.scanForAOB` and writes it with `core.writeCodeBytes` when the game
+  starts. Modules can change the game's memory, therefore UCP3 only loads this unsigned module when the game is
+  started from the UCP3 GUI with the launch option "Disable Security".
+
+Die Gebäude-Offsets der Burg werden nicht mehr in die Exe geschrieben, sondern stehen im UCP3-Modul
+`ucp/modules/<Name>-Offsets-<Version>`. Es wird beim Speichern von `anim_castle.gm1` in die UCP-Mod angelegt.
+Jeder Offset lässt sich in der UCP3-Oberfläche in den Optionen des Moduls ändern; das Tool liefert nur die
+Startwerte. Geschrieben werden nur Werte, die hier gesetzt oder in der UCP3-Oberfläche geändert wurden. Das Modul
+funktioniert für Crusader und Extreme (Crusader liegt 912 Bytes früher, die Muster passen auf beide Versionen).
+Da es nicht signiert ist, lädt UCP3 es nur mit der Startoption „Sicherheit deaktivieren“.
 
 „Datei → GM1/Tgx im UCP-Mod speichern“ überschreibt die Spieldateien nicht mehr, sondern speichert die
 geänderte Datei in einem UCP3-Plugin unter `ucp/plugins/<Name>-<Version>` im Stronghold-Ordner. Das Plugin

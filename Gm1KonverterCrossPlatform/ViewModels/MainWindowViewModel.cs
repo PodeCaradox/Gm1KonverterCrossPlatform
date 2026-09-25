@@ -511,17 +511,43 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             RefreshPreview();
         }
 
-        /// <summary>Saves the modified file in the UCP3 plugin; the game file stays unchanged.</summary>
+        /// <summary>
+        /// Saves the modified file in the UCP3 plugin; the game file stays unchanged. For anim_castle.gm1 the offsets
+        /// module is written as well, so the building offsets can be adjusted in the UCP3 GUI.
+        /// </summary>
         /// <returns>A message for the user.</returns>
         public string InstallGm1File()
         {
             var document = RequireGm1();
-            var modInstaller = CreateModInstaller(RequireStrongholdFolder());
+            var strongholdFolder = RequireStrongholdFolder();
+            var modInstaller = CreateModInstaller(strongholdFolder);
             modInstaller.Install(new GameFile(GameFolder.Gm, document.FileName), document.ToBytes());
+            string message = ModSavedMessage(modInstaller);
+
+            if (CastleOffsetAddresses.AppliesTo(document.FileName))
+            {
+                message += Environment.NewLine + Environment.NewLine + CreateOffsetModuleForCastle(strongholdFolder);
+            }
 
             ReopenGm1File(document);
             LoadWorkfolderFiles();
-            return ModSavedMessage(modInstaller);
+            return message;
+        }
+
+        /// <summary>Writes the offsets module next to the castle textures; a failure does not stop saving the textures.</summary>
+        private string CreateOffsetModuleForCastle(StrongholdFolder strongholdFolder)
+        {
+            try
+            {
+                var module = OpenOffsetModule(strongholdFolder);
+                module.Create();
+                return string.Format(Localization.GetText("UcpOffsetsWithCastle"), module.Info.DisplayName);
+            }
+            catch (Exception e) when (e is IOException || e is UnauthorizedAccessException || e is InvalidDataException)
+            {
+                Logger.LogException(e);
+                return e.Message;
+            }
         }
 
         /// <summary>Removes the file from the UCP3 plugin, so the game uses the original again.</summary>
@@ -823,7 +849,7 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             }
         }
 
-        /// <summary>The UCP3 offsets module, or null if the Stronghold folder has no executable.</summary>
+        /// <summary>The UCP3 offsets module, or null if no Stronghold folder is set.</summary>
         private UcpOffsetModule? LoadOffsetTarget()
         {
             var folder = TryGetStrongholdFolder();
@@ -834,8 +860,7 @@ namespace Gm1KonverterCrossPlatform.ViewModels
 
             try
             {
-                var module = OpenOffsetModule(folder);
-                return module.HasExecutables ? module : null;
+                return OpenOffsetModule(folder);
             }
             catch (Exception e) when (e is IOException || e is UnauthorizedAccessException)
             {
@@ -844,17 +869,8 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             }
         }
 
-        private UcpOffsetModule RequireOffsetModule()
-        {
-            var folder = RequireStrongholdFolder();
-            var module = OpenOffsetModule(folder);
-            if (!module.HasExecutables)
-            {
-                throw new WorkflowException($"\"{StrongholdFolder.CrusaderExecutable}\" / \"{StrongholdFolder.ExtremeExecutable}\": {folder.Root}");
-            }
-
-            return module;
-        }
+        /// <summary>The executables are optional: the offsets of both games are known (<see cref="KnownCastleOffsets"/>).</summary>
+        private UcpOffsetModule RequireOffsetModule() => OpenOffsetModule(RequireStrongholdFolder());
 
         private UcpOffsetModule OpenOffsetModule(StrongholdFolder folder)
         {

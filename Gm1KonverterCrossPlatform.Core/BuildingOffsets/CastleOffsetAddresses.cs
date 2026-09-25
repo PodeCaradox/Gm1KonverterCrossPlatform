@@ -35,11 +35,29 @@ namespace Gm1KonverterCrossPlatform.Core.BuildingOffsets
         public static IReadOnlyList<int> ImageIndices { get; } = AddressesByImageIndex.Keys.OrderBy(index => index).ToList();
 
         /// <summary>
+        /// Every offset address with the images that use it, sorted by the first image. Some images share
+        /// one offset (121 and 122, 123 and 125).
+        /// </summary>
+        public static IReadOnlyList<OffsetGroup> Groups { get; } = AddressesByImageIndex
+            .GroupBy(entry => entry.Value, entry => entry.Key)
+            .Select(group => new OffsetGroup(group.Key, group.OrderBy(index => index).ToList()))
+            .OrderBy(group => group.ImageIndices[0])
+            .ToList();
+
+        /// <summary>
         /// Every byte of every offset (Extreme addresses). These bytes differ between installations, e.g.
         /// after older versions of this program patched the executable.
         /// </summary>
         public static IReadOnlyCollection<int> VariableAddresses { get; } =
             new HashSet<int>(AddressesByImageIndex.Values.SelectMany(address => address.Bytes));
+
+        /// <summary>The group of <paramref name="address"/>.</summary>
+        /// <exception cref="ArgumentOutOfRangeException">The address is not a castle offset.</exception>
+        public static OffsetGroup GroupOf(OffsetAddress address)
+        {
+            return Groups.FirstOrDefault(group => group.Address.Equals(address))
+                ?? throw new ArgumentOutOfRangeException(nameof(address), "This is not a castle offset address.");
+        }
 
         /// <summary>Only images of this file have offsets in the executable.</summary>
         public static bool AppliesTo(string gm1FileName)
@@ -112,6 +130,24 @@ namespace Gm1KonverterCrossPlatform.Core.BuildingOffsets
         }
 
         private static sbyte ClampToSByte(int value) => (sbyte)Math.Max(sbyte.MinValue, Math.Min(sbyte.MaxValue, value));
+    }
+
+    /// <summary>An offset address and the images drawn with it.</summary>
+    public sealed class OffsetGroup
+    {
+        public OffsetGroup(OffsetAddress address, IReadOnlyList<int> imageIndices)
+        {
+            Address = address;
+            ImageIndices = imageIndices;
+        }
+
+        public OffsetAddress Address { get; }
+
+        /// <summary>Sorted, at least one.</summary>
+        public IReadOnlyList<int> ImageIndices { get; }
+
+        /// <summary>A stable identifier, e.g. "image121".</summary>
+        public string Name => "image" + ImageIndices[0];
     }
 
     /// <summary>Bytes to write at an address.</summary>

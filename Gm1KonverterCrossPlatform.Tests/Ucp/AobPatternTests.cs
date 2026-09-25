@@ -31,6 +31,33 @@ namespace Gm1KonverterCrossPlatform.Tests.Ucp
         }
 
         [Fact]
+        public void Parse_ReadsUcpFormat()
+        {
+            var pattern = AobPattern.Parse("8B 4C ? ? 0a");
+
+            Assert.Equal("8B 4C ? ? 0A", pattern.ToString());
+            Assert.Equal(new[] { 1 }, pattern.FindAll(new byte[] { 0, 0x8B, 0x4C, 1, 2, 0x0A }, 5));
+        }
+
+        [Theory]
+        [InlineData("8B XX")]
+        [InlineData("8B 4")]
+        [InlineData("8B ?? 4C")]
+        public void Parse_InvalidToken_ThrowsFormatException(string text)
+        {
+            Assert.Throws<FormatException>(() => AobPattern.Parse(text));
+        }
+
+        [Theory]
+        [InlineData("? 8B")]
+        [InlineData("8B ?")]
+        [InlineData("")]
+        public void Parse_WildcardAtEndOrEmpty_ThrowsArgumentException(string text)
+        {
+            Assert.Throws<ArgumentException>(() => AobPattern.Parse(text));
+        }
+
+        [Fact]
         public void FindAll_RespectsWildcards()
         {
             var pattern = AobPattern.Create(new byte[] { 0xAA, 0, 0xBB }, i => i == 1, out _)!;

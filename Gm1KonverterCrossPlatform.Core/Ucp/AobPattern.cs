@@ -26,6 +26,22 @@ namespace Gm1KonverterCrossPlatform.Core.Ucp
 
         public int Length => values.Length;
 
+        /// <summary>Parses a pattern like <c>"8B 4C ? ? 51"</c>.</summary>
+        /// <exception cref="FormatException">A token is neither "?" nor a hex byte.</exception>
+        public static AobPattern Parse(string text)
+        {
+            if (text == null) throw new ArgumentNullException(nameof(text));
+
+            var values = text.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(token => token == "?"
+                    ? Wildcard
+                    : token.Length == 2 && byte.TryParse(token, System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture, out byte value)
+                        ? value
+                        : throw new FormatException($"\"{token}\" is not a byte of an AOB pattern."))
+                .ToArray();
+            return new AobPattern(values);
+        }
+
         /// <summary>
         /// Creates a pattern from <paramref name="bytes"/>; bytes for which <paramref name="isWildcard"/> returns
         /// true become "?". Leading and trailing wildcards are removed, <paramref name="trimmedStart"/> is the
