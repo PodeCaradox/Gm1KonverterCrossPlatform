@@ -88,16 +88,24 @@ namespace Gm1KonverterCrossPlatform.Core.BuildingOffsets
             Save();
         }
 
-        private void Save()
+        /// <summary>The JSON of <paramref name="offsets"/> in the format of Offsets.json.</summary>
+        public static string ToJson(IEnumerable<KeyValuePair<int, BuildingOffset>> offsets)
         {
+            if (offsets == null) throw new ArgumentNullException(nameof(offsets));
+
             var entries = new SortedDictionary<int, OffsetEntry>();
             foreach (var entry in offsets)
             {
                 entries[entry.Key] = new OffsetEntry { X = entry.Value.X, Y = entry.Value.Y };
             }
 
+            return JsonConvert.SerializeObject(entries);
+        }
+
+        private void Save()
+        {
             ImageFiles.EnsureDirectoryOf(path);
-            File.WriteAllText(path, JsonConvert.SerializeObject(entries));
+            File.WriteAllText(path, ToJson(offsets));
         }
 
         /// <summary>Older versions wrote Avalonia points (<c>{"X":1.0,"Y":2.0,"IsDefault":false}</c>).</summary>

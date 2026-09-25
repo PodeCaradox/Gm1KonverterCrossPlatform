@@ -36,11 +36,34 @@ namespace Gm1KonverterCrossPlatform.Core.Ucp
 
         public string ModuleFolder(UcpExtensionInfo info) => Path.Combine(ModulesFolder, info.FolderName);
 
+        /// <summary>A module packed as zip, the form the UCP3 GUI lists (it shows module folders only for developer builds).</summary>
+        public string ModuleZip(UcpExtensionInfo info) => Path.Combine(ModulesFolder, info.FolderName + ".zip");
+
         /// <summary>Folders of the plugin <paramref name="name"/> in any version.</summary>
         public IReadOnlyList<string> FindPluginFolders(string name) => FindExtensionFolders(PluginsFolder, name);
 
         /// <summary>Folders of the module <paramref name="name"/> in any version.</summary>
         public IReadOnlyList<string> FindModuleFolders(string name) => FindExtensionFolders(ModulesFolder, name);
+
+        /// <summary>Zip files of the module <paramref name="name"/> in any version.</summary>
+        public IReadOnlyList<string> FindModuleZips(string name)
+        {
+            if (!Directory.Exists(ModulesFolder))
+            {
+                return Array.Empty<string>();
+            }
+
+            string prefix = name + "-";
+            return Directory.EnumerateFiles(ModulesFolder, "*.zip")
+                .Where(file =>
+                {
+                    string baseName = Path.GetFileNameWithoutExtension(file);
+                    return baseName.StartsWith(prefix, StringComparison.OrdinalIgnoreCase)
+                        && UcpExtensionInfo.IsValidVersion(baseName.Substring(prefix.Length));
+                })
+                .OrderBy(file => file, StringComparer.OrdinalIgnoreCase)
+                .ToList();
+        }
 
         private static IReadOnlyList<string> FindExtensionFolders(string parent, string name)
         {

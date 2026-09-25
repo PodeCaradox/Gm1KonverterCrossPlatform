@@ -116,8 +116,9 @@ a new version moves the existing plugin, a new name starts a new plugin. Files a
 opened from there, so you keep editing your modded version.
 
 Building offsets of the castle (`anim_castle.gm1`) are no longer patched into the executables either. They
-live in the UCP3 module `ucp/modules/<Name>-Offsets-<Version>`, which is written when `anim_castle.gm1` is
-saved into the UCP mod and whenever "Change Offsets" / "Import Offsets From File" is used:
+live in the UCP3 module `ucp/modules/<Name>-Offsets-<Version>.zip` (a zip, because the UCP3 GUI of a normal UCP3
+installation only lists modules packed as zip), which is written when `anim_castle.gm1` is saved into the UCP mod
+and whenever "Change Offsets" / "Import Offsets From File" is used:
 
 - Every offset can be changed in the UCP3 GUI (options of the module, `options.yml`). The values set in this
   program are the start values. An offset is only written if it was set here or changed in the UCP3 GUI; all
@@ -132,7 +133,8 @@ saved into the UCP mod and whenever "Change Offsets" / "Import Offsets From File
   started from the UCP3 GUI with the launch option "Disable Security".
 
 Die Gebäude-Offsets der Burg werden nicht mehr in die Exe geschrieben, sondern stehen im UCP3-Modul
-`ucp/modules/<Name>-Offsets-<Version>`. Es wird beim Speichern von `anim_castle.gm1` in die UCP-Mod angelegt.
+`ucp/modules/<Name>-Offsets-<Version>.zip` (als Zip, weil die UCP3-Oberfläche Modul-Ordner nur bei
+Entwickler-Versionen anzeigt). Es wird beim Speichern von `anim_castle.gm1` in die UCP-Mod angelegt.
 Jeder Offset lässt sich in der UCP3-Oberfläche in den Optionen des Moduls ändern; das Tool liefert nur die
 Startwerte. Geschrieben werden nur Werte, die hier gesetzt oder in der UCP3-Oberfläche geändert wurden. Das Modul
 funktioniert für Crusader und Extreme (Crusader liegt 912 Bytes früher, die Muster passen auf beide Versionen).

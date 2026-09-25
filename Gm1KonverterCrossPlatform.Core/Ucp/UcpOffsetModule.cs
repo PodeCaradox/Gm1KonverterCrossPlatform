@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using Gm1KonverterCrossPlatform.Core.BuildingOffsets;
@@ -51,27 +52,28 @@ namespace Gm1KonverterCrossPlatform.Core.Ucp
         private readonly Dictionary<(StrongholdExecutable Executable, OffsetAddress Address), int> shifts =
             new Dictionary<(StrongholdExecutable Executable, OffsetAddress Address), int>();
 
-        private UcpOffsetModule(UcpExtensionInfo info, string folder, IReadOnlyList<StrongholdExecutable> executables)
+        private UcpOffsetModule(UcpExtensionInfo info, string zipPath, IReadOnlyList<StrongholdExecutable> executables)
         {
             Info = info;
-            Folder = folder;
+            ZipPath = zipPath;
             this.executables = executables;
         }
 
         public UcpExtensionInfo Info { get; }
 
-        /// <summary>The module folder <c>ucp/modules/&lt;name&gt;-&lt;version&gt;</c>.</summary>
-        public string Folder { get; }
+        /// <summary>
+        /// The module file <c>ucp/modules/&lt;name&gt;-&lt;version&gt;.zip</c>. The UCP3 GUI of a normal UCP3 installation
+        /// only lists modules packed as zip.
+        /// </summary>
+        public string ZipPath { get; }
 
         /// <summary>True once the module was written.</summary>
-        public bool Exists => Directory.Exists(Folder);
+        public bool Exists => File.Exists(ZipPath);
 
         public bool HasExecutables => executables.Count > 0;
 
         /// <summary>The offsets set with this program (start values in the UCP3 GUI).</summary>
-        public IReadOnlyDictionary<int, BuildingOffset> Offsets => BuildingOffsetStore.Load(OffsetsFile).Offsets;
-
-        private string OffsetsFile => Path.Combine(Folder, OffsetsFileName);
+        public IReadOnlyDictionary<int, BuildingOffset> Offsets => ReadOffsets(ZipPath);
 
         /// <summary>The module that belongs to the texture mod <paramref name="textureMod"/>.</summary>
         public static UcpExtensionInfo InfoFor(UcpExtensionInfo textureMod)
@@ -81,8 +83,9 @@ namespace Gm1KonverterCrossPlatform.Core.Ucp
         }
 
         /// <summary>
-        /// Opens the module <paramref name="info"/>. Like <see cref="UcpTexturePlugin.Open"/>, the folder of another
-        /// version is renamed to the new version.
+        /// Opens the module <paramref name="info"/>. If it only exists in another version, or as a folder written by an
+        /// earlier version of this program, its offsets are taken over and the old module is removed, so UCP3 never
+        /// sees two modules with the same name.
         /// </summary>
         /// <param name="executables">The executables of the Stronghold folder, see <see cref="StrongholdExecutable.LoadAll"/>.</param>
         public static UcpOffsetModule Open(UcpFolder ucp, UcpExtensionInfo info, IReadOnlyList<StrongholdExecutable> executables)
@@ -91,10 +94,10 @@ namespace Gm1KonverterCrossPlatform.Core.Ucp
             if (info == null) throw new ArgumentNullException(nameof(info));
             if (executables == null) throw new ArgumentNullException(nameof(executables));
 
-            var module = new UcpOffsetModule(info, ucp.ModuleFolder(info), executables);
-            if (ExtensionFiles.MoveOtherVersion(module.Folder, ucp.FindModuleFolders(info.Name)))
+            var module = new UcpOffsetModule(info, ucp.ModuleZip(info), executables);
+            if (!module.Exists)
             {
-                module.UpdateDefinition();
+                module.TakeOverOldModule(ucp);
             }
 
             return module;
@@ -151,12 +154,15 @@ namespace Gm1KonverterCrossPlatform.Core.Ucp
                 throw new InvalidDataException("The building offsets could not be located in the executables, this version of Stronghold is not supported.");
             }
 
-            WriteFiles(entries);
-            BuildingOffsetStore.Load(OffsetsFile).SetAll(all);
+            WriteZip(all, entries);
         }
 
-        /// <summary>Rewrites the module files, e.g. after the name or author changed.</summary>
-        public void UpdateDefinition() => WriteFiles(CreateEntries(Offsets));
+        /// <summary>Rewrites the module, e.g. after the name or author changed.</summary>
+        public void UpdateDefinition()
+        {
+            var offsets = Offsets;
+            WriteZip(offsets, CreateEntries(offsets));
+        }
 
         public string CreateDefinition() => ExtensionFiles.CreateDefinition(Info, "module", "Castle building offsets, adjustable in the UCP3 GUI", Dependencies);
 
@@ -315,10 +321,75 @@ namespace Gm1KonverterCrossPlatform.Core.Ucp
 
         private static string Number(int value) => value.ToString(CultureInfo.InvariantCulture);
 
-        private void WriteFiles(IReadOnlyList<ModuleEntry> entries)
+        private static IReadOnlyDictionary<int, BuildingOffset> ReadOffsets(string zipPath)
         {
-            ExtensionFiles.Write(Folder, CreateDefinition(), CreateInitScript(entries), CreateDescription(entries));
-            ExtensionFiles.WriteText(Path.Combine(Folder, OptionsFileName), CreateOptions(entries));
+            if (!File.Exists(zipPath))
+            {
+                return new Dictionary<int, BuildingOffset>();
+            }
+
+            using var zip = ZipFile.OpenRead(zipPath);
+            var entry = zip.GetEntry(OffsetsFileName);
+            if (entry == null)
+            {
+                return new Dictionary<int, BuildingOffset>();
+            }
+
+            using var reader = new StreamReader(entry.Open(), Encoding.UTF8);
+            return BuildingOffsetStore.Parse(reader.ReadToEnd());
+        }
+
+        /// <summary>Takes over the offsets of this module in another version or of the folder of an earlier version.</summary>
+        private void TakeOverOldModule(UcpFolder ucp)
+        {
+            var zips = ucp.FindModuleZips(Info.Name);
+            if (zips.Count == 1)
+            {
+                var offsets = ReadOffsets(zips[0]);
+                WriteZip(offsets, CreateEntries(offsets));
+                File.Delete(zips[0]);
+                return;
+            }
+
+            // earlier versions of this program wrote a folder, which the UCP3 GUI does not list
+            var folders = ucp.FindModuleFolders(Info.Name).Where(IsGeneratedFolder).ToList();
+            if (zips.Count == 0 && folders.Count == 1)
+            {
+                var offsets = BuildingOffsetStore.Load(Path.Combine(folders[0], OffsetsFileName)).Offsets;
+                WriteZip(offsets, CreateEntries(offsets));
+                Directory.Delete(folders[0], recursive: true);
+            }
+        }
+
+        private static bool IsGeneratedFolder(string folder)
+        {
+            string initScript = Path.Combine(folder, ExtensionFiles.InitFileName);
+            return File.Exists(Path.Combine(folder, OffsetsFileName))
+                && File.Exists(initScript)
+                && File.ReadAllText(initScript).StartsWith("-- Generated by Gm1 Konverter", StringComparison.Ordinal);
+        }
+
+        /// <summary>Writes the whole module as zip, replacing the old file only when the new one is complete.</summary>
+        private void WriteZip(IReadOnlyDictionary<int, BuildingOffset> offsets, IReadOnlyList<ModuleEntry> entries)
+        {
+            using var buffer = new MemoryStream();
+            using (var zip = new ZipArchive(buffer, ZipArchiveMode.Create, leaveOpen: true))
+            {
+                AddEntry(zip, ExtensionFiles.DefinitionFileName, CreateDefinition());
+                AddEntry(zip, ExtensionFiles.InitFileName, CreateInitScript(entries));
+                AddEntry(zip, OptionsFileName, CreateOptions(entries));
+                AddEntry(zip, ExtensionFiles.DescriptionFile, CreateDescription(entries));
+                AddEntry(zip, OffsetsFileName, BuildingOffsetStore.ToJson(offsets));
+            }
+
+            Directory.CreateDirectory(Path.GetDirectoryName(ZipPath)!);
+            ExtensionFiles.WriteBytes(ZipPath, buffer.ToArray());
+        }
+
+        private static void AddEntry(ZipArchive zip, string name, string text)
+        {
+            using var writer = new StreamWriter(zip.CreateEntry(name).Open(), new UTF8Encoding(false));
+            writer.Write(text);
         }
 
         /// <summary>The value in the local executables, otherwise the value of the unmodified game.</summary>

@@ -882,7 +882,7 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             var ucpFolder = new UcpFolder(RequireStrongholdFolder().Root);
             string paragraph = Environment.NewLine + Environment.NewLine;
             string message = string.Format(Localization.GetText("UcpOffsetsSaved"), module.Info.DisplayName)
-                + Environment.NewLine + Path.GetRelativePath(Path.GetDirectoryName(ucpFolder.Root)!, module.Folder)
+                + Environment.NewLine + Path.GetRelativePath(Path.GetDirectoryName(ucpFolder.Root)!, module.ZipPath)
                 + paragraph + Localization.GetText("UcpOffsetsActivate");
             return ucpFolder.IsInstalled ? message : message + paragraph + Localization.GetText("UcpNotInstalled");
         }
