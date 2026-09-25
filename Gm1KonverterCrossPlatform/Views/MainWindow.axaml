@@ -20,7 +20,7 @@
       <Menu>
         <MenuItem Header="{DynamicResource File}">
           <MenuItem Header="{DynamicResource CreatenewGM1}" Name="CreatenewGM1MenueItem" IsEnabled="{Binding ButtonsEnabled}" Click="CreatenewGM1"/>
-          <MenuItem Header="{DynamicResource ReplacewithSavedGM1File}" Name="ReplacewithSavedGM1FileMenueItem" IsEnabled="{Binding ReplaceWithSaveFile}" Click="ReplacewithSavedGM1FileM"/>
+          <MenuItem Header="{DynamicResource ReplacewithSavedGM1File}" Name="ReplacewithSavedGM1FileMenueItem" IsEnabled="{Binding ReplaceWithSaveFile}" Click="ReplacewithSavedGM1File"/>
           <Separator/>
           <MenuItem Header="{DynamicResource CreatenewTgx}" Name="CreatenewTgxMenueItem" IsEnabled="{Binding TgxButtonExportEnabled}" Click="CreatenewTgx"/>
           <MenuItem Header="{DynamicResource ReplacewithSavedTgxFile}" Name="ReplacewithSavedTgxFileMenueItem" IsEnabled="{Binding ReplaceWithSaveFileTgx}" Click="ReplacewithSavedTgxFile"/>
@@ -79,13 +79,13 @@
       <Separator/>
       
       <Menu>
-        <MenuItem Header="{DynamicResource OpenWorkFolder}" Name="OpenWorkFolderMenueItem" Click="OpenFolder"/>
+        <MenuItem Header="{DynamicResource OpenWorkFolder}" Name="OpenWorkFolderMenueItem" Click="OpenWorkFolder"/>
       </Menu>
       
       <Separator/>
       
       <Menu>
-        <MenuItem Header="{DynamicResource OpenStrongholdFolder}" Name="OpenStrongholdFolderMenueItem" Click="OpenFolder"/>
+        <MenuItem Header="{DynamicResource OpenStrongholdFolder}" Name="OpenStrongholdFolderMenueItem" Click="OpenStrongholdFolder"/>
       </Menu>
     </DockPanel>
 
@@ -98,7 +98,7 @@
             <Image Source="avares://Gm1KonverterCrossPlatform/Assets/CreateGm1.png"/>
           </MenuItem.Header>
         </MenuItem>
-        <MenuItem IsEnabled="{Binding ReplaceWithSaveFile}" Click="ReplacewithSavedGM1FileM" ToolTip.Tip="{DynamicResource ReplacewithSavedGM1File}">
+        <MenuItem IsEnabled="{Binding ReplaceWithSaveFile}" Click="ReplacewithSavedGM1File" ToolTip.Tip="{DynamicResource ReplacewithSavedGM1File}">
           <MenuItem.Header>
             <Image Source="avares://Gm1KonverterCrossPlatform/Assets/ReplacewithSavedGM1File.png"/>
           </MenuItem.Header>
@@ -177,7 +177,7 @@
         <ListBox IsVisible="{Binding GfxPreviewTrue}" Items="{Binding GfxFiles}" SelectionMode="Single" Name="GfxFilesSelector" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Grid.Column="0" Grid.Row="2" SelectionChanged="SelectedGfxFile"/>
       </Grid>
 
-      <Grid Grid.Column="2" RowDefinitions="Auto,Auto,Auto,Auto,Auto,*" ColumnDefinitions="*">
+      <Grid Grid.Column="2" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,*" ColumnDefinitions="*">
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" IsVisible="{Binding FileSelected}" Grid.Row="0" Grid.Column="0">
           <TextBlock Text="{DynamicResource Datatype}"/>
           <TextBlock Text=" "/>
@@ -214,7 +214,7 @@
         </Expander>
 
         <Expander ExpandDirection="Down" Header="{DynamicResource Gm1FileHeaderFields}" Grid.Row="3" Grid.Column="0">
-          <Grid DataContext="{Binding File}">
+          <Grid DataContext="{Binding FileHeader}">
             <Grid.RowDefinitions>
               <RowDefinition Height="*"/>
               <RowDefinition Height="*"/>
@@ -246,54 +246,54 @@
             </Grid.ColumnDefinitions>
 
             <TextBlock Grid.Row="0" Grid.Column="0" Text="UnknownField1:"/>
-            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding FileHeader.UnknownField1}"/>
+            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding UnknownField1}"/>
             <TextBlock Grid.Row="1" Grid.Column="0" Text="UnknownField2:"/>
-            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding FileHeader.UnknownField2}"/>
+            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding UnknownField2}"/>
             <TextBlock Grid.Row="2" Grid.Column="0" Text="UnknownField3:"/>
-            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding FileHeader.UnknownField3}"/>
-            <TextBlock Grid.Row="3" Grid.Column="0" Text="INumberOfPictureinFile:"/>
-            <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding FileHeader.INumberOfPictureinFile}"/>
+            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding UnknownField3}"/>
+            <TextBlock Grid.Row="3" Grid.Column="0" Text="ImageCount:"/>
+            <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding ImageCount}"/>
             <TextBlock Grid.Row="4" Grid.Column="0" Text="UnknownField5:"/>
-            <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding FileHeader.UnknownField5}"/>
-            <TextBlock Grid.Row="5" Grid.Column="0" Text="IDataType:"/>
-            <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding FileHeader.IDataType}"/>
+            <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding UnknownField5}"/>
+            <TextBlock Grid.Row="5" Grid.Column="0" Text="DataType:"/>
+            <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding DataType}"/>
             <TextBlock Grid.Row="6" Grid.Column="0" Text="UnknownField7:"/>
-            <TextBlock Grid.Row="6" Grid.Column="1" Text="{Binding FileHeader.UnknownField7}"/>
+            <TextBlock Grid.Row="6" Grid.Column="1" Text="{Binding UnknownField7}"/>
             <TextBlock Grid.Row="7" Grid.Column="0" Text="UnknownField8:"/>
-            <TextBlock Grid.Row="7" Grid.Column="1" Text="{Binding FileHeader.UnknownField8}"/>
+            <TextBlock Grid.Row="7" Grid.Column="1" Text="{Binding UnknownField8}"/>
             <TextBlock Grid.Row="8" Grid.Column="0" Text="UnknownField9:"/>
-            <TextBlock Grid.Row="8" Grid.Column="1" Text="{Binding FileHeader.UnknownField9}"/>
+            <TextBlock Grid.Row="8" Grid.Column="1" Text="{Binding UnknownField9}"/>
             <TextBlock Grid.Row="9" Grid.Column="0" Text="UnknownField10:"/>
-            <TextBlock Grid.Row="9" Grid.Column="1" Text="{Binding FileHeader.UnknownField10}"/>
+            <TextBlock Grid.Row="9" Grid.Column="1" Text="{Binding UnknownField10}"/>
             <TextBlock Grid.Row="10" Grid.Column="0" Text="UnknownField11:"/>
-            <TextBlock Grid.Row="10" Grid.Column="1" Text="{Binding FileHeader.UnknownField11}"/>
+            <TextBlock Grid.Row="10" Grid.Column="1" Text="{Binding UnknownField11}"/>
             <TextBlock Grid.Row="11" Grid.Column="0" Text="UnknownField12:"/>
-            <TextBlock Grid.Row="11" Grid.Column="1" Text="{Binding FileHeader.UnknownField12}"/>
+            <TextBlock Grid.Row="11" Grid.Column="1" Text="{Binding UnknownField12}"/>
             <TextBlock Grid.Row="12" Grid.Column="0" Text="Width:"/>
-            <TextBlock Grid.Row="12" Grid.Column="1" Text="{Binding FileHeader.Width}"/>
+            <TextBlock Grid.Row="12" Grid.Column="1" Text="{Binding Width}"/>
             <TextBlock Grid.Row="13" Grid.Column="0" Text="Height:"/>
-            <TextBlock Grid.Row="13" Grid.Column="1" Text="{Binding FileHeader.Height}"/>
+            <TextBlock Grid.Row="13" Grid.Column="1" Text="{Binding Height}"/>
             <TextBlock Grid.Row="14" Grid.Column="0" Text="UnknownField15:"/>
-            <TextBlock Grid.Row="14" Grid.Column="1" Text="{Binding FileHeader.UnknownField15}"/>
+            <TextBlock Grid.Row="14" Grid.Column="1" Text="{Binding UnknownField15}"/>
             <TextBlock Grid.Row="15" Grid.Column="0" Text="UnknownField16:"/>
-            <TextBlock Grid.Row="15" Grid.Column="1" Text="{Binding FileHeader.UnknownField16}"/>
+            <TextBlock Grid.Row="15" Grid.Column="1" Text="{Binding UnknownField16}"/>
             <TextBlock Grid.Row="16" Grid.Column="0" Text="UnknownField17:"/>
-            <TextBlock Grid.Row="16" Grid.Column="1" Text="{Binding FileHeader.UnknownField17}"/>
+            <TextBlock Grid.Row="16" Grid.Column="1" Text="{Binding UnknownField17}"/>
             <TextBlock Grid.Row="17" Grid.Column="0" Text="UnknownField18:"/>
-            <TextBlock Grid.Row="17" Grid.Column="1" Text="{Binding FileHeader.UnknownField18}"/>
+            <TextBlock Grid.Row="17" Grid.Column="1" Text="{Binding UnknownField18}"/>
             <TextBlock Grid.Row="18" Grid.Column="0" Text="OriginX:"/>
-            <TextBlock Grid.Row="18" Grid.Column="1" Text="{Binding FileHeader.OriginX}"/>
+            <TextBlock Grid.Row="18" Grid.Column="1" Text="{Binding OriginX}"/>
             <TextBlock Grid.Row="19" Grid.Column="0" Text="OriginY:"/>
-            <TextBlock Grid.Row="19" Grid.Column="1" Text="{Binding FileHeader.OriginY}"/>
-            <TextBlock Grid.Row="20" Grid.Column="0" Text="IDataSize:"/>
-            <TextBlock Grid.Row="20" Grid.Column="1" Text="{Binding FileHeader.IDataSize}"/>
+            <TextBlock Grid.Row="19" Grid.Column="1" Text="{Binding OriginY}"/>
+            <TextBlock Grid.Row="20" Grid.Column="0" Text="DataSize:"/>
+            <TextBlock Grid.Row="20" Grid.Column="1" Text="{Binding DataSize}"/>
             <TextBlock Grid.Row="21" Grid.Column="0" Text="UnknownField22:"/>
-            <TextBlock Grid.Row="21" Grid.Column="1" Text="{Binding FileHeader.UnknownField22}"/>
+            <TextBlock Grid.Row="21" Grid.Column="1" Text="{Binding UnknownField22}"/>
           </Grid>
         </Expander>
 
         <Expander ExpandDirection="Down" Header="{DynamicResource Gm1FileImageHeaderFields}" Grid.Row="4" Grid.Column="0">
-          <Grid DataContext="{Binding ActualTGXImageSelection, Mode=TwoWay}">
+          <Grid DataContext="{Binding SelectedImageHeader}">
             <Grid.RowDefinitions>
               <RowDefinition Height="*"/>
               <RowDefinition Height="*"/>
@@ -313,25 +313,25 @@
             </Grid.ColumnDefinitions>
 
             <TextBlock Grid.Row="0" Grid.Column="0" Text="Width:"/>
-            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Header.Width}"/>
+            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Width}"/>
             <TextBlock Grid.Row="1" Grid.Column="0" Text="Height:"/>
-            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Header.Height}"/>
+            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Height}"/>
             <TextBlock Grid.Row="2" Grid.Column="0" Text="OffsetX:"/>
-            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Header.OffsetX}"/>
+            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding OffsetX}"/>
             <TextBlock Grid.Row="3" Grid.Column="0" Text="OffsetY:"/>
-            <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding Header.OffsetY}"/>
+            <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding OffsetY}"/>
             <TextBlock Grid.Row="4" Grid.Column="0" Text="ImagePart:"/>
-            <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding Header.ImagePart}"/>
+            <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding ImagePart}"/>
             <TextBlock Grid.Row="5" Grid.Column="0" Text="SubParts:"/>
-            <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding Header.SubParts}"/>
+            <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding SubParts}"/>
             <TextBlock Grid.Row="6" Grid.Column="0" Text="TileOffset:"/>
-            <TextBlock Grid.Row="6" Grid.Column="1" Text="{Binding Header.TileOffset}"/>
+            <TextBlock Grid.Row="6" Grid.Column="1" Text="{Binding TileOffset}"/>
             <TextBlock Grid.Row="7" Grid.Column="0" Text="Direction:"/>
-            <TextBlock Grid.Row="7" Grid.Column="1" Text="{Binding Header.Direction}"/>
+            <TextBlock Grid.Row="7" Grid.Column="1" Text="{Binding Direction}"/>
             <TextBlock Grid.Row="8" Grid.Column="0" Text="HorizontalOffsetOfImage:"/>
-            <TextBlock Grid.Row="8" Grid.Column="1" Text="{Binding Header.HorizontalOffsetOfImage}"/>
+            <TextBlock Grid.Row="8" Grid.Column="1" Text="{Binding HorizontalOffsetOfImage}"/>
             <TextBlock Grid.Row="9" Grid.Column="0" Text="BuildingWidth:"/>
-            <TextBlock Grid.Row="9" Grid.Column="1" Text="{Binding Header.BuildingWidth}"/>
+            <TextBlock Grid.Row="9" Grid.Column="1" Text="{Binding BuildingWidth}"/>
           </Grid>
         </Expander>
 
@@ -351,6 +351,11 @@
               <WrapPanel Orientation="Horizontal"/>
             </ItemsPanelTemplate>
           </ListBox.ItemsPanel>
+          <ListBox.ItemTemplate>
+            <DataTemplate>
+              <Image Source="{Binding Bitmap}" MaxWidth="{Binding Width}" MaxHeight="{Binding Height}"/>
+            </DataTemplate>
+          </ListBox.ItemTemplate>
         </ListBox>
       </Grid>
     </Grid>

@@ -8,7 +8,11 @@ namespace Gm1KonverterCrossPlatform.Views
     {
         public enum MessageTyp { Fehler, Info }
 
-        public MessageBoxWindow() { }
+        /// <summary>Only for the XAML designer.</summary>
+        public MessageBoxWindow()
+        {
+            AvaloniaXamlLoader.Load(this);
+        }
 
         public MessageBoxWindow(MessageTyp typ, string message)
         {
@@ -19,7 +23,7 @@ namespace Gm1KonverterCrossPlatform.Views
             textBox.Text = message;
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void Button_Click(object? sender, RoutedEventArgs e)
         {
             Close();
         }

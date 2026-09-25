@@ -1,18 +1,30 @@
-﻿using Avalonia;
+using System;
+using System.Threading.Tasks;
+using Avalonia;
 using Avalonia.Controls;
+using Gm1KonverterCrossPlatform.Core.Diagnostics;
+using Gm1KonverterCrossPlatform.HelperClasses;
 using Gm1KonverterCrossPlatform.ViewModels;
 using Gm1KonverterCrossPlatform.Views;
 
 namespace Gm1KonverterCrossPlatform
 {
-    class Program
+    internal static class Program
     {
         // Initialization code. Don't use any Avalonia, third-party APIs or any
         // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
         // yet and stuff might break.
         public static void Main(string[] args)
         {
-            System.AppDomain.CurrentDomain.FirstChanceException += HelperClasses.Logger.LogFirstChanceException;
+            Logger.Directory = System.IO.Path.Combine(Config.LocalAppDataPath, "Logs");
+            AppDomain.CurrentDomain.FirstChanceException += Logger.LogFirstChanceException;
+            AppDomain.CurrentDomain.UnhandledException += (sender, e) => Logger.LogException(e.ExceptionObject as Exception ?? new Exception(e.ExceptionObject?.ToString()));
+            TaskScheduler.UnobservedTaskException += (sender, e) =>
+            {
+                Logger.LogException(e.Exception);
+                e.SetObserved();
+            };
+
             BuildAvaloniaApp().Start(AppMain, args);
         }
 
@@ -21,8 +33,6 @@ namespace Gm1KonverterCrossPlatform
             => AppBuilder.Configure<App>()
                 .UsePlatformDetect();
 
-        // Your application's entry point. Here you can initialize your MVVM framework, DI
-        // container, etc.
         private static void AppMain(Application app, string[] args)
         {
             var window = new MainWindow

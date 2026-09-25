@@ -1,24 +1,13 @@
-﻿using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 using Avalonia;
 using Avalonia.Markup.Xaml.MarkupExtensions;
+using Gm1KonverterCrossPlatform.Core.Settings;
 
 namespace Gm1KonverterCrossPlatform.HelperClasses
 {
-	public static class Languages
-	{
-        private static Language SelectedLanguage;
-        private static ResourceInclude SelectedLanguageDictionary;
-
-        /// <summary>
-        /// Default Language to be used if none is set.
-        /// </summary>
-        public static readonly Language DefaultLanguage = Language.English;
-
-        /// <summary>
-        /// List of supported languages.
-        /// </summary>
-        public enum Language { English, Deutsch, Русский };
-
+    public static class Languages
+    {
         private static readonly Dictionary<Language, string> LanguageSources = new Dictionary<Language, string>
         {
             { Language.English, "avares://Gm1KonverterCrossPlatform/Languages/Language.en_US.xaml" },
@@ -26,35 +15,27 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
             { Language.Русский, "avares://Gm1KonverterCrossPlatform/Languages/Language.ru_RU.xaml" }
         };
 
-        /// <summary>
-        /// Change application Language.
-        /// </summary>
+        private static ResourceInclude? selectedLanguageDictionary;
+
+        /// <summary>Languages in the order they are shown in the menu.</summary>
+        public static Language[] All { get; } = { Language.Deutsch, Language.English, Language.Русский };
+
+        /// <summary>Change the application language.</summary>
         public static void SelectLanguage(Language language)
         {
-            /*if (language == SelectedLanguage)
+            if (!LanguageSources.TryGetValue(language, out string? source))
             {
-                return;
-            }*/
-
-            var appDictionaries = Application.Current.Resources.MergedDictionaries;
-
-            // remove old dictionary if exists
-            if (SelectedLanguageDictionary != null)
-            {
-                appDictionaries.Remove(SelectedLanguageDictionary);
+                source = LanguageSources[Language.English];
             }
 
-            // create new dictionary
-            string source = LanguageSources[language];
+            var appDictionaries = Application.Current!.Resources.MergedDictionaries;
+            if (selectedLanguageDictionary != null)
+            {
+                appDictionaries.Remove(selectedLanguageDictionary);
+            }
 
-            SelectedLanguageDictionary = new ResourceInclude() {
-                Source = new System.Uri(source)
-            };
-
-            // apply new dictionary
-            appDictionaries.Add(SelectedLanguageDictionary);
-
-            SelectedLanguage = language;
+            selectedLanguageDictionary = new ResourceInclude { Source = new Uri(source) };
+            appDictionaries.Add(selectedLanguageDictionary);
         }
     }
 }

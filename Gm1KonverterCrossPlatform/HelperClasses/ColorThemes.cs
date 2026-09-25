@@ -1,24 +1,14 @@
-﻿using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 using Avalonia;
 using Avalonia.Markup.Xaml.Styling;
-using Avalonia.Styling;
+using Gm1KonverterCrossPlatform.Core.Settings;
 
 namespace Gm1KonverterCrossPlatform.HelperClasses
 {
-	public static class ColorThemes
-	{
-        private static ColorTheme SelectedColorTheme;
-        private static StyleInclude SelectedColorThemeStyle;
-
-        /// <summary>
-        /// Default ColorTheme to be used if none is set.
-        /// </summary>
-        public static readonly ColorTheme DefaultColorTheme = ColorTheme.Light;
-
-        /// <summary>
-        /// List of supported color themes.
-        /// </summary>
-        public enum ColorTheme { Light, Dark };
+    public static class ColorThemes
+    {
+        private static readonly Uri BaseUri = new Uri("avares://Gm1KonverterCrossPlatform/Views/App.axaml");
 
         private static readonly Dictionary<ColorTheme, string> ColorThemeSources = new Dictionary<ColorTheme, string>
         {
@@ -26,36 +16,26 @@ namespace Gm1KonverterCrossPlatform.HelperClasses
             { ColorTheme.Dark, "avares://Avalonia.Themes.Default/Accents/BaseDark.xaml" },
         };
 
-        /// <summary>
-        /// Change application ColorTheme.
-        /// </summary>
+        private static StyleInclude? selectedColorThemeStyle;
+
+        public static ColorTheme[] All { get; } = { ColorTheme.Light, ColorTheme.Dark };
+
+        /// <summary>Change the application color theme.</summary>
         public static void SelectColorTheme(ColorTheme colorTheme)
         {
-            /*if (colorTheme == SelectedColorTheme)
+            if (!ColorThemeSources.TryGetValue(colorTheme, out string? source))
             {
-                return;
-            }*/
-
-            Styles appStyles = Application.Current.Styles;
-
-            // remove old style if exists
-            if (SelectedColorThemeStyle != null)
-            {
-                appStyles.Remove(SelectedColorThemeStyle);
+                source = ColorThemeSources[ColorTheme.Light];
             }
 
-            // create new style
-            string source = ColorThemeSources[colorTheme];
-
-            SelectedColorThemeStyle = new StyleInclude(new System.Uri("avares://Gm1KonverterCrossPlatform/Wiews/App.axaml"))
+            var appStyles = Application.Current!.Styles;
+            if (selectedColorThemeStyle != null)
             {
-                Source = new System.Uri(source)
-            };
+                appStyles.Remove(selectedColorThemeStyle);
+            }
 
-            // apply new style
-            appStyles.Add(SelectedColorThemeStyle);
-
-            SelectedColorTheme = colorTheme;
+            selectedColorThemeStyle = new StyleInclude(BaseUri) { Source = new Uri(source) };
+            appStyles.Add(selectedColorThemeStyle);
         }
     }
 }

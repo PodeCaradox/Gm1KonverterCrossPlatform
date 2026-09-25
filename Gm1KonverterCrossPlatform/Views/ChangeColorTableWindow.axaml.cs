@@ -1,79 +1,102 @@
-﻿using System;
+using System;
 using System.ComponentModel;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Shapes;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
-using Gm1KonverterCrossPlatform.ViewModels;
+using Gm1KonverterCrossPlatform.Core.Files;
+using Gm1KonverterCrossPlatform.Core.Imaging;
 using Gm1KonverterCrossPlatform.HelperClasses;
-using Gm1KonverterCrossPlatform.Files;
-using Gm1KonverterCrossPlatform.Files.Converters;
+using Gm1KonverterCrossPlatform.ViewModels;
 
 namespace Gm1KonverterCrossPlatform.Views
 {
+    /// <summary>
+    /// Edits a copy of a color table; the copy is handed to the callback when the user saves.
+    /// </summary>
     public class ChangeColorTableWindow : Window
     {
-        private const int width = 32;
-        private const int height = 8;
-        private const int pixelSize = 20;
+        private const int CellSize = 20;
 
         private readonly ChangeColorTableViewModel viewModel;
-        private readonly Action<ColorTable> callback;
+        private readonly Action<ColorTable> onSave;
         private readonly Image image;
         private readonly Rectangle highlight;
 
-        public ChangeColorTableWindow() { }
+        /// <summary>Only for the XAML designer.</summary>
+        public ChangeColorTableWindow()
+            : this(new ColorTable(new ushort[ColorTable.ColorCount]), _ => { })
+        {
+        }
 
-        public ChangeColorTableWindow(ColorTable colorTable, Action<ColorTable> callback)
+        /// <param name="colorTable">The table to edit; pass a copy, it is changed directly.</param>
+        /// <param name="onSave">Called with the edited table when the user saves.</param>
+        public ChangeColorTableWindow(ColorTable colorTable, Action<ColorTable> onSave)
         {
             AvaloniaXamlLoader.Load(this);
 
             viewModel = new ChangeColorTableViewModel(colorTable);
             DataContext = viewModel;
+            this.onSave = onSave ?? throw new ArgumentNullException(nameof(onSave));
 
-            this.callback = callback;
-
-            Closing += WindowClosed;
+            Closing += OnClosing;
 
             image = this.Get<Image>("PaletteImage");
             highlight = this.Get<Rectangle>("PaletteImageHighlight");
 
-            LoadBitmap();
+            UpdateBitmap();
         }
 
-        private void LoadBitmap()
+        public void SaveColorTableChanges()
         {
-            viewModel.Bitmap = ColorTableConverter.GetBitmap(viewModel.ColorTable, width, height, pixelSize);
+            onSave(viewModel.ColorTable);
+            viewModel.ColorTableChanged = false;
         }
 
-        private void MousePressed(object sender, PointerPressedEventArgs e)
+        public void DiscardColorTableChanges()
         {
-            var pos = e.GetPosition(image);
-            var newPos = new Point(((int)pos.X) / pixelSize * pixelSize, ((int)pos.Y) / pixelSize * pixelSize);
+            viewModel.ColorTableChanged = false;
+        }
 
-            Canvas.SetLeft(highlight, newPos.X);
-            Canvas.SetTop(highlight, newPos.Y);
+        private void UpdateBitmap()
+        {
+            viewModel.Bitmap = BitmapFactory.Create(ColorTableImage.Render(viewModel.ColorTable, CellSize));
+        }
 
-            viewModel.ColorPositionInColorTable = (int)newPos.X / pixelSize + (int)(newPos.Y) / pixelSize * width;
-            var color = viewModel.ColorTable.ColorList[viewModel.ColorPositionInColorTable];
-            ColorConverter.DecodeArgb1555(color, out byte r, out byte g, out byte b, out _);
+        private void MousePressed(object? sender, PointerPressedEventArgs e)
+        {
+            var position = e.GetPosition(image);
+            int index = ColorTableImage.IndexAt(position.X, position.Y, CellSize);
+            if (index < 0)
+            {
+                return;
+            }
 
+            Canvas.SetLeft(highlight, index % Palette.ImageColumns * CellSize);
+            Canvas.SetTop(highlight, index / Palette.ImageColumns * CellSize);
+
+            viewModel.ColorPositionInColorTable = index;
+            Argb1555.Decode(viewModel.ColorTable[index], out byte r, out byte g, out byte b, out _);
             viewModel.SetColor(r, g, b);
-
             viewModel.ColorSelected = true;
         }
 
-        private void Button_SaveColor(object sender, RoutedEventArgs e)
+        private void Button_SaveColor(object? sender, RoutedEventArgs e)
         {
-            viewModel.ColorTable.ColorList[viewModel.ColorPositionInColorTable] = ColorConverter.EncodeArgb1555((byte)viewModel.Red, (byte)viewModel.Green, (byte)viewModel.Blue, 255);
-            LoadBitmap();
+            if (!viewModel.ColorSelected)
+            {
+                return;
+            }
+
+            viewModel.ColorTable[viewModel.ColorPositionInColorTable] =
+                Argb1555.Encode((byte)viewModel.Red, (byte)viewModel.Green, (byte)viewModel.Blue, byte.MaxValue);
+            UpdateBitmap();
 
             viewModel.ColorTableChanged = true;
         }
 
-        private void Button_SaveColorTable(object sender, RoutedEventArgs e)
+        private void Button_SaveColorTable(object? sender, RoutedEventArgs e)
         {
             if (viewModel.ColorTableChanged)
             {
@@ -83,26 +106,13 @@ namespace Gm1KonverterCrossPlatform.Views
             Close();
         }
 
-        private void WindowClosed(object sender, CancelEventArgs e)
+        private void OnClosing(object? sender, CancelEventArgs e)
         {
             if (viewModel.ColorTableChanged)
             {
                 e.Cancel = true;
-
-                var dialogBox = new ChangeColorTableWindowDialogBox(this);
-                dialogBox.ShowDialog(this);
+                new ChangeColorTableWindowDialogBox(this).ShowDialog(this);
             }
-        }
-
-        public void SaveColorTableChanges()
-        {
-            callback(viewModel.ColorTable);
-            viewModel.ColorTableChanged = false;
-        }
-
-        public void DiscardColorTableChanges()
-        {
-            viewModel.ColorTableChanged = false;
         }
     }
 }

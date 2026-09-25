@@ -2,7 +2,7 @@
 {
     public class TexturePack
     {
-        public string Name;
+        public string? Name;
         public float StrongholdVersion;
         public float VersionNumber;
 

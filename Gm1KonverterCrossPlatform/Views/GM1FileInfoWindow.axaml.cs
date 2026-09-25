@@ -1,14 +1,18 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
-using Gm1KonverterCrossPlatform.Files;
+using Gm1KonverterCrossPlatform.Core.Files;
 
 namespace Gm1KonverterCrossPlatform.Views
 {
     public class GM1FileInfoWindow : Window
     {
-        public GM1FileInfoWindow() { }
+        /// <summary>Only for the XAML designer.</summary>
+        public GM1FileInfoWindow()
+        {
+            AvaloniaXamlLoader.Load(this);
+        }
 
-        public GM1FileInfoWindow(GM1FileHeader.DataType dataType)
+        public GM1FileInfoWindow(Gm1DataType dataType)
         {
             AvaloniaXamlLoader.Load(this);
 
@@ -23,25 +27,25 @@ namespace Gm1KonverterCrossPlatform.Views
             
             switch (dataType)
             {
-                case GM1FileHeader.DataType.Animations:
+                case Gm1DataType.Animations:
                     animation.IsVisible = true;
                     break;
-                case GM1FileHeader.DataType.Interface:
+                case Gm1DataType.Interface:
                     interfaceS.IsVisible = true;
                     break;
-                case GM1FileHeader.DataType.TilesObject:
+                case Gm1DataType.TilesObject:
                     tiledObject.IsVisible = true;
                     break;
-                case GM1FileHeader.DataType.Font:
+                case Gm1DataType.Font:
                     noInfo.IsVisible = true;
                     break;
-                case GM1FileHeader.DataType.NOCompression:
+                case Gm1DataType.NoCompression:
                     noInfo.IsVisible = true;
                     break;
-                case GM1FileHeader.DataType.TGXConstSize:
+                case Gm1DataType.TgxConstSize:
                     noInfo.IsVisible = true;
                     break;
-                case GM1FileHeader.DataType.NOCompression1:
+                case Gm1DataType.NoCompression1:
                     noInfo.IsVisible = true;
                     break;
                 default:

@@ -5,7 +5,7 @@
         public enum Filetype { TGX, GM1 };
 
         public Filetype Type;
-        public string FileName;
-        public byte[] FileData;
+        public string? FileName;
+        public byte[]? FileData;
     }
 }

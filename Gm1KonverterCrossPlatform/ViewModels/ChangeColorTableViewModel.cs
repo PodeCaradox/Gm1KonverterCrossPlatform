@@ -1,13 +1,17 @@
-﻿using ReactiveUI;
+﻿using System;
+using ReactiveUI;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
-using Gm1KonverterCrossPlatform.Files;
+using Gm1KonverterCrossPlatform.Core.Files;
 
 namespace Gm1KonverterCrossPlatform.ViewModels
 {
 	public class ChangeColorTableViewModel : ViewModelBase
     {
-        private WriteableBitmap bitmap;
+        /// <summary>Largest 8 bit value that can be stored in a 5 bit color channel.</summary>
+        private const uint MaxChannelValue = 248;
+
+        private WriteableBitmap? bitmap;
         private ColorTable colorTable;
 
         private bool colorTableChanged = false;
@@ -50,7 +54,7 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             }
         }
 
-        public WriteableBitmap Bitmap
+        public WriteableBitmap? Bitmap
         {
             get => bitmap;
             set
@@ -75,12 +79,12 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             {
                 value = FormatColorHexValue(value);
                 if (colorAsText == value) return;
-                try
+
+                // Keep the current color until the text is a valid color.
+                if (Color.TryParse(value, out Color color))
                 {
-                    Color color = Color.Parse(value);
                     SetColor(color.R, color.G, color.B);
                 }
-                catch(System.Exception) { }
             }
         }
 
@@ -123,36 +127,26 @@ namespace Gm1KonverterCrossPlatform.ViewModels
         public void SetColor(uint r, uint g, uint b)
         {
             red = FormatColorValue(r);
-            this.RaisePropertyChanged("Red");
+            this.RaisePropertyChanged(nameof(Red));
 
             green = FormatColorValue(g);
-            this.RaisePropertyChanged("Green");
+            this.RaisePropertyChanged(nameof(Green));
 
             blue = FormatColorValue(b);
-            this.RaisePropertyChanged("Blue");
+            this.RaisePropertyChanged(nameof(Blue));
 
             UpdateColorHexValue();
         }
 
-        private uint FormatColorValue(uint value)
+        private static uint FormatColorValue(uint value)
         {
-            if (value > 248)
-            {
-                value = 248;
-            }
-            else if (value < 0)
-            {
-                value = 0;
-            }
-
-            value = (value / 8) * 8;
-
-            return value;
+            return Math.Min(value, MaxChannelValue) / 8 * 8;
         }
 
-        private string FormatColorHexValue(string value)
+        private static string FormatColorHexValue(string? value)
         {
-            if (!value.StartsWith("#"))
+            value ??= string.Empty;
+            if (!value.StartsWith("#", StringComparison.Ordinal))
             {
                 value = "#" + value;
             }
@@ -163,7 +157,7 @@ namespace Gm1KonverterCrossPlatform.ViewModels
         private void UpdateColorHexValue()
         {
             colorAsText = "#" + red.ToString("X2") + green.ToString("X2") + blue.ToString("X2");
-            this.RaisePropertyChanged("ColorAsText");
+            this.RaisePropertyChanged(nameof(ColorAsText));
         }
 	}
 }

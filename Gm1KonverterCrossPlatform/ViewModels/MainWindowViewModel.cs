@@ -1,51 +1,96 @@
-﻿using System;
-using System.IO;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using ReactiveUI;
-using Avalonia;
-using Avalonia.Controls;
+using System.IO;
+using System.Linq;
 using Avalonia.Media.Imaging;
-using Gm1KonverterCrossPlatform.Files;
-using Gm1KonverterCrossPlatform.Files.Converters;
-using Gm1KonverterCrossPlatform.Views;
+using Gm1KonverterCrossPlatform.Core.BuildingOffsets;
+using Gm1KonverterCrossPlatform.Core.Diagnostics;
+using Gm1KonverterCrossPlatform.Core.Documents;
+using Gm1KonverterCrossPlatform.Core.Files;
+using Gm1KonverterCrossPlatform.Core.Imaging;
+using Gm1KonverterCrossPlatform.Core.IO;
+using Gm1KonverterCrossPlatform.Core.Services;
+using Gm1KonverterCrossPlatform.Core.Settings;
 using Gm1KonverterCrossPlatform.HelperClasses;
-using Newtonsoft.Json;
+using ReactiveUI;
 
 namespace Gm1KonverterCrossPlatform.ViewModels
 {
-    public class MainWindowViewModel : ViewModelBase, IDisposable
+    /// <summary>
+    /// State of the main window and all operations on the opened file. Operations throw exceptions on
+    /// errors (<see cref="WorkflowException"/> for expected problems); the view shows them to the user.
+    /// </summary>
+    public class MainWindowViewModel : ViewModelBase
     {
-        private UserConfig userConfig;
-        public UserConfig UserConfig { get => userConfig; set => userConfig = value; }
+        private readonly UserConfigStore configStore;
+        private UserConfig userConfig = new UserConfig();
 
-        private Languages.Language actualLanguage;
-        public Languages.Language ActualLanguage
+        private Language actualLanguage;
+        private ColorTheme actualColorTheme;
+        private bool openFolderAfterExport;
+        private bool loggerActiv;
+
+        private IReadOnlyList<string> workfolderFiles = Array.Empty<string>();
+        private IReadOnlyList<string> strongholdFiles = Array.Empty<string>();
+        private IReadOnlyList<string> gfxFiles = Array.Empty<string>();
+
+        private Gm1Document? gm1Document;
+        private TgxDocument? tgxDocument;
+        private Gm1FileHeader? fileHeader;
+        private TgxImageHeader? selectedImageHeader;
+        private ObservableCollection<ImagePreviewItem> tgxImages = new ObservableCollection<ImagePreviewItem>();
+        private WriteableBitmap? actuellColorTable;
+        private Gm1DataType filetype;
+        private bool fileSelected;
+        private int actualPalette = 1;
+
+        private bool buttonsEnabled;
+        private bool importButtonEnabled;
+        private bool colorButtonsEnabled;
+        private bool orginalStrongholdAnimationButtonEnabled;
+        private bool tgxButtonExportEnabled;
+        private bool tgxButtonImportEnabled;
+        private bool replaceWithSaveFile;
+        private bool replaceWithSaveFileTgx;
+
+        private int delay = 100;
+        private int bigImageWidth = 900;
+        private bool gm1PreviewTrue = true;
+        private bool gfxPreviewTrue;
+        private string toggleButtonName = "GM1";
+
+        private IBuildingOffsetTarget? offsetTarget;
+        private int selectedOffsetImageIndex = -1;
+        private bool offsetExpanderVisible;
+        private sbyte xOffset;
+        private int yOffset;
+
+        public MainWindowViewModel()
+            : this(new UserConfigStore(Config.AppDataPath))
+        {
+        }
+
+        public MainWindowViewModel(UserConfigStore configStore)
+        {
+            this.configStore = configStore ?? throw new ArgumentNullException(nameof(configStore));
+        }
+
+        public Language ActualLanguage
         {
             get => actualLanguage;
-            set {
+            set
+            {
                 this.RaiseAndSetIfChanged(ref actualLanguage, value);
                 HelperClasses.Languages.SelectLanguage(value);
                 userConfig.Language = value;
+                SaveUserConfig();
             }
         }
 
-        private Languages.Language[] languages = new Languages.Language[] { HelperClasses.Languages.Language.Deutsch, HelperClasses.Languages.Language.English, HelperClasses.Languages.Language.Русский };
-        public Languages.Language[] Languages
-        {
-            get => languages;
-            set => this.RaiseAndSetIfChanged(ref languages, value);
-        }
+        public Language[] Languages => HelperClasses.Languages.All;
 
-        private ColorThemes.ColorTheme actualColorTheme;
-
-        private ColorThemes.ColorTheme[] colorThemes = new ColorThemes.ColorTheme[] { HelperClasses.ColorThemes.ColorTheme.Light, HelperClasses.ColorThemes.ColorTheme.Dark };
-        public ColorThemes.ColorTheme[] ColorThemes
-        {
-            get => colorThemes;
-            set => this.RaiseAndSetIfChanged(ref colorThemes, value);
-        }
-        public ColorThemes.ColorTheme ActualColorTheme
+        public ColorTheme ActualColorTheme
         {
             get => actualColorTheme;
             set
@@ -53,142 +98,12 @@ namespace Gm1KonverterCrossPlatform.ViewModels
                 this.RaiseAndSetIfChanged(ref actualColorTheme, value);
                 HelperClasses.ColorThemes.SelectColorTheme(value);
                 userConfig.ColorTheme = value;
+                SaveUserConfig();
             }
         }
 
-        private GM1FileHeader.DataType filetype;
-        public GM1FileHeader.DataType Filetype
-        {
-            get => filetype;
-            set => this.RaiseAndSetIfChanged(ref filetype, value);
-        }
+        public ColorTheme[] ColorThemes => HelperClasses.ColorThemes.All;
 
-        private Image gifImage;
-        public Image GIFImage
-        {
-            get => gifImage;
-            set => this.RaiseAndSetIfChanged(ref gifImage, value);
-        }
-
-        private int delay = 100;
-        public int Delay
-        {
-            get => delay;
-            set => this.RaiseAndSetIfChanged(ref delay, value);
-        }
-        
-        private int actualPalette = 1;
-        public int ActualPalette
-        {
-            get => actualPalette;
-            set => this.RaiseAndSetIfChanged(ref actualPalette, value);
-        }
-
-        internal string[] workfolderFiles;
-        internal string[] WorkfolderFiles
-        {
-            get => workfolderFiles;
-            set => this.RaiseAndSetIfChanged(ref workfolderFiles, value);
-        }
-
-        internal string[] strongholdFiles;
-        internal string[] StrongholdFiles
-        {
-            get => strongholdFiles;
-            set => this.RaiseAndSetIfChanged(ref strongholdFiles, value);
-        }
-
-        internal string[] gfxFiles;
-        internal string[] GfxFiles
-        {
-            get => gfxFiles;
-            set => this.RaiseAndSetIfChanged(ref gfxFiles, value);
-        }
-
-        private bool buttonsEnabled = false;
-        public bool ButtonsEnabled
-        {
-            get => buttonsEnabled;
-            set => this.RaiseAndSetIfChanged(ref buttonsEnabled, value);
-        }
-
-        private bool offsetExpanderVisible = false;
-        public bool OffsetExpanderVisible
-        {
-            get => offsetExpanderVisible;
-            set => this.RaiseAndSetIfChanged(ref offsetExpanderVisible, value);
-        }
-
-        private sbyte xOffset;
-        public sbyte XOffset
-        {
-            get => xOffset;
-            set {
-                if (value > sbyte.MaxValue)
-                {
-                    value = sbyte.MaxValue;
-                }
-                else if (value < sbyte.MinValue)
-                {
-                    value = sbyte.MinValue;
-                }
-                this.RaiseAndSetIfChanged(ref xOffset, value);
-            }
-        }
-
-        private int yOffset;
-        public int YOffset
-        {
-            get => yOffset;
-            set
-            {
-                this.RaiseAndSetIfChanged(ref yOffset, value);
-            }
-        }
-
-        private int _bigImageWidth = 900;
-        public int BigImageWidth
-        {
-            get => _bigImageWidth;
-            set
-            {
-                this.RaiseAndSetIfChanged(ref _bigImageWidth, value);
-            }
-        }
-
-        private bool gm1PreviewTrue = true;
-        public bool Gm1PreviewTrue
-        {
-            get => gm1PreviewTrue;
-            set {
-                this.RaiseAndSetIfChanged(ref gm1PreviewTrue, value);
-                GfxPreviewTrue = !gm1PreviewTrue;
-                if (value)
-                {
-                    ToggleButtonName = "GM1";
-                }
-                else
-                {
-                    ToggleButtonName = "GFX";
-                }
-            }
-        }
-        
-        private bool gfxPreviewTrue = false;
-        public bool GfxPreviewTrue
-        {
-            get => gfxPreviewTrue;
-            set => this.RaiseAndSetIfChanged(ref gfxPreviewTrue, value);
-        }
-
-        private string toggleButtonName = "GM1";
-        public string ToggleButtonName
-        {
-            get => toggleButtonName;
-            set => this.RaiseAndSetIfChanged(ref toggleButtonName, value);
-        }
-
-        private bool openFolderAfterExport = false;
         public bool OpenFolderAfterExport
         {
             get => openFolderAfterExport;
@@ -196,399 +111,679 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             {
                 this.RaiseAndSetIfChanged(ref openFolderAfterExport, value);
                 userConfig.OpenFolderAfterExport = value;
+                SaveUserConfig();
             }
         }
 
-        private bool loggerActiv = false;
         public bool LoggerActiv
         {
             get => loggerActiv;
-            set {
+            set
+            {
                 this.RaiseAndSetIfChanged(ref loggerActiv, value);
+                Logger.IsEnabled = value;
                 userConfig.ActivateLogger = value;
+                SaveUserConfig();
             }
         }
 
-        private bool replaceWithSaveFile = false;
-        public bool ReplaceWithSaveFile
+        public string? CrusaderPath => userConfig.CrusaderPath;
+
+        public string? WorkFolderPath => userConfig.WorkFolderPath;
+
+        public IReadOnlyList<string> WorkfolderFiles
         {
-            get => replaceWithSaveFile;
-            set => this.RaiseAndSetIfChanged(ref replaceWithSaveFile, value);
+            get => workfolderFiles;
+            private set => this.RaiseAndSetIfChanged(ref workfolderFiles, value);
         }
 
-        private bool replaceWithSaveFileTgx = false;
-        public bool ReplaceWithSaveFileTgx
+        public IReadOnlyList<string> StrongholdFiles
         {
-            get => replaceWithSaveFileTgx;
-            set => this.RaiseAndSetIfChanged(ref replaceWithSaveFileTgx, value);
+            get => strongholdFiles;
+            private set => this.RaiseAndSetIfChanged(ref strongholdFiles, value);
         }
 
-        private bool colorButtonsEnabled = false;
-        public bool ColorButtonsEnabled
+        public IReadOnlyList<string> GfxFiles
         {
-            get => colorButtonsEnabled;
-            set => this.RaiseAndSetIfChanged(ref colorButtonsEnabled, value);
-        }
-        
-        private bool tgxButtonExportEnabled = false;
-        public bool TgxButtonExportEnabled
-        {
-            get => tgxButtonExportEnabled;
-            set => this.RaiseAndSetIfChanged(ref tgxButtonExportEnabled, value);
+            get => gfxFiles;
+            private set => this.RaiseAndSetIfChanged(ref gfxFiles, value);
         }
 
-        private bool tgxButtonImportEnabled = false;
-        public bool TgxButtonImportEnabled
+        public bool Gm1PreviewTrue
         {
-            get => tgxButtonImportEnabled;
-            set => this.RaiseAndSetIfChanged(ref tgxButtonImportEnabled, value);
+            get => gm1PreviewTrue;
+            set
+            {
+                this.RaiseAndSetIfChanged(ref gm1PreviewTrue, value);
+                GfxPreviewTrue = !value;
+                ToggleButtonName = value ? "GM1" : "GFX";
+            }
         }
 
-        private bool orginalStrongholdAnimationButtonEnabled = false;
-        public bool OrginalStrongholdAnimationButtonEnabled
+        public bool GfxPreviewTrue
         {
-            get => orginalStrongholdAnimationButtonEnabled;
-            set => this.RaiseAndSetIfChanged(ref orginalStrongholdAnimationButtonEnabled, value);
+            get => gfxPreviewTrue;
+            set => this.RaiseAndSetIfChanged(ref gfxPreviewTrue, value);
         }
 
-        private bool importButtonEnabled = false;
+        public string ToggleButtonName
+        {
+            get => toggleButtonName;
+            set => this.RaiseAndSetIfChanged(ref toggleButtonName, value);
+        }
+
+        public Gm1Document? Gm1Document => gm1Document;
+
+        public TgxDocument? TgxDocument => tgxDocument;
+
+        public bool FileSelected
+        {
+            get => fileSelected;
+            private set => this.RaiseAndSetIfChanged(ref fileSelected, value);
+        }
+
+        public Gm1DataType Filetype
+        {
+            get => filetype;
+            private set => this.RaiseAndSetIfChanged(ref filetype, value);
+        }
+
+        /// <summary>Header of the opened .gm1 file, shown in the header expander.</summary>
+        public Gm1FileHeader? FileHeader
+        {
+            get => fileHeader;
+            private set => this.RaiseAndSetIfChanged(ref fileHeader, value);
+        }
+
+        /// <summary>Header of the selected image, shown in the image header expander.</summary>
+        public TgxImageHeader? SelectedImageHeader
+        {
+            get => selectedImageHeader;
+            private set => this.RaiseAndSetIfChanged(ref selectedImageHeader, value);
+        }
+
+        public ObservableCollection<ImagePreviewItem> TGXImages
+        {
+            get => tgxImages;
+            private set => this.RaiseAndSetIfChanged(ref tgxImages, value);
+        }
+
+        public WriteableBitmap? ActuellColorTable
+        {
+            get => actuellColorTable;
+            private set => this.RaiseAndSetIfChanged(ref actuellColorTable, value);
+        }
+
+        /// <summary>1 based number of the selected color table.</summary>
+        public int ActualPalette
+        {
+            get => actualPalette;
+            private set => this.RaiseAndSetIfChanged(ref actualPalette, value);
+        }
+
+        public int Delay
+        {
+            get => delay;
+            set => this.RaiseAndSetIfChanged(ref delay, value);
+        }
+
+        public int BigImageWidth
+        {
+            get => bigImageWidth;
+            set => this.RaiseAndSetIfChanged(ref bigImageWidth, value);
+        }
+
+        public bool ButtonsEnabled
+        {
+            get => buttonsEnabled;
+            private set => this.RaiseAndSetIfChanged(ref buttonsEnabled, value);
+        }
+
         public bool ImportButtonEnabled
         {
             get => importButtonEnabled;
-            set => this.RaiseAndSetIfChanged(ref importButtonEnabled, value);
+            private set => this.RaiseAndSetIfChanged(ref importButtonEnabled, value);
         }
 
-        private bool decodeButtonEnabled = false;
-        public bool DecodeButtonEnabled
+        public bool ColorButtonsEnabled
         {
-            get => decodeButtonEnabled;
-            set => this.RaiseAndSetIfChanged(ref decodeButtonEnabled, value);
+            get => colorButtonsEnabled;
+            private set => this.RaiseAndSetIfChanged(ref colorButtonsEnabled, value);
         }
 
-        internal WriteableBitmap actuellColorTable;
-        internal WriteableBitmap ActuellColorTable
+        public bool OrginalStrongholdAnimationButtonEnabled
         {
-            get => actuellColorTable;
-            set => this.RaiseAndSetIfChanged(ref actuellColorTable, value);
+            get => orginalStrongholdAnimationButtonEnabled;
+            private set => this.RaiseAndSetIfChanged(ref orginalStrongholdAnimationButtonEnabled, value);
         }
 
-        internal ObservableCollection<Image> images = new ObservableCollection<Image>();
-        internal ObservableCollection<Image> TGXImages
+        public bool TgxButtonExportEnabled
         {
-            get => images;
-            set => this.RaiseAndSetIfChanged(ref images, value);
+            get => tgxButtonExportEnabled;
+            private set => this.RaiseAndSetIfChanged(ref tgxButtonExportEnabled, value);
         }
 
-        internal bool fileSelected = false;
-        internal bool FileSelected {
-            get => fileSelected;
-            set => this.RaiseAndSetIfChanged(ref fileSelected, value);
+        public bool TgxButtonImportEnabled
+        {
+            get => tgxButtonImportEnabled;
+            private set => this.RaiseAndSetIfChanged(ref tgxButtonImportEnabled, value);
         }
 
-        internal DecodedFile file;
-        internal DecodedFile File {
-            get => file;
-            set {
-                file = value;
-                FileSelected = (file != null);
+        public bool ReplaceWithSaveFile
+        {
+            get => replaceWithSaveFile;
+            private set => this.RaiseAndSetIfChanged(ref replaceWithSaveFile, value);
+        }
+
+        public bool ReplaceWithSaveFileTgx
+        {
+            get => replaceWithSaveFileTgx;
+            private set => this.RaiseAndSetIfChanged(ref replaceWithSaveFileTgx, value);
+        }
+
+        public bool OffsetExpanderVisible
+        {
+            get => offsetExpanderVisible;
+            private set => this.RaiseAndSetIfChanged(ref offsetExpanderVisible, value);
+        }
+
+        public sbyte XOffset
+        {
+            get => xOffset;
+            set => this.RaiseAndSetIfChanged(ref xOffset, value);
+        }
+
+        public int YOffset
+        {
+            get => yOffset;
+            set => this.RaiseAndSetIfChanged(ref yOffset, value);
+        }
+
+        /// <summary>Offsets.json in the work folder, if it exists.</summary>
+        public string? ExistingOffsetsFile
+        {
+            get
+            {
+                var workFolder = TryGetWorkFolder();
+                return workFolder != null && File.Exists(workFolder.OffsetsFile) ? workFolder.OffsetsFile : null;
             }
         }
 
-        internal TGXImage _actualTGXImageSelection;
-        internal TGXImage ActualTGXImageSelection
+        /// <summary>Loads the user config and the file lists.</summary>
+        public void Initialize()
         {
-            get => _actualTGXImageSelection;
-            set => this.RaiseAndSetIfChanged(ref _actualTGXImageSelection, value);
+            userConfig = configStore.Load();
+
+            Logger.IsEnabled = userConfig.ActivateLogger;
+            HelperClasses.Languages.SelectLanguage(userConfig.Language);
+            HelperClasses.ColorThemes.SelectColorTheme(userConfig.ColorTheme);
+
+            actualLanguage = userConfig.Language;
+            actualColorTheme = userConfig.ColorTheme;
+            openFolderAfterExport = userConfig.OpenFolderAfterExport;
+            loggerActiv = userConfig.ActivateLogger;
+            this.RaisePropertyChanged(nameof(ActualLanguage));
+            this.RaisePropertyChanged(nameof(ActualColorTheme));
+            this.RaisePropertyChanged(nameof(OpenFolderAfterExport));
+            this.RaisePropertyChanged(nameof(LoggerActiv));
+
+            LoadStrongholdFiles();
+            LoadWorkfolderFiles();
         }
 
-        public Dictionary<int, Point> OffsetsBuildings { get => offsetsBuildings; set => offsetsBuildings = value; }
-        public byte[] StrongholdasBytes { get => _strongholdasBytes; set => _strongholdasBytes = value; }
-        public byte[] StrongholdExtremeasBytes { get => _strongholdExtremeasBytes; set => _strongholdExtremeasBytes = value; }
-        public Point Strongholdadress { get => _strongholdadress; set => _strongholdadress = value; }
-
-        private byte[] _strongholdasBytes;
-        private byte[] _strongholdExtremeasBytes;
-        private Point _strongholdadress;
-
-        ~MainWindowViewModel()
+        public void SetCrusaderPath(string path)
         {
-            Dispose(false);
+            userConfig.CrusaderPath = StrongholdFolder.NormalizeRoot(path);
+            SaveUserConfig();
+            this.RaisePropertyChanged(nameof(CrusaderPath));
+            LoadStrongholdFiles();
         }
 
-        public void Dispose()
+        public void SetWorkFolderPath(string path)
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);
+            userConfig.WorkFolderPath = path;
+            SaveUserConfig();
+            this.RaisePropertyChanged(nameof(WorkFolderPath));
+            LoadWorkfolderFiles();
         }
 
-        protected virtual void Dispose(bool disposing)
+        public void LoadStrongholdFiles()
         {
-            if (File != null)
+            var folder = TryGetStrongholdFolder();
+            StrongholdFiles = folder?.GetGm1FileNames() ?? Array.Empty<string>();
+            GfxFiles = folder?.GetTgxFileNames() ?? Array.Empty<string>();
+        }
+
+        public void LoadWorkfolderFiles()
+        {
+            var workFolder = TryGetWorkFolder();
+            if (workFolder == null)
             {
-                File.Dispose();
+                WorkfolderFiles = Array.Empty<string>();
+                return;
+            }
+
+            Directory.CreateDirectory(workFolder.Root);
+            WorkfolderFiles = Directory.GetDirectories(workFolder.Root)
+                .Select(Path.GetFileName)
+                .OfType<string>()
+                .OrderBy(name => name, StringComparer.OrdinalIgnoreCase)
+                .ToList();
+        }
+
+        /// <exception cref="InvalidDataException">The file is not a valid .gm1 file.</exception>
+        public void OpenGm1File(string fileName)
+        {
+            Logger.Log($"Open GM1 file {fileName}");
+            var folder = RequireStrongholdFolder();
+
+            CloseFiles();
+            var document = Gm1Document.Load(folder.Gm1File(fileName));
+            gm1Document = document;
+            this.RaisePropertyChanged(nameof(Gm1Document));
+
+            FileSelected = true;
+            Filetype = document.DataType;
+            FileHeader = document.File.Header;
+
+            if (!document.IsSupported)
+            {
+                throw new WorkflowException($"{(uint)document.DataType} {Localization.GetText("TilesarenotSupportedyet")}");
+            }
+
+            ButtonsEnabled = true;
+            ImportButtonEnabled = true;
+            ColorButtonsEnabled = document.HasColorTables;
+            OrginalStrongholdAnimationButtonEnabled = document.HasColorTables;
+            ReplaceWithSaveFile = BackupExists(fileName);
+            ActualPalette = document.ColorTableIndex + 1;
+
+            offsetTarget = CastleOffsetAddresses.AppliesTo(fileName) ? LoadOffsetTarget() : null;
+
+            RefreshPreview();
+        }
+
+        public string ExportImages() => AfterExport(new Gm1Exporter(RequireWorkFolder()).ExportImages(RequireGm1()));
+
+        public string ExportBigImage()
+        {
+            if (BigImageWidth <= 0)
+            {
+                throw new WorkflowException($"{Localization.GetText("ImageSize")}: {BigImageWidth} <= 0");
+            }
+
+            return AfterExport(new Gm1Exporter(RequireWorkFolder()).ExportBigImage(RequireGm1(), BigImageWidth));
+        }
+
+        public string ExportColorTables() => AfterExport(new Gm1Exporter(RequireWorkFolder()).ExportColorTables(RequireGm1()));
+
+        public string ExportOriginalAnimation() => AfterExport(new Gm1Exporter(RequireWorkFolder()).ExportOriginalAnimation(RequireGm1()));
+
+        public void ImportImages()
+        {
+            new Gm1Importer(RequireWorkFolder()).ImportImages(RequireGm1());
+            RefreshPreview();
+        }
+
+        public void ImportBigImage()
+        {
+            new Gm1Importer(RequireWorkFolder()).ImportBigImage(RequireGm1());
+            RefreshPreview();
+        }
+
+        public void ImportColorTables()
+        {
+            new Gm1Importer(RequireWorkFolder()).ImportColorTables(RequireGm1());
+            RefreshPreview();
+        }
+
+        public void ImportOriginalAnimation()
+        {
+            new Gm1Importer(RequireWorkFolder()).ImportOriginalAnimation(RequireGm1());
+            RefreshPreview();
+        }
+
+        /// <summary>Shows the next (+1) or previous (-1) color table. Imported images are kept.</summary>
+        public void ChangeColorTable(int step)
+        {
+            var document = RequireGm1();
+            document.ColorTableIndex = ((document.ColorTableIndex + step) % Palette.ColorTableCount + Palette.ColorTableCount) % Palette.ColorTableCount;
+            ActualPalette = document.ColorTableIndex + 1;
+            RefreshPreview();
+        }
+
+        /// <summary>A copy of the current color table for editing.</summary>
+        public ColorTable CopyCurrentColorTable() => RequireGm1().CurrentColorTable.Copy();
+
+        public void ReplaceCurrentColorTable(ColorTable colorTable)
+        {
+            var document = RequireGm1();
+            document.File.Palette.ColorTables[document.ColorTableIndex] = colorTable ?? throw new ArgumentNullException(nameof(colorTable));
+            RefreshPreview();
+        }
+
+        /// <summary>Writes the modified file into the Stronghold folder, keeping a backup of the original.</summary>
+        public void InstallGm1File()
+        {
+            var document = RequireGm1();
+            var workFolder = RequireWorkFolder();
+            var strongholdFolder = RequireStrongholdFolder();
+
+            GameFileInstaller.Install(
+                strongholdFolder.Gm1File(document.FileName),
+                document.ToBytes(),
+                workFolder.BackupFile(document.FileName),
+                workFolder.ModdedFile(document.FileName));
+
+            ReopenGm1File(document);
+            LoadWorkfolderFiles();
+        }
+
+        public void RestoreGm1File()
+        {
+            var document = RequireGm1();
+            GameFileInstaller.Restore(RequireWorkFolder().BackupFile(document.FileName), RequireStrongholdFolder().Gm1File(document.FileName));
+            ReopenGm1File(document);
+        }
+
+        public string ExportGif(IEnumerable<ImagePreviewItem> selectedItems)
+        {
+            var frames = selectedItems.Select(item => item.Pixels).ToList();
+            if (frames.Count == 0)
+            {
+                throw new WorkflowException(Localization.GetText("SelectGif"));
+            }
+
+            string fileName = gm1Document?.FileName ?? tgxDocument?.FileName ?? throw new WorkflowException(Localization.GetText("SelectGif"));
+            var workFolder = RequireWorkFolder();
+            GifExporter.Save(frames, Delay, workFolder.GifFile(fileName));
+            return AfterExport(workFolder.GifFolder(fileName));
+        }
+
+        /// <exception cref="InvalidDataException">The file is not a valid .tgx file.</exception>
+        public void OpenTgxFile(string fileName)
+        {
+            Logger.Log($"Open TGX file {fileName}");
+            var folder = RequireStrongholdFolder();
+
+            CloseFiles();
+            tgxDocument = TgxDocument.Load(folder.TgxFile(fileName));
+            this.RaisePropertyChanged(nameof(TgxDocument));
+
+            TgxButtonExportEnabled = true;
+            var workFolder = TryGetWorkFolder();
+            TgxButtonImportEnabled = workFolder != null && File.Exists(workFolder.TgxImageFile(fileName));
+            ReplaceWithSaveFileTgx = BackupExists(fileName);
+
+            RefreshPreview();
+        }
+
+        public string ExportTgxImage()
+        {
+            string folder = new TgxImageTransfer(RequireWorkFolder()).Export(RequireTgx());
+            TgxButtonImportEnabled = true;
+            return AfterExport(folder);
+        }
+
+        public void ImportTgxImage()
+        {
+            new TgxImageTransfer(RequireWorkFolder()).Import(RequireTgx());
+            RefreshPreview();
+        }
+
+        public void InstallTgxFile()
+        {
+            var document = RequireTgx();
+            GameFileInstaller.Install(
+                RequireStrongholdFolder().TgxFile(document.FileName),
+                document.ToBytes(),
+                RequireWorkFolder().BackupFile(document.FileName));
+
+            ReplaceWithSaveFileTgx = true;
+            LoadWorkfolderFiles();
+        }
+
+        public void RestoreTgxFile()
+        {
+            var document = RequireTgx();
+            GameFileInstaller.Restore(RequireWorkFolder().BackupFile(document.FileName), RequireStrongholdFolder().TgxFile(document.FileName));
+            OpenTgxFile(document.FileName);
+        }
+
+        public void SelectImage(ImagePreviewItem? item)
+        {
+            SelectedImageHeader = item?.Header;
+
+            selectedOffsetImageIndex = -1;
+            OffsetExpanderVisible = false;
+
+            if (item == null || offsetTarget == null || !offsetTarget.Supports(item.Index))
+            {
+                return;
+            }
+
+            if (offsetTarget.TryRead(item.Index, out var offset))
+            {
+                XOffset = (sbyte)Math.Max(sbyte.MinValue, Math.Min(sbyte.MaxValue, offset.X));
+                YOffset = offset.Y;
+                selectedOffsetImageIndex = item.Index;
+                OffsetExpanderVisible = true;
             }
         }
 
-        /// <summary>
-        /// Load the GM1 Files from the CrusaderPath
-        /// </summary>
-        internal void LoadStrongholdFiles()
+        /// <summary>Writes the offset of the selected image into the executables and Offsets.json.</summary>
+        public void ChangeSelectedOffset()
         {
-            Logger.Log("LoadStrongholdFiles start");
-            if (!string.IsNullOrEmpty(userConfig.CrusaderPath))
+            if (selectedOffsetImageIndex < 0)
             {
-               
+                return;
+            }
+
+            var offset = new BuildingOffset(XOffset, YOffset);
+            var patcher = RequireOffsetPatcher();
+            patcher.Write(selectedOffsetImageIndex, offset);
+            patcher.Save();
+            offsetTarget = patcher;
+
+            var workFolder = TryGetWorkFolder();
+            if (workFolder != null)
+            {
+                BuildingOffsetStore.Load(workFolder.OffsetsFile).Set(selectedOffsetImageIndex, offset);
+            }
+        }
+
+        /// <summary>Applies all offsets of an offset file to the executables.</summary>
+        /// <returns>The number of applied offsets.</returns>
+        public int ApplyOffsetsFromFile(string path)
+        {
+            var offsets = BuildingOffsetStore.Load(path).Offsets;
+            var patcher = RequireOffsetPatcher();
+
+            int applied = 0;
+            foreach (var entry in offsets.Where(entry => patcher.Supports(entry.Key)))
+            {
+                patcher.Write(entry.Key, entry.Value);
+                applied++;
+            }
+
+            patcher.Save();
+            offsetTarget = patcher;
+
+            var workFolder = TryGetWorkFolder();
+            if (workFolder != null && !PathsEqual(path, workFolder.OffsetsFile))
+            {
+                var store = BuildingOffsetStore.Load(workFolder.OffsetsFile);
+                foreach (var entry in offsets.Where(entry => patcher.Supports(entry.Key)))
+                {
+                    store.Set(entry.Key, entry.Value);
+                }
+            }
+
+            return applied;
+        }
+
+        public void OpenStrongholdFolder() => FolderLauncher.Open(RequireStrongholdFolder().Root);
+
+        public void OpenWorkFolder() => FolderLauncher.Open(RequireWorkFolder().Root);
+
+        public void OpenWorkFolderEntry(string name) => FolderLauncher.Open(Path.Combine(RequireWorkFolder().Root, name));
+
+        public void OpenLogFolder() => FolderLauncher.Open(Logger.Directory);
+
+        private void RefreshPreview()
+        {
+            var items = new ObservableCollection<ImagePreviewItem>();
+
+            if (gm1Document != null && gm1Document.IsSupported)
+            {
+                var images = gm1Document.RenderItems();
+                for (int i = 0; i < images.Count; i++)
+                {
+                    items.Add(new ImagePreviewItem(i, images[i], gm1Document.GetFirstImageOfItem(i).Header));
+                }
+
+                ActuellColorTable = gm1Document.HasColorTables
+                    ? BitmapFactory.Create(ColorTableImage.Render(gm1Document.CurrentColorTable))
+                    : null;
+
+                // The header values change on import; a new DataContext makes the bindings read them again.
+                FileHeader = null;
+                FileHeader = gm1Document.File.Header;
+            }
+            else if (tgxDocument != null)
+            {
+                items.Add(new ImagePreviewItem(0, tgxDocument.Render(), null));
+            }
+
+            TGXImages = items;
+            SelectImage(null);
+        }
+
+        private void CloseFiles()
+        {
+            gm1Document = null;
+            tgxDocument = null;
+            offsetTarget = null;
+            this.RaisePropertyChanged(nameof(Gm1Document));
+            this.RaisePropertyChanged(nameof(TgxDocument));
+
+            FileSelected = false;
+            FileHeader = null;
+            ActuellColorTable = null;
+            ActualPalette = 1;
+            ButtonsEnabled = false;
+            ImportButtonEnabled = false;
+            ColorButtonsEnabled = false;
+            OrginalStrongholdAnimationButtonEnabled = false;
+            ReplaceWithSaveFile = false;
+            TgxButtonExportEnabled = false;
+            TgxButtonImportEnabled = false;
+            ReplaceWithSaveFileTgx = false;
+            TGXImages = new ObservableCollection<ImagePreviewItem>();
+            SelectImage(null);
+        }
+
+        private void ReopenGm1File(Gm1Document previous)
+        {
+            OpenGm1File(previous.FileName);
+            if (gm1Document != null && gm1Document.HasColorTables)
+            {
+                gm1Document.ColorTableIndex = previous.ColorTableIndex;
+                ActualPalette = previous.ColorTableIndex + 1;
+                RefreshPreview();
+            }
+        }
+
+        private string AfterExport(string folder)
+        {
+            LoadWorkfolderFiles();
+            if (OpenFolderAfterExport)
+            {
                 try
                 {
-                    StrongholdFiles = Utility.GetFileNames(userConfig.CrusaderPath + "\\gm", "*.gm1");
-                    GfxFiles = Utility.GetFileNames(userConfig.CrusaderPath + "\\gfx", "*.tgx");
+                    FolderLauncher.Open(folder);
                 }
                 catch (Exception e)
                 {
-                    Logger.Log(e.Message.ToString());
+                    // The export itself succeeded.
+                    Logger.LogException(e);
                 }
             }
-            Logger.Log("LoadStrongholdFiles end");
+
+            return folder;
         }
 
-        internal void LoadWorkfolderFiles()
+        private bool BackupExists(string fileName)
         {
-            if (!String.IsNullOrEmpty(userConfig.WorkFolderPath))
+            var workFolder = TryGetWorkFolder();
+            return workFolder != null && File.Exists(workFolder.BackupFile(fileName));
+        }
+
+        private IBuildingOffsetTarget? LoadOffsetTarget()
+        {
+            var folder = TryGetStrongholdFolder();
+            if (folder == null)
             {
-                if (!Directory.Exists(userConfig.WorkFolderPath))
-                {
-                    Directory.CreateDirectory(userConfig.WorkFolderPath);
-                }
-
-                WorkfolderFiles = Utility.GetDirectoryNames(userConfig.WorkFolderPath);
+                return null;
             }
-        }
 
-        /// <summary>
-        /// Decode the GM1 File to IMGS and Headers
-        /// </summary>
-        /// <param name="fileName">The Filepath/Filename to decode</param>
-        /// <param name="window">actual avalonia window for error Text</param>
-        /// <returns></returns>
-        internal bool DecodeData(string fileName, Window window)
-        {
-            this.RaisePropertyChanging("File");
-
-            Logger.Log("DecodeData:\nFile: "+ fileName);
-            //Convert Selected file
             try
             {
-                Dispose();
-                File = new DecodedFile();
-                if (!File.DecodeGm1File(System.IO.File.ReadAllBytes(userConfig.CrusaderPath + "\\gm\\" + fileName), fileName))
-                {
-                    MessageBoxWindow messageBox = new MessageBoxWindow(MessageBoxWindow.MessageTyp.Info, (GM1FileHeader.DataType)File.FileHeader.IDataType + Utility.GetText("TilesarenotSupportedyet"));
-                    messageBox.ShowDialog(window);
-                    return false;
-                }
-
-                if ((GM1FileHeader.DataType)File.FileHeader.IDataType == GM1FileHeader.DataType.TilesObject)
-                {
-                    ShowTileImgToWindow();
-                }
-                else
-                {
-                    ShowTGXImgToWindow();
-                }
+                var patcher = ExecutableOffsetPatcher.Load(folder);
+                return patcher.HasExecutables ? patcher : null;
             }
-            catch (Exception e)
+            catch (Exception e) when (e is IOException || e is UnauthorizedAccessException)
             {
-                Logger.Log("Exception:\n" + e.Message);
-                MessageBoxWindow messageBox = new MessageBoxWindow(MessageBoxWindow.MessageTyp.Info, "Something went wrong: pls add a issue on the Github Page\n\nError:\n" + e.Message);
-                messageBox.Show();
-                return false;
-            }
-
-            this.RaisePropertyChanged("File");
-
-            return true;
-        }
-
-        public TGXImage TgxImage;
-        internal void DecodeTgxData(string fileName, MainWindow mainWindow)
-        {
-            if (Logger.Loggeractiv) Logger.Log("DecodeTgxData:\nFile: " + fileName);
-
-            var array = System.IO.File.ReadAllBytes(userConfig.CrusaderPath +"\\gfx\\" + fileName);
-            TgxImage = new TGXImage();
-
-            TgxImage.TgxWidth = BitConverter.ToUInt32(array, 0);
-            TgxImage.TgxHeight = BitConverter.ToUInt32(array, 4);
-            TgxImage.ImgFileAsBytearray = new byte[array.Length - 8];
-            TgxImage.Header = new TGXImageHeader();
-            TgxImage.Header.AnimatedColor = 1;
-            Array.Copy(array, 8, TgxImage.ImgFileAsBytearray, 0, TgxImage.ImgFileAsBytearray.Length);
-            TgxImage.Bitmap = ImageConverter.GM1ByteArrayToImg(
-                TgxImage.ImgFileAsBytearray,
-                (int)TgxImage.TgxWidth,
-                (int)TgxImage.TgxHeight,
-                null);
-            TGXImages = new ObservableCollection<Image>();
-            var bitmap = TgxImage.Bitmap;
-            Image image = new Image();
-            image.MaxWidth = TgxImage.TgxWidth;
-            image.MaxHeight = TgxImage.TgxHeight;
-            image.Tag = TgxImage;
-            image.Source = bitmap;
-            TGXImages.Add(image);
-        }
-
-        /// <summary>
-        /// Show the Imgs to the main Window
-        /// </summary>
-        private void ShowTileImgToWindow()
-        {
-            TGXImages = new ObservableCollection<Image>();
-            for (int j = 0; j < File.TilesImages.Count; j++)
-            {
-                var bitmap = File.TilesImages[j].TileImage;
-
-                Image image = new Image();
-                image.MaxHeight = File.TilesImages[j].Height;
-                image.MaxWidth = File.TilesImages[j].Width;
-                image.Source = bitmap;
-                TGXImages.Add(image);
+                Logger.LogException(e);
+                return null;
             }
         }
 
-        /// <summary>
-        /// Show the Tile Imgs to the main Window
-        /// </summary>
-        private void ShowTGXImgToWindow()
+        private ExecutableOffsetPatcher RequireOffsetPatcher()
         {
-            TGXImages = new ObservableCollection<Image>();
-
-            for (int j = 0; j < File.FileHeader.INumberOfPictureinFile; j++)
+            var folder = RequireStrongholdFolder();
+            var patcher = ExecutableOffsetPatcher.Load(folder);
+            if (!patcher.HasExecutables)
             {
-                var bitmap = File.ImagesTGX[j].Bitmap;
-                Image image = new Image();
-                image.MaxHeight = File.ImagesTGX[j].Header.Height;
-                image.MaxWidth = File.ImagesTGX[j].Header.Width;
-                image.Source = bitmap;
-                image.Tag = File.ImagesTGX[j];
-                TGXImages.Add(image);
+                throw new WorkflowException($"\"{StrongholdFolder.CrusaderExecutable}\" / \"{StrongholdFolder.ExtremeExecutable}\": {folder.Root}");
             }
 
-            if (File.Palette != null)
+            return patcher;
+        }
+
+        private Gm1Document RequireGm1() => gm1Document ?? throw new WorkflowException(Localization.GetText("NoFileSelected"));
+
+        private TgxDocument RequireTgx() => tgxDocument ?? throw new WorkflowException(Localization.GetText("NoFileSelected"));
+
+        private WorkFolder RequireWorkFolder() => TryGetWorkFolder() ?? throw new WorkflowException(Localization.GetText("NoWorkfolderSelected"));
+
+        private StrongholdFolder RequireStrongholdFolder() => TryGetStrongholdFolder() ?? throw new WorkflowException(Localization.GetText("NoStrongholdFolderSelected"));
+
+        private WorkFolder? TryGetWorkFolder()
+        {
+            return string.IsNullOrWhiteSpace(userConfig.WorkFolderPath) ? null : new WorkFolder(userConfig.WorkFolderPath!);
+        }
+
+        private StrongholdFolder? TryGetStrongholdFolder()
+        {
+            return string.IsNullOrWhiteSpace(userConfig.CrusaderPath) ? null : new StrongholdFolder(userConfig.CrusaderPath!);
+        }
+
+        private void SaveUserConfig()
+        {
+            try
             {
-                ActuellColorTable = ColorTableConverter.GetBitmap(File.Palette.ColorTables[File.Palette.ActualPalette], Palette.width, Palette.height, Palette.pixelSize);
+                configStore.Save(userConfig);
+            }
+            catch (Exception e) when (e is IOException || e is UnauthorizedAccessException)
+            {
+                Logger.LogException(e);
             }
         }
 
-        /// <summary>
-        /// Changes the actual Paletteimg
-        /// </summary>
-        /// <param name="number"></param>
-        internal void ChangePalette(int number)
+        private static bool PathsEqual(string first, string second)
         {
-            if (number > 0)
-            {
-                if (File.Palette.ActualPalette + number > 9)
-                {
-                    File.Palette.ActualPalette = 0;
-                }
-                else
-                {
-                    File.Palette.ActualPalette += number;
-                }
-            }
-            else
-            {
-                if (File.Palette.ActualPalette + number < 0)
-                {
-                    File.Palette.ActualPalette = 9;
-                }
-                else
-                {
-                    File.Palette.ActualPalette += number;
-                }
-            }
-            ActualPalette = File.Palette.ActualPalette + 1;
-            File.DecodeGm1File(File.FileArray, File.FileHeader.Name);
-            ShowTGXImgToWindow();
-        }
-
-        /// <summary>
-        /// Generate the Palette with the IMGS new, maybe after Import from new Colortables
-        /// </summary>
-        internal void GeneratePaletteAndImgNew()
-        {
-            File.DecodeGm1File(File.FileArray, File.FileHeader.Name);
-            ShowTGXImgToWindow();
-        }
-
-        private Dictionary<int, Point> offsetsBuildings = new Dictionary<int, Point>() {
-            { 0, new Point(939615, 939608) },
-            { 1, new Point(939841, 939834) },
-            { 2, new Point(940022, 940015) },
-            { 3, new Point(939728, 939721) },
-            { 12, new Point(939000, 938996) },
-            { 13, new Point(939031, 939027) },
-            { 43, new Point(938935, 938928) },
-            { 44, new Point(938969, 938962) },
-            { 121, new Point(939943, 939936) },
-            { 122, new Point(939943, 939936) },
-            { 123, new Point(939574, 939567) },
-            { 124, new Point(939536, 939529) },
-            { 125, new Point(939574, 939567) },
-            { 23, new Point(938858, 938851) }
-        };
-        
-        public Dictionary<int, Point> NewOffsetsInExe { get; set; } = new Dictionary<int, Point>();
-        internal void ChangeExeOffset(int index, Point strongholdadress, int xOffset, int yOffset)
-        {
-            if (NewOffsetsInExe.ContainsKey(index))
-            {
-                NewOffsetsInExe[index] = new Point(xOffset, yOffset);
-            }
-            else
-            {
-                NewOffsetsInExe.Add(index, new Point(xOffset, yOffset));
-            }
-
-            var offsetData = JsonConvert.SerializeObject(NewOffsetsInExe);
-            System.IO.File.WriteAllText(UserConfig.WorkFolderPath + Path.DirectorySeparatorChar + "Offsets.json", offsetData);
-
-            int strongholdValue = 912;
-            var bytesArray = BitConverter.GetBytes(yOffset);
-            if (_strongholdExtremeasBytes != null)
-            {
-                _strongholdExtremeasBytes[(int)strongholdadress.X] = (byte)xOffset;
-            }
-
-            _strongholdasBytes[(int)strongholdadress.X - strongholdValue] = (byte)xOffset;
-     
-            if (index == 12 || index == 13)
-            {
-                if (_strongholdExtremeasBytes != null)
-                {
-                    _strongholdExtremeasBytes[(int)strongholdadress.Y] = (byte)yOffset;
-                }
-
-                _strongholdasBytes[(int)strongholdadress.Y - strongholdValue] = (byte)yOffset;
-            }
-            else
-            {
-                if (_strongholdExtremeasBytes != null)
-                {
-                    for (int i = 0; i < bytesArray.Length; i++)
-                    {
-                        _strongholdExtremeasBytes[(int)strongholdadress.Y + i] = bytesArray[i];
-                    }
-                }
-                for (int i = 0; i < bytesArray.Length; i++)
-                {
-                    _strongholdasBytes[(int)strongholdadress.Y - strongholdValue + i] = bytesArray[i];
-                }
-            }
-
-            System.IO.File.WriteAllBytes(UserConfig.CrusaderPath + "\\Stronghold_Crusader_Extreme.exe", _strongholdExtremeasBytes);
-            System.IO.File.WriteAllBytes(UserConfig.CrusaderPath + "\\Stronghold Crusader.exe", _strongholdasBytes);
+            return string.Equals(Path.GetFullPath(first), Path.GetFullPath(second), StringComparison.OrdinalIgnoreCase);
         }
     }
 }

@@ -20,7 +20,7 @@ namespace Gm1KonverterCrossPlatform.Core.Diagnostics
         public static bool IsEnabled { get; set; }
 
         public static string Directory { get; set; } = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Gm1ConverterCrossPlatform", "Logs");
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData, Environment.SpecialFolderOption.Create), "Gm1ConverterCrossPlatform", "Logs");
 
         public static void Log(string text)
         {

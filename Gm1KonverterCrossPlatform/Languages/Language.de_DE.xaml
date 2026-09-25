@@ -105,4 +105,8 @@
     <x:String x:Key="ChangeColorTableDialogBox_Button_Cancel">Cancel</x:String>
     <x:String x:Key="ChangeColorTableDialogBox_Button_Save">Save</x:String>
     <x:String x:Key="ChangeColorTableDialogBox_Button_Close">Close</x:String>
+    <x:String x:Key="NoFileSelected">Bitte zuerst eine Datei auswählen.</x:String>
+    <x:String x:Key="NoWorkfolderSelected">Bitte zuerst unter Optionen einen Arbeitsordner auswählen.</x:String>
+    <x:String x:Key="NoStrongholdFolderSelected">Bitte zuerst unter Optionen den Stronghold Ordner auswählen.</x:String>
+    <x:String x:Key="SomethingWentWrong">Etwas ist schiefgelaufen: bitte erstelle ein Issue auf der GitHub Seite.</x:String>
 </controls:ResourceDictionary>

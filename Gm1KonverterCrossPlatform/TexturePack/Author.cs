@@ -2,8 +2,8 @@
 {
     public class Author
     {
-        public string Name;
-        public string Information;
-        public string[] Urls;
+        public string? Name;
+        public string? Information;
+        public string[]? Urls;
     }
 }

@@ -6,9 +6,13 @@ namespace Gm1KonverterCrossPlatform.Views
 {
     public class ChangeColorTableWindowDialogBox : Window
     {
-        private readonly ChangeColorTableWindow changeColorTableWindow;
+        private readonly ChangeColorTableWindow? changeColorTableWindow;
 
-        public ChangeColorTableWindowDialogBox() { }
+        /// <summary>Only for the XAML designer.</summary>
+        public ChangeColorTableWindowDialogBox()
+        {
+            AvaloniaXamlLoader.Load(this);
+        }
 
         public ChangeColorTableWindowDialogBox(ChangeColorTableWindow changeColorTableWindow)
         {
@@ -17,22 +21,22 @@ namespace Gm1KonverterCrossPlatform.Views
             this.changeColorTableWindow = changeColorTableWindow;
         }
 
-        private void Button_Cancel(object sender, RoutedEventArgs e)
+        private void Button_Cancel(object? sender, RoutedEventArgs e)
         {
             Close();
         }
 
-        private void Button_Save(object sender, RoutedEventArgs e)
+        private void Button_Save(object? sender, RoutedEventArgs e)
         {
-            changeColorTableWindow.SaveColorTableChanges();
-            changeColorTableWindow.Close();
+            changeColorTableWindow?.SaveColorTableChanges();
+            changeColorTableWindow?.Close();
             Close();
         }
 
-        private void Button_Close(object sender, RoutedEventArgs e)
+        private void Button_Close(object? sender, RoutedEventArgs e)
         {
-            changeColorTableWindow.DiscardColorTableChanges();
-            changeColorTableWindow.Close();
+            changeColorTableWindow?.DiscardColorTableChanges();
+            changeColorTableWindow?.Close();
             Close();
         }
     }
