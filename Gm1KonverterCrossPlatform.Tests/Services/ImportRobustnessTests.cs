@@ -101,18 +101,6 @@ namespace Gm1KonverterCrossPlatform.Tests.Services
         }
 
         [Fact]
-        public void ExecutableOffsetPatcher_SecondExecutableTooSmall_PatchesNeither()
-        {
-            var crusader = new byte[950_000];
-            var extreme = new byte[1000];
-            var patcher = ExecutableOffsetPatcher.FromBytes(crusader, extreme);
-
-            Assert.Throws<InvalidDataException>(() => patcher.Write(0, new BuildingOffset(5, 6)));
-
-            Assert.All(patcher.GetBytes(0), b => Assert.Equal(0, b));
-        }
-
-        [Fact]
         public void BuildingOffsetStore_ValueOutOfRange_ThrowsInvalidDataException()
         {
             Assert.Throws<InvalidDataException>(() => BuildingOffsetStore.Parse("{\"0\":{\"X\":1e20,\"Y\":0}}"));

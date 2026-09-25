@@ -76,7 +76,7 @@ namespace Gm1KonverterCrossPlatform.Views
 
         private void Button_ClickPalleteplus(object? sender, RoutedEventArgs e) => Run(() => RequiredViewModel.ChangeColorTable(1));
 
-        private void Button_ChangeOffset(object? sender, RoutedEventArgs e) => Run(() => RequiredViewModel.ChangeSelectedOffset());
+        private void Button_ChangeOffset(object? sender, RoutedEventArgs e) => _ = RunAsync(() => ShowInfoIfAnyAsync(RequiredViewModel.ChangeSelectedOffset()));
 
         private void OpenWorkfolderDirectory(object? sender, RoutedEventArgs e)
         {
@@ -185,7 +185,7 @@ namespace Gm1KonverterCrossPlatform.Views
                 string? path = RequiredViewModel.ExistingOffsetsFile ?? await SelectOffsetFileAsync();
                 if (path != null)
                 {
-                    RequiredViewModel.ApplyOffsetsFromFile(path);
+                    await ShowInfoAsync(RequiredViewModel.ApplyOffsetsFromFile(path));
                 }
             });
         }
@@ -250,6 +250,8 @@ namespace Gm1KonverterCrossPlatform.Views
         }
 
         private Task ShowInfoAsync(string message) => new MessageBoxWindow(MessageBoxWindow.MessageTyp.Info, message).ShowDialog(this);
+
+        private Task ShowInfoIfAnyAsync(string? message) => message == null ? Task.CompletedTask : ShowInfoAsync(message);
 
         private async Task ShowErrorAsync(Exception error)
         {

@@ -75,6 +75,19 @@ namespace Gm1KonverterCrossPlatform.Core.BuildingOffsets
             Save();
         }
 
+        /// <summary>Sets several offsets and saves the file once.</summary>
+        public void SetAll(IEnumerable<KeyValuePair<int, BuildingOffset>> entries)
+        {
+            if (entries == null) throw new ArgumentNullException(nameof(entries));
+
+            foreach (var entry in entries)
+            {
+                offsets[entry.Key] = entry.Value;
+            }
+
+            Save();
+        }
+
         private void Save()
         {
             var entries = new SortedDictionary<int, OffsetEntry>();

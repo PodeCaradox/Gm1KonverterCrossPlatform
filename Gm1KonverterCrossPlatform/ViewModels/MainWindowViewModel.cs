@@ -373,6 +373,18 @@ namespace Gm1KonverterCrossPlatform.ViewModels
                 {
                     plugin.UpdateDefinition();
                 }
+
+                var module = LoadOffsetTarget();
+                if (module != null && module.Exists)
+                {
+                    module.UpdateDefinition();
+                }
+
+                if (IsCastleFileOpen)
+                {
+                    offsetTarget = module;
+                    SelectImage(selectedItem);
+                }
             }
 
             UpdateRestoreState();
@@ -618,60 +630,55 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             }
         }
 
-        /// <summary>Writes the offset of the selected image into the executables and Offsets.json.</summary>
-        public void ChangeSelectedOffset()
+        /// <summary>
+        /// Sets the offset of the selected image in the UCP3 offsets module (the executables stay unchanged)
+        /// and in Offsets.json of the work folder.
+        /// </summary>
+        /// <returns>A message for the user if the module was created, otherwise null.</returns>
+        public string? ChangeSelectedOffset()
         {
             if (selectedOffsetImageIndex < 0)
             {
-                return;
+                return null;
             }
 
             var offset = new BuildingOffset(XOffset, YOffset);
-            var patcher = RequireOffsetPatcher();
-            patcher.Write(selectedOffsetImageIndex, offset);
-            patcher.Save();
-            offsetTarget = IsCastleFileOpen ? patcher : null;
+            var module = RequireOffsetModule();
+            bool created = !module.Exists;
+            module.Write(selectedOffsetImageIndex, offset);
+            offsetTarget = IsCastleFileOpen ? module : null;
 
             var workFolder = TryGetWorkFolder();
             if (workFolder != null)
             {
                 BuildingOffsetStore.Load(workFolder.OffsetsFile).Set(selectedOffsetImageIndex, offset);
             }
+
+            return created ? OffsetsSavedMessage(module) : null;
         }
 
-        /// <summary>Applies all offsets of an offset file to the executables.</summary>
-        /// <returns>The number of applied offsets.</returns>
-        public int ApplyOffsetsFromFile(string path)
+        /// <summary>Sets all offsets of an offset file in the UCP3 offsets module.</summary>
+        /// <returns>A message for the user.</returns>
+        public string ApplyOffsetsFromFile(string path)
         {
-            var offsets = BuildingOffsetStore.Load(path).Offsets;
-            var patcher = RequireOffsetPatcher();
+            var module = RequireOffsetModule();
+            var offsets = BuildingOffsetStore.Load(path).Offsets.Where(entry => module.Supports(entry.Key)).ToList();
+            module.WriteAll(offsets);
 
-            int applied = 0;
-            foreach (var entry in offsets.Where(entry => patcher.Supports(entry.Key)))
-            {
-                patcher.Write(entry.Key, entry.Value);
-                applied++;
-            }
-
-            patcher.Save();
             if (IsCastleFileOpen)
             {
                 // Show the applied values instead of the ones read before.
-                offsetTarget = patcher;
+                offsetTarget = module;
                 SelectImage(selectedItem);
             }
 
             var workFolder = TryGetWorkFolder();
             if (workFolder != null && !PathsEqual(path, workFolder.OffsetsFile))
             {
-                var store = BuildingOffsetStore.Load(workFolder.OffsetsFile);
-                foreach (var entry in offsets.Where(entry => patcher.Supports(entry.Key)))
-                {
-                    store.Set(entry.Key, entry.Value);
-                }
+                BuildingOffsetStore.Load(workFolder.OffsetsFile).SetAll(offsets);
             }
 
-            return applied;
+            return OffsetsSavedMessage(module);
         }
 
         public void OpenStrongholdFolder() => FolderLauncher.Open(RequireStrongholdFolder().Root);
@@ -816,7 +823,8 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             }
         }
 
-        private IBuildingOffsetTarget? LoadOffsetTarget()
+        /// <summary>The UCP3 offsets module, or null if the Stronghold folder has no executable.</summary>
+        private UcpOffsetModule? LoadOffsetTarget()
         {
             var folder = TryGetStrongholdFolder();
             if (folder == null)
@@ -826,8 +834,8 @@ namespace Gm1KonverterCrossPlatform.ViewModels
 
             try
             {
-                var patcher = ExecutableOffsetPatcher.Load(folder);
-                return patcher.HasExecutables ? patcher : null;
+                var module = OpenOffsetModule(folder);
+                return module.HasExecutables ? module : null;
             }
             catch (Exception e) when (e is IOException || e is UnauthorizedAccessException)
             {
@@ -836,16 +844,31 @@ namespace Gm1KonverterCrossPlatform.ViewModels
             }
         }
 
-        private ExecutableOffsetPatcher RequireOffsetPatcher()
+        private UcpOffsetModule RequireOffsetModule()
         {
             var folder = RequireStrongholdFolder();
-            var patcher = ExecutableOffsetPatcher.Load(folder);
-            if (!patcher.HasExecutables)
+            var module = OpenOffsetModule(folder);
+            if (!module.HasExecutables)
             {
                 throw new WorkflowException($"\"{StrongholdFolder.CrusaderExecutable}\" / \"{StrongholdFolder.ExtremeExecutable}\": {folder.Root}");
             }
 
-            return patcher;
+            return module;
+        }
+
+        private UcpOffsetModule OpenOffsetModule(StrongholdFolder folder)
+        {
+            return UcpOffsetModule.Open(new UcpFolder(folder.Root), UcpOffsetModule.InfoFor(UcpMod), StrongholdExecutable.LoadAll(folder));
+        }
+
+        private string OffsetsSavedMessage(UcpOffsetModule module)
+        {
+            var ucpFolder = new UcpFolder(RequireStrongholdFolder().Root);
+            string paragraph = Environment.NewLine + Environment.NewLine;
+            string message = string.Format(Localization.GetText("UcpOffsetsSaved"), module.Info.DisplayName)
+                + Environment.NewLine + Path.GetRelativePath(Path.GetDirectoryName(ucpFolder.Root)!, module.Folder)
+                + paragraph + Localization.GetText("UcpOffsetsActivate");
+            return ucpFolder.IsInstalled ? message : message + paragraph + Localization.GetText("UcpNotInstalled");
         }
 
         private Gm1Document RequireGm1() => gm1Document ?? throw new WorkflowException(Localization.GetText("NoFileSelected"));

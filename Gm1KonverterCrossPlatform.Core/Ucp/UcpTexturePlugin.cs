@@ -17,11 +17,14 @@ namespace Gm1KonverterCrossPlatform.Core.Ucp
     /// </remarks>
     public sealed class UcpTexturePlugin
     {
-        public const string DefinitionFileName = "definition.yml";
-        public const string InitFileName = "init.lua";
         public const string ResourcesFolderName = "resources";
 
-        private static readonly UTF8Encoding Utf8WithoutBom = new UTF8Encoding(false);
+        private static readonly KeyValuePair<string, string>[] Dependencies =
+        {
+            new KeyValuePair<string, string>("framework", "^3.0.0"),
+            new KeyValuePair<string, string>("frontend", "^1.0.0"),
+            new KeyValuePair<string, string>("files", "^1.0.0"),
+        };
 
         private UcpTexturePlugin(UcpExtensionInfo info, string folder)
         {
@@ -45,14 +48,9 @@ namespace Gm1KonverterCrossPlatform.Core.Ucp
             if (info == null) throw new ArgumentNullException(nameof(info));
 
             var plugin = new UcpTexturePlugin(info, ucp.PluginFolder(info));
-            if (!Directory.Exists(plugin.Folder))
+            if (ExtensionFiles.MoveOtherVersion(plugin.Folder, ucp.FindPluginFolders(info.Name)))
             {
-                var otherVersions = ucp.FindPluginFolders(info.Name);
-                if (otherVersions.Count == 1)
-                {
-                    Directory.Move(otherVersions[0], plugin.Folder);
-                    plugin.UpdateDefinition();
-                }
+                plugin.UpdateDefinition();
             }
 
             return plugin;
@@ -111,7 +109,7 @@ namespace Gm1KonverterCrossPlatform.Core.Ucp
 
             string target = FindFile(file) ?? Path.Combine(ResourceFolder(file.Folder), file.FileName);
             Directory.CreateDirectory(Path.GetDirectoryName(target)!);
-            WriteSafely(target, content);
+            ExtensionFiles.WriteBytes(target, content);
             UpdateDefinition();
         }
 
@@ -131,21 +129,7 @@ namespace Gm1KonverterCrossPlatform.Core.Ucp
         }
 
         /// <summary>The generated definition.yml.</summary>
-        public string CreateDefinition()
-        {
-            var yaml = new StringBuilder();
-            yaml.Append("name: ").Append(Info.Name).Append('\n');
-            yaml.Append("display-name: ").Append(ScriptText.YamlString(Info.DisplayName)).Append('\n');
-            yaml.Append("author: ").Append(ScriptText.YamlString(Info.Author)).Append('\n');
-            yaml.Append("version: ").Append(Info.Version).Append('\n');
-            yaml.Append("dependencies:\n");
-            yaml.Append("  framework: ^3.0.0\n");
-            yaml.Append("  frontend: ^1.0.0\n");
-            yaml.Append("  files: ^1.0.0\n");
-            yaml.Append("meta:\n");
-            yaml.Append("  version: 1.0.0\n");
-            return yaml.ToString();
-        }
+        public string CreateDefinition() => ExtensionFiles.CreateDefinition(Info, Dependencies);
 
         /// <summary>The generated init.lua, which registers every replacement with the "files" module.</summary>
         public string CreateInitScript()
@@ -193,29 +177,12 @@ namespace Gm1KonverterCrossPlatform.Core.Ucp
             return markdown.ToString();
         }
 
-        private string ResourceFolder(GameFolder folder) => Path.Combine(Folder, ResourcesFolderName, GameFile.FolderNameOf(folder));
-
         /// <summary>
         /// Rewrites definition.yml, init.lua and the description, e.g. after the name or author changed.
         /// Creates the plugin if it does not exist yet.
         /// </summary>
-        public void UpdateDefinition()
-        {
-            Directory.CreateDirectory(Folder);
-            WriteSafely(Path.Combine(Folder, DefinitionFileName), Utf8WithoutBom.GetBytes(CreateDefinition()));
-            WriteSafely(Path.Combine(Folder, InitFileName), Utf8WithoutBom.GetBytes(CreateInitScript()));
+        public void UpdateDefinition() => ExtensionFiles.Write(Folder, CreateDefinition(), CreateInitScript(), CreateDescription());
 
-            string locale = Path.Combine(Folder, "locale");
-            Directory.CreateDirectory(locale);
-            WriteSafely(Path.Combine(locale, "description-en.md"), Utf8WithoutBom.GetBytes(CreateDescription()));
-        }
-
-        /// <summary>Writes to a temporary file first so the game never reads a half written file.</summary>
-        private static void WriteSafely(string path, byte[] content)
-        {
-            string temporaryFile = path + ".tmp";
-            File.WriteAllBytes(temporaryFile, content);
-            File.Move(temporaryFile, path, overwrite: true);
-        }
+        private string ResourceFolder(GameFolder folder) => Path.Combine(Folder, ResourcesFolderName, GameFile.FolderNameOf(folder));
     }
 }

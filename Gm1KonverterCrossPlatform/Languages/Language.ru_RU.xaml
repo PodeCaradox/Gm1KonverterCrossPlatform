@@ -122,4 +122,6 @@
     <x:String x:Key="UcpModActivate">Активируйте мод в интерфейсе UCP3, чтобы игра его использовала. Оригинальный файл игры остается без изменений.</x:String>
     <x:String x:Key="UcpNotInstalled">UCP3 еще не установлен в папке Stronghold. Мод заработает сразу после установки UCP3.</x:String>
     <x:String x:Key="Cancel">Отмена</x:String>
+    <x:String x:Key="UcpOffsetsSaved">Сохранено в модуле UCP3 «{0}»:</x:String>
+    <x:String x:Key="UcpOffsetsActivate">Активируйте модуль в интерфейсе UCP3. Модуль не подписан: запускайте игру из интерфейса UCP3 с параметром запуска «Отключить защиту». Исполняемые файлы остаются без изменений.</x:String>
 </controls:ResourceDictionary>

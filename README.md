@@ -115,6 +115,18 @@ version of this program overwrote the game file). Name, author and version are s
 a new version moves the existing plugin, a new name starts a new plugin. Files already in the plugin are
 opened from there, so you keep editing your modded version.
 
+Building offsets ("Change Offsets" for `anim_castle.gm1`, "Import Offsets From File") are no longer patched
+into the executables either. They are written to the UCP3 module `ucp/modules/<Name>-Offsets-<Version>`:
+its `init.lua` finds every offset with a byte pattern (AOB) taken from your `Stronghold Crusader.exe` /
+`Stronghold_Crusader_Extreme.exe` and writes the new value when the game starts (`core.scanForAOB`,
+`core.writeCodeBytes`). The offset bytes are wildcards in the pattern, so executables patched by older
+versions are found as well. Modules can change the game's memory, therefore UCP3 only loads this unsigned
+module when the game is started from the UCP3 GUI with the launch option "Disable Security".
+
+Die Gebäude-Offsets werden ebenfalls nicht mehr in die Exe geschrieben, sondern in das UCP3-Modul
+`ucp/modules/<Name>-Offsets-<Version>`. Da das Modul nicht signiert ist, lädt UCP3 es nur, wenn das Spiel
+aus der UCP3-Oberfläche mit der Startoption „Sicherheit deaktivieren“ gestartet wird.
+
 „Datei → GM1/Tgx im UCP-Mod speichern“ überschreibt die Spieldateien nicht mehr, sondern speichert die
 geänderte Datei in einem UCP3-Plugin unter `ucp/plugins/<Name>-<Version>` im Stronghold-Ordner. Das Plugin
 wird in der UCP3-Oberfläche aktiviert. „… aus UCP-Mod entfernen (Original)“ nimmt die Datei wieder heraus,

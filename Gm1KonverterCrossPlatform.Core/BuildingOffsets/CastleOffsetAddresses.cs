@@ -1,5 +1,7 @@
 using System;
+using System.Buffers.Binary;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Gm1KonverterCrossPlatform.Core.BuildingOffsets
 {
@@ -29,6 +31,16 @@ namespace Gm1KonverterCrossPlatform.Core.BuildingOffsets
             { 125, new OffsetAddress(939574, 939567) }
         };
 
+        /// <summary>Image indices that have an offset in the executable, sorted.</summary>
+        public static IReadOnlyList<int> ImageIndices { get; } = AddressesByImageIndex.Keys.OrderBy(index => index).ToList();
+
+        /// <summary>
+        /// Every byte of every offset (Extreme addresses). These bytes differ between installations, e.g.
+        /// after older versions of this program patched the executable.
+        /// </summary>
+        public static IReadOnlyCollection<int> VariableAddresses { get; } =
+            new HashSet<int>(AddressesByImageIndex.Values.SelectMany(address => address.Bytes));
+
         /// <summary>Only images of this file have offsets in the executable.</summary>
         public static bool AppliesTo(string gm1FileName)
         {
@@ -54,5 +66,65 @@ namespace Gm1KonverterCrossPlatform.Core.BuildingOffsets
         public int Y { get; }
 
         public bool SingleByteY { get; }
+
+        public int YLength => SingleByteY ? 1 : sizeof(int);
+
+        /// <summary>First address of the x and y bytes.</summary>
+        public int Start => Math.Min(X, Y);
+
+        /// <summary>Address after the last x or y byte.</summary>
+        public int End => Math.Max(X + 1, Y + YLength);
+
+        /// <summary>The addresses of all x and y bytes.</summary>
+        public IEnumerable<int> Bytes => new[] { X }.Concat(Enumerable.Range(Y, YLength));
+
+        /// <summary>
+        /// The bytes to write for <paramref name="offset"/>: x as signed byte, y as little endian integer or
+        /// signed byte. Signed bytes are clamped to -128..127.
+        /// </summary>
+        public IReadOnlyList<OffsetWrite> GetWrites(BuildingOffset offset)
+        {
+            var y = new byte[YLength];
+            if (SingleByteY)
+            {
+                y[0] = unchecked((byte)ClampToSByte(offset.Y));
+            }
+            else
+            {
+                BinaryPrimitives.WriteInt32LittleEndian(y, offset.Y);
+            }
+
+            return new[]
+            {
+                new OffsetWrite(X, new[] { unchecked((byte)ClampToSByte(offset.X)) }),
+                new OffsetWrite(Y, y),
+            };
+        }
+
+        /// <summary>Reads the offset from the bytes starting at <see cref="Start"/>.</summary>
+        public BuildingOffset Read(ReadOnlySpan<byte> bytesFromStart)
+        {
+            int x = unchecked((sbyte)bytesFromStart[X - Start]);
+            int y = SingleByteY
+                ? unchecked((sbyte)bytesFromStart[Y - Start])
+                : BinaryPrimitives.ReadInt32LittleEndian(bytesFromStart.Slice(Y - Start));
+            return new BuildingOffset(x, y);
+        }
+
+        private static sbyte ClampToSByte(int value) => (sbyte)Math.Max(sbyte.MinValue, Math.Min(sbyte.MaxValue, value));
+    }
+
+    /// <summary>Bytes to write at an address.</summary>
+    public sealed class OffsetWrite
+    {
+        public OffsetWrite(int address, byte[] bytes)
+        {
+            Address = address;
+            Bytes = bytes ?? throw new ArgumentNullException(nameof(bytes));
+        }
+
+        public int Address { get; }
+
+        public IReadOnlyList<byte> Bytes { get; }
     }
 }

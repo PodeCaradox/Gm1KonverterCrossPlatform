@@ -1,8 +1,7 @@
 namespace Gm1KonverterCrossPlatform.Core.BuildingOffsets
 {
     /// <summary>
-    /// Where changed building offsets are applied. Currently the Stronghold executables are patched
-    /// (<see cref="ExecutableOffsetPatcher"/>); a UCP module can implement this interface later.
+    /// Where changed building offsets are applied: the UCP3 module <see cref="Ucp.UcpOffsetModule"/>.
     /// </summary>
     public interface IBuildingOffsetTarget
     {
