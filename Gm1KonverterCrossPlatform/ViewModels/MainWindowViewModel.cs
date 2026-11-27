@@ -348,8 +348,7 @@ namespace Gm1KonverterCrossPlatform.ViewModels
         }
 
         /// <summary>
-        /// Changes name, author and version of the UCP3 plugin. An existing plugin with the same name is
-        /// updated (and moved to the new version); another name starts a new plugin.
+        /// Changes name, author and version of the target UCP3 plugin.
         /// </summary>
         /// <exception cref="WorkflowException">The version is set but not like 1.0.0.</exception>
         public void SetUcpMod(string? displayName, string? author, string? version)
@@ -359,16 +358,20 @@ namespace Gm1KonverterCrossPlatform.ViewModels
                 throw new WorkflowException(Localization.GetText("UcpModInvalidVersion"));
             }
 
+            var previousMod = UcpMod;
+            var strongholdFolder = TryGetStrongholdFolder();
+            var plugin = strongholdFolder == null
+                ? null
+                : UcpTexturePlugin.Open(new UcpFolder(strongholdFolder.Root), UcpExtensionInfo.FromUserInput(displayName, author, version));
+
             userConfig.UcpModName = string.IsNullOrWhiteSpace(displayName) ? null : displayName!.Trim();
             userConfig.UcpModAuthor = string.IsNullOrWhiteSpace(author) ? null : author!.Trim();
             userConfig.UcpModVersion = UcpExtensionInfo.IsValidVersion(version) ? version!.Trim() : null;
             SaveUserConfig();
             this.RaisePropertyChanged(nameof(UcpMod));
 
-            var strongholdFolder = TryGetStrongholdFolder();
-            if (strongholdFolder != null)
+            if (plugin != null)
             {
-                var plugin = UcpTexturePlugin.Open(new UcpFolder(strongholdFolder.Root), UcpMod);
                 if (plugin.Exists)
                 {
                     plugin.UpdateDefinition();
@@ -380,7 +383,18 @@ namespace Gm1KonverterCrossPlatform.ViewModels
                     module.UpdateDefinition();
                 }
 
-                if (IsCastleFileOpen)
+                if (!string.Equals(previousMod.FolderName, plugin.Info.FolderName, StringComparison.OrdinalIgnoreCase))
+                {
+                    if (gm1Document != null)
+                    {
+                        ReopenGm1File(gm1Document);
+                    }
+                    else if (tgxDocument != null)
+                    {
+                        OpenTgxFile(tgxDocument.FileName);
+                    }
+                }
+                else if (IsCastleFileOpen)
                 {
                     offsetTarget = module;
                     SelectImage(selectedItem);
