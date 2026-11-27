@@ -358,6 +358,7 @@ namespace Gm1KonverterCrossPlatform.ViewModels
                 throw new WorkflowException(Localization.GetText("UcpModInvalidVersion"));
             }
 
+            var previousMod = UcpMod;
             var strongholdFolder = TryGetStrongholdFolder();
             var plugin = strongholdFolder == null
                 ? null
@@ -382,7 +383,18 @@ namespace Gm1KonverterCrossPlatform.ViewModels
                     module.UpdateDefinition();
                 }
 
-                if (IsCastleFileOpen)
+                if (!string.Equals(previousMod.FolderName, plugin.Info.FolderName, StringComparison.OrdinalIgnoreCase))
+                {
+                    if (gm1Document != null)
+                    {
+                        ReopenGm1File(gm1Document);
+                    }
+                    else if (tgxDocument != null)
+                    {
+                        OpenTgxFile(tgxDocument.FileName);
+                    }
+                }
+                else if (IsCastleFileOpen)
                 {
                     offsetTarget = module;
                     SelectImage(selectedItem);
